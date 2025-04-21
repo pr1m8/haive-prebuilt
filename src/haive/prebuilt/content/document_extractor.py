@@ -1,0 +1,45 @@
+# src/haive/prebuilt/simple/document_extractor.py
+"""Agent Name: DocumentExtractor
+Description: Extracts structured data or targeted fields (e.g. dates, names, numbers, places) from freeform text.
+Useful for indexing, templating, and semantic metadata extraction.
+"""
+
+from langchain_core.prompts import ChatPromptTemplate
+from pydantic import BaseModel, Field
+
+from haive_agents_dep.simple.factory import create_simple_agent
+from haive.core.engine.aug_llm import AugLLMConfig
+from haive.core.models.llm.base import AzureLLMConfig
+
+SYSTEM_PROMPT = """
+You are a structured information extractor.
+Given a passage, extract relevant information and return it in a structured form. Prioritize named entities (e.g. person, organization, date, location) and key metadata.
+Make sure values are clean, normalized, and non-redundant.
+"""
+
+prompt = ChatPromptTemplate.from_messages([
+    ("system", SYSTEM_PROMPT),
+    ("user", "Text: {input}")
+])
+
+class ExtractedInfo(BaseModel):
+    title: str | None = Field(None, description="Document or passage title, if present.")
+    person: str | None = Field(None, description="Main person mentioned in the passage, if any.")
+    organization: str | None = Field(None, description="Mentioned organization or institution.")
+    location: str | None = Field(None, description="Relevant place or location.")
+    date: str | None = Field(None, description="Mentioned date or time period.")
+    summary: str | None = Field(None, description="A brief abstract of the passage, if appropriate.")
+
+document_extractor_config = AugLLMConfig(
+    name="document_extractor",
+    llm_config=AzureLLMConfig(),
+    prompt_template=prompt,
+    structured_output_model=ExtractedInfo,
+)
+
+document_extractor = create_simple_agent(
+    engine=document_extractor_config,
+    name="document_extractor"
+)
+
+
