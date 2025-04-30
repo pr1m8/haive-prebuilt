@@ -5,8 +5,8 @@ Description: Converts a single query into multiple variations or batched forms f
 """
 
 from langchain_core.prompts import ChatPromptTemplate
-from haive_core.models.llm.base import AzureLLMConfig
-from haive_core.engine.aug_llm import AugLLMConfig
+from haive.core.models.llm.base import AzureLLMConfig
+from haive.core.engine.aug_llm import AugLLMConfig
 from haive_prebuilt.simple.query.models import QueryModel
 from pydantic import BaseModel, Field
 from typing import List

@@ -7,8 +7,8 @@ Useful for indexing, templating, and semantic metadata extraction.
 from langchain_core.prompts import ChatPromptTemplate
 from pydantic import BaseModel, Field
 from typing import Optional
-from haive_core.models.llm.base import AzureLLMConfig
-from haive_core.aug_llm import AugLLMConfig
+from haive.core.models.llm.base import AzureLLMConfig
+from haive.core.aug_llm import AugLLMConfig
 from haive_agents.simple.factory import create_simple_agent
 SYSTEM_PROMPT = """
 You are a structured information extractor.

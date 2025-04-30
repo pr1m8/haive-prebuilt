@@ -1,7 +1,7 @@
 from langchain_core.messages import SystemMessage, HumanMessage
 from langchain_core.prompts import ChatPromptTemplate
 from haive_agents.contract_analysis.models import ContractInfo, StepAnalysis
-from haive_core.aug_llm.base import AugLLMConfig
+from haive.core.aug_llm.base import AugLLMConfig
 
 
 

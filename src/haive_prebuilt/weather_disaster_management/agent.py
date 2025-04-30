@@ -3,8 +3,8 @@ from pydantic import BaseModel
 from typing import Dict, Union, Literal
 from haive_prebuilt.misc.weather_disaster_management.state import WeatherState, WeatherLocation
 from haive_prebuilt.misc.weather_disaster_management.config import WeatherDisasterManagerConfig
-from src.haive.toolkits.weather import weather_tool
-from haive_core.engine.agent.agent import Agent, AgentConfig,register_agent
+from haive.haive.toolkits.weather import weather_tool
+from haive.core.engine.agent.agent import Agent, AgentConfig,register_agent
 from datetime import datetime
 from langgraph.types import Command
 from langgraph.graph import END

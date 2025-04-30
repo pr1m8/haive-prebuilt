@@ -3,9 +3,9 @@ from pydantic import BaseModel, Field, field_validator
 from datetime import datetime
 import uuid
 
-from haive_core.engine.agent.agent import AgentConfig
-from haive_core.engine.aug_llm import AugLLMConfig
-from haive_core.graph.StateSchemaManager import StateSchemaManager
+from haive.core.engine.agent.agent import AgentConfig
+from haive.core.engine.aug_llm import AugLLMConfig
+from haive.core.graph.StateSchemaManager import StateSchemaManager
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 from langchain_core.messages import SystemMessage
 from langgraph.graph import StateGraph

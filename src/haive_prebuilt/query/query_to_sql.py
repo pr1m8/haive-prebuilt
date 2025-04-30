@@ -5,8 +5,8 @@ Description: Converts a natural language query into an SQL SELECT statement (ass
 """
 from langchain_core.prompts import ChatPromptTemplate
 from pydantic import BaseModel, Field
-from haive_core.models.llm.base import AzureLLMConfig
-from haive_core.aug_llm import AugLLMConfig
+from haive.core.models.llm.base import AzureLLMConfig
+from haive.core.aug_llm import AugLLMConfig
 from haive_prebuilt.simple.query.models import QueryModel
 from haive_agents.simple.factory import create_simple_agent
 

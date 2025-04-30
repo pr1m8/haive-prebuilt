@@ -1,6 +1,6 @@
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.prompts import ChatPromptTemplate
-from haive_core.aug_llm import AugLLMConfig
+from haive.core.aug_llm import AugLLMConfig
 from haive_agents.simple.factory import create_simple_agent
 
 map_prompt = ChatPromptTemplate.from_messages([('human',"Write a concise summary of the following:\\n\\n{contex}")])

@@ -3,8 +3,8 @@ from datetime import datetime
 from langgraph.graph import StateGraph, START, END
 from langchain_core.messages import HumanMessage, AIMessage, SystemMessage
 
-from haive_core.engine.agent.agent import Agent, register_agent
-from haive_core.engine.aug_llm import AugLLMConfig
+from haive.core.engine.agent.agent import Agent, register_agent
+from haive.core.engine.aug_llm import AugLLMConfig
 
 # Import the configuration and state
 from haive_prebuilt.misc.company_researcher.config import KYCAgentConfiguration

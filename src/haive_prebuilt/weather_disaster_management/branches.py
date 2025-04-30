@@ -1,4 +1,4 @@
-from haive_core.graph.branches import Branch
+from haive.core.graph.branches import Branch
 
 route_branch = Branch(
     function=lambda state: (

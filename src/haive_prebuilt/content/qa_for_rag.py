@@ -6,8 +6,8 @@ Description: Generates QA pairs from documents suitable for fine-tuning or retri
 from langchain_core.prompts import ChatPromptTemplate
 from pydantic import BaseModel, Field
 from typing import List
-from haive_core.models.llm.base import AzureLLMConfig
-from haive_core.engine.aug_llm import AugLLMConfig
+from haive.core.models.llm.base import AzureLLMConfig
+from haive.core.engine.aug_llm import AugLLMConfig
 from haive_agents.simple.factory import create_simple_agent
 SYSTEM_PROMPT = """
 You are a question-answer pair generator for retrieval-augmented generation (RAG).

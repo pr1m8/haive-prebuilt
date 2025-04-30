@@ -1,6 +1,6 @@
 from typing import Annotated, Sequence
 from langchain_core.messages import BaseMessage
-from src.haive.utils.message_utils import add_messages
+from haive.haive.utils.message_utils import add_messages
 from pydantic import BaseModel,Field
 
 
