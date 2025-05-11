@@ -5,25 +5,37 @@ description = "haive-prebuilt for Haive framework"
 authors = ["pr1m8 <william.astley@algebraicwealth.com>"]
 license = "MIT"
 readme = "README.md"
-packages=[
-    {include = "src", from="."}
-]
+packages = [{ include = "src", from = "." }]
 [tool.poetry.dependencies]
-haive-core = {path = "../haive-core", develop = true}
-haive-agents = {path = "../haive-agents", develop = true}
+haive-core = { path = "../haive-core", develop = true }
+haive-agents = { path = "../haive-agents", develop = true }
 python = ">=3.12,<3.13"
 pydantic = "^2.10.6"
 langchain = "^0.3.20"
 langchain-core = "^0.3.44"
 langgraph = "^0.3.5"
+langdetect = "^1.0.9"
+fast-langdetect = "^0.3.2"
+langid = "^1.1.6"
+gcld3 = "^3.0.13"
+pyspellchecker = "^0.8.2"
 
 [tool.poetry.group.dev.dependencies]
-haive-core = {path = "../haive-core", develop = true}
-haive-agents = {path = "../haive-agents", develop = true}
+haive-core = { path = "../haive-core", develop = true }
+haive-agents = { path = "../haive-agents", develop = true }
 pytest = "^8.3.5"
 black = "^25.1.0"
 isort = "^6.0.1"
 mypy = "^1.15.0"
+cython = "^3.1.0"
+
+
+[tool.poetry.group.constitutional-agent.dependencies]
+profanity-check = "^1.0.3"
+better-profanity = "^0.7.0"
+profanityfilter = "^2.1.0"
+pygments = "^2.19.1"
+pyspellchecker = "^0.8.2"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
