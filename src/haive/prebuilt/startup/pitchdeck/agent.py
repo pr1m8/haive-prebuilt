@@ -12,8 +12,8 @@ from langchain_core.messages import BaseMessage, HumanMessage
 from langgraph.graph import END, START, StateGraph
 from pydantic import BaseModel, Field
 
-from .models import StartupIdea
-from .pitch_deck_models import (
+from haive.prebuilt.startup.ideation.models import StartupIdea
+from haive.prebuilt.startup.pitchdeck.models import (
     DesignStyle,
     PitchDeck,
     PitchDeckMetadata,
@@ -22,7 +22,7 @@ from .pitch_deck_models import (
     SlideContent,
     SlideType,
 )
-from .prompts import (
+from haive.prebuilt.startup.pitchdeck.prompts import (
     pitch_deck_outline_aug_llm,
     pitch_deck_review_aug_llm,
     slide_content_aug_llm,

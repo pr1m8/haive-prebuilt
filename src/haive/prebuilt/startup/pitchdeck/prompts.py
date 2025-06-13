@@ -1,3 +1,10 @@
+from typing import Any, Dict, List, Optional
+
+from haive.core.engine.aug_llm.config import AugLLMConfig, AzureLLMConfig
+from langchain_core.messages import SystemMessage
+from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
+from pydantic import BaseModel, Field
+
 # ============================================================================
 # PITCH DECK REVIEW AGENT
 # ============================================================================
@@ -62,4 +69,81 @@ pitch_deck_review_aug_llm = AugLLMConfig(
     llm_config=AzureLLMConfig(model="gpt-4o", temperature=0.4),
     structured_output_model=PitchDeckFeedback,
     system_message=PITCH_DECK_REVIEW_SYSTEM_PROMPT,
+)
+PITCH_DECK_OUTLINE_SYSTEM_PROMPT = """You are a pitch deck specialist who has created hundreds of successful pitch decks for startups. Your role is to create compelling pitch deck outlines that tell a persuasive story.
+
+Pitch deck principles:
+1. Story Arc: Problem → Solution → Traction → Vision
+2. Clarity: One key message per slide
+3. Visual: Suggest visual elements for each slide
+4. Data-Driven: Include relevant metrics and proof points
+5. Emotional: Connect with investors emotionally
+6. Actionable: Clear ask and use of funds
+
+Structure considerations:
+- Hook investors in the first 30 seconds
+- Build credibility throughout
+- Address objections preemptively
+- End with a strong call to action
+
+Create outlines that investors want to see through to the end."""
+
+pitch_deck_outline_prompt = ChatPromptTemplate.from_messages(
+    [
+        SystemMessage(content=PITCH_DECK_OUTLINE_SYSTEM_PROMPT),
+        MessagesPlaceholder(variable_name="messages", optional=True),
+        (
+            "human",
+            """Create a pitch deck outline for:
+
+Company: {company_name}
+Stage: {stage}
+Industry: {industry}
+Funding Sought: {funding_amount}
+
+Startup Brief:
+{startup_brief}
+
+Create a compelling slide-by-slide outline.""",
+        ),
+    ]
+)
+
+
+class PitchDeckOutlineRequest(BaseModel):
+    """Request for pitch deck outline."""
+
+    company_name: str
+    stage: str
+    industry: str
+    funding_amount: Optional[float] = None
+    startup_brief: Dict[str, Any]
+
+
+class SlideOutline(BaseModel):
+    """Outline for a single slide."""
+
+    slide_type: SlideType
+    title: str
+    headline: str
+    key_points: List[str]
+    visual_suggestions: List[str]
+    speaker_notes: str
+
+
+class PitchDeckOutlineResponse(BaseModel):
+    """Complete pitch deck outline."""
+
+    slides: List[SlideOutline]
+    narrative_flow: str
+    key_messages: List[str]
+    design_recommendations: List[str]
+
+
+pitch_deck_outline_aug_llm = AugLLMConfig(
+    name="pitch_deck_outline_agent",
+    prompt_template=pitch_deck_outline_prompt,
+    llm_config=AzureLLMConfig(model="gpt-4o", temperature=0.6),
+    structured_output_model=PitchDeckOutlineResponse,
+    system_message=PITCH_DECK_OUTLINE_SYSTEM_PROMPT,
 )
