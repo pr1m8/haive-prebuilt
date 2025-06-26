@@ -23,7 +23,7 @@ from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 from pydantic import BaseModel, Field
 
 # Import your models
-from .models import (
+from haive.prebuilt.startup.models import (
     BusinessModelCanvas,
     CompetitorAnalysis,
     IdeaCategory,
@@ -33,7 +33,7 @@ from .models import (
     SolutionConcept,
     StartupIdea,
 )
-from .pitch_deck_models import (
+from haive.prebuilt.startup.pitch_deck_models import (
     PitchDeck,
     PitchDeckMetadata,
     Slide,

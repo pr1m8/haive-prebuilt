@@ -71,7 +71,7 @@ Example:
     ```
 """
 
-from .agent_utilities_models import (  # Goal Decomposition; Decision Analysis; Resource Planning; Quality Assessment; Workflow Optimization; Communication Planning
+from haive.prebuilt.misc.agent_utilities_models import (  # Goal Decomposition; Decision Analysis; Resource Planning; Quality Assessment; Workflow Optimization; Communication Planning
     BottleneckType,
     CommunicationFrequency,
     CommunicationPlan,
@@ -102,7 +102,7 @@ from .agent_utilities_models import (  # Goal Decomposition; Decision Analysis; 
     SubGoal,
     WorkflowOptimization,
 )
-from .agent_utilities_prompts import (  # Prompt Templates; Agent Creation Functions
+from haive.prebuilt.misc.agent_utilities_prompts import (  # Prompt Templates; Agent Creation Functions
     AgentUtilitiesPrompts,
     create_communication_planning_agent,
     create_decision_analysis_agent,

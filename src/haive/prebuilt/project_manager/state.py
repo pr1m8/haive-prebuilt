@@ -2,7 +2,7 @@ from typing import List, TypedDict
 
 from pydantic import BaseModel, Field
 
-from .models import (
+from haive.prebuilt.project_manager.models import (
     DependencyList,
     RiskList,
     RiskListIteration,

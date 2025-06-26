@@ -7,7 +7,7 @@ and workflow optimization.
 
 from langchain_core.prompts import ChatPromptTemplate
 
-from .agent_utilities_models import (
+from haive.prebuilt.misc.agent_management.goal_decompisition.agent_utilities_models import (
     CommunicationPlan,
     DecisionAnalysis,
     GoalDecomposition,

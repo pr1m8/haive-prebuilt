@@ -15,19 +15,28 @@ from langgraph.graph import END, START, StateGraph
 from langgraph.types import Send
 from pydantic import BaseModel, Field
 
-from .business_model_subgraph import BusinessModelState, build_business_model_subgraph
+from haive.prebuilt.startup.business_model_subgraph import (
+    BusinessModelState,
+    build_business_model_subgraph,
+)
 
 # Import subgraphs
-from .ideation_subgraph import IdeationState, build_ideation_subgraph
-from .market_research_subgraph import (
+from haive.prebuilt.startup.ideation_subgraph import (
+    IdeationState,
+    build_ideation_subgraph,
+)
+from haive.prebuilt.startup.market_research_subgraph import (
     MarketResearchState,
     build_market_research_subgraph,
 )
 
 # Import models
-from .models import IdeaPortfolio, StartupIdea
-from .pitch_deck_models import PitchDeck, PitchDeckMetadata
-from .pitch_deck_subgraph import PitchDeckState, build_pitch_deck_subgraph
+from haive.prebuilt.startup.models import IdeaPortfolio, StartupIdea
+from haive.prebuilt.startup.pitch_deck_models import PitchDeck, PitchDeckMetadata
+from haive.prebuilt.startup.pitch_deck_subgraph import (
+    PitchDeckState,
+    build_pitch_deck_subgraph,
+)
 
 
 class MasterStartupState(StateSchema):
@@ -226,7 +235,7 @@ class MasterStartupAgent(Agent):
                 # In practice, this would be more sophisticated
                 import uuid
 
-                from .models import IdeaCategory, create_basic_idea
+from haive.prebuilt.startup.models import IdeaCategory, create_basic_idea
 
                 best_idea_str = state.raw_ideas[0]
                 parts = best_idea_str.split(":")

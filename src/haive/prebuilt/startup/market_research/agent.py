@@ -11,8 +11,12 @@ from langchain_core.messages import BaseMessage, HumanMessage
 from langgraph.graph import END, START, StateGraph
 from pydantic import BaseModel, Field
 
-from .models import CompetitorAnalysis, MarketResearch, StartupIdea
-from .prompts import (
+from haive.prebuilt.startup.market_research.models import (
+    CompetitorAnalysis,
+    MarketResearch,
+    StartupIdea,
+)
+from haive.prebuilt.startup.market_research.prompts import (
     competitor_analysis_aug_llm,
     industry_research_aug_llm,
     market_research_aug_llm,

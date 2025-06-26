@@ -3,7 +3,7 @@ from typing import Annotated, TypedDict
 
 from pydantic import BaseModel, Field
 
-from .models import SearchQuery, Section
+from haive.prebuilt.open_researcher.models import SearchQuery, Section
 
 
 class ReportStateInput(BaseModel):
