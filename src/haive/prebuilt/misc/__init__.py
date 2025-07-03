@@ -1,3 +1,19 @@
+"""Misc - TODO: Add brief description
+
+TODO: Add detailed description of module functionality
+
+
+
+Example:
+    Basic usage::
+
+        from haive.misc import module_function
+        
+        # TODO: Add example
+
+
+"""
+
 """Agent Utilities Module for Haive Agents.
 
 This module provides essential structured models and prompts for common agent tasks

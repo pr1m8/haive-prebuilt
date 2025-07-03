@@ -1,13 +1,12 @@
 # haive/agents/perplexity/base/prompts.py
-"""
-Prompt templates for the Perplexity multi-agent system.
+"""Prompt templates for the Perplexity multi-agent system.
 
 This module contains all the prompt templates used by different agents in the
 Perplexity system. Each prompt follows a structured format with system context,
 task instructions, input/output formats, and examples.
 """
 
-from langchain_core.prompts import ChatPromptTemplate, PromptTemplate
+from langchain_core.prompts import ChatPromptTemplate
 
 # ============================================================================
 # QUERY UNDERSTANDING AGENT PROMPTS
@@ -734,7 +733,6 @@ def create_prompt_with_examples(
     examples: list,
 ) -> ChatPromptTemplate:
     """Helper function to create prompts with a consistent structure."""
-
     example_text = "\n\n".join(
         [
             f"Example {i+1}:\nInput: {ex['input']}\nOutput: {ex['output']}"

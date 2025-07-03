@@ -1,7 +1,6 @@
 # Main graph
 def initiate_all_interviews(state: ResearchGraphState):
     """This is the "map" step where we run each interview sub-graph using Send API"""
-
     topic = state["topic"]
     return [
         Send(
@@ -86,4 +85,3 @@ def finalize_report(state: ResearchGraphState):
 
 def Start_parallel(state):
     """No-op node that should be interrupted on"""
-    pass

@@ -1,8 +1,6 @@
 from datetime import datetime
-from typing import Any, Dict, List, Optional, Union
 
 from haive.core.engine.agent.agent import Agent, register_agent
-from haive.core.engine.aug_llm import AugLLMConfig
 
 # Import the configuration and state
 from haive_prebuilt.misc.company_researcher.config import KYCAgentConfiguration
@@ -10,7 +8,6 @@ from haive_prebuilt.misc.company_researcher.config import KYCAgentConfiguration
 # Import models
 from haive_prebuilt.misc.company_researcher.models import (
     EnhancedKYCCustomerProfile,
-    ProhibitedActivity,
     RestrictedIndustry,
 )
 from haive_prebuilt.misc.company_researcher.state import (
@@ -19,13 +16,12 @@ from haive_prebuilt.misc.company_researcher.state import (
     KYCWorkflowState,
 )
 from langchain_core.messages import AIMessage, HumanMessage, SystemMessage
-from langgraph.graph import END, START, StateGraph
+from langgraph.graph import END, START
 
 
 @register_agent(KYCAgentConfiguration)
 class EnhancedKYCAgent(Agent[KYCAgentConfiguration]):
-    """
-    Advanced KYC Agent with comprehensive risk assessment workflow
+    """Advanced KYC Agent with comprehensive risk assessment workflow
 
     Implements a sophisticated multi-stage KYC processing pipeline:
     1. Initial Screening
@@ -35,8 +31,7 @@ class EnhancedKYCAgent(Agent[KYCAgentConfiguration]):
     """
 
     def setup_workflow(self) -> None:
-        """
-        Configure the KYC workflow graph
+        """Configure the KYC workflow graph
 
         Stages:
         - Initial Screening
@@ -74,8 +69,7 @@ class EnhancedKYCAgent(Agent[KYCAgentConfiguration]):
         self.graph.add_edge("final_decision", END)
 
     def initial_screening(self, state: KYCWorkflowState) -> KYCWorkflowState:
-        """
-        Perform initial customer screening
+        """Perform initial customer screening
 
         Args:
             state: Current workflow state
@@ -117,8 +111,7 @@ class EnhancedKYCAgent(Agent[KYCAgentConfiguration]):
             return state
 
     def risk_assessment(self, state: KYCWorkflowState) -> KYCWorkflowState:
-        """
-        Assess customer risk based on initial screening
+        """Assess customer risk based on initial screening
 
         Args:
             state: Current workflow state
@@ -171,8 +164,7 @@ class EnhancedKYCAgent(Agent[KYCAgentConfiguration]):
         return state
 
     def route_risk_assessment(self, state: KYCWorkflowState) -> str:
-        """
-        Determine routing based on risk assessment
+        """Determine routing based on risk assessment
 
         Args:
             state: Current workflow state
@@ -185,8 +177,7 @@ class EnhancedKYCAgent(Agent[KYCAgentConfiguration]):
         return "final_decision"
 
     def enhanced_due_diligence(self, state: KYCWorkflowState) -> KYCWorkflowStage:
-        """
-        Perform Enhanced Due Diligence for high-risk customers
+        """Perform Enhanced Due Diligence for high-risk customers
 
         Args:
             state: Current workflow state
@@ -244,8 +235,7 @@ class EnhancedKYCAgent(Agent[KYCAgentConfiguration]):
             return state
 
     def final_decision(self, state: KYCWorkflowState) -> KYCWorkflowState:
-        """
-        Make final KYC decision based on all previous assessments
+        """Make final KYC decision based on all previous assessments
 
         Args:
             state: Current workflow state
@@ -307,8 +297,7 @@ class EnhancedKYCAgent(Agent[KYCAgentConfiguration]):
         original_profile: EnhancedKYCCustomerProfile,
         new_results: EnhancedKYCCustomerProfile,
     ) -> EnhancedKYCCustomerProfile:
-        """
-        Merge results from different stages of KYC assessment
+        """Merge results from different stages of KYC assessment
 
         Args:
             original_profile: Initial customer profile
@@ -348,8 +337,7 @@ class EnhancedKYCAgent(Agent[KYCAgentConfiguration]):
     def _determine_final_decision(
         self, final_profile: EnhancedKYCCustomerProfile
     ) -> KYCDecisionStatus:
-        """
-        Determine the final KYC decision based on comprehensive assessment
+        """Determine the final KYC decision based on comprehensive assessment
 
         Args:
             final_profile: Final customer profile after all assessments
@@ -362,7 +350,7 @@ class EnhancedKYCAgent(Agent[KYCAgentConfiguration]):
 
         # Check for absolute prohibitions
         if final_profile.risk_profile.prohibited_activities or any(
-            RestrictedIndustry.PROHIBITED == ind
+            ind == RestrictedIndustry.PROHIBITED
             for ind in final_profile.risk_profile.restricted_industries
         ):
             return KYCDecisionStatus.REJECTED
@@ -370,12 +358,11 @@ class EnhancedKYCAgent(Agent[KYCAgentConfiguration]):
         # Determine decision based on risk score
         if risk_score >= thresholds["prohibited"]:
             return KYCDecisionStatus.REJECTED
-        elif risk_score >= thresholds["high_risk"]:
+        if risk_score >= thresholds["high_risk"]:
             return KYCDecisionStatus.PENDING_REVIEW
-        elif risk_score >= thresholds["medium_risk"]:
+        if risk_score >= thresholds["medium_risk"]:
             return KYCDecisionStatus.CONDITIONAL_APPROVAL
-        else:
-            return KYCDecisionStatus.APPROVED
+        return KYCDecisionStatus.APPROVED
 
 
 # Example demonstration

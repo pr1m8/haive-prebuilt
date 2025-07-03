@@ -1,4 +1,4 @@
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 from haive.core.engine.aug_llm.config import AugLLMConfig, AzureLLMConfig
 from langchain_core.messages import SystemMessage
@@ -48,19 +48,19 @@ Provide comprehensive feedback and improvement suggestions.""",
 class PitchDeckReviewRequest(BaseModel):
     """Request for pitch deck review."""
 
-    pitch_deck_content: Dict[str, Any]
+    pitch_deck_content: dict[str, Any]
 
 
 class PitchDeckFeedback(BaseModel):
     """Feedback for a pitch deck."""
 
     overall_score: float = Field(..., ge=0.0, le=10.0)
-    strengths: List[str]
-    weaknesses: List[str]
-    improvement_suggestions: List[Dict[str, str]]  # slide -> suggestion
-    missing_elements: List[str]
-    investor_concerns: List[str]
-    revised_narrative: Optional[str] = None
+    strengths: list[str]
+    weaknesses: list[str]
+    improvement_suggestions: list[dict[str, str]]  # slide -> suggestion
+    missing_elements: list[str]
+    investor_concerns: list[str]
+    revised_narrative: str | None = None
 
 
 pitch_deck_review_aug_llm = AugLLMConfig(
@@ -116,8 +116,8 @@ class PitchDeckOutlineRequest(BaseModel):
     company_name: str
     stage: str
     industry: str
-    funding_amount: Optional[float] = None
-    startup_brief: Dict[str, Any]
+    funding_amount: float | None = None
+    startup_brief: dict[str, Any]
 
 
 class SlideOutline(BaseModel):
@@ -126,18 +126,18 @@ class SlideOutline(BaseModel):
     slide_type: SlideType
     title: str
     headline: str
-    key_points: List[str]
-    visual_suggestions: List[str]
+    key_points: list[str]
+    visual_suggestions: list[str]
     speaker_notes: str
 
 
 class PitchDeckOutlineResponse(BaseModel):
     """Complete pitch deck outline."""
 
-    slides: List[SlideOutline]
+    slides: list[SlideOutline]
     narrative_flow: str
-    key_messages: List[str]
-    design_recommendations: List[str]
+    key_messages: list[str]
+    design_recommendations: list[str]
 
 
 pitch_deck_outline_aug_llm = AugLLMConfig(

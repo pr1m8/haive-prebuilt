@@ -1,11 +1,10 @@
-"""
-Prompts and AugLLM configurations for startup ideation and pitch deck creation.
+"""Prompts and AugLLM configurations for startup ideation and pitch deck creation.
 
 This module provides specialized AugLLM configurations for different agents
 in the startup development pipeline, from ideation through pitch deck creation.
 """
 
-from typing import Any, Dict, List, Optional, Type
+from typing import Any
 
 from haive.core.engine.aug_llm import AugLLMConfig
 from haive.core.models.llm.base import AzureLLMConfig
@@ -30,13 +29,8 @@ from haive.prebuilt.startup.models import (
     IdeaMetrics,
     MarketResearch,
     ProblemStatement,
-    SolutionConcept,
-    StartupIdea,
 )
 from haive.prebuilt.startup.pitch_deck_models import (
-    PitchDeck,
-    PitchDeckMetadata,
-    Slide,
     SlideContent,
     SlideType,
 )
@@ -90,7 +84,7 @@ class ProblemResearchRequest(BaseModel):
     problem_description: str = Field(
         ..., description="Description of the problem to research"
     )
-    research_focus: List[str] = Field(
+    research_focus: list[str] = Field(
         default_factory=lambda: [
             "severity",
             "frequency",
@@ -106,7 +100,7 @@ class ProblemResearchResponse(BaseModel):
 
     problem: ProblemStatement = Field(..., description="Detailed problem statement")
     evidence_summary: str = Field(..., description="Summary of evidence found")
-    market_indicators: List[str] = Field(
+    market_indicators: list[str] = Field(
         ..., description="Market indicators of the problem"
     )
     research_confidence: float = Field(
@@ -171,7 +165,7 @@ class MarketResearchRequest(BaseModel):
     problem_description: str
     solution_description: str
     category: IdeaCategory
-    research_priorities: List[str] = Field(
+    research_priorities: list[str] = Field(
         default_factory=lambda: ["market_size", "growth_rate", "competition", "trends"]
     )
 
@@ -232,17 +226,17 @@ class CompetitorResearchRequest(BaseModel):
     startup_name: str
     solution_description: str
     target_market: str
-    key_features: List[str]
+    key_features: list[str]
 
 
 class CompetitorResearchResponse(BaseModel):
     """Response with competitor analyses."""
 
-    competitors: List[CompetitorAnalysis] = Field(
+    competitors: list[CompetitorAnalysis] = Field(
         ..., description="Detailed competitor analyses"
     )
     market_positioning: str = Field(..., description="Recommended market positioning")
-    differentiation_opportunities: List[str] = Field(
+    differentiation_opportunities: list[str] = Field(
         ..., description="Ways to differentiate"
     )
 
@@ -303,9 +297,9 @@ class BusinessModelRequest(BaseModel):
 
     idea_name: str
     solution_description: str
-    target_customers: List[str]
+    target_customers: list[str]
     value_proposition: str
-    market_size: Optional[float] = None
+    market_size: float | None = None
 
 
 business_model_aug_llm = AugLLMConfig(
@@ -362,9 +356,9 @@ class IdeaScoringRequest(BaseModel):
     idea_name: str
     problem: str
     solution: str
-    market_research: Optional[Dict[str, Any]] = None
-    business_model: Optional[Dict[str, Any]] = None
-    competition: Optional[List[str]] = None
+    market_research: dict[str, Any] | None = None
+    business_model: dict[str, Any] | None = None
+    competition: list[str] | None = None
 
 
 idea_scoring_aug_llm = AugLLMConfig(
@@ -426,8 +420,8 @@ class PitchDeckOutlineRequest(BaseModel):
     company_name: str
     stage: str
     industry: str
-    funding_amount: Optional[float] = None
-    startup_brief: Dict[str, Any]
+    funding_amount: float | None = None
+    startup_brief: dict[str, Any]
 
 
 class SlideOutline(BaseModel):
@@ -436,18 +430,18 @@ class SlideOutline(BaseModel):
     slide_type: SlideType
     title: str
     headline: str
-    key_points: List[str]
-    visual_suggestions: List[str]
+    key_points: list[str]
+    visual_suggestions: list[str]
     speaker_notes: str
 
 
 class PitchDeckOutlineResponse(BaseModel):
     """Complete pitch deck outline."""
 
-    slides: List[SlideOutline]
+    slides: list[SlideOutline]
     narrative_flow: str
-    key_messages: List[str]
-    design_recommendations: List[str]
+    key_messages: list[str]
+    design_recommendations: list[str]
 
 
 pitch_deck_outline_aug_llm = AugLLMConfig(
@@ -507,8 +501,8 @@ class SlideContentRequest(BaseModel):
 
     slide_type: SlideType
     slide_title: str
-    key_points: List[str]
-    supporting_data: Optional[Dict[str, Any]] = None
+    key_points: list[str]
+    supporting_data: dict[str, Any] | None = None
     target_message: str
 
 
@@ -568,19 +562,19 @@ class FinancialProjectionRequest(BaseModel):
 
     company_name: str
     business_model: str
-    pricing_info: Dict[str, Any]
+    pricing_info: dict[str, Any]
     market_size: float
-    current_metrics: Optional[Dict[str, Any]] = None
+    current_metrics: dict[str, Any] | None = None
 
 
 class FinancialProjectionResponse(BaseModel):
     """Financial projection response."""
 
-    revenue_projections: List[Dict[str, Any]]
-    expense_projections: List[Dict[str, Any]]
-    key_metrics: Dict[str, List[float]]
-    assumptions: List[str]
-    charts_data: List[Dict[str, Any]]
+    revenue_projections: list[dict[str, Any]]
+    expense_projections: list[dict[str, Any]]
+    key_metrics: dict[str, list[float]]
+    assumptions: list[str]
+    charts_data: list[dict[str, Any]]
 
 
 financial_projection_aug_llm = AugLLMConfig(
@@ -636,19 +630,19 @@ Provide comprehensive feedback and improvement suggestions.""",
 class PitchDeckReviewRequest(BaseModel):
     """Request for pitch deck review."""
 
-    pitch_deck_content: Dict[str, Any]
+    pitch_deck_content: dict[str, Any]
 
 
 class PitchDeckFeedback(BaseModel):
     """Feedback for a pitch deck."""
 
     overall_score: float = Field(..., ge=0.0, le=10.0)
-    strengths: List[str]
-    weaknesses: List[str]
-    improvement_suggestions: List[Dict[str, str]]  # slide -> suggestion
-    missing_elements: List[str]
-    investor_concerns: List[str]
-    revised_narrative: Optional[str] = None
+    strengths: list[str]
+    weaknesses: list[str]
+    improvement_suggestions: list[dict[str, str]]  # slide -> suggestion
+    missing_elements: list[str]
+    investor_concerns: list[str]
+    revised_narrative: str | None = None
 
 
 pitch_deck_review_aug_llm = AugLLMConfig(
@@ -699,7 +693,7 @@ class IndustryResearchRequest(BaseModel):
     """Request for industry research."""
 
     industry: str
-    focus_areas: List[str] = Field(
+    focus_areas: list[str] = Field(
         default_factory=lambda: [
             "trends",
             "competition",
@@ -715,12 +709,12 @@ class IndustryResearchResponse(BaseModel):
     """Industry research findings."""
 
     executive_summary: str
-    key_trends: List[Dict[str, str]]
-    major_players: List[Dict[str, Any]]
-    regulations: List[Dict[str, str]]
-    opportunities: List[str]
-    threats: List[str]
-    investment_landscape: Dict[str, Any]
+    key_trends: list[dict[str, str]]
+    major_players: list[dict[str, Any]]
+    regulations: list[dict[str, str]]
+    opportunities: list[str]
+    threats: list[str]
+    investment_landscape: dict[str, Any]
     future_outlook: str
 
 
@@ -779,20 +773,20 @@ class ValidationRequest(BaseModel):
     """Request for validation strategy."""
 
     idea_name: str
-    assumptions: List[str]
-    target_customers: List[str]
-    resources: Dict[str, Any] = Field(default_factory=dict)
+    assumptions: list[str]
+    target_customers: list[str]
+    resources: dict[str, Any] = Field(default_factory=dict)
 
 
 class ValidationStrategy(BaseModel):
     """Validation strategy and results."""
 
-    validation_methods: List[Dict[str, Any]]
-    experiment_designs: List[Dict[str, Any]]
-    success_criteria: Dict[str, Any]
+    validation_methods: list[dict[str, Any]]
+    experiment_designs: list[dict[str, Any]]
+    success_criteria: dict[str, Any]
     timeline: str
-    cost_estimate: Optional[float] = None
-    risk_mitigation: List[str]
+    cost_estimate: float | None = None
+    risk_mitigation: list[str]
 
 
 validation_aug_llm = AugLLMConfig(
@@ -853,7 +847,7 @@ class StorytellingRequest(BaseModel):
     company_name: str
     problem: str
     solution: str
-    customer_stories: List[str] = Field(default_factory=list)
+    customer_stories: list[str] = Field(default_factory=list)
     vision: str
 
 
@@ -865,8 +859,8 @@ class StartupNarrative(BaseModel):
     solution_story: str
     customer_transformation: str
     vision_statement: str
-    supporting_anecdotes: List[str]
-    emotional_journey: List[str]
+    supporting_anecdotes: list[str]
+    emotional_journey: list[str]
     call_to_action: str
 
 
@@ -921,7 +915,6 @@ def create_research_chain():
 # Example of how to use these in a workflow
 def example_ideation_workflow():
     """Example of using agents in an ideation workflow."""
-
     # Step 1: Generate ideas
     ideation_agent = ideation_aug_llm.create_runnable()
     ideas = ideation_agent.invoke(

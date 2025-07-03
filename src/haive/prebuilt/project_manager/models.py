@@ -1,6 +1,5 @@
 # Data Models
 import uuid
-from typing import List
 
 from pydantic import BaseModel, Field
 
@@ -17,14 +16,14 @@ class Task(BaseModel):
 
 
 class TaskList(BaseModel):
-    tasks: List[Task] = Field(description="List of tasks")
+    tasks: list[Task] = Field(description="List of tasks")
 
 
 class TaskDependency(BaseModel):
     """Task dependency model"""
 
     task: Task = Field(description="Task")
-    dependent_tasks: List[Task] = Field(description="List of dependent tasks")
+    dependent_tasks: list[Task] = Field(description="List of dependent tasks")
 
 
 class TeamMember(BaseModel):
@@ -33,7 +32,7 @@ class TeamMember(BaseModel):
 
 
 class Team(BaseModel):
-    team_members: List[TeamMember] = Field(description="List of team members")
+    team_members: list[TeamMember] = Field(description="List of team members")
 
 
 # Iterative assessment
@@ -56,19 +55,19 @@ class TaskSchedule(BaseModel):
 class DependencyList(BaseModel):
     """List of task dependencies"""
 
-    dependencies: List[TaskDependency] = Field(description="List of task dependencies")
+    dependencies: list[TaskDependency] = Field(description="List of task dependencies")
 
 
 class Schedule(BaseModel):
     """List of task schedules"""
 
-    schedule: List[TaskSchedule] = Field(description="List of task schedules")
+    schedule: list[TaskSchedule] = Field(description="List of task schedules")
 
 
 class TaskAllocationList(BaseModel):
     """List of task allocations"""
 
-    task_allocations: List[TaskAllocation] = Field(
+    task_allocations: list[TaskAllocation] = Field(
         description="List of task allocations"
     )
 
@@ -77,7 +76,7 @@ class TaskAllocationList(BaseModel):
 class TaskAllocationListIteration(BaseModel):
     """List of task allocations for each iteration"""
 
-    task_allocations_iteration: List[TaskAllocationList] = Field(
+    task_allocations_iteration: list[TaskAllocationList] = Field(
         description="List of task allocations for each iteration"
     )
 
@@ -85,7 +84,7 @@ class TaskAllocationListIteration(BaseModel):
 class ScheduleIteration(BaseModel):
     """List of task schedules for each iteration"""
 
-    schedule: List[Schedule] = Field(
+    schedule: list[Schedule] = Field(
         description="List of task schedules for each iteration"
     )
 
@@ -100,12 +99,12 @@ class Risk(BaseModel):
 class RiskList(BaseModel):
     """List of risks for each iteration"""
 
-    risks: List[Risk] = Field(description="List of risks")
+    risks: list[Risk] = Field(description="List of risks")
 
 
 class RiskListIteration(BaseModel):
     """List of risks for each iteration"""
 
-    risks_iteration: List[RiskList] = Field(
+    risks_iteration: list[RiskList] = Field(
         description="List of risks for each iteration"
     )

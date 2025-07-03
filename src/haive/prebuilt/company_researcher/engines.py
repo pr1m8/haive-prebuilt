@@ -1,9 +1,6 @@
 from __future__ import annotations
 
-import uuid
 from datetime import datetime
-from enum import Enum, auto
-from typing import Any, Dict, List, Literal, Optional, Union
 
 from langchain_core.messages import SystemMessage
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
@@ -12,8 +9,7 @@ from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 
 
 def create_initial_screening_prompt() -> ChatPromptTemplate:
-    """
-    Create a prompt template for initial KYC screening
+    """Create a prompt template for initial KYC screening
 
     Returns:
         ChatPromptTemplate for initial screening
@@ -42,8 +38,7 @@ Provide a comprehensive initial risk assessment focusing on:
 
 
 def create_enhanced_due_diligence_prompt() -> ChatPromptTemplate:
-    """
-    Create a prompt template for enhanced due diligence
+    """Create a prompt template for enhanced due diligence
 
     Returns:
         ChatPromptTemplate for enhanced due diligence
@@ -73,8 +68,7 @@ Focus Areas:
 
 
 def create_final_risk_assessment_prompt() -> ChatPromptTemplate:
-    """
-    Create a prompt template for final risk assessment
+    """Create a prompt template for final risk assessment
 
     Returns:
         ChatPromptTemplate for final risk assessment

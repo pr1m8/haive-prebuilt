@@ -1,3 +1,19 @@
+"""Essay Grading - TODO: Add brief description
+
+TODO: Add detailed description of module functionality
+
+
+
+Example:
+    Basic usage::
+
+        from haive.essay_grading import module_function
+        
+        # TODO: Add example
+
+
+"""
+
 https://github.com/NirDiamant/GenAI_Agents/blob/main/all_agents_tutorials/essay_grading_system_langgraph.ipynb# Define the fact-checking prompt
 fact_checking_prompt = PromptTemplate(
     input_variables=["text"],

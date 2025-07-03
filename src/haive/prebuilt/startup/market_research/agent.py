@@ -1,15 +1,14 @@
-"""
-Market research subgraph for comprehensive market analysis.
+"""Market research subgraph for comprehensive market analysis.
 
 This subgraph handles market sizing, competitive analysis, and trend research.
 """
 
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 from haive.core.schema.state_schema import StateSchema
 from langchain_core.messages import BaseMessage, HumanMessage
 from langgraph.graph import END, START, StateGraph
-from pydantic import BaseModel, Field
+from pydantic import Field
 
 from haive.prebuilt.startup.market_research.models import (
     CompetitorAnalysis,
@@ -26,18 +25,18 @@ from haive.prebuilt.startup.market_research.prompts import (
 class MarketResearchState(StateSchema):
     """State for market research subgraph."""
 
-    messages: List[BaseMessage] = Field(default_factory=list)
+    messages: list[BaseMessage] = Field(default_factory=list)
 
     # Input
-    startup_idea: Optional[StartupIdea] = None
+    startup_idea: StartupIdea | None = None
     research_depth: str = Field(
         default="comprehensive"
     )  # quick, standard, comprehensive
 
     # Research results
-    market_research: Optional[MarketResearch] = None
-    competitor_analyses: List[CompetitorAnalysis] = Field(default_factory=list)
-    industry_analysis: Optional[Dict[str, Any]] = None
+    market_research: MarketResearch | None = None
+    competitor_analyses: list[CompetitorAnalysis] = Field(default_factory=list)
+    industry_analysis: dict[str, Any] | None = None
 
     # Market insights
     market_size_validated: bool = False
@@ -45,11 +44,11 @@ class MarketResearchState(StateSchema):
     trends_identified: bool = False
 
     # Summary
-    go_no_go_recommendation: Optional[str] = None
-    key_insights: List[str] = Field(default_factory=list)
+    go_no_go_recommendation: str | None = None
+    key_insights: list[str] = Field(default_factory=list)
 
 
-def analyze_market_size_node(state: MarketResearchState) -> Dict[str, Any]:
+def analyze_market_size_node(state: MarketResearchState) -> dict[str, Any]:
     """Analyze market size and dynamics."""
     if not state.startup_idea:
         return {
@@ -94,7 +93,7 @@ def analyze_market_size_node(state: MarketResearchState) -> Dict[str, Any]:
     }
 
 
-def analyze_competitors_node(state: MarketResearchState) -> Dict[str, Any]:
+def analyze_competitors_node(state: MarketResearchState) -> dict[str, Any]:
     """Deep competitive analysis."""
     if not state.startup_idea:
         return {
@@ -127,7 +126,7 @@ def analyze_competitors_node(state: MarketResearchState) -> Dict[str, Any]:
     }
 
 
-def analyze_industry_trends_node(state: MarketResearchState) -> Dict[str, Any]:
+def analyze_industry_trends_node(state: MarketResearchState) -> dict[str, Any]:
     """Analyze industry trends and dynamics."""
     if not state.startup_idea:
         return {
@@ -163,7 +162,7 @@ def analyze_industry_trends_node(state: MarketResearchState) -> Dict[str, Any]:
     }
 
 
-def synthesize_market_insights_node(state: MarketResearchState) -> Dict[str, Any]:
+def synthesize_market_insights_node(state: MarketResearchState) -> dict[str, Any]:
     """Synthesize all market research into actionable insights."""
     insights = state.key_insights.copy()
 
@@ -215,12 +214,11 @@ def determine_research_depth(state: MarketResearchState) -> str:
 
     if not state.market_research:
         return "market_size"
-    elif not state.competition_mapped:
+    if not state.competition_mapped:
         return "competitors"
-    elif not state.trends_identified and state.research_depth == "comprehensive":
+    if not state.trends_identified and state.research_depth == "comprehensive":
         return "industry"
-    else:
-        return "synthesize"
+    return "synthesize"
 
 
 def build_market_research_subgraph() -> StateGraph:

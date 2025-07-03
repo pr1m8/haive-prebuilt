@@ -1,5 +1,3 @@
-from typing import Dict, Union
-
 from haive.core.engine.agent.agent import AgentConfig
 from haive.core.engine.aug_llm import AugLLMConfig
 from haive.core.graph.branches import Branch
@@ -25,7 +23,7 @@ from haive.haive.toolkits.weather import weather_tool
 class WeatherDisasterManagerConfig(AgentConfig):
     model_config = ConfigDict(arbitrary_types_allowed=True)  # ✅ Add this
 
-    engines: Dict[str, Union[AugLLMConfig, AgentConfig]] = Field(
+    engines: dict[str, AugLLMConfig | AgentConfig] = Field(
         default={
             "analyze_disaster_type": disaster_engine,
             "severity_engine": severity_engine,
@@ -36,13 +34,13 @@ class WeatherDisasterManagerConfig(AgentConfig):
         }
     )
 
-    branches: Dict[str, Branch] = Field(
+    branches: dict[str, Branch] = Field(
         default={
             "route_branch": route_branch,
         }
     )
 
-    tools: Dict[str, StructuredTool] = Field(
+    tools: dict[str, StructuredTool] = Field(
         default={
             "weather_tool": weather_tool,
         }

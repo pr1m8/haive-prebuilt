@@ -17,5 +17,3 @@ class EssayGradingOutputState(BaseModel):
 
 class EssayGradingState(BaseModel, EssayGradingInputState, EssayGradingOutputState):
     """Represents the state of the essay grading process."""
-
-    pass

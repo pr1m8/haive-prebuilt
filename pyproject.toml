@@ -5,7 +5,7 @@ description = "haive-prebuilt for Haive framework"
 authors = ["pr1m8 <william.astley@algebraicwealth.com>"]
 license = "MIT"
 readme = "README.md"
-packages = [{ include = "src", from = "." }]
+packages = [{ include = "haive", from = "src" }]
 [tool.poetry.dependencies]
 haive-core = { path = "../haive-core", develop = true }
 haive-agents = { path = "../haive-agents", develop = true }

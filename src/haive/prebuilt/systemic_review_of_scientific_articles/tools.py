@@ -1,10 +1,10 @@
-from typing import Any, Dict, List
+from typing import Any
 
 from haive_prebuilt.misc.systemic_review_of_scientific_articles.models import (
     AcademicPaperSearchInput,
 )
 from langchain_core.tools import BaseTool
-from pydantic import BaseModel, Field
+from pydantic import Field
 
 
 class AcademicPaperSearchTool(BaseTool):
@@ -25,17 +25,17 @@ class AcademicPaperSearchTool(BaseTool):
         self.name = name
         self.description = description
 
-    def _run(self, topic: str, max_results: int) -> List[Dict[str, Any]]:
+    def _run(self, topic: str, max_results: int) -> list[dict[str, Any]]:
         # Query an external academic API like arXiv, Semantic Scholar, or CrossRef
         search_results = self.query_academic_api(topic, max_results)
         # testing = search_results[0]['text'][:100]
 
         return search_results
 
-    async def _arun(self, topic: str, max_results: int) -> List[Dict[str, Any]]:
+    async def _arun(self, topic: str, max_results: int) -> list[dict[str, Any]]:
         raise NotImplementedError("Async version not implemented")
 
-    def query_academic_api(self, topic: str, max_results: int) -> List[Dict[str, Any]]:
+    def query_academic_api(self, topic: str, max_results: int) -> list[dict[str, Any]]:
         base_url = "https://api.semanticscholar.org/graph/v1/paper/search"
         params = {
             "query": topic,
@@ -69,9 +69,7 @@ class AcademicPaperSearchTool(BaseTool):
                 except:
                     # raise ValueError(f"Failed to fetch papers: {response.status_code} - {response.text}")
                     print(
-                        (
-                            f"Failed to fetch papers: {response.status_code} - {response.text}. Trying Again..."
-                        )
+                        f"Failed to fetch papers: {response.status_code} - {response.text}. Trying Again..."
                     )
         except KeyboardInterrupt:
             print("\nOperation cancelled by user")

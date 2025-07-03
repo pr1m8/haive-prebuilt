@@ -138,9 +138,9 @@ __all__ = [
 if PREBUILT_AVAILABLE:
     __all__.extend(
         [
-            "ResearchAssistant",
+            "CodeReviewer",
             "ContentGenerator",
             "CustomerSupportBot",
-            "CodeReviewer",
+            "ResearchAssistant",
         ]
     )

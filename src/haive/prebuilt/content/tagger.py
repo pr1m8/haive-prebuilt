@@ -1,11 +1,9 @@
 # Document-oriented Simple Agents
 
 # src/haive/prebuilt/simple/tagger.py
-"""
-Agent Name: DocumentTagger
+"""Agent Name: DocumentTagger
 Description: Tags a document or passage with relevant keywords, topics, or semantic tags.
 """
-from typing import List
 
 from haive.core.aug_llm import AugLLMConfig
 from haive.core.models.llm.base import AzureLLMConfig
@@ -25,7 +23,7 @@ prompt = ChatPromptTemplate.from_messages(
 
 
 class TagOutput(BaseModel):
-    tags: List[str] = Field(
+    tags: list[str] = Field(
         ...,
         description="List of concise, high-level tags representing the document content.",
     )

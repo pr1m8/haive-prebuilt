@@ -47,7 +47,7 @@ def download_paper(url: str) -> str:
                     for page in pdf.pages:
                         text += page.extract_text() + "\n"
                 return text
-            elif attempt < max_retries - 1:
+            if attempt < max_retries - 1:
                 time.sleep(2 ** (attempt + 2))
             else:
                 raise Exception(

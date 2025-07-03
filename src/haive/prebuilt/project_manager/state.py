@@ -1,5 +1,3 @@
-from typing import List, TypedDict
-
 from pydantic import BaseModel, Field
 
 from haive.prebuilt.project_manager.models import (
@@ -27,16 +25,16 @@ class ProjectManagerState(BaseModel):
     risks: RiskList = Field(description="The risks of the project")
     iteration_number: int = Field(description="The iteration number of the project")
     max_iteration: int = Field(description="The maximum iteration of the project")
-    insights: List[str] = Field(description="The insights of the project")
-    schedule_iteration: List[Schedule] = Field(
+    insights: list[str] = Field(description="The insights of the project")
+    schedule_iteration: list[Schedule] = Field(
         description="The schedule iteration of the project"
     )
-    task_allocations_iteration: List[TaskAllocationList] = Field(
+    task_allocations_iteration: list[TaskAllocationList] = Field(
         description="The task allocations iteration of the project"
     )
-    risks_iteration: List[RiskListIteration] = Field(
+    risks_iteration: list[RiskListIteration] = Field(
         description="The risks iteration of the project"
     )
-    project_risk_score_iterations: List[int] = Field(
+    project_risk_score_iterations: list[int] = Field(
         description="The project risk score iterations of the project"
     )

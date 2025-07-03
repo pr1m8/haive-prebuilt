@@ -1,6 +1,5 @@
 def deduplicate_sources(search_response: dict | list[dict]) -> list[dict]:
-    """
-    Takes either a single search response or list of responses from Tavily API and de-duplicates them based on the URL.
+    """Takes either a single search response or list of responses from Tavily API and de-duplicates them based on the URL.
 
     Args:
         search_response: Either:
@@ -41,8 +40,7 @@ def format_sources(
     include_raw_content: bool = True,
     max_tokens_per_source: int = 1000,
 ) -> str:
-    """
-    Takes a list of unique results from Tavily API and formats them.
+    """Takes a list of unique results from Tavily API and formats them.
     Limits the raw_content to approximately max_tokens_per_source.
     include_raw_content specifies whether to include the raw_content from Tavily in the formatted string.
 

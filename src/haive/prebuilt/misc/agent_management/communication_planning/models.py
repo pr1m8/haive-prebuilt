@@ -1,5 +1,4 @@
 from enum import Enum
-from typing import Dict, List, Optional
 
 from pydantic import BaseModel, Field
 
@@ -54,8 +53,8 @@ class Stakeholder(BaseModel):
     influence_level: InfluenceLevel = Field(..., description="Level of influence")
     interest_level: InterestLevel = Field(..., description="Level of interest")
 
-    key_concerns: List[str] = Field(..., description="Their main concerns or interests")
-    success_criteria: List[str] = Field(
+    key_concerns: list[str] = Field(..., description="Their main concerns or interests")
+    success_criteria: list[str] = Field(
         ..., description="What success looks like to them"
     )
 
@@ -66,7 +65,7 @@ class Stakeholder(BaseModel):
         ..., description="How often to communicate"
     )
 
-    potential_resistance: Optional[str] = Field(
+    potential_resistance: str | None = Field(
         default=None, description="Potential sources of resistance"
     )
     engagement_strategy: str = Field(
@@ -78,40 +77,40 @@ class CommunicationPlan(BaseModel):
     """Comprehensive plan for stakeholder communication."""
 
     project_name: str = Field(..., description="Name of the project/initiative")
-    communication_objectives: List[str] = Field(
+    communication_objectives: list[str] = Field(
         ..., description="What communication aims to achieve"
     )
 
-    stakeholders: List[Stakeholder] = Field(
+    stakeholders: list[Stakeholder] = Field(
         ..., description="All identified stakeholders"
     )
 
-    key_messages: Dict[str, str] = Field(
+    key_messages: dict[str, str] = Field(
         ..., description="Key messages for different audiences"
     )
-    communication_channels: List[str] = Field(
+    communication_channels: list[str] = Field(
         ..., description="Available communication channels"
     )
 
-    communication_schedule: Dict[str, str] = Field(
+    communication_schedule: dict[str, str] = Field(
         ..., description="When to communicate what"
     )
 
-    high_priority_stakeholders: List[str] = Field(
+    high_priority_stakeholders: list[str] = Field(
         ..., description="Stakeholder IDs requiring special attention"
     )
-    risk_mitigation: List[str] = Field(
+    risk_mitigation: list[str] = Field(
         ..., description="How to handle communication risks"
     )
 
-    feedback_mechanisms: List[str] = Field(
+    feedback_mechanisms: list[str] = Field(
         ..., description="How stakeholders can provide feedback"
     )
-    success_metrics: List[str] = Field(
+    success_metrics: list[str] = Field(
         ..., description="How to measure communication effectiveness"
     )
 
-    escalation_procedures: List[str] = Field(
+    escalation_procedures: list[str] = Field(
         ..., description="What to do when issues arise"
     )
     review_schedule: str = Field(..., description="When to review and update the plan")

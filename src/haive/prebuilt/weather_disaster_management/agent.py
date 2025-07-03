@@ -4,9 +4,9 @@ import smtplib
 from datetime import datetime
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
-from typing import Dict, Literal, Union
+from typing import Literal
 
-from haive.core.engine.agent.agent import Agent, AgentConfig, register_agent
+from haive.core.engine.agent.agent import Agent, register_agent
 from haive_prebuilt.misc.weather_disaster_management.config import (
     WeatherDisasterManagerConfig,
 )
@@ -59,10 +59,9 @@ class WeatherDisasterManagementAgent(Agent[WeatherDisasterManagerConfig]):
                             f"Human verification result: {'Approved' if approved else 'Rejected'}"
                         )
                         break
-                    else:
-                        print("Please enter 'y' for yes or 'n' for no:")
+                    print("Please enter 'y' for yes or 'n' for no:")
                 except Exception as e:
-                    print(f"Error reading input: {str(e)}")
+                    print(f"Error reading input: {e!s}")
                     print("Please try again with 'y' or 'n':")
 
             return {
@@ -73,18 +72,15 @@ class WeatherDisasterManagementAgent(Agent[WeatherDisasterManagerConfig]):
                     )
                 ],
             }
-        else:
-            # Auto-approve for high/critical severity
-            return Command(
-                update={
-                    "human_approved": True,
-                    "messages": [
-                        SystemMessage(
-                            content=f"Auto-approved {severity} severity alert"
-                        )
-                    ],
-                }
-            )
+        # Auto-approve for high/critical severity
+        return Command(
+            update={
+                "human_approved": True,
+                "messages": [
+                    SystemMessage(content=f"Auto-approved {severity} severity alert")
+                ],
+            }
+        )
 
     def data_logging(self, state: WeatherState) -> WeatherState:
         """Log weather data, disaster analysis, and response to a file."""
@@ -108,7 +104,7 @@ class WeatherDisasterManagementAgent(Agent[WeatherDisasterManagerConfig]):
         except Exception as e:
             return Command(
                 update={
-                    "messages": [SystemMessage(content=f"Failed to log data: {str(e)}")]
+                    "messages": [SystemMessage(content=f"Failed to log data: {e!s}")]
                 }
             )
 
@@ -162,7 +158,7 @@ class WeatherDisasterManagementAgent(Agent[WeatherDisasterManagerConfig]):
             return Command(
                 update={
                     "messages": [
-                        SystemMessage(content=f"Failed to send email alert: {str(e)}")
+                        SystemMessage(content=f"Failed to send email alert: {e!s}")
                     ]
                 }
             )
@@ -242,7 +238,7 @@ class WeatherDisasterManagementAgent(Agent[WeatherDisasterManagerConfig]):
 
     def get_weather_data(
         self,
-        state: Union[BaseModel, Dict],
+        state: BaseModel | dict,
         unit: Literal["celsius", "fahrenheit"] = "celsius",
     ):
         """Fetch weather data using LangChain-compatible tool, update state."""
@@ -283,7 +279,7 @@ class WeatherDisasterManagementAgent(Agent[WeatherDisasterManagerConfig]):
                     "weather_data": fallback_data,
                     "messages": [
                         SystemMessage(
-                            content=f"❌ Failed to fetch weather for {city}: {str(e)}"
+                            content=f"❌ Failed to fetch weather for {city}: {e!s}"
                         )
                     ],
                 }
@@ -291,7 +287,6 @@ class WeatherDisasterManagementAgent(Agent[WeatherDisasterManagerConfig]):
 
     def public_works_response(self, state: WeatherState) -> WeatherState:
         """Generate public works response plan"""
-
         try:
             response = (
                 self.engines["public_works_response"]
@@ -319,7 +314,7 @@ class WeatherDisasterManagementAgent(Agent[WeatherDisasterManagerConfig]):
                     "response": "Failed to generate response plan",
                     "messages": [
                         SystemMessage(
-                            content=f"Failed to generate public works response: {str(e)}"
+                            content=f"Failed to generate public works response: {e!s}"
                         )
                     ],
                 }
@@ -327,7 +322,6 @@ class WeatherDisasterManagementAgent(Agent[WeatherDisasterManagerConfig]):
 
     def civil_defense_response(self, state: WeatherState) -> WeatherState:
         """Generate civil defense response plan"""
-
         try:
             chain = self.engines["civil_defense_response"]
             response = chain.invoke(
@@ -352,7 +346,7 @@ class WeatherDisasterManagementAgent(Agent[WeatherDisasterManagerConfig]):
                     "response": "Failed to generate response plan",
                     "messages": [
                         SystemMessage(
-                            content=f"Failed to generate civil defense response: {str(e)}"
+                            content=f"Failed to generate civil defense response: {e!s}"
                         )
                     ],
                 }
@@ -360,7 +354,6 @@ class WeatherDisasterManagementAgent(Agent[WeatherDisasterManagerConfig]):
 
     def emergency_response(self, state: WeatherState) -> WeatherState:
         """Generate emergency response plan"""
-
         try:
             response = (
                 self.engines["emergency_response"]
@@ -388,7 +381,7 @@ class WeatherDisasterManagementAgent(Agent[WeatherDisasterManagerConfig]):
                     "response": "Failed to generate response plan",
                     "messages": [
                         SystemMessage(
-                            content=f"Failed to generate emergency response: {str(e)}"
+                            content=f"Failed to generate emergency response: {e!s}"
                         )
                     ],
                 }
@@ -416,9 +409,7 @@ class WeatherDisasterManagementAgent(Agent[WeatherDisasterManagerConfig]):
                 update={
                     "disaster_type": "Analysis Failed",
                     "messages": [
-                        SystemMessage(
-                            content=f"Failed to analyze disaster type: {str(e)}"
-                        )
+                        SystemMessage(content=f"Failed to analyze disaster type: {e!s}")
                     ],
                 }
             )
@@ -447,7 +438,7 @@ class WeatherDisasterManagementAgent(Agent[WeatherDisasterManagerConfig]):
                 update={
                     "severity": "Assessment Failed",
                     "messages": state["messages"]
-                    + [SystemMessage(content=f"Failed to assess severity: {str(e)}")],
+                    + [SystemMessage(content=f"Failed to assess severity: {e!s}")],
                 }
             )
 
@@ -500,14 +491,12 @@ class WeatherDisasterManagementAgent(Agent[WeatherDisasterManagerConfig]):
         if severity in ["critical", "high"]:
             return "emergency_response"
             "send_email_alert"
-        elif "flood" in disaster or "storm" in disaster:
+        if "flood" in disaster or "storm" in disaster:
             return "public_works_response"
-        else:
-            return "civil_defense_response"
+        return "civil_defense_response"
 
     def run_weather_emergency_system(self, location: WeatherLocation):
         """Initialize and run the weather emergency system for a given city"""
-
         print(f"Running weather emergency system for {location}")
         print(f"Initializing state for {location.__str__()}")
         initial_state = WeatherState(
@@ -530,7 +519,7 @@ class WeatherDisasterManagementAgent(Agent[WeatherDisasterManagerConfig]):
             print(f"Completed weather check for {location}")
             return result
         except Exception as e:
-            print(f"Error running weather emergency system: {str(e)}")
+            print(f"Error running weather emergency system: {e!s}")
 
 
 a = WeatherDisasterManagementAgent()

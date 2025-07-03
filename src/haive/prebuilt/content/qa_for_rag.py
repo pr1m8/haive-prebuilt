@@ -1,9 +1,7 @@
 # src/haive/prebuilt/simple/qa_for_rag.py
-"""
-Agent Name: QAForRAGGenerator
+"""Agent Name: QAForRAGGenerator
 Description: Generates QA pairs from documents suitable for fine-tuning or retrieval-augmented generation.
 """
-from typing import List
 
 from haive.core.engine.aug_llm import AugLLMConfig
 from haive.core.models.llm.base import AzureLLMConfig
@@ -34,7 +32,7 @@ class QAPair(BaseModel):
 
 
 class QAForRAGOutput(BaseModel):
-    qa_pairs: List[QAPair] = Field(
+    qa_pairs: list[QAPair] = Field(
         ..., description="A list of question-answer pairs suitable for RAG or QA tasks."
     )
 

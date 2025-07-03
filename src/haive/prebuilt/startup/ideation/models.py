@@ -1,5 +1,4 @@
-"""
-Startup idea models for the Haive framework.
+"""Startup idea models for the Haive framework.
 
 This module provides comprehensive data models for brainstorming, researching,
 and evaluating startup ideas using AI agents. These models integrate with the
@@ -18,15 +17,8 @@ from datetime import datetime
 from enum import Enum
 from typing import (
     Any,
-    Dict,
-    Generic,
-    List,
     Literal,
-    Optional,
-    Sequence,
-    Set,
     TypeVar,
-    Union,
 )
 
 from pydantic import (
@@ -37,7 +29,6 @@ from pydantic import (
     field_validator,
     model_validator,
 )
-from typing_extensions import Annotated
 
 # Type variables for generic content
 TResearch = TypeVar("TResearch", bound=BaseModel)
@@ -109,8 +100,7 @@ class ValidationMethod(str, Enum):
 
 
 class ProblemStatement(BaseModel):
-    """
-    Defines a problem that the startup idea aims to solve.
+    """Defines a problem that the startup idea aims to solve.
 
     This is the foundation of any good startup idea - a clear problem definition.
     """
@@ -121,32 +111,32 @@ class ProblemStatement(BaseModel):
     description: str = Field(..., description="Clear description of the problem")
 
     # Problem characteristics
-    affected_users: List[str] = Field(..., description="Who experiences this problem")
+    affected_users: list[str] = Field(..., description="Who experiences this problem")
     frequency: Literal["daily", "weekly", "monthly", "occasionally", "rarely"] = Field(
         ...
     )
     severity: Literal["critical", "high", "medium", "low"] = Field(...)
-    current_solutions: List[str] = Field(
+    current_solutions: list[str] = Field(
         default_factory=list, description="How people currently solve this"
     )
 
     # Pain points
-    pain_points: List[str] = Field(..., description="Specific pain points")
-    emotional_impact: Optional[str] = Field(
+    pain_points: list[str] = Field(..., description="Specific pain points")
+    emotional_impact: str | None = Field(
         None, description="How users feel about this problem"
     )
-    financial_impact: Optional[str] = Field(None, description="Cost of the problem")
+    financial_impact: str | None = Field(None, description="Cost of the problem")
 
     # Evidence
-    evidence: List[str] = Field(
+    evidence: list[str] = Field(
         default_factory=list, description="Evidence this problem exists"
     )
-    quotes: List[str] = Field(
+    quotes: list[str] = Field(
         default_factory=list, description="Real user quotes about the problem"
     )
 
     # Research
-    research_sources: List[str] = Field(
+    research_sources: list[str] = Field(
         default_factory=list, description="Sources validating the problem"
     )
     validation_score: float = Field(
@@ -175,8 +165,7 @@ class ProblemStatement(BaseModel):
 
 
 class SolutionConcept(BaseModel):
-    """
-    Defines a solution concept for a problem.
+    """Defines a solution concept for a problem.
 
     This represents how the startup plans to solve the identified problem.
     """
@@ -188,24 +177,22 @@ class SolutionConcept(BaseModel):
     description: str = Field(..., description="Clear description of the solution")
 
     # Solution details
-    key_features: List[str] = Field(..., description="Main features of the solution")
+    key_features: list[str] = Field(..., description="Main features of the solution")
     value_proposition: str = Field(..., description="Core value proposition")
-    unique_aspects: List[str] = Field(..., description="What makes this unique")
+    unique_aspects: list[str] = Field(..., description="What makes this unique")
 
     # Technical aspects
     technical_feasibility: float = Field(
         0.5, ge=0.0, le=1.0, description="Technical feasibility score"
     )
     implementation_complexity: RiskLevel = Field(RiskLevel.MEDIUM)
-    required_technologies: List[str] = Field(default_factory=list)
+    required_technologies: list[str] = Field(default_factory=list)
 
     # User experience
-    user_journey: List[str] = Field(
+    user_journey: list[str] = Field(
         default_factory=list, description="Key steps in user journey"
     )
-    wow_factor: Optional[str] = Field(
-        None, description="What will make users say 'wow'"
-    )
+    wow_factor: str | None = Field(None, description="What will make users say 'wow'")
 
     @field_validator("key_features")
     @classmethod
@@ -217,8 +204,7 @@ class SolutionConcept(BaseModel):
 
 
 class MarketResearch(BaseModel):
-    """
-    Market research data for a startup idea.
+    """Market research data for a startup idea.
 
     Contains comprehensive market analysis and research findings.
     """
@@ -226,48 +212,44 @@ class MarketResearch(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
     # Market sizing
-    total_addressable_market: Optional[float] = Field(None, description="TAM in USD")
-    serviceable_addressable_market: Optional[float] = Field(
-        None, description="SAM in USD"
-    )
-    serviceable_obtainable_market: Optional[float] = Field(
-        None, description="SOM in USD"
-    )
+    total_addressable_market: float | None = Field(None, description="TAM in USD")
+    serviceable_addressable_market: float | None = Field(None, description="SAM in USD")
+    serviceable_obtainable_market: float | None = Field(None, description="SOM in USD")
     market_size_category: MarketSize = Field(MarketSize.MEDIUM)
 
     # Market dynamics
-    growth_rate: Optional[float] = Field(None, ge=0.0, description="Annual growth rate")
-    market_trends: List[str] = Field(
+    growth_rate: float | None = Field(None, ge=0.0, description="Annual growth rate")
+    market_trends: list[str] = Field(
         default_factory=list, description="Key market trends"
     )
-    market_drivers: List[str] = Field(
+    market_drivers: list[str] = Field(
         default_factory=list, description="What's driving market growth"
     )
-    market_barriers: List[str] = Field(
+    market_barriers: list[str] = Field(
         default_factory=list, description="Barriers to market entry"
     )
 
     # Customer segments
-    primary_customers: List[Dict[str, Any]] = Field(
+    primary_customers: list[dict[str, Any]] = Field(
         default_factory=list, description="Primary customer segments"
     )
-    secondary_customers: List[Dict[str, Any]] = Field(
+    secondary_customers: list[dict[str, Any]] = Field(
         default_factory=list, description="Secondary segments"
     )
-    early_adopters: List[str] = Field(
+    early_adopters: list[str] = Field(
         default_factory=list, description="Early adopter characteristics"
     )
 
     # Competitive landscape
-    direct_competitors: List[Dict[str, Any]] = Field(default_factory=list)
-    indirect_competitors: List[Dict[str, Any]] = Field(default_factory=list)
-    market_gaps: List[str] = Field(
+    direct_competitors: list[dict[str, Any]] = Field(default_factory=list)
+    indirect_competitors: list[dict[str, Any]] = Field(default_factory=list)
+    market_gaps: list[str] = Field(
         default_factory=list, description="Identified market gaps"
     )
 
     # Research metadata
     research_date: datetime = Field(default_factory=datetime.now)
-    data_sources: List[str] = Field(default_factory=list)
+    data_sources: list[str] = Field(default_factory=list)
     confidence_level: float = Field(0.5, ge=0.0, le=1.0)
 
     @model_validator(mode="after")
@@ -285,8 +267,7 @@ class MarketResearch(BaseModel):
 
 
 class CompetitorAnalysis(BaseModel):
-    """
-    Analysis of a specific competitor.
+    """Analysis of a specific competitor.
 
     Detailed competitive intelligence for strategic planning.
     """
@@ -294,38 +275,35 @@ class CompetitorAnalysis(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
     competitor_name: str = Field(..., description="Competitor name")
-    website: Optional[str] = Field(None, description="Competitor website")
+    website: str | None = Field(None, description="Competitor website")
     description: str = Field(..., description="What they do")
 
     # Business details
-    founded_year: Optional[int] = Field(None)
-    funding_raised: Optional[float] = Field(None, description="Total funding in USD")
-    estimated_revenue: Optional[float] = Field(
-        None, description="Annual revenue in USD"
-    )
-    employee_count: Optional[str] = Field(None, description="Employee range")
+    founded_year: int | None = Field(None)
+    funding_raised: float | None = Field(None, description="Total funding in USD")
+    estimated_revenue: float | None = Field(None, description="Annual revenue in USD")
+    employee_count: str | None = Field(None, description="Employee range")
 
     # Competitive positioning
-    strengths: List[str] = Field(default_factory=list)
-    weaknesses: List[str] = Field(default_factory=list)
-    market_share: Optional[float] = Field(None, ge=0.0, le=1.0)
-    customer_satisfaction: Optional[float] = Field(None, ge=0.0, le=5.0)
+    strengths: list[str] = Field(default_factory=list)
+    weaknesses: list[str] = Field(default_factory=list)
+    market_share: float | None = Field(None, ge=0.0, le=1.0)
+    customer_satisfaction: float | None = Field(None, ge=0.0, le=5.0)
 
     # Product analysis
-    key_features: List[str] = Field(default_factory=list)
-    pricing_model: Optional[str] = Field(None)
-    target_customers: List[str] = Field(default_factory=list)
-    unique_selling_points: List[str] = Field(default_factory=list)
+    key_features: list[str] = Field(default_factory=list)
+    pricing_model: str | None = Field(None)
+    target_customers: list[str] = Field(default_factory=list)
+    unique_selling_points: list[str] = Field(default_factory=list)
 
     # Strategic insights
-    recent_developments: List[str] = Field(default_factory=list)
-    potential_threats: List[str] = Field(default_factory=list)
-    opportunities_to_differentiate: List[str] = Field(default_factory=list)
+    recent_developments: list[str] = Field(default_factory=list)
+    potential_threats: list[str] = Field(default_factory=list)
+    opportunities_to_differentiate: list[str] = Field(default_factory=list)
 
 
 class BusinessModelCanvas(BaseModel):
-    """
-    Business model canvas for startup ideas.
+    """Business model canvas for startup ideas.
 
     Based on the standard Business Model Canvas framework.
     """
@@ -333,24 +311,24 @@ class BusinessModelCanvas(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
     # Key components
-    value_propositions: List[str] = Field(..., description="Core value propositions")
-    customer_segments: List[str] = Field(..., description="Target customer segments")
-    channels: List[str] = Field(..., description="Distribution channels")
-    customer_relationships: List[str] = Field(
+    value_propositions: list[str] = Field(..., description="Core value propositions")
+    customer_segments: list[str] = Field(..., description="Target customer segments")
+    channels: list[str] = Field(..., description="Distribution channels")
+    customer_relationships: list[str] = Field(
         ..., description="How we maintain relationships"
     )
-    revenue_streams: List[str] = Field(..., description="How we make money")
+    revenue_streams: list[str] = Field(..., description="How we make money")
 
-    key_resources: List[str] = Field(..., description="Essential resources needed")
-    key_activities: List[str] = Field(..., description="Critical activities")
-    key_partnerships: List[str] = Field(..., description="Important partners")
-    cost_structure: List[str] = Field(..., description="Major cost categories")
+    key_resources: list[str] = Field(..., description="Essential resources needed")
+    key_activities: list[str] = Field(..., description="Critical activities")
+    key_partnerships: list[str] = Field(..., description="Important partners")
+    cost_structure: list[str] = Field(..., description="Major cost categories")
 
     # Additional strategic elements
-    unfair_advantage: Optional[str] = Field(
+    unfair_advantage: str | None = Field(
         None, description="Sustainable competitive advantage"
     )
-    metrics: List[str] = Field(default_factory=list, description="Key metrics to track")
+    metrics: list[str] = Field(default_factory=list, description="Key metrics to track")
 
     @field_validator("value_propositions", "customer_segments", "revenue_streams")
     @classmethod
@@ -362,8 +340,7 @@ class BusinessModelCanvas(BaseModel):
 
 
 class RiskAssessment(BaseModel):
-    """
-    Risk assessment for a startup idea.
+    """Risk assessment for a startup idea.
 
     Comprehensive risk analysis across multiple dimensions.
     """
@@ -381,13 +358,13 @@ class RiskAssessment(BaseModel):
     team_risk: RiskLevel = Field(..., description="Risk from team limitations")
 
     # Specific risks
-    identified_risks: List[Dict[str, Any]] = Field(
+    identified_risks: list[dict[str, Any]] = Field(
         default_factory=list, description="Specific risks with mitigation strategies"
     )
 
     # Overall assessment
     overall_risk_level: RiskLevel = Field(...)
-    risk_mitigation_strategies: List[str] = Field(default_factory=list)
+    risk_mitigation_strategies: list[str] = Field(default_factory=list)
 
     @model_validator(mode="after")
     def calculate_overall_risk(self):
@@ -423,8 +400,7 @@ class RiskAssessment(BaseModel):
 
 
 class ValidationResult(BaseModel):
-    """
-    Results from idea validation activities.
+    """Results from idea validation activities.
 
     Tracks validation efforts and findings.
     """
@@ -437,25 +413,24 @@ class ValidationResult(BaseModel):
 
     # Results
     summary: str = Field(..., description="Summary of findings")
-    key_insights: List[str] = Field(..., description="Key insights gained")
-    supporting_data: Dict[str, Any] = Field(default_factory=dict)
+    key_insights: list[str] = Field(..., description="Key insights gained")
+    supporting_data: dict[str, Any] = Field(default_factory=dict)
 
     # Metrics
-    sample_size: Optional[int] = Field(
+    sample_size: int | None = Field(
         None, description="Number of participants/data points"
     )
-    response_rate: Optional[float] = Field(None, ge=0.0, le=1.0)
+    response_rate: float | None = Field(None, ge=0.0, le=1.0)
     confidence_score: float = Field(0.5, ge=0.0, le=1.0)
 
     # Outcomes
-    validates_hypothesis: Optional[bool] = Field(None)
-    pivot_recommendations: List[str] = Field(default_factory=list)
-    next_steps: List[str] = Field(default_factory=list)
+    validates_hypothesis: bool | None = Field(None)
+    pivot_recommendations: list[str] = Field(default_factory=list)
+    next_steps: list[str] = Field(default_factory=list)
 
 
 class IdeaMetrics(BaseModel):
-    """
-    Metrics for evaluating startup ideas.
+    """Metrics for evaluating startup ideas.
 
     Comprehensive scoring across multiple dimensions.
     """
@@ -475,8 +450,8 @@ class IdeaMetrics(BaseModel):
     resource_requirements: float = Field(5.0, ge=0.0, le=10.0)
 
     # Calculated scores
-    overall_score: Optional[float] = Field(None, ge=0.0, le=10.0)
-    investment_readiness: Optional[float] = Field(None, ge=0.0, le=1.0)
+    overall_score: float | None = Field(None, ge=0.0, le=10.0)
+    investment_readiness: float | None = Field(None, ge=0.0, le=1.0)
 
     @model_validator(mode="after")
     def calculate_scores(self):
@@ -508,8 +483,7 @@ class IdeaMetrics(BaseModel):
 
 
 class IdeaBrainstorm(BaseModel):
-    """
-    A brainstorming session for generating startup ideas.
+    """A brainstorming session for generating startup ideas.
 
     Tracks the ideation process and generated concepts.
     """
@@ -520,36 +494,36 @@ class IdeaBrainstorm(BaseModel):
     session_date: datetime = Field(default_factory=datetime.now)
 
     # Session parameters
-    focus_areas: List[str] = Field(
+    focus_areas: list[str] = Field(
         default_factory=list, description="Areas to focus on"
     )
-    constraints: List[str] = Field(
+    constraints: list[str] = Field(
         default_factory=list, description="Constraints to consider"
     )
-    inspiration_sources: List[str] = Field(
+    inspiration_sources: list[str] = Field(
         default_factory=list, description="Sources of inspiration"
     )
 
     # Participants (agents)
-    participating_agents: List[str] = Field(
+    participating_agents: list[str] = Field(
         default_factory=list, description="Agent IDs involved"
     )
 
     # Generated ideas
-    raw_ideas: List[str] = Field(
+    raw_ideas: list[str] = Field(
         default_factory=list, description="All generated ideas"
     )
-    refined_ideas: List["StartupIdea"] = Field(
+    refined_ideas: list["StartupIdea"] = Field(
         default_factory=list, description="Refined idea objects"
     )
 
     # Process tracking
-    techniques_used: List[str] = Field(
+    techniques_used: list[str] = Field(
         default_factory=list, description="Brainstorming techniques"
     )
     session_notes: str = Field(default="", description="Notes from the session")
 
-    def add_raw_idea(self, idea: str, agent_id: Optional[str] = None) -> None:
+    def add_raw_idea(self, idea: str, agent_id: str | None = None) -> None:
         """Add a raw idea to the session."""
         self.raw_ideas.append(idea)
         if agent_id and agent_id not in self.participating_agents:
@@ -557,8 +531,7 @@ class IdeaBrainstorm(BaseModel):
 
 
 class StartupIdea(BaseModel):
-    """
-    Complete startup idea with all research and validation.
+    """Complete startup idea with all research and validation.
 
     This is the main model that brings together all components of a startup idea.
     """
@@ -577,30 +550,30 @@ class StartupIdea(BaseModel):
     solution: SolutionConcept = Field(..., description="Proposed solution")
 
     # Research and validation
-    market_research: Optional[MarketResearch] = None
-    competitor_analyses: List[CompetitorAnalysis] = Field(default_factory=list)
-    business_model: Optional[BusinessModelCanvas] = None
-    risk_assessment: Optional[RiskAssessment] = None
-    validation_results: List[ValidationResult] = Field(default_factory=list)
+    market_research: MarketResearch | None = None
+    competitor_analyses: list[CompetitorAnalysis] = Field(default_factory=list)
+    business_model: BusinessModelCanvas | None = None
+    risk_assessment: RiskAssessment | None = None
+    validation_results: list[ValidationResult] = Field(default_factory=list)
 
     # Metrics and scoring
-    metrics: Optional[IdeaMetrics] = None
+    metrics: IdeaMetrics | None = None
 
     # Development tracking
     created_at: datetime = Field(default_factory=datetime.now)
     updated_at: datetime = Field(default_factory=datetime.now)
 
     # Agent collaboration
-    contributing_agents: List[str] = Field(
+    contributing_agents: list[str] = Field(
         default_factory=list, description="Agents that contributed"
     )
-    research_sources: List[str] = Field(
+    research_sources: list[str] = Field(
         default_factory=list, description="External sources used"
     )
 
     # Private tracking
-    _research_tasks_completed: Set[str] = PrivateAttr(default_factory=set)
-    _validation_status: Dict[str, bool] = PrivateAttr(default_factory=dict)
+    _research_tasks_completed: set[str] = PrivateAttr(default_factory=set)
+    _validation_status: dict[str, bool] = PrivateAttr(default_factory=dict)
 
     @model_validator(mode="after")
     def update_timestamp(self):
@@ -633,7 +606,7 @@ class StartupIdea(BaseModel):
         if len(self.validation_results) >= 3 and self.stage == IdeaStage.RESEARCHED:
             self.stage = IdeaStage.VALIDATED
 
-    def calculate_readiness(self) -> Dict[str, Any]:
+    def calculate_readiness(self) -> dict[str, Any]:
         """Calculate how ready this idea is for next steps."""
         readiness = {
             "research_completeness": len(self._research_tasks_completed)
@@ -658,9 +631,8 @@ class StartupIdea(BaseModel):
 
         return readiness
 
-    def to_pitch_deck_brief(self) -> Dict[str, Any]:
-        """
-        Convert idea to a brief for pitch deck generation.
+    def to_pitch_deck_brief(self) -> dict[str, Any]:
+        """Convert idea to a brief for pitch deck generation.
 
         This creates a structured brief that can be used by pitch deck agents.
         """
@@ -709,7 +681,7 @@ class StartupIdea(BaseModel):
             "metrics": self.metrics.model_dump() if self.metrics else None,
         }
 
-    def get_research_gaps(self) -> List[str]:
+    def get_research_gaps(self) -> list[str]:
         """Identify what research is still needed."""
         gaps = []
 
@@ -738,8 +710,7 @@ class StartupIdea(BaseModel):
 
 
 class IdeaPortfolio(BaseModel):
-    """
-    Portfolio of startup ideas being developed.
+    """Portfolio of startup ideas being developed.
 
     Manages multiple ideas and tracks their progress.
     """
@@ -751,15 +722,15 @@ class IdeaPortfolio(BaseModel):
     description: str = Field(default="", description="Portfolio description")
 
     # Ideas
-    ideas: List[StartupIdea] = Field(default_factory=list)
+    ideas: list[StartupIdea] = Field(default_factory=list)
 
     # Tracking
     created_at: datetime = Field(default_factory=datetime.now)
     updated_at: datetime = Field(default_factory=datetime.now)
 
     # Filters and organization
-    focus_categories: List[IdeaCategory] = Field(default_factory=list)
-    target_market_size: Optional[MarketSize] = None
+    focus_categories: list[IdeaCategory] = Field(default_factory=list)
+    target_market_size: MarketSize | None = None
     max_ideas: int = Field(default=10, ge=1, le=50)
 
     def add_idea(self, idea: StartupIdea) -> bool:
@@ -771,7 +742,7 @@ class IdeaPortfolio(BaseModel):
         self.updated_at = datetime.now()
         return True
 
-    def get_top_ideas(self, n: int = 3) -> List[StartupIdea]:
+    def get_top_ideas(self, n: int = 3) -> list[StartupIdea]:
         """Get top N ideas by score."""
         scored_ideas = [
             idea for idea in self.ideas if idea.metrics and idea.metrics.overall_score
@@ -780,11 +751,11 @@ class IdeaPortfolio(BaseModel):
             scored_ideas, key=lambda x: x.metrics.overall_score, reverse=True
         )[:n]
 
-    def get_ideas_by_stage(self, stage: IdeaStage) -> List[StartupIdea]:
+    def get_ideas_by_stage(self, stage: IdeaStage) -> list[StartupIdea]:
         """Get all ideas at a specific stage."""
         return [idea for idea in self.ideas if idea.stage == stage]
 
-    def get_portfolio_summary(self) -> Dict[str, Any]:
+    def get_portfolio_summary(self) -> dict[str, Any]:
         """Get summary statistics of the portfolio."""
         return {
             "total_ideas": len(self.ideas),
@@ -859,17 +830,15 @@ def create_basic_idea(
 class IdeaGenerationRequest(BaseModel):
     """Request model for idea generation."""
 
-    focus_area: Optional[str] = Field(
+    focus_area: str | None = Field(
         None, description="Specific area to focus on (e.g., 'healthcare', 'education')"
     )
-    target_audience: Optional[str] = Field(
-        None, description="Target audience for ideas"
-    )
-    constraints: List[str] = Field(
+    target_audience: str | None = Field(None, description="Target audience for ideas")
+    constraints: list[str] = Field(
         default_factory=list, description="Any constraints to consider"
     )
     num_ideas: int = Field(default=5, description="Number of ideas to generate")
-    inspiration_keywords: List[str] = Field(
+    inspiration_keywords: list[str] = Field(
         default_factory=list, description="Keywords for inspiration"
     )
 
@@ -877,8 +846,8 @@ class IdeaGenerationRequest(BaseModel):
 class IdeaGenerationResponse(BaseModel):
     """Response model for idea generation."""
 
-    ideas: List[Dict[str, Any]] = Field(..., description="Generated startup ideas")
+    ideas: list[dict[str, Any]] = Field(..., description="Generated startup ideas")
     rationale: str = Field(..., description="Reasoning behind the ideas")
-    market_trends: List[str] = Field(
+    market_trends: list[str] = Field(
         ..., description="Relevant market trends identified"
     )

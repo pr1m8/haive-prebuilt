@@ -1,7 +1,4 @@
-from typing import Optional
-
-from haive_agents.base import AgentArchitecture, AgentArchitectureConfig, AgentConfig
-from haive_agents.contract_analysis.models import ContractInfo, ReviewPlan
+from haive_agents.base import AgentArchitecture, AgentArchitectureConfig
 from haive_agents.contract_analysis.state import ContractReviewState
 from langgraph.graph import END, START
 from pydantic import Field
