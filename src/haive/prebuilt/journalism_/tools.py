@@ -24,13 +24,15 @@ from functools import lru_cache
 from typing import Any, Dict, List, Optional, Tuple
 
 from duckduckgo_search import DDGS
+from haive-prebuilt.src.haive.prebuilt.journalism_.models import (
+    ArticleChunk,
+    SearchResult,
+)
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_community.document_loaders import WebBaseLoader
 from langchain_community.document_transformers import BeautifulSoupTransformer
 from langchain_core.tools import tool
 from pydantic import BaseModel, Field
-
-from .models import ArticleChunk, SearchResult
 
 # Configure logging
 logger = logging.getLogger(__name__)

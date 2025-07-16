@@ -22,7 +22,7 @@ prompt = ChatPromptTemplate.from_messages(
 
 class QueryIntent(BaseModel):
     intent: str = Field(..., description="The classified intent behind the query.")
-    confidence: float = Field(..., description="Confidence score between 0 and 1.")
+    confidence: float = Field(..., description="The confidence score for the intent.")
 
 
 query_intent_classifier_config = AugLLMConfig(

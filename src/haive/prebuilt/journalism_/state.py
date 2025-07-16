@@ -22,10 +22,7 @@ Note:
 from datetime import datetime
 from typing import Any, Dict, List, Optional, Set
 
-from haive.core.schema.prebuilt.messages.messages_state import MessagesState
-from pydantic import Field, PrivateAttr, computed_field
-
-from .models import (
+from haive-prebuilt.src.haive.prebuilt.journalism_.models import (
     ArticleChunk,
     ArticleSummary,
     ComprehensiveReport,
@@ -36,6 +33,8 @@ from .models import (
     SearchResult,
     ToneAnalysis,
 )
+from haive.core.schema.prebuilt.messages.messages_state import MessagesState
+from pydantic import Field, PrivateAttr, computed_field
 
 
 class JournalismState(MessagesState):
