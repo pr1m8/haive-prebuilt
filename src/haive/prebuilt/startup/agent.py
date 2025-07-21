@@ -235,7 +235,10 @@ class MasterStartupAgent(Agent):
                 # In practice, this would be more sophisticated
                 import uuid
 
-from haive.prebuilt.startup.models import IdeaCategory, create_basic_idea
+                from haive.prebuilt.startup.models import (
+                    IdeaCategory,
+                    create_basic_idea,
+                )
 
                 best_idea_str = state.raw_ideas[0]
                 parts = best_idea_str.split(":")

@@ -14,4 +14,5 @@ prompt = f"""
             2. **Incorporate Insights:** 
                 - Utilize insights from previous iterations to enhance scheduling efficiency and address any identified issues.
         """
-    schedule_llm = llm.with_structured_output(Schedule)
+
+schedule_llm = llm.with_structured_output(Schedule)

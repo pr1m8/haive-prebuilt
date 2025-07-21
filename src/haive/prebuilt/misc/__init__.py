@@ -8,7 +8,7 @@ Example:
     Basic usage::
 
         from haive.misc import module_function
-        
+
         # TODO: Add example
 
 
@@ -143,31 +143,26 @@ __all__ = [
     "InfluenceLevel",
     "InterestLevel",
     "CommunicationFrequency",
-    
     # Goal Decomposition Models
     "SubGoal",
     "GoalDecomposition",
-    
     # Decision Analysis Models
     "DecisionCriteria",
     "DecisionOption",
     "DecisionAnalysis",
-    
     # Resource Planning Models
     "Resource",
     "ResourceRequirement",
     "ResourcePlan",
-    
     # Quality Assessment Models
     "QualityMetric",
     "QualityIssue",
     "QualityAssessment",
-    
     # Workflow Optimization Models
     "ProcessStep",
     "ProcessBottleneck",
     "WorkflowOptimization",
-    
     # Communication Planning Models
     "Stakeholder",
     "CommunicationPlan",
+]

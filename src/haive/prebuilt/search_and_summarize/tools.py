@@ -55,7 +55,7 @@ def search_web(query: str, max_results: int = 5) -> SearchResults:
                         parts[1].strip("'").strip('"') if len(parts) > 1 else "Untitled"
                     )
                     link = (
-                        parts[2].strip(").strip("'").strip('"')
+                        parts[2].strip(")").strip("'").strip('"')
                         if len(parts) > 2
                         else ""
                     )

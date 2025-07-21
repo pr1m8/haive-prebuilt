@@ -20,24 +20,25 @@ Note:
 
 from typing import Dict, List, Optional
 
-from haive-prebuilt.src.haive.prebuilt.tldr2.models import (
+from haive.core.engine.aug_llm import AugLLMConfig
+from haive.core.models.llm.base import AzureLLMConfig, OpenAILLMConfig
+from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
+from pydantic import Field
+
+from haive.prebuilt.tldr2.models import (
     ArticleSummary,
     NewsApiParams,
     ResearchAnalysis,
     ResearchReport,
     SearchDecision,
 )
-from haive-prebuilt.src.haive.prebuilt.tldr2.tools import (
+from haive.prebuilt.tldr2.tools import (
     analyze_relevance,
     check_source_credibility,
     extract_content,
     filter_by_date,
     web_search,
 )
-from haive.core.engine.aug_llm import AugLLMConfig
-from haive.core.models.llm.base import AzureLLMConfig, OpenAILLMConfig
-from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
-from pydantic import Field
 
 # Default LLM configuration (can be overridden)
 DEFAULT_LLM_CONFIG = AzureLLMConfig(

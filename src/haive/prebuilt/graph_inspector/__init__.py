@@ -8,10 +8,10 @@ Example:
     Basic usage::
 
         from haive.graph_inspector import module_function
-        
+
         # TODO: Add example
 
 
 """
 
-https://github.com/NirDiamant/GenAI_Agents/blob/main/all_agents_tutorials/graph_inspector_system_langgraph.ipynb
+# Reference: https://github.com/NirDiamant/GenAI_Agents/blob/main/all_agents_tutorials/graph_inspector_system_langgraph.ipynb

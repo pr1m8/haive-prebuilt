@@ -48,21 +48,24 @@ from .tools import (
 DEFAULT_LLM_CONFIG = AzureLLMConfig(
     model="gpt-4o-mini",
     temperature=0.3,  # Lower temperature for more consistent analysis
-    max_tokens=2000
+    max_tokens=2000,
 )
 
 
 def create_action_identification_engine() -> AugLLMConfig:
     """Create engine for identifying user-requested actions.
-    
+
     This engine analyzes user input to determine which journalism
     analysis actions should be performed.
-    
+
     Returns:
         AugLLMConfig: Configured action identification engine
     """
-    prompt = ChatPromptTemplate.from_messages([
-        ("system", """You are an AI assistant that identifies journalism analysis actions from user requests.
+    prompt = ChatPromptTemplate.from_messages(
+        [
+            (
+                "system",
+                """You are an AI assistant that identifies journalism analysis actions from user requests.
 
 Identify the user's intended actions and categorize them into:
 - summarization: Create article summary
@@ -78,36 +81,42 @@ Guidelines:
 1. If user asks for "everything" or "full analysis", select all individual actions
 2. List only explicitly requested actions
 3. Multiple specific actions can be selected
-4. Be precise in interpretation"""),
-        
-        MessagesPlaceholder(variable_name="messages"),
-        
-        ("human", """User request: {input_text}
+4. Be precise in interpretation""",
+            ),
+            MessagesPlaceholder(variable_name="messages"),
+            (
+                "human",
+                """User request: {input_text}
 
-Identify the journalism analysis actions requested.""")
-    ])
-    
+Identify the journalism analysis actions requested.""",
+            ),
+        ]
+    )
+
     return AugLLMConfig(
         name="action_identification",
         llm_config=DEFAULT_LLM_CONFIG.model_copy(update={"temperature": 0.1}),
         prompt_template=prompt,
         structured_output_model=JournalismAction,
-        structured_output_version='v2',
-        description="Identifies requested journalism analysis actions"
+        structured_output_version="v2",
+        description="Identifies requested journalism analysis actions",
     )
 
 
 def create_summarization_engine() -> AugLLMConfig:
     """Create engine for article summarization.
-    
+
     This engine generates concise summaries focusing on main events,
     key people, and important statistics.
-    
+
     Returns:
         AugLLMConfig: Configured summarization engine
     """
-    prompt = ChatPromptTemplate.from_messages([
-        ("system", """You are an expert journalism summarizer who creates clear, concise summaries.
+    prompt = ChatPromptTemplate.from_messages(
+        [
+            (
+                "system",
+                """You are an expert journalism summarizer who creates clear, concise summaries.
 
 Your task is to summarize articles by:
 1. Identifying 3-7 main points or events
@@ -120,18 +129,24 @@ Focus on:
 - Neutral, journalistic tone
 - Clear and concise language
 - Logical flow of information
-- No personal opinions or interpretations"""),
-        
-        MessagesPlaceholder(variable_name="messages"),
-        
-        ("human", """Article text to summarize:
+- No personal opinions or interpretations""",
+            ),
+            MessagesPlaceholder(variable_name="messages"),
+            (
+                "human",
+                """Article text to summarize:
 {article_text}
 
 Word count: {word_count}
 
-Create a comprehensive summary following the guidelines.""")
-    ])
-    
+Create a comprehensive summary following the guidelines.""",
+            ),
+        ]
+    )
+
     return AugLLMConfig(
         name="summarization",
         llm_config=DEFAULT_LLM_CONFIG,
+        prompt_template=prompt,
+        description="Creates comprehensive article summaries",
+    )

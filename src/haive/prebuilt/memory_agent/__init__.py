@@ -8,10 +8,10 @@ Example:
     Basic usage::
 
         from haive.memory_agent import module_function
-        
+
         # TODO: Add example
 
 
 """
 
-https://github.com/NirDiamant/GenAI_Agents/blob/main/all_agents_tutorials/memory-agent-tutorial.ipynb
+# Reference: https://github.com/NirDiamant/GenAI_Agents/blob/main/all_agents_tutorials/memory-agent-tutorial.ipynb

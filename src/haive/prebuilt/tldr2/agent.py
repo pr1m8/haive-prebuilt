@@ -27,9 +27,6 @@ Note:
 import logging
 from typing import Any, Dict, List, Optional, Type
 
-from haive-prebuilt.src.haive.prebuilt.tldr2.engines import create_all_engines
-from haive-prebuilt.src.haive.prebuilt.tldr2.models import SearchDecision
-from haive-prebuilt.src.haive.prebuilt.tldr2.state import NewsResearchState
 from haive.agents.base.agent import Agent
 from haive.core.graph.node.engine_node import EngineNodeConfig
 from haive.core.graph.node.tool_node_config import ToolNodeConfig
@@ -37,6 +34,10 @@ from haive.core.graph.state_graph.base_graph2 import BaseGraph
 from langgraph.graph import END, START
 from langgraph.types import Command
 from pydantic import Field
+
+from haive.prebuilt.tldr2.engines import create_all_engines
+from haive.prebuilt.tldr2.models import SearchDecision
+from haive.prebuilt.tldr2.state import NewsResearchState
 
 # Configure logging
 logger = logging.getLogger(__name__)
@@ -364,8 +365,8 @@ Data Gaps: {len(state.analysis.data_gaps)} gaps identified
         Returns:
             Command to update state with extracted content
         """
-        from haive-prebuilt.src.haive.prebuilt.tldr2.models import ArticleContent
-        from haive-prebuilt.src.haive.prebuilt.tldr2.tools import extract_content
+        from haive.prebuilt.tldr2.models import ArticleContent
+        from haive.prebuilt.tldr2.tools import extract_content
 
         # Get unprocessed articles
         unprocessed = state.get_unprocessed_metadata()
