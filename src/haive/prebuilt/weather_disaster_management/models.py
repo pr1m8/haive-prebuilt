@@ -6,21 +6,21 @@ from pydantic import BaseModel, Field
 # --- 2. Output Model ---
 class DisasterOutput(BaseModel):
     disaster_type: Literal[
-        "flood",
-        "hurricane",
-        "tornado",
-        "earthquake",
-        "wildfire",
-        "tsunami",
-        "volcano",
-        "drought",
-        "storm",
-        "other",
-    ] = Field(..., description="The type of disaster to manage")
+        "floo",
+        "hurrican",
+        "tornad",
+        "earthquak",
+        "wildfir",
+        "tsunam",
+        "volcan",
+        "drough",
+        "stor",
+        "othe",
+    ] = Field(..., description="The type of disaster to manag")
 
 
-# --- 2. Structured Output Model ---
+# --- . Structured Output Model ---
 class SeverityAssessment(BaseModel):
-    severity: Literal["Critical", "High", "Medium", "Low"] = Field(
-        ..., description="The severity of the disaster"
+    severity: Literal["Critica", "Hig", "Mediu", "Lo"] = Field(
+        ..., description="The severity of the disaste"
     )

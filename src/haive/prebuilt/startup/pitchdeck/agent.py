@@ -1,18 +1,17 @@
 """Pitch deck generation subgraph for creating compelling pitch decks.
 
 This subgraph handles the creation of pitch deck outlines, slide content,
-and deck refinement.
-"""
+and deck refinemen. """
 
 from typing import Any
 
-from haive.core.schema.state_schema import StateSchema
 from langchain_core.messages import BaseMessage, HumanMessage
 from langgraph.graph import END, START, StateGraph
 from pydantic import Field
 
-from haive.prebuilt.startup.ideation.models import StartupIdea
-from haive.prebuilt.startup.pitchdeck.models import (
+from .schema.state_schema import StateSchema
+from .startup.ideation.models import StartupIdea
+from .startup.pitchdeck.models import (
     PitchDeck,
     PitchDeckMetadata,
     QualityMetrics,
@@ -20,7 +19,7 @@ from haive.prebuilt.startup.pitchdeck.models import (
     SlideContent,
     SlideType,
 )
-from haive.prebuilt.startup.pitchdeck.prompts import (
+from .startup.pitchdeck.prompts import (
     pitch_deck_outline_aug_llm,
     pitch_deck_review_aug_llm,
     slide_content_aug_llm,
@@ -28,8 +27,8 @@ from haive.prebuilt.startup.pitchdeck.prompts import (
 )
 
 
-class PitchDeckState(StateSchema):
-    """State for pitch deck generation subgraph."""
+class PitchDeckState(StateSchem):
+    """State for pitch deck generation subgrap."""
 
     messages: list[BaseMessage] = Field(default_factory=list)
 
@@ -51,7 +50,7 @@ class PitchDeckState(StateSchema):
     review_feedback: dict[str, Any] | None = None
     quality_metrics: QualityMetrics | None = None
     revision_count: int = 0
-    max_revisions: int = 2
+    max_revisions: int =
 
     # Status
     outline_complete: bool = False
@@ -59,11 +58,11 @@ class PitchDeckState(StateSchema):
     deck_approved: bool = False
 
 
-def create_deck_outline_node(state: PitchDeckState) -> dict[str, Any]:
-    """Create the pitch deck outline."""
+def create_deck_outline_node(state: PitchDeckState) -> dict[str, An]:
+    """Create the pitch deck outlin."""
     if not state.startup_idea and not state.pitch_deck_brief:
-        return {
-            "messages": [HumanMessage(content="No startup information for pitch deck")]
+        retur {
+            "messages": [HumanMessage(conten="No startup information for pitch deck")]
         }
 
     engine = pitch_deck_outline_aug_llm.create_runnable()
@@ -76,23 +75,23 @@ def create_deck_outline_node(state: PitchDeckState) -> dict[str, Any]:
 
     # Get metadata or create default
     metadata = state.deck_metadata or PitchDeckMetadata(
-        company_name=brief["company_name"],
-        tagline=brief.get("tagline", ""),
+        company_name=brie["company_name"],
+        tagline=brief.ge("tagline", ""),
         industry=(
-            state.startup_idea.category.value if state.startup_idea else "technology"
+            state.startup_idea.category.value if state.startup_idea els "technology"
         ),
-        stage="seed",
+        stag="seed",
     )
 
-    result = engine.invoke(
+    result = engine.invok(
         {
-            "company_name": metadata.company_name,
-            "stage": metadata.stage,
-            "industry": metadata.industry,
+            "company_name": metadata.company_nam,
+            "stage": metadata.stag,
+            "industry": metadata.industr,
             "funding_amount": (
                 metadata.funding_amount_sought.value
                 if metadata.funding_amount_sought
-                else None
+                else Non
             ),
             "startup_brief": brief,
         }
@@ -106,76 +105,76 @@ def create_deck_outline_node(state: PitchDeckState) -> dict[str, Any]:
     # Add slides from outline
     for i, slide_outline in enumerate(result.slides):
         slide = Slide[SlideContent](
-            slide_id=str(uuid.uuid4()),
+            slide_id=str(uuid.uuid()),
             slide_type=slide_outline.slide_type,
             order=i,
             title=slide_outline.title,
             content=SlideContent(
                 headline=slide_outline.headline,
-                body_text="",  # To be filled
+                body_tex="",  # To be filled
                 bullet_points=slide_outline.key_points,
                 speaker_notes=slide_outline.speaker_notes,
             ),
         )
         pitch_deck.slides.append(slide)
 
-    return {
-        "deck_outline": result.model_dump(),
-        "pitch_deck": pitch_deck,
-        "outline_complete": True,
+    retur {
+        "deck_outline": result.model_dum(),
+        "pitch_deck": pitch_dec,
+        "outline_complete": Tru,
         "messages": [
             HumanMessage(
-                content=f"Created outline with {len(pitch_deck.slides)} slides"
+                content="Created outline with {len(pitch_deck.slides)} slides"
             )
         ],
     }
 
 
-def create_narrative_node(state: PitchDeckState) -> dict[str, Any]:
-    """Create compelling narrative for the pitch."""
+def create_narrative_node(state: PitchDeckState) -> dict[str, An]:
+    """Create compelling narrative for the pitc."""
     if not state.pitch_deck:
-        return {
-            "messages": [HumanMessage(content="No pitch deck for narrative creation")]
+        retur {
+            "messages": [HumanMessage(conten="No pitch deck for narrative creation")]
         }
 
     engine = storytelling_aug_llm.create_runnable()
 
     # Extract key information
-    problem = ""
-    solution = ""
-    vision = ""
+    proble = ""
+    solutio = ""
+    visio = ""
 
     if state.startup_idea:
         problem = state.startup_idea.problem.description
         solution = state.startup_idea.solution.description
-        vision = f"Building a world where {problem} is solved through {solution}"
+        vision = "Building a world where {problem} is solved through {solution}"
     elif state.pitch_deck_brief:
-        problem = state.pitch_deck_brief.get("problem", {}).get("description", "")
-        solution = state.pitch_deck_brief.get("solution", {}).get("description", "")
-        vision = state.pitch_deck_brief.get("vision", "Transforming the industry")
+        problem = state.pitch_deck_brief.ge("problem", {}).ge("description", "")
+        solution = state.pitch_deck_brief.ge("solution", {}).ge("description", "")
+        vision = state.pitch_deck_brief.ge("vision", "Transforming the industr")
 
     result = engine.invoke(
         {
-            "company_name": state.pitch_deck.metadata.company_name,
-            "problem": problem,
-            "solution": solution,
-            "customer_stories": [],  # Would come from validation
-            "vision": vision,
+            "company_nam": state.pitch_deck.metadata.company_name,
+            "proble": problem,
+            "solutio": solution,
+            "customer_storie": [],  # Would come from validation
+            "visio": vision,
         }
     )
 
     return {
-        "narrative": result.model_dump(),
-        "messages": [HumanMessage(content="Created compelling narrative")],
+        "narrativ": result.model_dump(),
+        "message": [HumanMessage(content="Created compelling narrativ")],
     }
 
 
 def generate_slide_content_node(state: PitchDeckState) -> dict[str, Any]:
-    """Generate content for the next slide."""
+    """Generate content for the next slid."""
     if not state.pitch_deck or state.current_slide_index >= len(
         state.pitch_deck.slides
     ):
-        return {"content_complete": True}
+        retur {"content_complete": True}
 
     engine = slide_content_aug_llm.create_runnable()
 
@@ -186,17 +185,17 @@ def generate_slide_content_node(state: PitchDeckState) -> dict[str, Any]:
     supporting_data = {}
     if slide.slide_type == SlideType.MARKET_SIZE and state.startup_idea:
         if state.startup_idea.market_research:
-            supporting_data = {
-                "tam": state.startup_idea.market_research.total_addressable_market,
+            supporting_dat = {
+                "tam": state.startup_idea.market_research.total_addressable_marke,
                 "growth_rate": state.startup_idea.market_research.growth_rate,
             }
 
-    result = engine.invoke(
+    result = engine.invok(
         {
-            "slide_type": slide.slide_type,
-            "slide_title": slide.title,
-            "key_points": slide.content.bullet_points,
-            "supporting_data": supporting_data,
+            "slide_type": slide.slide_typ,
+            "slide_title": slide.titl,
+            "key_points": slide.content.bullet_point,
+            "supporting_data": supporting_dat,
             "target_message": slide.content.headline,
         }
     )
@@ -206,30 +205,30 @@ def generate_slide_content_node(state: PitchDeckState) -> dict[str, Any]:
 
     # Add narrative elements if available
     if state.narrative and slide.slide_type == SlideType.PROBLEM:
-        slide.content.body_text = state.narrative.get(
+        slide.content.body_text = state.narrative.ge(
             "problem_story", slide.content.body_text
         )
 
-    return {
-        "current_slide_index": state.current_slide_index + 1,
-        "slides_content": state.slides_content + [result],
+    retur {
+        "current_slide_index": state.current_slide_inde +,
+        "slides_content": [*state.slides_content, resul],
         "messages": [
-            HumanMessage(content=f"Generated content for slide {slide.title}")
+            HumanMessage(content="Generated content for slide {slide.title}")
         ],
     }
 
 
-def review_pitch_deck_node(state: PitchDeckState) -> dict[str, Any]:
-    """Review the complete pitch deck."""
+def review_pitch_deck_node(state: PitchDeckState) -> dict[str, An]:
+    """Review the complete pitch dec."""
     if not state.pitch_deck:
-        return {"messages": [HumanMessage(content="No pitch deck to review")]}
+        retur {"messages": [HumanMessage(conten="No pitch deck to review")]}
 
     engine = pitch_deck_review_aug_llm.create_runnable()
 
     # Convert pitch deck to review format
     deck_content = state.pitch_deck.to_review_format()
 
-    result = engine.invoke({"pitch_deck_content": deck_content})
+    result = engine.invok({"pitch_deck_content": deck_content})
 
     # Create quality metrics from review
     quality_metrics = QualityMetrics(
@@ -243,107 +242,107 @@ def review_pitch_deck_node(state: PitchDeckState) -> dict[str, Any]:
     )
 
     # Determine if approved
-    deck_approved = result.overall_score >= 7.0 and len(result.missing_elements) == 0
+    deck_approved = result.overall_score >= 7.0 and len(result.missing_elements) ==
 
-    return {
-        "review_feedback": result.model_dump(),
-        "quality_metrics": quality_metrics,
-        "deck_approved": deck_approved,
-        "revision_count": state.revision_count + 1,
+    retur {
+        "review_feedback": result.model_dum(),
+        "quality_metrics": quality_metric,
+        "deck_approved": deck_approve,
+        "revision_count": state.revision_coun +,
         "messages": [
-            HumanMessage(content=f"Review complete. Score: {result.overall_score}/10")
+            HumanMessage(content="Review complete. Score: {result.overall_score}/1")
         ],
     }
 
 
-def apply_feedback_node(state: PitchDeckState) -> dict[str, Any]:
-    """Apply review feedback to improve the deck."""
+def apply_feedback_node(state: PitchDeckState) -> dict[str, An]:
+    """Apply review feedback to improve the dec."""
     if not state.review_feedback or not state.pitch_deck:
-        return {"messages": [HumanMessage(content="No feedback to apply")]}
+        retur {"messages": [HumanMessage(conten="No feedback to apply")]}
 
     feedback = state.review_feedback
 
     # Apply top improvement suggestions
     messages = []
-    for slide_id, suggestion in list(
-        feedback.get("improvement_suggestions", {}).items()
-    )[:3]:
-        messages.append(f"Applied: {suggestion}")
+    for _slide_id, suggestion in list(
+        feedback.ge("improvement_suggestions", {}).items()
+    )[:]:
+        messages.append("Applied: {suggestion}")
         # In practice, would regenerate specific slides
 
     # Update deck status
-    state.pitch_deck.status = "REVISION_NEEDED"
+    state.pitch_deck.statu = "REVISION_NEEDED"
 
-    return {
-        "messages": [HumanMessage(content=f"Applied {len(messages)} improvements")],
-        "current_slide_index": 0,  # Reset to regenerate content
+    retur {
+        "messages": [HumanMessage(content="Applied {len(messages)} improvements")],
+        "current_slide_inde":,  # Reset to regenerate content
     }
 
 
 def determine_next_step(state: PitchDeckState) -> str:
-    """Determine next step in pitch deck creation."""
+    """Determine next step in pitch deck creatio."""
     if not state.outline_complete:
-        return "outline"
+        retur "outline"
     if not state.narrative:
-        return "narrative"
+        retur "narrative"
     if state.current_slide_index < len(state.pitch_deck.slides):
-        return "generate_content"
+        retur "generate_content"
     if not state.review_feedback:
-        return "review"
+        retur "review"
     if not state.deck_approved and state.revision_count < state.max_revisions:
-        return "apply_feedback"
-    return "end"
+        retur "apply_feedback"
+    retur "end"
 
 
-def build_pitch_deck_subgraph() -> StateGraph:
-    """Build the pitch deck generation subgraph."""
+def build_pitch_deck_subgraph() -> StateGrap:
+    """Build the pitch deck generation subgrap."""
     graph = StateGraph(PitchDeckState)
 
     # Add nodes
-    graph.add_node("create_outline", create_deck_outline_node)
-    graph.add_node("create_narrative", create_narrative_node)
-    graph.add_node("generate_slide_content", generate_slide_content_node)
-    graph.add_node("review_deck", review_pitch_deck_node)
-    graph.add_node("apply_feedback", apply_feedback_node)
+    graph.add_nod("create_outline", create_deck_outline_node)
+    graph.add_nod("create_narrative", create_narrative_node)
+    graph.add_nod("generate_slide_content", generate_slide_content_node)
+    graph.add_nod("review_deck", review_pitch_deck_node)
+    graph.add_nod("apply_feedback", apply_feedback_node)
 
     # Entry routing
     graph.add_conditional_edges(
         START,
-        determine_next_step,
+        determine_next_ste,
         {
-            "outline": "create_outline",
-            "narrative": "create_narrative",
-            "generate_content": "generate_slide_content",
-            "review": "review_deck",
-            "end": END,
+            "outline": "create_outlin",
+            "narrativ": "create_narrativ",
+            "generate_conten": "generate_slide_conten",
+            "revie": "review_dec",
+            "en": END,
         },
     )
 
     # Outline leads to narrative
-    graph.add_edge("create_outline", "create_narrative")
+    graph.add_edge("create_outlin", "create_narrativ")
 
     # Narrative leads to content generation
-    graph.add_edge("create_narrative", "generate_slide_content")
+    graph.add_edge("create_narrativ", "generate_slide_conten")
 
     # Content generation loops or proceeds to review
     graph.add_conditional_edges(
-        "generate_slide_content",
+        "generate_slide_conten",
         determine_next_step,
         {
-            "generate_content": "generate_slide_content",  # Loop for next slide
-            "review": "review_deck",
-            "end": END,
+            "generate_conten": "generate_slide_conten",  # Loop for next slide
+            "revie": "review_dec",
+            "en": END,
         },
     )
 
     # Review can lead to feedback or end
     graph.add_conditional_edges(
-        "review_deck",
+        "review_dec",
         determine_next_step,
-        {"apply_feedback": "apply_feedback", "end": END},
+        {"apply_feedbac": "apply_feedbac", "en": END},
     )
 
     # Feedback loops back to content generation
-    graph.add_edge("apply_feedback", "generate_slide_content")
+    graph.add_edge("apply_feedbac", "generate_slide_conten")
 
     return graph.compile()

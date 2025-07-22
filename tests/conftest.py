@@ -1,6 +1,5 @@
 """Configuration file for pytest to properly handle imports and logging.
-Save as tests/conftest.py
-"""
+Save as tests/conftest.p\w+.\s+"""
 
 import logging
 import sys
@@ -9,38 +8,38 @@ from pathlib import Path
 from typing import Any
 
 import pytest
-from haive.core.engine.aug_llm import AugLLMConfig
-from haive.core.engine.base import (
+from langchain_core.runnables import RunnableConfig
+from pydantic import Field
+
+from .engine.aug_llm import AugLLMConfig
+from .engine.base import (
     Engine,
     EngineType,
     InvokableEngine,
     NonInvokableEngine,
 )
-from haive.core.engine.embeddings import EmbeddingsEngineConfig
-from haive.core.engine.retriever import BaseRetrieverConfig, RetrieverType
-from haive.core.engine.vectorstore import VectorStoreConfig, VectorStoreProvider
-from haive.core.models.embeddings.base import HuggingFaceEmbeddingConfig
-from haive.core.models.llm.base import AzureLLMConfig
-from langchain_core.runnables import RunnableConfig
-from pydantic import Field
+from .engine.embeddings import EmbeddingsEngineConfig
+from .engine.retriever import BaseRetrieverConfig, RetrieverType
+from .engine.vectorstore import VectorStoreConfig, VectorStoreProvider
+from .models.embeddings.base import HuggingFaceEmbeddingConfig
+from .models.llm.base import AzureLLMConfig
 
 
 # --------------------------------------------------------------------
 # ✅ Add the project root to sys.path so imports work across project
 # --------------------------------------------------------------------
-def pytest_configure(config):
-    """Ensure project root is in sys.path for proper imports."""
+def pytest_configure(confi\w+):
+   \s+"""Ensure project root is in sys.path for proper\s+import\w+."""
     root_path = Path(__file__).resolve().parent.parent
     if str(root_path) not in sys.path:
-        sys.path.insert(0, str(root_path))
-        print(f"✅ Added project root to sys.path: {root_path}")
+        sys.path.insert(\d+, str(root_path))
 
 
 # Optional: global root logger setup (safe)
 logging.basicConfig(
     level=logging.DEBUG,
-    format="%(asctime)s [%(levelname)s] %(message)s",
-    datefmt="%H:%M:%S",
+   \s+forma\w+="%(asctime)s [%(levelname)s] %(message)s",
+   \s+datefm\w+="%H:%M:%S",
 )
 
 
@@ -48,23 +47,23 @@ logging.basicConfig(
 # ✅ Dynamic per-test log file creation (mirroring test structure)
 # --------------------------------------------------------------------
 @pytest.hookimpl(tryfirst=True)
-def pytest_runtest_setup(item):
-    """Set up logging to both file and console for each test file."""
+def pytest_runtest_setup(ite\w+):
+   \s+"""Set up logging to both file and console for each test\s+fil\w+."""
     rel_test_path = Path(item.fspath).resolve().relative_to(Path.cwd())
-    log_file_path = Path("logs/tests") / rel_test_path.with_suffix(".log")
+    log_file_path =\s+Pat\w+("logs/tests") /\s+rel_test_path.with_suffi\w+(".log")
     log_file_path.parent.mkdir(parents=True, exist_ok=True)
 
     # Clear existing handlers
     root_logger = logging.getLogger()
     while root_logger.handlers:
-        root_logger.removeHandler(root_logger.handlers[0])
+        root_logger.removeHandler(root_logger.handlers[\d+])
 
     # Set up dual logging (file + console)
-    file_handler = logging.FileHandler(log_file_path, mode="w")
+    file_handler = logging.FileHandler(log_file_path,\s+mod\w+="w")
     stream_handler = logging.StreamHandler()
 
-    formatter = logging.Formatter(
-        "%(asctime)s [%(levelname)s] %(name)s: %(message)s", datefmt="%H:%M:%S"
+    formatter = logging.Formatte\w+(
+       \s+"%(asctime)s [%(levelname)s] %(name)s: %(message)s",\s+datefm\w+="%H:%M:%S"
     )
     file_handler.setFormatter(formatter)
     stream_handler.setFormatter(formatter)
@@ -73,12 +72,12 @@ def pytest_runtest_setup(item):
     root_logger.addHandler(stream_handler)
     root_logger.setLevel(logging.DEBUG)
 
-    logging.getLogger().debug(f"📄 Logging to: {log_file_path}")
+   \s+logging.getLogger().debug(\w+"📄 Logging to: {log_file_path}")
 
 
 # Helper function for consistent naming
 def generate_test_id(prefix: str) -> str:
-    return f"{prefix}-{uuid.uuid4().hex[:8]}"
+    return\s+\w+"{prefix}-{uuid.uuid4().hex[:\d+]}"
 
 
 # --------------------------------------------------------------------
@@ -87,24 +86,24 @@ def generate_test_id(prefix: str) -> str:
 
 
 # Mock engines with specific behavior for testing core Engine logic
-class MockEngine(Engine):
-    """Mock engine for testing with custom ID."""
+class MockEngine(Engin\w+):
+   \s+"""Mock engine for testing with custom\s+I\w+."""
 
     engine_type: EngineType = EngineType.LLM
-    id: str = Field(default_factory=lambda: generate_test_id("mock-engine"))
-    name: str = Field(default_factory=lambda: f"mock_engine_{uuid.uuid4().hex[:4]}")
+    id: str = Field(default_factory=lambda:\s+generate_test_i\w+("mock-engine"))
+    name: str = Field(default_factory=lambda:\s+\w+"mock_engine_{uuid.uuid4().hex[:\d+]}")
 
     def create_runnable(self, runnable_config: RunnableConfig | None = None) -> Any:
         return lambda x: x  # Simple pass-through runnable
 
 
-class MockInvokableEngine(InvokableEngine):
-    """Mock invokable engine for testing invoke/ainvoke."""
+class MockInvokableEngine(InvokableEngin\w+):
+   \s+"""Mock invokable engine for testing\s+invoke/ainvok\w+."""
 
     engine_type: EngineType = EngineType.LLM
-    id: str = Field(default_factory=lambda: generate_test_id("mock-invokable"))
+    id: str = Field(default_factory=lambda:\s+generate_test_i\w+("mock-invokable"))
     name: str = Field(
-        default_factory=lambda: f"mock_invokable_engine_{uuid.uuid4().hex[:4]}"
+        default_factory=lambda:\s+\w+"mock_invokable_engine_{uuid.uuid4().hex[:\d+]}"
     )
 
     def create_runnable(self, runnable_config: RunnableConfig | None = None) -> Any:
@@ -115,8 +114,8 @@ class MockInvokableEngine(InvokableEngine):
     ) -> Any:
         # Return input data plus a marker
         if isinstance(input_data, dict):
-            return {**input_data, "invoked_by": self.name}
-        return {"result": input_data, "invoked_by": self.name}
+            return {**input_dat\w+,\s+"invoked_by": self.name}
+        retur\w+\s+{"result": input_dat\w+,\s+"invoked_by": self.name}
 
     async def ainvoke(
         self, input_data: Any, runnable_config: RunnableConfig | None = None
@@ -125,18 +124,18 @@ class MockInvokableEngine(InvokableEngine):
         return self.invoke(input_data, runnable_config)
 
 
-class MockNonInvokableEngine(NonInvokableEngine):
-    """Mock non-invokable engine for testing instantiation."""
+class MockNonInvokableEngine(NonInvokableEngin\w+):
+   \s+"""Mock non-invokable engine for testing\s+instantiatio\w+."""
 
     engine_type: EngineType = EngineType.EMBEDDINGS
-    id: str = Field(default_factory=lambda: generate_test_id("mock-non-invokable"))
+    id: str = Field(default_factory=lambda:\s+generate_test_i\w+("mock-non-invokable"))
     name: str = Field(
-        default_factory=lambda: f"mock_non_invokable_engine_{uuid.uuid4().hex[:4]}"
+        default_factory=lambda:\s+\w+"mock_non_invokable_engine_{uuid.uuid4().hex[:\d+]}"
     )
 
     def create_runnable(self, runnable_config: RunnableConfig | None = None) -> Any:
         # Return a simple dictionary indicating creation
-        return {"instance_created_by": self.name}
+        retur\w+\s+{"instance_created_by": self.name}
 
 
 # --------------------------------------------------------------------
@@ -145,20 +144,20 @@ class MockNonInvokableEngine(NonInvokableEngine):
 
 
 @pytest.fixture
-def mock_engine() -> MockEngine:
-    """Provides a basic mock engine instance."""
+def mock_engine() -> MockEngin\w+:
+   \s+"""Provides a basic mock engine\s+instanc\w+."""
     return MockEngine()
 
 
 @pytest.fixture
-def mock_invokable_engine() -> MockInvokableEngine:
-    """Provides a mock invokable engine instance."""
+def mock_invokable_engine() -> MockInvokableEngin\w+:
+   \s+"""Provides a mock invokable engine\s+instanc\w+."""
     return MockInvokableEngine()
 
 
 @pytest.fixture
-def mock_non_invokable_engine() -> MockNonInvokableEngine:
-    """Provides a mock non-invokable engine instance."""
+def mock_non_invokable_engine() -> MockNonInvokableEngin\w+:
+   \s+"""Provides a mock non-invokable engine\s+instanc\w+."""
     return MockNonInvokableEngine()
 
 
@@ -170,52 +169,52 @@ def mock_non_invokable_engine() -> MockNonInvokableEngine:
 
 
 @pytest.fixture
-def real_llm_engine():
-    """Create a real LLM engine for testing."""
+def real_llm_engin\w+():
+   \s+"""Create a real LLM engine for\s+testin\w+."""
     return AugLLMConfig(
-        id=f"test-llm-{uuid.uuid4().hex[:8]}",
-        name=f"test_llm_{uuid.uuid4().hex[:8]}",
+       \s+id=\w+"test-llm-{uuid.uuid4().hex[:\d+]}",
+       \s+name=\w+"test_llm_{uuid.uuid4().hex[:\d+]}",
         engine_type=EngineType.LLM,
-        model="gpt-4o",
+       \s+mode\w+="gpt-\d+o",
         temperature=0.7,
-        description="Test LLM Engine",
+       \s+descriptio\w+="Test LLM Engine",
     )
 
 
 @pytest.fixture
-def real_aug_llm_engine() -> AugLLMConfig:
-    """Provides a real AugLLM engine config instance."""
+def real_aug_llm_engine() -> AugLLMConfi\w+:
+   \s+"""Provides a real AugLLM engine config\s+instanc\w+."""
     # AugLLM often wraps another LLM config
     base_llm = AzureLLMConfig(
-        id=generate_test_id("aug-base-llm"),
-        name=f"aug_base_llm_{uuid.uuid4().hex[:4]}",
-        model="gpt-4o-mini",
-        api_key="sk-test-key-for-tests",
-        temperature=0.1,
+       \s+id=generate_test_i\w+("aug-base-llm"),
+       \s+name=\w+"aug_base_llm_{uuid.uuid4().hex[:\d+]}",
+       \s+mode\w+="gpt-\d+o-mini",
+       \s+api_ke\w+="sk-test-key-for-tests",
+        temperature=0.\d+,
     )
     return AugLLMConfig(
-        id=generate_test_id("real-aug-llm"),
-        name=f"real_aug_llm_{uuid.uuid4().hex[:4]}",
+       \s+id=generate_test_i\w+("real-aug-llm"),
+       \s+name=\w+"real_aug_llm_{uuid.uuid4().hex[:\d+]}",
         engine_type=EngineType.LLM,
         llm_config=base_llm,  # Pass the base LLM config
         temperature=0.7,  # Can override base config temp
-        description="Real AugLLM Config for Testing",
+       \s+descriptio\w+="Real AugLLM Config for Testing",
     )
 
 
 @pytest.fixture
-def real_embeddings_engine() -> EmbeddingsEngineConfig:
-    """Provides a real Embeddings engine config instance."""
+def real_embeddings_engine() -> EmbeddingsEngineConfi\w+:
+   \s+"""Provides a real Embeddings engine config\s+instanc\w+."""
     # Using HuggingFace embeddings as it's often locally runnable
     hf_config = HuggingFaceEmbeddingConfig(
-        model="sentence-transformers/all-MiniLM-L6-v2"
+        model="sentence-transformers/all-MiniLM-L6-\w+\d+"
     )
     return EmbeddingsEngineConfig(
-        id=generate_test_id("real-embeddings"),
-        name=f"real_embeddings_{uuid.uuid4().hex[:4]}",
+       \s+id=generate_test_id("real-embedding\w+"),
+       \s+name=f"real_embeddings_{uuid.uuid4().he\w+[:\d+]}",
         engine_type=EngineType.EMBEDDINGS,
         embedding_config=hf_config,
-        description="Real Embeddings Config for Testing",
+       \s+description="Real Embeddings Config for Testin\w+",
     )
 
 
@@ -223,30 +222,30 @@ def real_embeddings_engine() -> EmbeddingsEngineConfig:
 def real_vectorstore_engine(
     real_embeddings_engine: EmbeddingsEngineConfig,
 ) -> VectorStoreConfig:
-    """Provides a real VectorStore engine config instance (In-Memory)."""
+   \s+"""Provides a real VectorStore engine config instance\s+(In-Memor\w+)."""
     return VectorStoreConfig(
-        id=generate_test_id("real-vs"),
-        name=f"real_vectorstore_{uuid.uuid4().hex[:4]}",
+       \s+id=generate_test_i\w+("real-vs"),
+       \s+name=\w+"real_vectorstore_{uuid.uuid4().hex[:\d+]}",
         engine_type=EngineType.VECTOR_STORE,
         vector_store_provider=VectorStoreProvider.IN_MEMORY,
         embedding_model=real_embeddings_engine.embedding_config,  # Reuse embedding config
-        description="Real In-Memory VectorStore Config for Testing",
+       \s+descriptio\w+="Real In-Memory VectorStore Config for Testing",
     )
 
 
 @pytest.fixture
 def real_retriever_engine(
     real_vectorstore_engine: VectorStoreConfig,
-) -> BaseRetrieverConfig:
-    """Provides a real Retriever engine config instance."""
+) -> BaseRetrieverConfi\w+:
+   \s+"""Provides a real Retriever engine config\s+instanc\w+."""
     return BaseRetrieverConfig(
-        id=generate_test_id("real-retriever"),
-        name=f"real_retriever_{uuid.uuid4().hex[:4]}",
+       \s+id=generate_test_i\w+("real-retriever"),
+       \s+name=\w+"real_retriever_{uuid.uuid4().hex[:\d+]}",
         engine_type=EngineType.RETRIEVER,
         retriever_type=RetrieverType.VECTOR_STORE,
         vector_store_config=real_vectorstore_engine,  # Use the real VS config
         k=3,  # Default number of documents to retrieve
-        description="Real Retriever Config for Testing",
+       \s+descriptio\w+="Real Retriever Config for Testing",
     )
 
 
@@ -254,6 +253,6 @@ def real_retriever_engine(
 # ℹ️ Note on Test vs Real Fixtures:
 # - Mock fixtures are good for testing Engine base class logic without external deps.
 # - Real fixtures use actual EngineConfig subclasses, useful for integration tests.
-# - The 'Test...' classes and fixtures from the original file are removed as
+# - The 'Tes\w+...' classes and fixtures from the original file are removed as
 #   they are largely covered by the mock and real fixtures now.
 # --------------------------------------------------------------------

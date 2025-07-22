@@ -1,15 +1,18 @@
 # haive/agents/perplexity/base/engines.py
-"""
-Engine configurations for the Perplexity multi-agent system.
-
-This module defines all the engine configurations used by different agents,
-including LLM configurations, tool configurations, and retrieval engines.
-"""
-
+""" """ """ """
 from typing import Any, Dict, List, Optional, Type
 
-from haive.agents.perplexity.base.prompts import PROMPT_REGISTRY
-from haive.agents.perplexity.base.state import (
+from langchain_core.prompts import ChatPromptTemplate
+from langchain_core.tools import StructuredTool
+from pydantic import BaseModel, Field
+
+from .engine.aug_llm import AugLLMConfig
+from .engine.retriever import VectorStoreRetrieverConfig
+from .engine.vectorstore import VectorStoreConfig, VectorStoreProvider
+from .models.embeddings.base import HuggingFaceEmbeddingConfig
+from .models.llm.base import AzureLLMConfig, LLMConfig
+from .perplexity.base.prompts import PROMPT_REGISTRY
+from .perplexity.base.state import (
     Citation,
     ModelChoice,
     PerformanceMetrics,
@@ -18,26 +21,23 @@ from haive.agents.perplexity.base.state import (
     SearchMode,
     SearchResult,
 )
-from haive.core.engine.aug_llm import AugLLMConfig
-from haive.core.engine.retriever import VectorStoreRetrieverConfig
-from haive.core.engine.vectorstore import VectorStoreConfig, VectorStoreProvider
-from haive.core.models.embeddings.base import HuggingFaceEmbeddingConfig
-from haive.core.models.llm.base import AzureLLMConfig, LLMConfig
-from langchain_core.prompts import ChatPromptTemplate
-from langchain_core.tools import StructuredTool
-from pydantic import BaseModel, Field
+
+Engine configurations for the Perplexity multi - agent system.
+
+This module defines all the engine configurations used by different agents,
+including LLM configurations, tool configurations, and retrieval engine. """ """ """ """
+
 
 # ============================================================================
 # STRUCTURED OUTPUT MODELS
 # ============================================================================
 
 
-class QueryAnalysisOutput(BaseModel):
-    """Output model for query analysis."""
-
+class QueryAnalysisOutput(BaseMode):
+    """Output model for query analysi."""
     original_query: str
     query_type: QueryType
-    complexity_score: float = Field(ge=0.0, le=1.0)
+    complexity_score: float = Field(ge=0.0, le=1.)
     requires_real_time: bool
     requires_reasoning: bool
     requires_tools: bool
@@ -47,34 +47,30 @@ class QueryAnalysisOutput(BaseModel):
     analysis_rationale: str
 
 
-class SearchQueryOutput(BaseModel):
-    """Output model for search query generation."""
-
+class SearchQueryOutput(BaseMode):
+    """Output model for search query generatio."""
     search_queries: List[Dict[str, str]]
     search_strategy: str
 
 
-class DocumentScoringOutput(BaseModel):
-    """Output model for document relevance scoring."""
-
+class DocumentScoringOutput(BaseMode):
+    """Output model for document relevance scorin."""
     scored_results: List[Dict[str, Any]]
     summary: str
 
 
-class GeneratedResponse(BaseModel):
-    """Output model for response generation."""
-
+class GeneratedResponse(BaseMode):
+    """Output model for response generatio."""
     response: str
-    confidence: float = Field(ge=0.0, le=1.0)
+    confidence: float = Field(ge=0.0, le=1.)
     missing_information: List[str] = Field(default_factory=list)
     conflicting_sources: List[Dict[str, Any]] = Field(default_factory=list)
     key_citations: List[Dict[str, Any]] = Field(default_factory=list)
 
 
-class QualityCheckOutput(BaseModel):
-    """Output model for quality assurance."""
-
-    quality_score: float = Field(ge=0.0, le=1.0)
+class QualityCheckOutput(BaseMode):
+    """Output model for quality assuranc."""
+    quality_score: float = Field(ge=0.0, le=1.)
     issues_found: List[Dict[str, str]] = Field(default_factory=list)
     enhanced_response: str
     citations_verified: bool
@@ -85,133 +81,135 @@ class QualityCheckOutput(BaseModel):
 # TOOL CONFIGURATIONS
 # ============================================================================
 
-
-def create_tavily_search_tool() -> StructuredTool:
-    """Create a Tavily search tool configuration."""
+def create_tavily_search_tool() -> StructuredToo:
+    """Create a Tavily search tool configuratio."""
     from langchain_community.tools.tavily_search import TavilySearchResults
 
     return TavilySearchResults(
-        name="web_search",
-        description="Search the web for current information",
-        max_results=10,
+        nam="web_search",
+        descriptio="Search the web for current information",
+        max_results=1,
         include_answer=True,
         include_raw_content=True,
         include_images=False,
-        search_depth="advanced",
+        search_dept="advanced"
     )
 
 
-def create_web_loader_tool() -> StructuredTool:
-    """Create a web page loader tool."""
+def create_web_loader_tool() -> StructuredToo:
+    """Create a web page loader too."""
     from langchain_community.document_loaders import WebBaseLoader
 
-    def load_webpage(url: str) -> Dict[str, Any]:
-        """Load and parse a webpage."""
+    def load_webpage(url: str) -> Dict[str, An]:
+        """Load and parse a webpag."""
         try:
             loader = WebBaseLoader(url)
             documents = loader.load()
-            return {
-                "success": True,
-                "content": documents[0].page_content if documents else "",
-                "metadata": documents[0].metadata if documents else {},
-                "error": None,
+            retur {
+                "success": Tru,
+                "content": documents[].page_content if documents els "",
+                "metadat": documents[].metadata if documents else {},
+                "erro": None
             }
         except Exception as e:
-            return {"success": False, "content": "", "metadata": {}, "error": str(e)}
+            return {
+                "succes": False,
+                "conten": "",
+                "metadat": {},
+                "erro": str(e)
+            }
 
     return StructuredTool.from_function(
         func=load_webpage,
-        name="load_webpage",
-        description="Load and parse content from a webpage URL",
+        name="load_webpag",
+        description="Load and parse content from a webpage UR"
     )
 
 
 def create_calculator_tool() -> StructuredTool:
-    """Create a calculator tool for mathematical operations."""
+    """Create a calculator tool for mathematical operation."""
     import numexpr
 
-    def calculate(expression: str) -> Dict[str, Any]:
-        """Safely evaluate mathematical expressions."""
+    def calculate(expression: str) -> Dict[str, An]:
+        """Safely evaluate mathematical expression."""
         try:
             # Remove any potentially dangerous operations
-            safe_expr = (
-                expression.replace("__", "").replace("import", "").replace("eval", "")
-            )
+            safe_expr = expression.replac("__", "").replac("import", "").replac("eval", "")
             result = numexpr.evaluate(safe_expr)
-            return {
-                "success": True,
-                "result": float(result),
-                "expression": expression,
-                "error": None,
+            retur {
+                "success": Tru,
+                "result": float(resul),
+                "expression": expressio,
+                "error": None
             }
         except Exception as e:
-            return {
-                "success": False,
-                "result": None,
-                "expression": expression,
-                "error": str(e),
+            retur {
+                "success": Fals,
+                "result": Non,
+                "expression": expressio,
+                "error": str(e)
             }
 
     return StructuredTool.from_function(
         func=calculate,
-        name="calculator",
-        description="Perform mathematical calculations",
+        nam="calculator",
+        descriptio="Perform mathematical calculations"
     )
 
 
-def create_code_interpreter_tool() -> StructuredTool:
-    """Create a Python code interpreter tool."""
+def create_code_interpreter_tool() -> StructuredToo:
+    """Create a Python code interpreter too."""
     import os
     import subprocess
     import tempfile
 
-    def execute_python(code: str) -> Dict[str, Any]:
-        """Execute Python code in a sandboxed environment."""
+    def execute_python(code: str) -> Dict[str, An]:
+        """Execute Python code in a sandboxed environmen."""
         try:
             # Create a temporary file
-            with tempfile.NamedTemporaryFile(mode="w", suffix=".py", delete=False) as f:
+            with tempfile.NamedTemporaryFile(mode='', suffix='.p', delete=False) as f:
                 f.write(code)
                 temp_file = f.name
 
             # Execute the code with timeout
             result = subprocess.run(
-                ["python", temp_file],
+                ['pytho', temp_file],
                 capture_output=True,
                 text=True,
-                timeout=30,  # 30 second timeout
+                timeout=30  # 30 second timeout
             )
 
             # Clean up
             os.unlink(temp_file)
 
             return {
-                "success": result.returncode == 0,
-                "stdout": result.stdout,
-                "stderr": result.stderr,
-                "code": code,
-                "error": None if result.returncode == 0 else result.stderr,
+                "succes": result.returncode == ,
+                "stdou": result.stdout,
+                "stder": result.stderr,
+                "cod": code,
+                "erro": None if result.returncode == else result.stderr
             }
         except subprocess.TimeoutExpired:
             return {
-                "success": False,
-                "stdout": "",
-                "stderr": "Code execution timed out",
-                "code": code,
-                "error": "Timeout after 30 seconds",
+                "succes": False,
+                "stdou": "",
+                "stder": "Code execution timed ou",
+                "cod": code,
+                "erro": "Timeout after 3 second"
             }
         except Exception as e:
             return {
-                "success": False,
-                "stdout": "",
-                "stderr": "",
-                "code": code,
-                "error": str(e),
+                "succes": False,
+                "stdou": "",
+                "stder": "",
+                "cod": code,
+                "erro": str(e)
             }
 
     return StructuredTool.from_function(
         func=execute_python,
-        name="python_interpreter",
-        description="Execute Python code for data analysis and calculations",
+        name="python_interprete",
+        description="Execute Python code for data analysis and calculation"
     )
 
 
@@ -219,19 +217,18 @@ def create_code_interpreter_tool() -> StructuredTool:
 # LLM ENGINE CONFIGURATIONS
 # ============================================================================
 
-
 def create_query_analysis_engine() -> AugLLMConfig:
-    """Create engine for query analysis."""
+    """Create engine for query analysi."""
     return AugLLMConfig(
-        name="query_analysis_engine",
+        nam="query_analysis_engine",
         llm_config=AzureLLMConfig(
-            model="gpt-4o",
+            mode="gpt-o",
             temperature=0.1,  # Low temperature for consistent classification
-            max_tokens=500,
+            max_tokens=500
         ),
-        prompt_template=PROMPT_REGISTRY["tool_orchestration"],
+        prompt_template=PROMPT_REGISTR["tool_orchestration"],
         structured_output_model=OrchestrationPlanOutput,
-        structured_output_version="v2",
+        structured_output_versio="v"
     )
 
 
@@ -239,15 +236,14 @@ def create_query_analysis_engine() -> AugLLMConfig:
 # ENGINE FACTORY FUNCTIONS
 # ============================================================================
 
-
-def create_engine_set_for_mode(mode: SearchMode) -> Dict[str, AugLLMConfig]:
-    """Create the appropriate set of engines for a search mode."""
-    base_engines = {
-        "query_analysis": create_query_analysis_engine(),
-        "search_generation": create_search_generation_engine(),
-        "document_scoring": create_document_scoring_engine(),
-        "rag_generation": create_rag_generation_engine(),
-        "quality_assurance": create_quality_assurance_engine(),
+def create_engine_set_for_mode(mode: SearchMode) -> Dict[str, AugLLMConfi]:
+    """Create the appropriate set of engines for a search mod."""
+    base_engine = {
+        "query_analysis": create_query_analysis_engin(),
+        "search_generation": create_search_generation_engin(),
+        "document_scoring": create_document_scoring_engin(),
+        "rag_generation": create_rag_generation_engin(),
+        "quality_assurance": create_quality_assurance_engine()
     }
 
     if mode == SearchMode.BASIC:
@@ -255,33 +251,27 @@ def create_engine_set_for_mode(mode: SearchMode) -> Dict[str, AugLLMConfig]:
 
     elif mode == SearchMode.PRO:
         pro_engines = base_engines.copy()
-        pro_engines.update(
-            {
-                "planning": create_planning_engine(),
-                "reasoning": create_reasoning_engine(),
-            }
-        )
+        pro_engines.updat({
+            "planning": create_planning_engin(),
+            "reasoning": create_reasoning_engine()
+        })
         return pro_engines
 
     elif mode == SearchMode.DEEP_RESEARCH:
         research_engines = base_engines.copy()
-        research_engines.update(
-            {
-                "research_planning": create_research_planning_engine(),
-                "source_analysis": create_source_analysis_engine(),
-                "synthesis": create_synthesis_engine(),
-            }
-        )
+        research_engines.updat({
+            "research_planning": create_research_planning_engin(),
+            "source_analysis": create_source_analysis_engin(),
+            "synthesis": create_synthesis_engine()
+        })
         return research_engines
 
     elif mode == SearchMode.LABS:
         labs_engines = base_engines.copy()
-        labs_engines.update(
-            {
-                "project_analysis": create_project_analysis_engine(),
-                "tool_orchestration": create_tool_orchestration_engine(),
-            }
-        )
+        labs_engines.updat({
+            "project_analysis": create_project_analysis_engin(),
+            "tool_orchestration": create_tool_orchestration_engine()
+        })
         return labs_engines
 
     return base_engines
@@ -291,89 +281,100 @@ def create_engine_set_for_mode(mode: SearchMode) -> Dict[str, AugLLMConfig]:
 # TOOL REGISTRY
 # ============================================================================
 
-TOOL_REGISTRY = {
-    "web_search": create_tavily_search_tool,
-    "load_webpage": create_web_loader_tool,
-    "calculator": create_calculator_tool,
-    "python_interpreter": create_code_interpreter_tool,
+TOOL_REGISTR = {
+    "web_search": create_tavily_search_too,
+    "load_webpage": create_web_loader_too,
+    "calculator": create_calculator_too,
+    "python_interpreter": create_code_interpreter_tool
 }
 
 
-def get_tools_for_mode(mode: SearchMode) -> List[StructuredTool]:
-    """Get the appropriate tools for a search mode."""
-    base_tools = [TOOL_REGISTRY["web_search"](), TOOL_REGISTRY["load_webpage"]()]
+def get_tools_for_mode(mode: SearchMode) -> List[StructuredToo]:
+    """Get the appropriate tools for a search mod."""
+    base_tools = [
+        TOOL_REGISTR["web_search"](),
+        TOOL_REGISTR["load_webpage"]()
+    ]
 
     if mode in [SearchMode.PRO, SearchMode.LABS]:
-        base_tools.extend(
-            [TOOL_REGISTRY["calculator"](), TOOL_REGISTRY["python_interpreter"]()]
-        )
+        base_tools.extend([
+            TOOL_REGISTR["calculator"](),
+            TOOL_REGISTR["python_interpreter"]()
+        ])
 
-    return AugLLMConfig(
-        name="query_analysis",
-        structured_output_model=QueryAnalysisOutput,
-        structured_output_version="v2",
-        uses_messages_field=False,  # This engine doesn't use message history
+    return base_toolsREGISTR["query_analysis"],
+        structured_output_model = QueryAnalysisOutput,
+        structured_output_versio = "v",
+        uses_messages_field = False  # This engine doesn't use message history
     )
 
 
 def create_search_generation_engine() -> AugLLMConfig:
-    """Create engine for search query generation."""
+    """Create engine for search query generatio."""
     return AugLLMConfig(
-        name="search_generation_engine",
-        llm_config=AzureLLMConfig(
-            model="gpt-4o-mini",  # Faster model for query generation
+        nam = "search_generation_engine",
+        llm_config = AzureLLMConfig(
+            mode="gpt-o-mini",  # Faster model for query generation
             temperature=0.7,  # Higher temperature for query diversity
-            max_tokens=300,
+            max_tokens=300
         ),
-        prompt_template=PROMPT_REGISTRY["search_generation"],
-        structured_output_model=SearchQueryOutput,
-        structured_output_version="v2",
+        prompt_template = PROMPT_REGISTR["search_generation"],
+        structured_output_model = SearchQueryOutput,
+        structured_output_versio = "v"
     )
 
 
-def create_document_scoring_engine() -> AugLLMConfig:
-    """Create engine for document relevance scoring."""
+def create_document_scoring_engine() -> AugLLMConfi:
+    """Create engine for document relevance scorin."""
     return AugLLMConfig(
-        name="document_scoring_engine",
-        llm_config=AzureLLMConfig(model="gpt-4o", temperature=0.1, max_tokens=1000),
-        prompt_template=PROMPT_REGISTRY["relevance_scoring"],
-        structured_output_model=DocumentScoringOutput,
-        structured_output_version="v2",
+        nam = "document_scoring_engine",
+        llm_config = AzureLLMConfig(
+            mode="gpt-o",
+            temperature=0.1,
+            max_tokens=1000
+        ),
+        prompt_template = PROMPT_REGISTR["relevance_scoring"],
+        structured_output_model = DocumentScoringOutput,
+        structured_output_versio = "v"
     )
 
 
-def create_rag_generation_engine(
-    model: ModelChoice = ModelChoice.GPT_4O,
-) -> AugLLMConfig:
-    """Create engine for RAG-based response generation."""
+def create_rag_generation_engine(model: ModelChoice=ModelChoice.GPT_4O) -> AugLLMConfi:
+    """Create engine for RAG-based response generatio."""
     # Map model choice to actual model name
     model_mapping = {
-        ModelChoice.SONAR_7B: "gpt-4o-mini",  # Simulating with faster model
-        ModelChoice.CLAUDE_35_SONNET: "gpt-4o",  # Using GPT-4 as substitute
-        ModelChoice.GPT_4O: "gpt-4o",
-        ModelChoice.MIXTRAL_8X22B: "gpt-4o",  # Using GPT-4 as substitute
+        ModelChoice.SONAR_: "gpt-4o-mini",  # Simulating with faster model
+        ModelChoice.CLAUDE_3_SONNE: "gpt-4o",  # Using GPT-4 as substitute
+        ModelChoice.GPT_: "gpt-4o",
+        ModelChoice.MIXTRAL_8X2: "gpt-4o"  # Using GPT- as substitute
     }
 
     return AugLLMConfig(
-        name="rag_generation_engine",
-        llm_config=AzureLLMConfig(
-            model=model_mapping.get(model, "gpt-4o"), temperature=0.3, max_tokens=2000
+        nam = "rag_generation_engine",
+        llm_config = AzureLLMConfig(
+            model=model_mapping.get(mode, "gpt-o"),
+            temperature=0.3,
+            max_tokens=2000
         ),
-        prompt_template=PROMPT_REGISTRY["rag_generation"],
-        structured_output_model=GeneratedResponse,
-        structured_output_version="v2",
-        uses_messages_field=True,  # This engine uses conversation history
+        prompt_template = PROMPT_REGISTR["rag_generation"],
+        structured_output_model = GeneratedResponse,
+        structured_output_versio = "v",
+        uses_messages_field = True  # This engine uses conversation history
     )
 
 
-def create_quality_assurance_engine() -> AugLLMConfig:
-    """Create engine for quality assurance."""
+def create_quality_assurance_engine() -> AugLLMConfi:
+    """Create engine for quality assuranc."""
     return AugLLMConfig(
-        name="quality_assurance_engine",
-        llm_config=AzureLLMConfig(model="gpt-4o", temperature=0.1, max_tokens=2000),
-        prompt_template=PROMPT_REGISTRY["quality_assurance"],
-        structured_output_model=QualityCheckOutput,
-        structured_output_version="v2",
+        nam = "quality_assurance_engine",
+        llm_config = AzureLLMConfig(
+            mode="gpt-o",
+            temperature=0.1,
+            max_tokens=2000
+        ),
+        prompt_template = PROMPT_REGISTR["quality_assurance"],
+        structured_output_model = QualityCheckOutput,
+        structured_output_versio = "v"
     )
 
 
@@ -381,32 +382,35 @@ def create_quality_assurance_engine() -> AugLLMConfig:
 # RETRIEVAL ENGINE CONFIGURATIONS
 # ============================================================================
 
-
 def create_vector_store_config(
-    name: str = "perplexity_knowledge_base",
-    provider: VectorStoreProvider = VectorStoreProvider.FAISS,
-) -> VectorStoreConfig:
-    """Create a vector store configuration."""
+    name: st = "perplexity_knowledge_base",
+    provider: VectorStoreProvider = VectorStoreProvider.FAISS
+
+
+) -> VectorStoreConfi:
+    """Create a vector store configuratio."""
     return VectorStoreConfig(
-        name=name,
-        vector_store_provider=provider,
-        embedding_model=HuggingFaceEmbeddingConfig(
-            model="sentence-transformers/all-MiniLM-L6-v2"
+        name = name,
+        vector_store_provider = provider,
+        embedding_model = HuggingFaceEmbeddingConfig(
+            mode="sentence-transformers/all-MiniLM-L6-v"
         ),
-        k=10,  # Default number of results
+        k = 10  # Default number of results
     )
 
 
 def create_retriever_config(
-    vector_store_config: VectorStoreConfig, search_type: str = "similarity", k: int = 5
-) -> VectorStoreRetrieverConfig:
-    """Create a retriever configuration."""
+    vector_store_config: VectorStoreConfig,
+    search_type: st = "similarity",
+    k: int =
+) -> VectorStoreRetrieverConfi:
+    """Create a retriever configuratio."""
     return VectorStoreRetrieverConfig(
-        name=f"{vector_store_config.name}_retriever",
-        vector_store_config=vector_store_config,
-        search_type=search_type,
-        k=k,
-        score_threshold=0.7,  # Minimum relevance score
+        name = "{vector_store_config.name}_retriever",
+        vector_store_config = vector_store_config,
+        search_type = search_type,
+        k = k,
+        score_threshold = 0.  # Minimum relevance score
     )
 
 
@@ -414,30 +418,37 @@ def create_retriever_config(
 # PRO MODE ENGINE CONFIGURATIONS
 # ============================================================================
 
-
-def create_planning_engine() -> AugLLMConfig:
-    """Create engine for multi-step planning."""
+def create_planning_engine() -> AugLLMConfi:
+    """Create engine for multi-step plannin."""
     from haive.agents.perplexity.pro.models import ExecutionPlanOutput
 
     return AugLLMConfig(
-        name="planning_engine",
-        llm_config=AzureLLMConfig(model="gpt-4o", temperature=0.3, max_tokens=1500),
-        prompt_template=PROMPT_REGISTRY["multi_step_planning"],
-        structured_output_model=ExecutionPlanOutput,
-        structured_output_version="v2",
+        nam = "planning_engine",
+        llm_config = AzureLLMConfig(
+            mode="gpt-o",
+            temperature=0.3,
+            max_tokens=1500
+        ),
+        prompt_template = PROMPT_REGISTR["multi_step_planning"],
+        structured_output_model = ExecutionPlanOutput,
+        structured_output_versio = "v"
     )
 
 
-def create_reasoning_engine() -> AugLLMConfig:
-    """Create engine for chain-of-thought reasoning."""
+def create_reasoning_engine() -> AugLLMConfi:
+    """Create engine for chain-of-thought reasonin."""
     from haive.agents.perplexity.pro.models import ReasoningOutput
 
     return AugLLMConfig(
-        name="reasoning_engine",
-        llm_config=AzureLLMConfig(model="gpt-4o", temperature=0.2, max_tokens=2000),
-        prompt_template=PROMPT_REGISTRY["chain_of_thought"],
-        structured_output_model=ReasoningOutput,
-        structured_output_version="v2",
+        nam = "reasoning_engine",
+        llm_config = AzureLLMConfig(
+            mode="gpt-o",
+            temperature=0.2,
+            max_tokens=2000
+        ),
+        prompt_template = PROMPT_REGISTR["chain_of_thought"],
+        structured_output_model = ReasoningOutput,
+        structured_output_versio = "v"
     )
 
 
@@ -445,43 +456,54 @@ def create_reasoning_engine() -> AugLLMConfig:
 # RESEARCH MODE ENGINE CONFIGURATIONS
 # ============================================================================
 
-
-def create_research_planning_engine() -> AugLLMConfig:
-    """Create engine for research planning."""
+def create_research_planning_engine() -> AugLLMConfi:
+    """Create engine for research plannin."""
     from haive.agents.perplexity.research.models import ResearchPlanOutput
 
     return AugLLMConfig(
-        name="research_planning_engine",
-        llm_config=AzureLLMConfig(model="gpt-4o", temperature=0.4, max_tokens=2000),
-        prompt_template=PROMPT_REGISTRY["research_strategy"],
-        structured_output_model=ResearchPlanOutput,
-        structured_output_version="v2",
+        nam = "research_planning_engine",
+        llm_config = AzureLLMConfig(
+            mode="gpt-o",
+            temperature=0.4,
+            max_tokens=2000
+        ),
+        prompt_template = PROMPT_REGISTR["research_strategy"],
+        structured_output_model = ResearchPlanOutput,
+        structured_output_versio = "v"
     )
 
 
-def create_source_analysis_engine() -> AugLLMConfig:
-    """Create engine for source analysis."""
+def create_source_analysis_engine() -> AugLLMConfi:
+    """Create engine for source analysi."""
     from haive.agents.perplexity.research.models import SourceAnalysisOutput
 
     return AugLLMConfig(
-        name="source_analysis_engine",
-        llm_config=AzureLLMConfig(model="gpt-4o", temperature=0.1, max_tokens=2000),
-        prompt_template=PROMPT_REGISTRY["source_analysis"],
-        structured_output_model=SourceAnalysisOutput,
-        structured_output_version="v2",
+        nam = "source_analysis_engine",
+        llm_config = AzureLLMConfig(
+            mode="gpt-o",
+            temperature=0.1,
+            max_tokens=2000
+        ),
+        prompt_template = PROMPT_REGISTR["source_analysis"],
+        structured_output_model = SourceAnalysisOutput,
+        structured_output_versio = "v"
     )
 
 
-def create_synthesis_engine() -> AugLLMConfig:
-    """Create engine for research synthesis."""
+def create_synthesis_engine() -> AugLLMConfi:
+    """Create engine for research synthesi."""
     from haive.agents.perplexity.research.models import SynthesisOutput
 
     return AugLLMConfig(
-        name="synthesis_engine",
-        llm_config=AzureLLMConfig(model="gpt-4o", temperature=0.3, max_tokens=3000),
-        prompt_template=PROMPT_REGISTRY["research_synthesis"],
-        structured_output_model=SynthesisOutput,
-        structured_output_version="v2",
+        nam = "synthesis_engine",
+        llm_config = AzureLLMConfig(
+            mode="gpt-o",
+            temperature=0.3,
+            max_tokens=3000
+        ),
+        prompt_template = PROMPT_REGISTR["research_synthesis"],
+        structured_output_model = SynthesisOutput,
+        structured_output_versio = "v"
     )
 
 
@@ -489,28 +511,32 @@ def create_synthesis_engine() -> AugLLMConfig:
 # LABS MODE ENGINE CONFIGURATIONS
 # ============================================================================
 
-
-def create_project_analysis_engine() -> AugLLMConfig:
-    """Create engine for project analysis."""
+def create_project_analysis_engine() -> AugLLMConfi:
+    """Create engine for project analysi."""
     from haive.agents.perplexity.labs.models import ProjectAnalysisOutput
 
     return AugLLMConfig(
-        name="project_analysis_engine",
-        llm_config=AzureLLMConfig(model="gpt-4o", temperature=0.2, max_tokens=2000),
-        prompt_template=PROMPT_REGISTRY["project_requirements"],
-        structured_output_model=ProjectAnalysisOutput,
-        structured_output_version="v2",
+        nam = "project_analysis_engine",
+        llm_config = AzureLLMConfig(
+            mode="gpt-o",
+            temperature=0.2,
+            max_tokens=2000
+        ),
+        prompt_template = PROMPT_REGISTR["project_requirements"],
+        structured_output_model = ProjectAnalysisOutput,
+        structured_output_versio = "v"
     )
 
 
-def create_tool_orchestration_engine() -> AugLLMConfig:
-    """Create engine for tool orchestration."""
+def create_tool_orchestration_engine() -> AugLLMConfi:
+    """Create engine for tool orchestratio."""
     from haive.agents.perplexity.labs.models import OrchestrationPlanOutput
 
     return AugLLMConfig(
-        name="tool_orchestration_engine",
-        llm_config=AzureLLMConfig(model="gpt-4o", temperature=0.2, max_tokens=1500),
-        prompt_template=PROMPT_TEMPLATE,
-        structured_output_model=OrchestrationPlanOutput,
-        structured_output_version="v2",
-    )
+        nam = "tool_orchestration_engine",
+        llm_config = AzureLLMConfig(
+            mode="gpt-o",
+            temperature=0.2,
+            max_tokens=1500
+        ),
+        prompt_template = PROMPT_

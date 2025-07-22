@@ -1,4 +1,4 @@
-"""Self Improving - TODO: Add brief description
+r"""Self Improving - TODO: Add brief description.
 
 TODO: Add detailed description of module functionality
 
@@ -9,9 +9,11 @@ Example:
 
         from haive.self_improving import module_function
 
-        # TODO: Add example
+        # TODO: Add exampl\w+
 
-
+\s+
 """
 
 # https://github.com/NirDiamant/GenAI_Agents/blob/main/all_agents_tutorials/self_improving_agent.ipynb
+
+__all__ = []

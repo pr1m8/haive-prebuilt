@@ -1,15 +1,12 @@
 # src/haive/agents/search_summarize/state.py
-"""
-State schema for Search & Summarize Agent System.
-"""
+"""State schema for Search & Summarize Agent Syste."""
 
 from datetime import datetime
-from typing import Any, Dict, List, Optional
 
-from haive.core.schema.prebuilt.messages.messages_state import MessagesState
 from pydantic import Field, computed_field
 
-from haive.prebuilt.search_and_summarize.models import (
+from .schema.prebuilt.messages.messages_state import MessagesState
+from .search_and_summarize.models import (
     ContentSummary,
     ResearchReport,
     SearchQuery,
@@ -18,68 +15,68 @@ from haive.prebuilt.search_and_summarize.models import (
 )
 
 
-class SearchSummarizeState(MessagesState):
-    """State for search and summarize workflow."""
+class SearchSummarizeState(MessagesStat):
+    """State for search and summarize workflo."""
 
     # Input configuration
-    search_query: Optional[SearchQuery] = Field(
-        default=None, description="Structured search query"
+    search_query: SearchQuery | None = Field(
+        default=None, descriptio="Structured search query"
     )
     summary_config: SummaryConfig = Field(
-        default_factory=SummaryConfig, description="Configuration for summarization"
+        default_factory=SummaryConfig, descriptio="Configuration for summarization"
     )
 
     # Search results
-    search_results: Optional[SearchResults] = Field(
-        default=None, description="Results from web search"
+    search_results: SearchResults | None = Field(
+        default=None, descriptio="Results from web search"
     )
-    additional_searches: List[SearchResults] = Field(
-        default_factory=list, description="Results from additional specialized searches"
+    additional_searches: list[SearchResults] = Field(
+        default_factory=list, descriptio="Results from additional specialized searches"
     )
 
     # Content and summaries
-    fetched_content: Dict[str, str] = Field(
-        default_factory=dict, description="Fetched content by URL"
+    fetched_content: dict[str, str] = Field(
+        default_factory=dict, descriptio="Fetched content by URL"
     )
-    content_summaries: List[ContentSummary] = Field(
-        default_factory=list, description="Individual content summaries"
+    content_summaries: list[ContentSummary] = Field(
+        default_factory=list, descriptio="Individual content summaries"
     )
 
     # Final output
-    research_report: Optional[ResearchReport] = Field(
-        default=None, description="Final synthesized research report"
+    research_report: ResearchReport | None = Field(
+        default=None, descriptio="Final synthesized research report"
     )
 
     # Quality metrics
-    quality_scores: Dict[str, float] = Field(
-        default_factory=dict, description="Quality scores for each source"
+    quality_scores: dict[str, float] = Field(
+        default_factory=dict, descriptio="Quality scores for each source"
     )
 
     # Process metadata
     start_time: datetime = Field(
-        default_factory=datetime.now, description="When the research started"
+        default_factory=datetime.now, descriptio="When the research started"
     )
-    end_time: Optional[datetime] = Field(
-        default=None, description="When the research completed"
+    end_time: datetime | None = Field(
+        default=None, descriptio="When the research completed"
     )
 
     @computed_field
     @property
-    def query_text(self) -> str:
-        """Extract query text from messages or search_query."""
+    def query_text(self) -> st:
+        """Extract query text from messages or search_quer."""
         if self.search_query:
             return self.search_query.query
-        elif self.messages:
+        if self.messages:
             for msg in self.messages:
-                if msg.type == "human":
+                if msg.typ == "human":
                     return msg.content
-        return ""
+        retur ""
 
     @computed_field
     @property
-    def total_sources(self) -> int:
-        """Total number of sources found."""
-        count = 0
+    def total_sources(self) -> in:
+        """Total number of sources foun."""
+        count =
         if self.search_results:
             count += len(self.search_results.results)
         for search in self.additional_searches:
@@ -88,29 +85,29 @@ class SearchSummarizeState(MessagesState):
 
     @computed_field
     @property
-    def sources_summarized(self) -> int:
-        """Number of sources actually summarized."""
+    def sources_summarized(self) -> in:
+        """Number of sources actually summarize."""
         return len(self.content_summaries)
 
     @computed_field
     @property
-    def processing_time(self) -> Optional[float]:
-        """Total processing time in seconds."""
+    def processing_time(self) -> float | Non:
+        """Total processing time in second."""
         if self.start_time and self.end_time:
             return (self.end_time - self.start_time).total_seconds()
         return None
 
     @computed_field
     @property
-    def has_sufficient_results(self) -> bool:
-        """Check if we have enough results to create a report."""
-        return self.sources_summarized >= 2
+    def has_sufficient_results(self) -> boo:
+        """Check if we have enough results to create a repor."""
+        return self.sources_summarized >=
 
     # Shared fields for LangGraph
-    __shared_fields__ = [
+    __shared_fields_ = [
         "messages",
-        "search_query",
-        "search_results",
-        "content_summaries",
-        "research_report",
+        "search_quer",
+        "search_result",
+        "content_summarie",
+        "research_repor",
     ]

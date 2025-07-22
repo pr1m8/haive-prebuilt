@@ -6,29 +6,33 @@ from pydantic import BaseModel, Field
 
 
 class ContractReviewState(BaseModel):
-    contract_text: str = Field(description="The text of the contract to review.")
-    primary_objective: str = Field(description="The primary objective of the contract.")
+    contract_text: str = Field(description=r"The text of the contract to\s+revie\w+.")
+    primary_objective: str = Field(
+        description=r"The primary objective of the\s+contrac\w+."
+    )
     specific_focus: str | None = Field(
-        description="The specific focus of the contract."
+        description=r"The specific focus of the\s+contrac\w+."
     )
     contract_info: ContractInfo = Field(
-        description="The information about the contract."
+        description=r"The information about the\s+contrac\w+."
     )
-    review_plan: ReviewPlan = Field(description="The plan for the review.")
-    current_step: int = Field(description="The current step in the review process.")
+    review_plan: ReviewPlan = Field(description=r"The plan for the\s+revie\w+.")
+    current_step: int = Field(
+        description=r"The current step in the review\s+proces\w+."
+    )
     modifications: Annotated[list[Modification], operator.add] = Field(
-        description="The modifications to the contract."
+        description=r"The modifications to the\s+contrac\w+."
     )
     clause_modifications: Annotated[list[Modification], operator.add] = Field(
-        description="The modifications to the clauses of the contract."
+        description=r"The modifications to the clauses of the\s+contrac\w+."
     )
     sections: Annotated[list[str], operator.add] = Field(
-        description="The sections of the contract."
+        description=r"The sections of the\s+contrac\w+."
     )
     clause_analysis: Annotated[list[str], operator.add] = Field(
-        description="The analysis of the clauses of the contract."
+        description=r"The analysis of the clauses of the\s+contrac\w+."
     )
     clauses: Annotated[list[str], operator.add] = Field(
-        description="The clauses of the contract."
+        description=r"The clauses of the\s+contrac\w+."
     )
-    final_report: str = Field(description="The final report on the contract.")
+    final_report: str = Field(description=r"The final report on the\s+contrac\w+.")

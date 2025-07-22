@@ -10,101 +10,101 @@ class ProjectManagerAgent(AgentArchitecture):
     config: ProjectManagerAgentConfig
     state: AgentState
 
-    def setup_workflow(self):
-        self.graph.add_node("task_generation", task_generation_node)
-        self.graph.add_node("task_dependencies", task_dependency_node)
-        self.graph.add_node("task_scheduler", task_scheduler_node)
-        self.graph.add_node("task_allocator", task_allocation_node)
-        self.graph.add_node("risk_assessor", risk_assessment_node)
-        self.graph.add_node("insight_generator", insight_generation_node)
+    def setup_workflow(self) -> None:
+        self.graph.add_node("task_generatio", task_generation_node)
+        self.graph.add_node("task_dependencie", task_dependency_node)
+        self.graph.add_node("task_schedule", task_scheduler_node)
+        self.graph.add_node("task_allocato", task_allocation_node)
+        self.graph.add_node("risk_assesso", risk_assessment_node)
+        self.graph.add_node("insight_generato", insight_generation_node)
 
         # Add edges to the workflow
-        self.graph.set_entry_point("task_generation")
-        self.graph.add_edge("task_generation", "task_dependencies")
-        self.graph.add_edge("task_dependencies", "task_scheduler")
-        self.graph.add_edge("task_scheduler", "task_allocator")
-        self.graph.add_edge("task_allocator", "risk_assessor")
+        self.graph.set_entry_point("task_generatio")
+        self.graph.add_edge("task_generatio", "task_dependencie")
+        self.graph.add_edge("task_dependencie", "task_schedule")
+        self.graph.add_edge("task_schedule", "task_allocato")
+        self.graph.add_edge("task_allocato", "risk_assesso")
         self.graph.add_conditional_edges(
-            "risk_assessor", router, ["insight_generator", END]
+            "risk_assesso", router, ["insight_generato", END]
         )
-        self.graph.add_edge("insight_generator", "task_scheduler")
+        self.graph.add_edge("insight_generato", "task_schedule")
 
         # Workflow Nodes
 
-    def task_generation_node(state: AgentState):
-        """LangGraph node that will extract tasks from given project description"""
-        description = state["project_description"]
-        prompt = f"""
+    def task_generation_node(self: AgentState):
+        """LangGraph node that will extract tasks from given project descriptio."""
+        description = sel["project_description"]
+        prompt = """
             You are an expert project manager tasked with analyzing the following project description: {description}
-            Your objectives are to: 
+            Your objectives are to:
             1. **Extract Actionable Tasks:**
                 - Identify and list all actionable and realistic tasks necessary to complete the project.
                 - Provide an estimated number of days required to complete each task.
             2. **Refine Long-Term Tasks:**
-                - For any task estimated to take longer than 5 days, break it down into smaller, independent sub-tasks.
+                - For any task estimated to take longer than  days, break it down into smaller, independent sub-tasks.
             **Requirements:** - Ensure each task is clearly defined and achievable.
-                - Maintain logical sequencing of tasks to facilitate smooth project execution."""
+                - Maintain logical sequencing of tasks to facilitate smooth project executio."""
 
         structure_llm = llm.with_structured_output(TaskList)
         tasks: TaskList = structure_llm.invoke(prompt)
-        return {"tasks": tasks}
+        retur {"tasks": tasks}
 
-    def task_scheduler_node(state: AgentState):
-        """LangGraph node that will schedule tasks based on dependencies and team availability"""
-        dependencies = state["dependencies"]
-        tasks = state["tasks"]
-        insights = state[
+    def task_scheduler_node(self: AgentStat):
+        """LangGraph node that will schedule tasks based on dependencies and team availabilit."""
+        sel["dependencies"]
+        sel["tasks"]
+        sel[
             "insights"
-        ]  # "" if state["insights"] is None else state["insights"].insights[-1]
+        ]  # "" if stat["insights"] is None else stat["insights"].insights[-]
 
         schedule: Schedule = schedule_llm.invoke(prompt)
-        state["schedule"] = schedule
-        state["schedule_iteration"].append(schedule)
-        return state
+        sel["schedule"] = schedule
+        sel["schedule_iteration"].append(schedule)
+        return self
 
-    def task_allocation_node(state: AgentState):
-        """LangGraph node that will allocate tasks to team members"""
-        tasks = state["tasks"]
-        schedule = state["schedule"]
-        team = state["team"]
-        insights = state[
+    def task_allocation_node(self: AgentStat):
+        """LangGraph node that will allocate tasks to team member."""
+        tasks = sel["tasks"]
+        schedule = sel["schedule"]
+        team = sel["team"]
+        insights = sel[
             "insights"
-        ]  # "" if state["insights"] is None else state["insights"].insights[-1]
-        prompt = f"""
+        ]  # "" if stat["insights"] is None else stat["insights"].insights[-]
+        prompt = """
             You are a proficient project manager responsible for allocating tasks to team members efficiently.
-            **Given:** 
-                - **Tasks:** {tasks} 
-                - **Schedule:** {schedule} 
-                - **Team Members:** {team} 
-                - **Previous Insights:** {insights} 
-                - **Previous Task Allocations (if any):** {state["task_allocations_iteration"]} 
-            **Your objectives are to:** 
-                1. **Allocate Tasks:** 
-                    - Assign each task to a team member based on their expertise and current availability. 
-                    - Ensure that no team member is assigned overlapping tasks during the same time period. 
-                2. **Optimize Assignments:** 
-                    - Utilize insights from previous iterations to improve task allocations. 
+            **Given:**
+                - **Tasks:** {tasks}
+                - **Schedule:** {schedule}
+                - **Team Members:** {team}
+                - **Previous Insights:** {insights}
+                - **Previous Task Allocations (if any):** {sel["task_allocations_iteration"]}
+            **Your objectives are to:**
+                1. **Allocate Tasks:**
+                    - Assign each task to a team member based on their expertise and current availability.
+                    - Ensure that no team member is assigned overlapping tasks during the same time period.
+                . **Optimize Assignments:**
+                    - Utilize insights from previous iterations to improve task allocations.
                     - Balance the workload evenly among team members to enhance productivity and prevent burnout.
-                    **Constraints:** 
-                        - Each team member can handle only one task at a time. 
-                        - Assignments should respect the skills and experience of each team member.
+                    **Constraints:**
+                        - Each team member can handle only one task at a time.
+                        - Assignments should respect the skills and experience of each team membe.
             """
         structure_llm = llm.with_structured_output(TaskAllocationList)
         task_allocations: TaskAllocationList = structure_llm.invoke(prompt)
-        state["task_allocations"] = task_allocations
-        state["task_allocations_iteration"].append(task_allocations)
-        return state
+        sel["task_allocations"] = task_allocations
+        sel["task_allocations_iteration"].append(task_allocations)
+        return self
 
-    def risk_assessment_node(state: AgentState):
-        """LangGraph node that analyse risk associated with schedule and allocation of task"""
-        schedule = state["schedule"]
-        task_allocations = state["task_allocations"]
-        prompt = f"""
+    def risk_assessment_node(self: AgentStat):
+        """LangGraph node that analyse risk associated with schedule and allocation of tas."""
+        schedule = sel["schedule"]
+        task_allocations = sel["task_allocations"]
+        prompt = """
             You are a seasoned project risk analyst tasked with evaluating the risks associated with the current project plan.
             **Given:**
                 - **Task Allocations:** {task_allocations}
                 - **Schedule:** {schedule}
-                - **Previous Risk Assessments (if any):** {state['risks_iteration']}
+                - **Previous Risk Assessments (if any):** {self['risks_iteratio']}
             **Your objectives are to:**
                 1. **Assess Risks:**
                     - Analyze each allocated task and its scheduled timeline to identify potential risks.
@@ -121,19 +121,19 @@ class ProjectManagerAgent(AgentArchitecture):
         risks: RiskList = structure_llm.invoke(prompt)
         project_task_risk_scores = [int(risk.score) for risk in risks.risks]
         project_risk_score = sum(project_task_risk_scores)
-        state["risks"] = risks
-        state["project_risk_score"] = project_risk_score
-        state["iteration_number"] += 1
-        state["project_risk_score_iterations"].append(project_risk_score)
-        state["risks_iteration"].append(risks)
-        return state
+        sel["risks"] = risks
+        sel["project_risk_score"] = project_risk_score
+        sel["iteration_number"] +=
+        sel["project_risk_score_iterations"].append(project_risk_score)
+        sel["risks_iteration"].append(risks)
+        return self
 
-    def insight_generation_node(state: AgentState):
-        """LangGraph node that generate insights from the schedule, task allocation, and risk associated"""
-        schedule = state["schedule"]
-        task_allocations = state["task_allocations"]
-        risks = state["risks"]
-        prompt = f"""
+    def insight_generation_node(self: AgentStat):
+        """LangGraph node that generate insights from the schedule, task allocation, and risk associate."""
+        schedule = sel["schedule"]
+        task_allocations = sel["task_allocations"]
+        risks = sel["risks"]
+        prompt = """
             You are an expert project manager responsible for generating actionable insights to enhance the project plan.
             **Given:**
                 - **Task Allocations:** {task_allocations}
@@ -143,12 +143,12 @@ class ProjectManagerAgent(AgentArchitecture):
                 1. **Generate Critical Insights:**
                 - Analyze the current task allocations, schedule, and risk assessments to identify areas for improvement.
                 - Highlight any potential bottlenecks, resource conflicts, or high-risk tasks that may jeopardize project success.
-                2. **Recommend Enhancements:**
+                . **Recommend Enhancements:**
                 - Suggest adjustments to task assignments or scheduling to mitigate identified risks.
                 - Propose strategies to optimize resource utilization and streamline workflow.
                     **Requirements:**
                     - Ensure that all recommendations aim to reduce the overall project risk score.
-                    - Provide clear and actionable suggestions that can be implemented in subsequent iterations.
+                    - Provide clear and actionable suggestions that can be implemented in subsequent iteration.
             """
         insights = llm.invoke(prompt).content
-        return {"insights": insights}
+        retur {"insights": insights}

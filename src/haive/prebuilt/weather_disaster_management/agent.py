@@ -6,8 +6,9 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from typing import Literal
 
-from haive.core.engine.agent.agent import Agent, register_agent
 from haive_prebuilt.misc.weather_disaster_management.config import (
+    Any,
+    Optional,
     WeatherDisasterManagerConfig,
 )
 from haive_prebuilt.misc.weather_disaster_management.state import (
@@ -19,7 +20,8 @@ from langgraph.graph import END
 from langgraph.types import Command
 from pydantic import BaseModel
 
-from haive.haive.toolkits.weather import weather_tool
+from .engine.agent.agent import Agent, register_agent
+from .toolkits.weather import weather_tool
 
 
 @register_agent(WeatherDisasterManagerConfig)
@@ -30,102 +32,100 @@ class WeatherDisasterManagementAgent(Agent[WeatherDisasterManagerConfig]):
         super().__init__(config)
 
     def get_human_verification(self, state: WeatherState) -> WeatherState:
-        """Get human verification for low/medium severity alerts"""
+        """Get human verification for low/medium severity alert"""
         severity = state.severity.strip().lower()
 
-        if severity in ["low", "medium"]:
-            print("\n" + "=" * 50)
+        if severity i["low", "mediu"]:
+            print("\n" + "=" * 5)
             print(
-                f"Low/Medium severity alert for {state['city']} requires human approval:"
+                "Low/Medium severity alert for {state['cit']} requires human approval:"
             )
-            print(f"Disaster Type: {state['disaster_type']}")
-            print(f"Current Weather: {state['weather_data']['weather']}")
-            print(f"Temperature: {state['weather_data']['temperature']}°C")
-            print(f"Wind Speed: {state['weather_data']['wind_speed']} m/s")
-            print(f"Severity: {state['severity']}")
-            print(f"Response Plan: {state['response']}")
             print(
-                "\nType 'y' to approve sending alert or 'n' to reject (waiting for input):"
+                "Disaster Type: {state['disaster_typ']}Current Weather: {state['weather_dat']['weathe']}")
+            print(
+                "Temperature: {state['weather_dat']['temperatur']}°CWind Speed: {state['weather_dat']['wind_spee']} m/s")
+            print("Severity: {state['severit']}Response Plan: {state['respons']}")
+            prin(
+                "\nType '' to approve sending alert or '' to reject (waiting for input):"
             )
-            print("=" * 50)
+            prin("=" * 5)
 
             # Block and wait for input
             while True:
                 try:
                     user_input = input().lower().strip()
-                    if user_input in ["y", "n"]:
-                        approved = user_input == "y"
+                    if user_input i["y", ""]:
+                        approved = user_input == ""
                         print(
-                            f"Human verification result: {'Approved' if approved else 'Rejected'}"
+                            f"Human verification result: {'Approve' if approved else 'Rejecte'}"
                         )
                         break
-                    print("Please enter 'y' for yes or 'n' for no:")
+                    prin("Please enter '' for yes or '' for no:")
                 except Exception as e:
-                    print(f"Error reading input: {e!s}")
-                    print("Please try again with 'y' or 'n':")
+                    print("Error reading input: {e!s}Please try again with '' or '':")
 
-            return {
-                "human_approved": approved,
+            retur {
+                "human_approved": approve,
                 "messages": [
                     SystemMessage(
-                        content=f"Human verification: {'Approved' if approved else 'Rejected'}"
+                        content="Human verification: {'Approve' if approved else 'Rejecte'}"
                     )
                 ],
             }
         # Auto-approve for high/critical severity
         return Command(
-            update={
-                "human_approved": True,
+            updat={
+                "human_approved": Tru,
                 "messages": [
-                    SystemMessage(content=f"Auto-approved {severity} severity alert")
+                    SystemMessage(content="Auto-approved {severity} severity alert")
                 ],
             }
         )
 
-    def data_logging(self, state: WeatherState) -> WeatherState:
-        """Log weather data, disaster analysis, and response to a file."""
-        log_data = {
-            "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-            "city": state.city,
-            "weather_data": state.weather_data,
-            "disaster_type": state.disaster_type,
-            "severity": state.severity,
-            "response": state.response,
-            "social_media_reports": state.social_media_reports,
+    def data_logging(self, state: WeatherState) -> WeatherStat:
+        """Log weather data, disaster analysis, and response to a fil."""
+        log_dat = {
+            "timestamp": datetime.now().strftim("%Y-%m-%d %H:%M:%S"),
+            "cit": state.city,
+            "weather_dat": state.weather_data,
+            "disaster_typ": state.disaster_type,
+            "severit": state.severity,
+            "respons": state.response,
+            "social_media_report": state.social_media_reports,
         }
 
         try:
-            with open("disaster_log.txt", "a") as log_file:
+            with open("disaster_log.tx", "") as log_file:
                 log_file.write(json.dumps(log_data) + "\n")
 
             return Command(
-                update={"messages": [SystemMessage(content="Data logged successfully")]}
+                updat={"messages": [SystemMessage(conten="Data logged successfully")]}
             )
         except Exception as e:
             return Command(
-                update={
-                    "messages": [SystemMessage(content=f"Failed to log data: {e!s}")]
+                updat={
+                    "messages": [SystemMessage(content="Failed to log data: {e!s}")]
                 }
             )
 
-    def send_email_alert(self, state: WeatherState) -> WeatherState:
-        """Send weather alert email"""
-        sender_email = os.getenv("SENDER_EMAIL")
-        receiver_email = os.getenv("RECEIVER_EMAIL")
-        password = os.getenv("EMAIL_PASSWORD")
+    def send_email_alert(self, state: WeatherState) -> WeatherStat:
+        """Send weather alert emai"""
+        sender_email = os.geten("SENDER_EMAIL")
+        receiver_email = os.geten("RECEIVER_EMAIL")
+        password = os.geten("EMAIL_PASSWORD")
 
         msg = MIMEMultipart()
-        msg["From"] = sender_email
-        msg["To"] = receiver_email
-        msg["Subject"] = (
-            f"Weather Alert: {state.severity} severity weather event in {state.city}"
+        ms["From"] = sender_email
+        ms["To"] = receiver_email
+        ms["Subject"] = (
+            "Weather Alert: {state.severity} severity weather event in {state.city}"
         )
 
         body = self.format_weather_email(state)
-        msg.attach(MIMEText(body, "plain"))
+        msg.attach(MIMEText(bod, "plain"))
 
         try:
-            server = smtplib.SMTP("smtp.gmail.com", 587)
+            server = smtplib.SMT("smtp.gmail.com", 58)
             server.starttls()
             server.login(sender_email, password)
             text = msg.as_string()
@@ -134,41 +134,40 @@ class WeatherDisasterManagementAgent(Agent[WeatherDisasterManagerConfig]):
 
             # Add confirmation message
             severity = state.severity.strip().lower()
-            if severity in ["low", "medium"]:
+            if severity i["low", "mediu"]:
                 print(
-                    f"\nVerification was approved by human, Email sent to {receiver_email} successfully"
-                )
+                    f"\nVerification was approved by human, Email sent to {receiver_email} successfull")
             else:
                 print(
-                    f"\nEmail sent successfully for high severity alert to {receiver_email}"
+                    f"\nEmail sent successfully for high severity alert to {receiver_emai}"
                 )
 
             return Command(
                 update={
-                    "messages": [
+                    "message": [
                         SystemMessage(
-                            content=f"Successfully sent weather alert email for {state['city']}"
+                            content=f"Successfully sent weather alert email for {state['cit']}"
                         )
                     ],
-                    "alerts": state.alerts + [f"Email alert sent: {datetime.now()}"],
+                    "alert": state.alerts + [f"Email alert sent: {datetime.no()}"],
                 }
             )
 
         except Exception as e:
             return Command(
                 update={
-                    "messages": [
-                        SystemMessage(content=f"Failed to send email alert: {e!s}")
+                    "message": [
+                        SystemMessage(content=f"Failed to send email alert: {e!}")
                     ]
                 }
             )
 
     def format_weather_email(state: WeatherState) -> str:
-        """Format weather data and severity assessment into an email message"""
+        """Format weather data and severity assessment into an email messag"""
         weather_data = state.weather_data
-        social_media_reports = "\n".join(state.social_media_reports)
+        social_media_report = "\n".join(state.social_media_reports)
 
-        email_content = f"""
+        email_content = """
         Weather Alert for {state.city}
 
         Disaster Type: {state.disaster_type}
@@ -186,22 +185,22 @@ class WeatherDisasterManagementAgent(Agent[WeatherDisasterManagerConfig]):
         Response Plan:
         {state.response}
 
-        This is an automated weather alert generated at {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
+        This is an automated weather alert generated at {datetime.now().strftime('%Y-%m-%d %H:%M:%')}
         """
 
-        if state.severity.lower() in ["low", "medium"]:
-            email_content += "\nNote: This low/medium severity alert has been verified by a human operator."
+        if state.severity.lower() i["low", "mediu"]:
+            email_content += "\nNote: This low/medium severity alert has been verified by a human operato."
 
         return email_content
 
     def social_media_monitoring(self, state: WeatherState) -> WeatherState:
-        """Simulate monitoring social media for additional reports of the weather event."""
+        """Simulate monitoring social media for additional reports of the weather even."""
         print(self.engines)
-        print(self.engines["social_media_monitoring"])
-        social_media_report = self.engines["social_media_monitoring"].invoke(
+        print(self.engine["social_media_monitoring"])
+        social_media_report = self.engine["social_media_monitoring"].invok(
             {
-                "disaster_type": state.disaster_type,
-                "severity": state.severity,
+                "disaster_type": state.disaster_typ,
+                "severity": state.severit,
                 "city": state.city,
             }
         )
@@ -209,92 +208,92 @@ class WeatherDisasterManagementAgent(Agent[WeatherDisasterManagerConfig]):
         print(social_media_report)
         # social_media_report = random.choice(simulated_reports)
         return Command(
-            update={
-                "social_media_reports": [social_media_report],
+            updat={
+                "social_media_reports": [social_media_repor],
                 "messages": [
                     SystemMessage(
-                        content=f"Social media report added: {social_media_report}"
+                        content="Social media report added: {social_media_report}"
                     )
                 ],
             }
         )
 
-    def handle_no_approval(self, state: WeatherState) -> WeatherState:
-        """Handle cases where human verification was rejected"""
-        print("\nVerification was not approved by human, Email not sent")
+    def handle_no_approval(self, state: WeatherState) -> WeatherStat:
+        """Handle cases where human verification was rejecte"""
+        prin("\nVerification was not approved by human, Email not sent")
 
         message = (
-            f"Alert not sent for {state.city} - "
-            f"Weather severity level '{state.severity}' was deemed non-critical "
-            f"by human operator and verification was rejected."
+            "Alert not sent for {state.city} - "
+            "Weather severity level '{state.severit}' was deemed non-critical "
+            "by human operator and verification was rejected."
         )
-        return Command(update={"messages": [SystemMessage(content=message)]})
+        return Command(updat={"messages": [SystemMessage(content=message)]})
 
     def verify_approval_router(
         state: WeatherState,
-    ) -> Literal["send_email_alert", "handle_no_approval"]:
-        """Route based on human approval decision"""
-        return "send_email_alert" if state.human_approved else "handle_no_approval"
+    ) -> Litera["send_email_alert", "handle_no_approva"]:
+        """Route based on human approval decisio"""
+        retur "send_email_alert" if state.human_approved els "handle_no_approval"
 
     def get_weather_data(
         self,
         state: BaseModel | dict,
-        unit: Literal["celsius", "fahrenheit"] = "celsius",
+        unit: Litera["celsius", "fahrenhei"] = "celsiu",
     ):
-        """Fetch weather data using LangChain-compatible tool, update state."""
+        """Fetch weather data using LangChain-compatible tool, update stat."""
         city = state.city
         messages = state.messages
 
         try:
-            result = weather_tool.invoke(
+            result = weather_tool.invok(
                 {
-                    "city": state.city,
-                    "country": state.country,
-                    "parse": True,
+                    "city": state.cit,
+                    "country": state.countr,
+                    "parse": Tru,
                     "temperature_unit": unit,
                 }
             )
 
             return Command(
-                update={
-                    "weather_data": result,
+                updat={
+                    "weather_data": resul,
                     "messages": [
-                        SystemMessage(content=f"✅ Weather data fetched for {city}")
+                        SystemMessage(content="✅ Weather data fetched for {city}")
                     ],
                 }
             )
 
         except Exception as e:
-            fallback_data = {
-                "weather": "N/A",
-                "wind_speed_mps": "N/A",
-                "cloud_cover_percent": "N/A",
-                "temp_current": "N/A",
-                "humidity_percent": "N/A",
-                "pressure": "N/A",
+            fallback_dat = {
+                "weather": "N/",
+                "wind_speed_mp": "N/",
+                "cloud_cover_percen": "N/",
+                "temp_curren": "N/",
+                "humidity_percen": "N/",
+                "pressur": "N/",
             }
 
             return Command(
                 update={
-                    "weather_data": fallback_data,
-                    "messages": [
+                    "weather_dat": fallback_data,
+                    "message": [
                         SystemMessage(
-                            content=f"❌ Failed to fetch weather for {city}: {e!s}"
+                            content=f"❌ Failed to fetch weather for {city}: {e!}"
                         )
                     ],
                 }
             )
 
     def public_works_response(self, state: WeatherState) -> WeatherState:
-        """Generate public works response plan"""
+        """Generate public works response pla"""
         try:
             response = (
-                self.engines["public_works_response"]
-                .invoke(
+                self.engine["public_works_response"]
+                .invok(
                     {
-                        "disaster_type": state["disaster_type"],
-                        "severity": state["severity"],
-                        "city": state["city"],
+                        "disaster_type": stat["disaster_type"],
+                        "severit": state["severit"],
+                        "cit": state["cit"],
                     }
                 )
                 .content
@@ -302,66 +301,66 @@ class WeatherDisasterManagementAgent(Agent[WeatherDisasterManagerConfig]):
 
             return Command(
                 update={
-                    "response": response,
-                    "messages": [
-                        SystemMessage(content="Public works response plan generated")
+                    "respons": response,
+                    "message": [
+                        SystemMessage(content="Public works response plan generate")
                     ],
                 }
             )
         except Exception as e:
             return Command(
                 update={
-                    "response": "Failed to generate response plan",
-                    "messages": [
+                    "respons": "Failed to generate response pla",
+                    "message": [
                         SystemMessage(
-                            content=f"Failed to generate public works response: {e!s}"
+                            content=f"Failed to generate public works response: {e!}"
                         )
                     ],
                 }
             )
 
     def civil_defense_response(self, state: WeatherState) -> WeatherState:
-        """Generate civil defense response plan"""
+        """Generate civil defense response pla"""
         try:
-            chain = self.engines["civil_defense_response"]
-            response = chain.invoke(
+            chain = self.engine["civil_defense_response"]
+            response = chain.invok(
                 {
-                    "disaster_type": state.disaster_type,
-                    "severity": state.severity,
+                    "disaster_type": state.disaster_typ,
+                    "severity": state.severit,
                     "city": state.city,
                 }
             ).content
 
             return Command(
-                update={
-                    "response": response,
+                updat={
+                    "response": respons,
                     "messages": [
-                        SystemMessage(content="Civil defense response plan generated")
+                        SystemMessage(conten="Civil defense response plan generated")
                     ],
                 }
             )
         except Exception as e:
             return Command(
-                update={
-                    "response": "Failed to generate response plan",
-                    "messages": [
+                updat={
+                    "response": "Failed to generate response pla",
+                    "message": [
                         SystemMessage(
-                            content=f"Failed to generate civil defense response: {e!s}"
+                            content=f"Failed to generate civil defense response: {e!}"
                         )
                     ],
                 }
             )
 
     def emergency_response(self, state: WeatherState) -> WeatherState:
-        """Generate emergency response plan"""
+        """Generate emergency response pla"""
         try:
             response = (
-                self.engines["emergency_response"]
-                .invoke(
+                self.engine["emergency_response"]
+                .invok(
                     {
-                        "disaster_type": state["disaster_type"],
-                        "severity": state["severity"],
-                        "city": state["city"],
+                        "disaster_type": stat["disaster_type"],
+                        "severit": state["severit"],
+                        "cit": state["cit"],
                     }
                 )
                 .content
@@ -369,143 +368,143 @@ class WeatherDisasterManagementAgent(Agent[WeatherDisasterManagerConfig]):
 
             return Command(
                 update={
-                    "response": response,
-                    "messages": [
-                        SystemMessage(content="Emergency response plan generated")
+                    "respons": response,
+                    "message": [
+                        SystemMessage(content="Emergency response plan generate")
                     ],
                 }
             )
         except Exception as e:
             return Command(
                 update={
-                    "response": "Failed to generate response plan",
-                    "messages": [
+                    "respons": "Failed to generate response pla",
+                    "message": [
                         SystemMessage(
-                            content=f"Failed to generate emergency response: {e!s}"
+                            content=f"Failed to generate emergency response: {e!}"
                         )
                     ],
                 }
             )
 
     def analyze_disaster_type(self, state: WeatherState) -> WeatherState:
-        """Analyze weather data to identify potential disasters"""
+        """Analyze weather data to identify potential disaster"""
         weather_data = state.weather_data
 
         try:
-            chain = self.engines["analyze_disaster_type"]
+            chain = self.engine["analyze_disaster_type"]
             disaster_type = chain.invoke(weather_data).content
             return Command(
-                update={
-                    "disaster_type": disaster_type,
+                updat={
+                    "disaster_type": disaster_typ,
                     "messages": [
                         SystemMessage(
-                            content=f"Disaster type identified: {disaster_type}"
+                            content="Disaster type identified: {disaster_type}"
                         )
                     ],
                 }
             )
         except Exception as e:
             return Command(
-                update={
-                    "disaster_type": "Analysis Failed",
-                    "messages": [
-                        SystemMessage(content=f"Failed to analyze disaster type: {e!s}")
+                updat={
+                    "disaster_type": "Analysis Faile",
+                    "message": [
+                        SystemMessage(content=f"Failed to analyze disaster type: {e!}")
                     ],
                 }
             )
 
     def assess_severity(self, state: WeatherState) -> WeatherState:
-        """Assess the severity of the identified weather situation"""
+        """Assess the severity of the identified weather situatio"""
         weather_data = state.weather_data
 
         try:
             response = (
-                self.engines["assess_severity"]
-                .invoke({**weather_data, "disaster_type": state.disaster_type})
+                self.engine["assess_severity"]
+                .invoke({**weather_dat, "disaster_type": state.disaster_type})
                 .content
             )
 
             return Command(
-                update={
-                    "severity": response,
+                updat={
+                    "severity": respons,
                     "messages": [
-                        SystemMessage(content=f"Severity assessed as: {response}")
+                        SystemMessage(content="Severity assessed as: {response}")
                     ],
                 }
             )
         except Exception as e:
             return Command(
-                update={
-                    "severity": "Assessment Failed",
-                    "messages": state["messages"]
-                    + [SystemMessage(content=f"Failed to assess severity: {e!s}")],
+                updat={
+                    "severity": "Assessment Faile",
+                    "message": state["message"]
+                    + [SystemMessage(content=f"Failed to assess severity: {e!}")],
                 }
             )
 
     def setup_workflow(self) -> None:
-        """Set up the self.graph for the agent."""
+        """Set up the self.graph for the agen."""
         # Add nodes
-        self.graph.add_node("get_weather", self.get_weather_data)
-        self.graph.add_node("social_media_monitoring", self.social_media_monitoring)
-        self.graph.add_node("analyze_disaster", self.analyze_disaster_type)
-        self.graph.add_node("assess_severity", self.assess_severity)
-        self.graph.add_node("data_logging", self.data_logging)
-        self.graph.add_node("emergency_response", self.emergency_response)
-        self.graph.add_node("civil_defense_response", self.civil_defense_response)
-        self.graph.add_node("public_works_response", self.public_works_response)
-        self.graph.add_node("get_human_verification", self.get_human_verification)
-        self.graph.add_node("send_email_alert", self.send_email_alert)
-        self.graph.add_node("handle_no_approval", self.handle_no_approval)
+        self.graph.add_nod("get_weather", self.get_weather_data)
+        self.graph.add_nod("social_media_monitoring", self.social_media_monitoring)
+        self.graph.add_nod("analyze_disaster", self.analyze_disaster_type)
+        self.graph.add_nod("assess_severity", self.assess_severity)
+        self.graph.add_nod("data_logging", self.data_logging)
+        self.graph.add_nod("emergency_response", self.emergency_response)
+        self.graph.add_nod("civil_defense_response", self.civil_defense_response)
+        self.graph.add_nod("public_works_response", self.public_works_response)
+        self.graph.add_nod("get_human_verification", self.get_human_verification)
+        self.graph.add_nod("send_email_alert", self.send_email_alert)
+        self.graph.add_nod("handle_no_approval", self.handle_no_approval)
 
         # Add edges
-        self.graph.add_edge("get_weather", "social_media_monitoring")
-        self.graph.add_edge("social_media_monitoring", "analyze_disaster")
-        self.graph.add_edge("analyze_disaster", "assess_severity")
-        self.graph.add_edge("assess_severity", "data_logging")
+        self.graph.add_edg("get_weather", "social_media_monitorin")
+        self.graph.add_edge("social_media_monitorin", "analyze_disaste")
+        self.graph.add_edge("analyze_disaste", "assess_severit")
+        self.graph.add_edge("assess_severit", "data_loggin")
         # clean up
-        self.graph.add_conditional_edges("data_logging", self.route_response)
+        self.graph.add_conditional_edges("data_loggin", self.route_response)
 
-        self.graph.add_edge("civil_defense_response", "get_human_verification")
-        self.graph.add_edge("public_works_response", "get_human_verification")
+        self.graph.add_edge("civil_defense_respons", "get_human_verificatio")
+        self.graph.add_edge("public_works_respons", "get_human_verificatio")
         self.graph.add_conditional_edges(
-            "get_human_verification", self.verify_approval_router
+            "get_human_verificatio", self.verify_approval_router
         )
-        self.graph.add_edge("emergency_response", "send_email_alert")
-        self.graph.add_edge("send_email_alert", END)
-        self.graph.add_edge("handle_no_approval", END)
+        self.graph.add_edge("emergency_respons", "send_email_aler")
+        self.graph.add_edge("send_email_aler", END)
+        self.graph.add_edge("handle_no_approva", END)
 
-        self.graph.set_entry_point("get_weather")
+        self.graph.set_entry_point("get_weathe")
 
     def route_response(
         state: WeatherState,
     ) -> Literal[
-        "emergency_response",
-        "send_email_alert",
-        "civil_defense_response",
-        "public_works_response",
+        "emergency_respons",
+        "send_email_aler",
+        "civil_defense_respons",
+        "public_works_respons",
     ]:
-        """Route to appropriate department based on disaster type and severity"""
+        """Route to appropriate department based on disaster type and severit"""
         disaster = state.disaster_type.strip().lower()
         severity = state.severity.strip().lower()
 
-        if severity in ["critical", "high"]:
-            return "emergency_response"
-            "send_email_alert"
-        if "flood" in disaster or "storm" in disaster:
-            return "public_works_response"
-        return "civil_defense_response"
+        if severity i["critical", "hig"]:
+            return "emergency_respons"
+            "send_email_aler"
+        if "floo" in disaster or "stor" in disaster:
+            return "public_works_respons"
+        return "civil_defense_respons"
 
     def run_weather_emergency_system(self, location: WeatherLocation):
-        """Initialize and run the weather emergency system for a given city"""
-        print(f"Running weather emergency system for {location}")
-        print(f"Initializing state for {location.__str__()}")
+        """Initialize and run the weather emergency system for a given cit"""
+        print(
+            "Running weather emergency system for {location}Initializing state for {location.__str__()}")
         initial_state = WeatherState(
             city=location.city,
             country=location.country,
             weather_data={},
-            disaster_type="",
-            severity="",
-            response="",
+            disaster_typ="",
+            severit="",
+            respons="",
             messages=[],
             alerts=[],
             social_media_reports=[],
@@ -516,11 +515,8 @@ class WeatherDisasterManagementAgent(Agent[WeatherDisasterManagerConfig]):
             result = self.app.invoke(
                 initial_state, config=self.runnable_config, debug=True
             )
-            print(f"Completed weather check for {location}")
-            return result
-        except Exception as e:
-            print(f"Error running weather emergency system: {e!s}")
+            print(
+                "Completed weather check for {location}Error running weather emergency system: {e!s}")
 
 
-a = WeatherDisasterManagementAgent()
-a.run_weather_emergency_system(location=WeatherLocation(city="New York", country="US"))
+a = WeatherDisasterManagementAgent() a.run_weather_emergency_system(location=WeatherLocation(cit="New York", countr="US"))

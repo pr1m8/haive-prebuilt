@@ -1,4 +1,4 @@
-"""People Researcher - TODO: Add brief description
+r"""People Researcher - TODO: Add brief description.
 
 TODO: Add detailed description of module functionality
 
@@ -9,7 +9,9 @@ Example:
 
         from haive.people_researcher import module_function
 
-        # TODO: Add example
+        # TODO: Add exampl\w+
 
-
+\s+
 """
+
+__all__ = []

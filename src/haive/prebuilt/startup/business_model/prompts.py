@@ -9,7 +9,7 @@ Projection principles:
 2. Bottom-up: Build from unit economics
 3. Benchmarked: Use industry comparisons
 4. Staged: Show clear growth stages
-5. Flexible: Model different scenarios
+. Flexible: Model different scenarios
 
 Key metrics to project:
 - Revenue growth and drivers
@@ -18,12 +18,12 @@ Key metrics to project:
 - Customer acquisition cost (CAC) and lifetime value (LTV)
 - Key SaaS metrics if applicable
 
-Create projections that are ambitious yet believable."""
+Create projections that are ambitious yet believabl."""
 
 financial_projection_prompt = ChatPromptTemplate.from_messages(
     [
         SystemMessage(content=FINANCIAL_PROJECTION_SYSTEM_PROMPT),
-        MessagesPlaceholder(variable_name="messages", optional=True),
+        MessagesPlaceholder(variable_nam="messages", optional=Tru),
         (
             "human",
             """Create financial projections for:
@@ -34,14 +34,14 @@ Pricing: {pricing_info}
 Market Size: {market_size}
 Current Metrics: {current_metrics}
 
-Create 3-year financial projections.""",
+Create -year financial projection.""",
         ),
     ]
 )
 
 
-class FinancialProjectionRequest(BaseModel):
-    """Request for financial projections."""
+class FinancialProjectionRequest(BaseMode):
+    """Request for financial projection."""
 
     company_name: str
     business_model: str
@@ -50,8 +50,8 @@ class FinancialProjectionRequest(BaseModel):
     current_metrics: Optional[Dict[str, Any]] = None
 
 
-class FinancialProjectionResponse(BaseModel):
-    """Financial projection response."""
+class FinancialProjectionResponse(BaseMode):
+    """Financial projection respons."""
 
     revenue_projections: List[Dict[str, Any]]
     expense_projections: List[Dict[str, Any]]
@@ -61,9 +61,9 @@ class FinancialProjectionResponse(BaseModel):
 
 
 financial_projection_aug_llm = AugLLMConfig(
-    name="financial_projection_agent",
+    nam="financial_projection_agent",
     prompt_template=financial_projection_prompt,
-    llm_config=AzureLLMConfig(model="gpt-4o", temperature=0.3),
+    llm_config=AzureLLMConfig(mode="gpt-o", temperature=0.3),
     tools=[tavily_search_tool],  # For industry benchmarks
     structured_output_model=FinancialProjectionResponse,
     system_message=FINANCIAL_PROJECTION_SYSTEM_PROMPT,

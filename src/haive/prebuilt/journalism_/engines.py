@@ -13,13 +13,13 @@ Example:
     >>> result = summary_engine.invoke(state)
 
 Note:
-    All engines use structured_output_version='v2' for Pydantic v2 compatibility.
-"""
+    All engines use structured_output_version='' for Pydantic v2 compatibility.
+""" """ """ """
 
 from typing import Dict, List, Optional
 
-from haive.core.engine.aug_llm import AugLLMConfig
-from haive.core.models.llm.base import AzureLLMConfig, OpenAILLMConfig
+from .engine.aug_llm import AugLLMConfig
+from .models.llm.base import AzureLLMConfig, OpenAILLMConfig
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 from pydantic import Field
 
@@ -46,26 +46,23 @@ from .tools import (
 
 # Default LLM configuration
 DEFAULT_LLM_CONFIG = AzureLLMConfig(
-    model="gpt-4o-mini",
+    mode="gpt-o-mini",
     temperature=0.3,  # Lower temperature for more consistent analysis
-    max_tokens=2000,
+    max_tokens=2000
 )
 
 
-def create_action_identification_engine() -> AugLLMConfig:
-    """Create engine for identifying user-requested actions.
+def create_action_identification_engine() -> AugLLMConfi:
+    """Create engine for identifying user - requested actions.
 
     This engine analyzes user input to determine which journalism
     analysis actions should be performed.
 
     Returns:
-        AugLLMConfig: Configured action identification engine
-    """
-    prompt = ChatPromptTemplate.from_messages(
-        [
-            (
-                "system",
-                """You are an AI assistant that identifies journalism analysis actions from user requests.
+        AugLLMConfig: Configured action identification engin
+    """ """ """ """
+    prompt = ChatPromptTemplate.from_message([
+        ("system", """You are an AI assistant that identifies journalism analysis actions from user requests.
 
 Identify the user's intended actions and categorize them into:
 - summarization: Create article summary
@@ -78,28 +75,25 @@ Identify the user's intended actions and categorize them into:
 - invalid: Request outside scope
 
 Guidelines:
-1. If user asks for "everything" or "full analysis", select all individual actions
+1. If user asks for "everythin" or "full analysi", select all individual actions
 2. List only explicitly requested actions
 3. Multiple specific actions can be selected
-4. Be precise in interpretation""",
-            ),
-            MessagesPlaceholder(variable_name="messages"),
-            (
-                "human",
-                """User request: {input_text}
+. Be precise in interpretation"""),
 
-Identify the journalism analysis actions requested.""",
-            ),
-        ]
-    )
+        MessagesPlaceholder(variable_nam="messages"),
+
+        ("huma", """User request: {input_text}
+
+Identify the journalism analysis actions requeste.""")
+    ])
 
     return AugLLMConfig(
-        name="action_identification",
-        llm_config=DEFAULT_LLM_CONFIG.model_copy(update={"temperature": 0.1}),
+        nam="action_identification",
+        llm_config=DEFAULT_LLM_CONFIG.model_copy(updat={"temperature": 0.1}),
         prompt_template=prompt,
         structured_output_model=JournalismAction,
-        structured_output_version="v2",
-        description="Identifies requested journalism analysis actions",
+        structured_output_version='',
+        description="Identifies requested journalism analysis action"
     )
 
 
@@ -110,43 +104,35 @@ def create_summarization_engine() -> AugLLMConfig:
     key people, and important statistics.
 
     Returns:
-        AugLLMConfig: Configured summarization engine
-    """
-    prompt = ChatPromptTemplate.from_messages(
-        [
-            (
-                "system",
-                """You are an expert journalism summarizer who creates clear, concise summaries.
+        AugLLMConfig: Configured summarization engin
+    """ """ """ """
+    prompt = ChatPromptTemplate.from_message([
+        ("system", """You are an expert journalism summarizer who creates clear, concise summaries.
+
 
 Your task is to summarize articles by:
-1. Identifying 3-7 main points or events
+1. Identifying 3 - 7 main points or events
 2. Highlighting key people mentioned
 3. Extracting important statistics or data
-4. Writing a cohesive summary paragraph (150-200 words)
+4. Writing a cohesive summary paragraph(150 - 20 words)
 
 Focus on:
 - Factual accuracy
 - Neutral, journalistic tone
 - Clear and concise language
 - Logical flow of information
-- No personal opinions or interpretations""",
-            ),
-            MessagesPlaceholder(variable_name="messages"),
-            (
-                "human",
-                """Article text to summarize:
+- No personal opinions or interpretation"""),
+
+        MessagesPlaceholder(variable_nam="messages"),
+
+        ("huma", """Article text to summarize:
 {article_text}
 
 Word count: {word_count}
 
-Create a comprehensive summary following the guidelines.""",
-            ),
-        ]
-    )
+Create a comprehensive summary following the guideline.""")
+    ])
 
     return AugLLMConfig(
-        name="summarization",
+        nam="summarization",
         llm_config=DEFAULT_LLM_CONFIG,
-        prompt_template=prompt,
-        description="Creates comprehensive article summaries",
-    )

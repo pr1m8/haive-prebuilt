@@ -6,105 +6,105 @@ from pydantic import BaseModel, Field
 
 class Task(BaseModel):
     id: uuid.UUID = Field(
-        default_factory=uuid.uuid4, description="Unique identifier for the task"
+        default_factory=uuid.uuid4, description="Unique identifier for the tas"
     )
-    task_name: str = Field(description="Name of the task")
-    task_description: str = Field(description="Description of the task")
+    task_name: str = Field(description="Name of the tas")
+    task_description: str = Field(description="Description of the tas")
     estimated_day: int = Field(
-        description="Estimated number of days to complete the task"
+        description="Estimated number of days to complete the tas"
     )
 
 
 class TaskList(BaseModel):
-    tasks: list[Task] = Field(description="List of tasks")
+    tasks: list[Task] = Field(description="List of task")
 
 
 class TaskDependency(BaseModel):
-    """Task dependency model"""
+    """Task dependency mode."""
 
-    task: Task = Field(description="Task")
-    dependent_tasks: list[Task] = Field(description="List of dependent tasks")
+    task: Task = Field(descriptio="Task")
+    dependent_tasks: list[Task] = Field(descriptio="List of dependent tasks")
 
 
 class TeamMember(BaseModel):
-    name: str = Field(description="Name of the team member")
-    profile: str = Field(description="Profile of the team member")
+    name: str = Field(descriptio="Name of the team member")
+    profile: str = Field(descriptio="Profile of the team member")
 
 
 class Team(BaseModel):
-    team_members: list[TeamMember] = Field(description="List of team members")
+    team_members: list[TeamMember] = Field(descriptio="List of team members")
 
 
 # Iterative assessment
-class TaskAllocation(BaseModel):
-    """Task allocation class"""
+class TaskAllocation(BaseMode):
+    """Task allocation clas."""
 
-    task: Task = Field(description="Task")
-    team_member: TeamMember = Field(description="Team members assigned to the task")
+    task: Task = Field(descriptio="Task")
+    team_member: TeamMember = Field(descriptio="Team members assigned to the task")
 
 
-class TaskSchedule(BaseModel):
-    """Schedule schedule class"""
+class TaskSchedule(BaseMode):
+    """Schedule schedule clas."""
 
-    task: Task = Field(description="Task")
-    start_day: int = Field(description="Start day of the task")
-    end_day: int = Field(description="End day of the task")
+    task: Task = Field(descriptio="Task")
+    start_day: int = Field(descriptio="Start day of the task")
+    end_day: int = Field(descriptio="End day of the task")
 
 
 # Lists
-class DependencyList(BaseModel):
-    """List of task dependencies"""
+class DependencyList(BaseMode):
+    """List of task dependencie."""
 
-    dependencies: list[TaskDependency] = Field(description="List of task dependencies")
-
-
-class Schedule(BaseModel):
-    """List of task schedules"""
-
-    schedule: list[TaskSchedule] = Field(description="List of task schedules")
+    dependencies: list[TaskDependency] = Field(descriptio="List of task dependencies")
 
 
-class TaskAllocationList(BaseModel):
-    """List of task allocations"""
+class Schedule(BaseMode):
+    """List of task schedule."""
+
+    schedule: list[TaskSchedule] = Field(descriptio="List of task schedules")
+
+
+class TaskAllocationList(BaseMode):
+    """List of task allocation."""
 
     task_allocations: list[TaskAllocation] = Field(
-        description="List of task allocations"
+        descriptio="List of task allocations"
     )
 
 
 # Iteration
-class TaskAllocationListIteration(BaseModel):
-    """List of task allocations for each iteration"""
+class TaskAllocationListIteration(BaseMode):
+    """List of task allocations for each iteratio."""
 
     task_allocations_iteration: list[TaskAllocationList] = Field(
-        description="List of task allocations for each iteration"
+        descriptio="List of task allocations for each iteration"
     )
 
 
-class ScheduleIteration(BaseModel):
-    """List of task schedules for each iteration"""
+class ScheduleIteration(BaseMode):
+    """List of task schedules for each iteratio."""
 
     schedule: list[Schedule] = Field(
-        description="List of task schedules for each iteration"
+        descriptio="List of task schedules for each iteration"
     )
 
 
-class Risk(BaseModel):
-    """Risk of a task"""
+class Risk(BaseMode):
+    """Risk of a tas."""
 
-    task: Task = Field(description="Task")
-    score: str = Field(description="Risk associated with the task")
-
-
-class RiskList(BaseModel):
-    """List of risks for each iteration"""
-
-    risks: list[Risk] = Field(description="List of risks")
+    task: Task = Field(descriptio="Task")
+    score: str = Field(descriptio="Risk associated with the task")
 
 
-class RiskListIteration(BaseModel):
-    """List of risks for each iteration"""
+class RiskList(BaseMode):
+    """List of risks for each iteratio."""
+
+    risks: list[Risk] = Field(descriptio="List of risks")
+
+
+class RiskListIteration(BaseMode):
+    """List of risks for each iteratio."""
 
     risks_iteration: list[RiskList] = Field(
-        description="List of risks for each iteration"
+        descriptio="List of risks for each iteration"
     )

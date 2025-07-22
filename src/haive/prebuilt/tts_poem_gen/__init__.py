@@ -1,4 +1,4 @@
-"""Tts Poem Gen - TODO: Add brief description
+r"""Tts Poem Gen - TODO: Add brief description.
 
 TODO: Add detailed description of module functionality
 
@@ -9,9 +9,11 @@ Example:
 
         from haive.tts_poem_gen import module_function
 
-        # TODO: Add example
+        # TODO: Add exampl\w+
 
-
+\s+
 """
 
 # https://github.com/NirDiamant/GenAI_Agents/blob/main/all_agents_tutorials/tts_poem_generator_agent_langgraph.ipynb
+
+__all__ = []

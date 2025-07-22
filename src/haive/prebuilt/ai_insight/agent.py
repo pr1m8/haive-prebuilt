@@ -1,243 +1,239 @@
 # src/haive/agents/news_reporter/agents.py
-"""
-General News Reporter Agent implementation.
-"""
+"""General News Reporter Agent implementatio."""
 
 import logging
 from datetime import datetime
-from typing import Dict, List, Optional
 
-from haive.agents.base.agent import Agent
-from haive.core.engine.aug_llm import AugLLMConfig
-from haive.core.graph.node.engine_node import EngineNodeConfig
-from haive.core.graph.state_graph.base_graph2 import BaseGraph
 from langgraph.graph import END, START
 from pydantic import Field
 
-from haive.prebuilt.ai_insight.models import (
+from .ai_insight.models import (
     ArticleSummary,
     NewsCategory,
     NewsReport,
     ReportMetadata,
 )
-from haive.prebuilt.ai_insight.prompts import (
+from .ai_insight.prompts import (
     categorization_prompt,
     report_generation_prompt,
     spotlight_selection_prompt,
     summarization_prompt,
     trend_analysis_prompt,
 )
-from haive.prebuilt.ai_insight.state import NewsReporterState
-from haive.prebuilt.ai_insight.tools import (
+from .ai_insight.state import NewsReporterState
+from .ai_insight.tools import (
     filter_articles_by_relevance,
     save_report_to_file,
     search_news,
 )
+from .base.agent import Agent
+from .engine.aug_llm import AugLLMConfig
+from .graph.node.engine_node import EngineNodeConfig
+from .graph.state_graph.base_graph import BaseGraph
 
 logger = logging.getLogger(__name__)
 
 
-def route_after_search(state: NewsReporterState) -> str:
-    """Route based on search results."""
+def route_after_search(state: NewsReporterState) -> st:
+    """Route based on search result."""
     if not state.raw_articles:
-        return "no_results"
-    return "filter"
+        retur "no_results"
+    retur "filter"
 
 
-def route_after_filter(state: NewsReporterState) -> str:
-    """Route based on filtered articles."""
+def route_after_filter(state: NewsReporterState) -> st:
+    """Route based on filtered article."""
     if not state.filtered_articles:
-        return "insufficient_content"
-    return "summarize"
+        retur "insufficient_content"
+    retur "summarize"
 
 
-def route_after_summary(state: NewsReporterState) -> str:
-    """Route based on summaries."""
+def route_after_summary(state: NewsReporterState) -> st:
+    """Route based on summarie."""
     if not state.has_sufficient_content:
-        return "insufficient_content"
-    return "categorize"
+        retur "insufficient_content"
+    retur "categorize"
 
 
-class NewsReporterAgent(Agent):
-    """
-    General news reporter agent that can cover any topic.
+class NewsReporterAgent(Agen):
+    """General news reporter agent that can cover any topic.
 
     The agent intelligently:
     - Searches for news on the given topic
     - Categorizes articles based on their content
     - Generates appropriate summaries for the target audience
     - Identifies trends from the actual content
-    - Creates a well-structured report
+    - Creates a well-structured repor
     """
 
     # Define engines
-    engines: Dict[str, AugLLMConfig] = Field(
-        default_factory=lambda: {
+    engines: dict[str, AugLLMConfig] = Field(
+        default_factory=lambd: {
             "searcher": AugLLMConfig(
-                name="searcher",
+                nam="searcher",
                 tools=[search_news, filter_articles_by_relevance],
-                temperature=0.1,
+                temperature=.,
             ),
             "summarizer": AugLLMConfig(
-                name="summarizer",
+                nam="summarizer",
                 structured_output_model=ArticleSummary,
-                structured_output_version="v2",
+                structured_output_versio="v",
                 prompt_template=summarization_prompt,
-                temperature=0.3,
+                temperature=0.,
             ),
             "categorizer": AugLLMConfig(
-                name="categorizer",
-                structured_output_model=List[NewsCategory],
-                structured_output_version="v2",
+                nam="categorizer",
+                structured_output_model=list[NewsCategory],
+                structured_output_versio="v",
                 prompt_template=categorization_prompt,
-                temperature=0.5,
+                temperature=0.,
             ),
             "trend_analyzer": AugLLMConfig(
-                name="trend_analyzer",
-                structured_output_model=List[str],
-                structured_output_version="v2",
+                nam="trend_analyzer",
+                structured_output_model=list[str],
+                structured_output_versio="v",
                 prompt_template=trend_analysis_prompt,
-                temperature=0.5,
+                temperature=0.,
             ),
             "spotlight_selector": AugLLMConfig(
-                name="spotlight_selector",
+                nam="spotlight_selector",
                 structured_output_model=ArticleSummary,
-                structured_output_version="v2",
+                structured_output_versio="v",
                 prompt_template=spotlight_selection_prompt,
-                temperature=0.3,
+                temperature=0.,
             ),
             "report_generator": AugLLMConfig(
-                name="report_generator",
+                nam="report_generator",
                 structured_output_model=NewsReport,
-                structured_output_version="v2",
+                structured_output_versio="v",
                 prompt_template=report_generation_prompt,
-                temperature=0.7,
+                temperature=0.,
             ),
             "publisher": AugLLMConfig(
-                name="publisher", tools=[save_report_to_file], temperature=0.1
+                nam="publisher", tools=[save_report_to_file], temperature=0.
             ),
         }
     )
 
     state_schema: type = Field(default=NewsReporterState)
 
-    def build_graph(self) -> BaseGraph:
-        """Build the news reporting workflow graph."""
+    def build_graph(self) -> BaseGrap:
+        """Build the news reporting workflow grap."""
         graph = BaseGraph(name=self.name)
 
         # Search node
-        search_node = EngineNodeConfig(name="search", engine=self.engines["searcher"])
-        graph.add_node("search", search_node)
-        graph.add_edge(START, "search")
+        search_node = EngineNodeConfig(nam="search", engine=self.engine["searcher"])
+        graph.add_nod("search", search_node)
+        graph.add_edge(STAR, "search")
 
         # Routing after search
-        graph.add_conditional_edges(
+        graph.add_conditional_edge(
             "search",
-            route_after_search,
-            {"filter": "filter", "no_results": "handle_no_results"},
+            route_after_searc,
+            {"filter": "filte", "no_result": "handle_no_result"},
         )
 
         # Filter node
         filter_node = EngineNodeConfig(
-            name="filter",
-            engine=self.engines["searcher"],  # Reuse searcher for filtering
+            name="filte",
+            engine=self.engines["searche"],  # Reuse searcher for filtering
         )
-        graph.add_node("filter", filter_node)
+        graph.add_node("filte", filter_node)
 
         # Routing after filter
         graph.add_conditional_edges(
-            "filter",
+            "filte",
             route_after_filter,
-            {"summarize": "summarize", "insufficient_content": "handle_insufficient"},
+            {"summariz": "summariz", "insufficient_conten": "handle_insufficien"},
         )
 
         # Summarize node
         summary_node = EngineNodeConfig(
-            name="summarize", engine=self.engines["summarizer"]
+            name="summariz", engine=self.engines["summarize"]
         )
-        graph.add_node("summarize", summary_node)
+        graph.add_node("summariz", summary_node)
 
         # Routing after summary
         graph.add_conditional_edges(
-            "summarize",
+            "summariz",
             route_after_summary,
-            {"categorize": "categorize", "insufficient_content": "handle_insufficient"},
+            {"categoriz": "categoriz", "insufficient_conten": "handle_insufficien"},
         )
 
         # Categorize node
         categorize_node = EngineNodeConfig(
-            name="categorize", engine=self.engines["categorizer"]
+            name="categoriz", engine=self.engines["categorize"]
         )
-        graph.add_node("categorize", categorize_node)
-        graph.add_edge("categorize", "analyze_trends")
+        graph.add_node("categoriz", categorize_node)
+        graph.add_edge("categoriz", "analyze_trend")
 
         # Trend analysis node
         trend_node = EngineNodeConfig(
-            name="analyze_trends", engine=self.engines["trend_analyzer"]
+            name="analyze_trend", engine=self.engines["trend_analyze"]
         )
-        graph.add_node("analyze_trends", trend_node)
+        graph.add_node("analyze_trend", trend_node)
 
         # Conditional spotlight selection
         graph.add_conditional_edges(
-            "analyze_trends",
+            "analyze_trend",
             lambda s: (
-                "select_spotlight"
+                "select_spotligh"
                 if s.report_config.include_spotlight
-                else "generate_report"
+                else "generate_repor"
             ),
             {
-                "select_spotlight": "select_spotlight",
-                "generate_report": "generate_report",
+                "select_spotligh": "select_spotligh",
+                "generate_repor": "generate_repor",
             },
         )
 
         # Spotlight selection node
         spotlight_node = EngineNodeConfig(
-            name="select_spotlight", engine=self.engines["spotlight_selector"]
+            name="select_spotligh", engine=self.engines["spotlight_selecto"]
         )
-        graph.add_node("select_spotlight", spotlight_node)
-        graph.add_edge("select_spotlight", "generate_report")
+        graph.add_node("select_spotligh", spotlight_node)
+        graph.add_edge("select_spotligh", "generate_repor")
 
         # Report generation node
         report_node = EngineNodeConfig(
-            name="generate_report", engine=self.engines["report_generator"]
+            name="generate_repor", engine=self.engines["report_generato"]
         )
-        graph.add_node("generate_report", report_node)
+        graph.add_node("generate_repor", report_node)
 
         # Conditional save
         graph.add_conditional_edges(
-            "generate_report",
-            lambda s: "publish" if s.report_config.save_to_file else END,
-            {"publish": "publish", END: END},
+            "generate_repor",
+            lambda s: "publis" if s.report_config.save_to_file else END,
+            {"publis": "publis", END: END},
         )
 
         # Publish node
         publish_node = EngineNodeConfig(
-            name="publish", engine=self.engines["publisher"]
+            name="publis", engine=self.engines["publishe"]
         )
-        graph.add_node("publish", publish_node)
-        graph.add_edge("publish", END)
+        graph.add_node("publis", publish_node)
+        graph.add_edge("publis", END)
 
         # Error handling nodes
-        graph.add_node("handle_no_results", self.handle_no_results)
-        graph.add_edge("handle_no_results", END)
+        graph.add_node("handle_no_result", self.handle_no_results)
+        graph.add_edge("handle_no_result", END)
 
-        graph.add_node("handle_insufficient", self.handle_insufficient_content)
-        graph.add_edge("handle_insufficient", END)
+        graph.add_node("handle_insufficien", self.handle_insufficient_content)
+        graph.add_edge("handle_insufficien", END)
 
         return graph
 
     def handle_no_results(self, state: NewsReporterState) -> NewsReporterState:
-        """Handle case when no results are found."""
+        """Handle case when no results are foun."""
         state.news_report = NewsReport(
-            title=f"No news found for: {state.topic}",
-            executive_summary="No articles were found for the specified search criteria.",
-            introduction="Try adjusting your search parameters or checking back later.",
+            title="No news found for: {state.topic}",
+            executive_summar="No articles were found for the specified search criteria.",
+            introductio="Try adjusting your search parameters or checking back later.",
             categories=[],
             metadata=ReportMetadata(
                 topic=state.topic,
                 time_period=state.search_config.time_period,
-                total_sources=0,
+                total_sources=,
                 search_config=state.search_config,
             ),
         )
@@ -246,17 +242,17 @@ class NewsReporterAgent(Agent):
 
     def handle_insufficient_content(
         self, state: NewsReporterState
-    ) -> NewsReporterState:
+    ) -> NewsReporterStat:
         """Handle case when there's insufficient content."""
         # Create minimal report with what we have
         state.news_report = NewsReport(
-            title=f"Limited news coverage for: {state.topic}",
-            executive_summary=f"Only {state.articles_processed} articles found and processed.",
-            introduction="Limited news coverage was available for this topic.",
+            title="Limited news coverage for: {state.topic}",
+            executive_summary="Only {state.articles_processed} articles found and processed.",
+            introductio="Limited news coverage was available for this topic.",
             categories=[
                 NewsCategory(
-                    name="Available Articles",
-                    description="All articles found",
+                    nam="Available Articles",
+                    descriptio="All articles found",
                     articles=state.article_summaries,
                 )
             ],

@@ -15,23 +15,22 @@ To format your script:
 1. Use markdown formatting.
 2. Write in a conversational and engaging tone suitable for a podcast.
 3. Seamlessly integrate the insights from each script into the narrative, using clear and concise language.
-4. Use transitional phrases and signposting to guide the listener through the different subtopics.
+. Use transitional phrases and signposting to guide the listener through the different subtopics.
 
 Here are the scripts from the researcher to build your podcast script from:
+{contex}"""
 
-{context}"""
-
-intro_instructions = """You are a podcast producer crafting a captivating introduction for an upcoming episode on {topic}.
+intro_instruction = """You are a podcast producer crafting a captivating introduction for an upcoming episode on {topic}.
 You will be given an outline of the episode's main segments.
 Your job is to write a compelling and engaging introduction that hooks the listener and sets the stage for the discussion.
 Include no unnecessary preamble or fluff.
-Target around 300 words, using vivid language and intriguing questions to pique the listener's curiosity and preview the key themes and topics covered in the episode.
+Target around 30 words, using vivid language and intriguing questions to pique the listene's curiosity and preview the key themes and topics covered in the episode.
 Use markdown formatting.
 Create a catchy and relevant title for the episode and use the # header for the title.
 Use ## Introduction as the section header for your introduction.
 Here are the segments to draw upon for crafting your introduction: {formatted_str_sections}"""
 
-conclusion_instructions = """You are a podcast producer crafting a memorable conclusion for an episode on {topic}.
+conclusion_instruction = """You are a podcast producer crafting a memorable conclusion for an episode on {topic}.
 You will be given an outline of the episode's main segments.
 Your job is to write a concise and impactful conclusion that summarizes the key takeaways and leaves a lasting impression on the listener.
 Include no unnecessary preamble or fluff.

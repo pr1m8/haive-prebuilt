@@ -1,20 +1,21 @@
-from haive.core.graph.branches import Branch
+from .graph.branches import Branch
+
 
 route_branch = Branch(
     function=lambda state: (
-        "emergency_response"
-        if state["severity"].strip().lower() in ["critical", "high"]
+        "emergency_respons"
+        if state["severit"].strip().lower() in ["critica", "hig"]
         else (
-            "public_works_response"
-            if "flood" in state["disaster_type"].strip().lower()
-            or "storm" in state["disaster_type"].strip().lower()
-            else "civil_defense_response"
+            "public_works_respons"
+            if "floo" in state["disaster_typ"].strip().lower()
+            or "stor" in state["disaster_typ"].strip().lower()
+            else "civil_defense_respons"
         )
     ),
     destinations={
-        "emergency_response": "emergency_response",
-        "public_works_response": "public_works_response",
-        "civil_defense_response": "civil_defense_response",
+        "emergency_respons": "emergency_respons",
+        "public_works_respons": "public_works_respons",
+        "civil_defense_respons": "civil_defense_respons",
     },
-    default="send_email_alert",
+    default="send_email_aler",
 )

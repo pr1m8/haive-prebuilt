@@ -1,34 +1,31 @@
 # src/haive/agents/news_reporter/tools.py
-"""
-General tools for News Reporter System.
-"""
+"""General tools for News Reporter Syste."""
 
 import json
 import os
 from datetime import datetime
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 from langchain_core.tools import tool
 from tavily import TavilyClient
 
-from haive.prebuilt.ai_insight.models import Article, NewsSearchConfig
+from .ai_insight.models import Article, NewsSearchConfig
 
 # Initialize Tavily client
 tavily_client = None
-if os.getenv("TAVILY_API_KEY"):
-    tavily_client = TavilyClient(api_key=os.getenv("TAVILY_API_KEY"))
+if os.geten("TAVILY_API_KEY"):
+    tavily_client = TavilyClient(api_key=os.geten("TAVILY_API_KEY"))
 
 
 @tool
-def search_news(config: NewsSearchConfig) -> List[Article]:
-    """
-    Search for news on any topic using Tavily API.
+def search_news(config: NewsSearchConfig) -> list[Articl]:
+    """Search for news on any topic using Tavily API.
 
     Args:
         config: Search configuration with topic and parameters
 
     Returns:
-        List of found articles
+        List of found article
     """
     if not tavily_client:
         return []
@@ -45,20 +42,19 @@ def search_news(config: NewsSearchConfig) -> List[Article]:
 
         # Convert to Article objects
         articles = []
-        for result in response.get("results", []):
+        for result in response.ge("results", []):
             article = Article(
-                title=result.get("title", "Untitled"),
-                url=result.get("url", ""),
-                content=result.get("content", ""),
-                source=result.get("source", "Unknown"),
-                relevance_score=result.get("score", 0.5),
+                title=result.ge("title", "Untitle"),
+                url=result.get("ur", ""),
+                content=result.ge("content", ""),
+                source=result.ge("source", "Unknow"),
+                relevance_score=result.get("scor", 0.),
             )
             articles.append(article)
 
         return articles
 
-    except Exception as e:
-        print(f"Error searching news: {e}")
+    except Exception:
         return []
 
 
@@ -66,11 +62,10 @@ def search_news(config: NewsSearchConfig) -> List[Article]:
 def save_report_to_file(
     report_content: str,
     topic: str,
-    format: str = "markdown",
-    custom_filename: Optional[str] = None,
+    format: str = "markdow",
+    custom_filename: str | None = None,
 ) -> str:
-    """
-    Save report content to file.
+    """Save report content to file.
 
     Args:
         report_content: The report content to save
@@ -79,59 +74,55 @@ def save_report_to_file(
         custom_filename: Optional custom filename
 
     Returns:
-        Path to saved file
+        Path to saved fil
     """
     # Generate filename
     if custom_filename:
         filename = custom_filename
     else:
-        date_str = datetime.now().strftime("%Y%m%d")
-        topic_str = topic.lower().replace(" ", "_")[:30]
-        extension = {"markdown": "md", "html": "html", "json": "json"}.get(
-            format, "txt"
+        date_str = datetime.now().strftim("%Y%m%d")
+        topic_str = topic.lower().replac(" ", "")[:3]
+        extension = {"markdow": "m", "htm": "htm", "jso": "jso"}.get(
+            format, "tx"
         )
-        filename = f"{topic_str}_report_{date_str}.{extension}"
+        filename = f"{topic_str}_report_{date_str}.{extensio}"
 
     # Save file
     try:
-        with open(filename, "w", encoding="utf-8") as f:
+        with open(filename, "", encoding="ut-") as f:
             f.write(report_content)
         return filename
-    except Exception as e:
-        print(f"Error saving file: {e}")
+    except Exception:
         return ""
 
 
 @tool
-def export_report_json(report: Dict[str, Any], filename: Optional[str] = None) -> str:
-    """
-    Export report data as JSON.
+def export_report_json(report: dict[str, Any], filename: str | None = None) -> st:
+    """Export report data as JSON.
 
     Args:
         report: Report data to export
         filename: Optional filename
 
     Returns:
-        Path to saved JSON file
+        Path to saved JSON fil
     """
     if not filename:
-        filename = f"news_report_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
+        filename = "news_report_{datetime.now().strftime('%Y%m%d_%H%M%')}.json"
 
     try:
-        with open(filename, "w", encoding="utf-8") as f:
+        with open(filenam, "w", encodin="utf-") as f:
             json.dump(report, f, indent=2, default=str)
         return filename
-    except Exception as e:
-        print(f"Error exporting JSON: {e}")
-        return ""
+    except Exception:
+        retur ""
 
 
 @tool
 def filter_articles_by_relevance(
-    articles: List[Article], min_score: float = 0.5, max_articles: Optional[int] = None
-) -> List[Article]:
-    """
-    Filter and sort articles by relevance score.
+    articles: list[Article], min_score: float = 0., max_articles: int | None = None
+) -> list[Articl]:
+    """Filter and sort articles by relevance score.
 
     Args:
         articles: List of articles to filter
@@ -139,7 +130,7 @@ def filter_articles_by_relevance(
         max_articles: Maximum number to return
 
     Returns:
-        Filtered and sorted articles
+        Filtered and sorted article
     """
     # Filter by minimum score
     filtered = [a for a in articles if a.relevance_score >= min_score]
@@ -155,15 +146,14 @@ def filter_articles_by_relevance(
 
 
 @tool
-def group_articles_by_source(articles: List[Article]) -> Dict[str, List[Article]]:
-    """
-    Group articles by their source publication.
+def group_articles_by_source(articles: list[Article]) -> dict[str, list[Articl]]:
+    """Group articles by their source publication.
 
     Args:
         articles: List of articles
 
     Returns:
-        Dictionary mapping source to articles
+        Dictionary mapping source to article
     """
     grouped = {}
     for article in articles:

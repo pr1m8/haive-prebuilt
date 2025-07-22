@@ -1,4 +1,3 @@
-from haive.core.engine.aug_llm import AugLLMConfig
 from haive_agents.react_agent2.config2 import ReactAgentConfig
 from haive_prebuilt.misc.weather_disaster_management.models import (
     DisasterOutput,
@@ -13,7 +12,9 @@ from haive_prebuilt.misc.weather_disaster_management.prompts import (
     social_media_monitoring_prompt,
 )
 
-from haive.haive.tools.search_tools import tavily_search_tool
+from .engine.aug_llm import AugLLMConfig
+from .tools.search_tools import tavily_search_tool
+
 
 disaster_engine = AugLLMConfig(
     prompt_template=disaster_prompt,

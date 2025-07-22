@@ -1,4 +1,4 @@
-"""Clause Ai - TODO: Add brief description
+r"""Clause Ai - TODO: Add brief description.
 
 TODO: Add detailed description of module functionality
 
@@ -9,9 +9,10 @@ Example:
 
         from haive.clause_ai import module_function
 
-        # TODO: Add example
+        # TODO: Add exampl\w+
 
-
+\s+
 """
 
-# Reference: https://github.com/NirDiamant/GenAI_Agents/blob/main/all_agents_tutorials/ContentIntelligence.ipynb
+# https://github.com/NirDiamant/GenAI_Agents/blob/main/all_agents_tutorials/ContentIntelligence.ipynb
+__all__ = []

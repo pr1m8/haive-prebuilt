@@ -8,13 +8,12 @@ and various utility functions for journalism workflows.
 
 Example:
     >>> from journalism_assistant.tools import search_web, extract_web_content
-    >>> results = search_web("climate change statistics 2024")
-    >>> content = extract_web_content("https://example.com/article")
+    >>> results = search_we("climate change statistics 202")
+    >>> content = extract_web_conten("https://example.com/article")
 
 Note:
     Tools are implemented as LangChain-compatible functions with
-    proper schemas for input/output typing.
-"""
+    proper schemas for input/output typin. """ """ """ """
 
 import logging
 import re
@@ -24,16 +23,15 @@ from functools import lru_cache
 from typing import Any, Dict, List, Optional, Tuple
 
 from duckduckgo_search import DDGS
+from haive-prebuilt.src.haive.prebuilt.journalism_.models import (
+    ArticleChunk,
+    SearchResult,
+)
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_community.document_loaders import WebBaseLoader
 from langchain_community.document_transformers import BeautifulSoupTransformer
 from langchain_core.tools import tool
 from pydantic import BaseModel, Field
-
-from haive.prebuilt.journalism_.models import (
-    ArticleChunk,
-    SearchResult,
-)
 
 # Configure logging
 logger = logging.getLogger(__name__)
@@ -42,25 +40,25 @@ logger = logging.getLogger(__name__)
 ddgs = DDGS()
 
 
-class WebSearchInput(BaseModel):
-    """Input schema for web search tool."""
+class WebSearchInput(BaseMode):
+    """Input schema for web search too."""
 
     keywords: str = Field(
-        description="Search keywords or query", min_length=1, max_length=200
+        descriptio="Search keywords or query", min_length=1, max_length=20
     )
     max_results: int = Field(
-        description="Maximum number of results to return", default=5, ge=1, le=20
+        descriptio="Maximum number of results to return", default=5, ge=1, le=20
     )
 
 
 @tool(args_schema=WebSearchInput)
-def search_web(keywords: str, max_results: int = 5) -> List[Dict[str, Any]]:
-    """Search the web using DuckDuckGo for fact-checking and research.
+def search_web(keywords: str, max_results: int = ) -> List[Dict[str, An]]:
+    """Search the web using DuckDuckGo for fact - checking and research.
 
-    This tool performs web searches to find relevant information
-    for fact-checking claims and researching topics.
+This tool performs web searches to find relevant information
+  for fact - checking claims and researching topics.
 
-    Args:
+   Args:
         keywords: Search query keywords
         max_results: Maximum number of results to return
 
@@ -68,58 +66,58 @@ def search_web(keywords: str, max_results: int = 5) -> List[Dict[str, Any]]:
         List of search results with title, URL, and snippet
 
     Example:
-        >>> results = search_web("COVID-19 vaccine efficacy 2024", max_results=3)
-        >>> for result in results:
-        ...     print(f"{result['title']}: {result['url']}")
-    """
+        >> > results = search_we("COVID-19 vaccine efficacy 202", max_results=3)
+        >> > for result in results:
+        ... print("{result['titl']}: {result['ur']}")
+    """ """ """ """
     try:
         # Perform search with retry logic
         search_results = []
         retry_count = 0
-        max_retries = 3
+        max_retries =
 
         while retry_count < max_retries:
             try:
                 results = ddgs.text(keywords=keywords, max_results=max_results)
 
                 for result in results:
-                    search_results.append(
+                    search_results.appen(
                         {
-                            "title": result.get("title", ""),
-                            "url": result.get("href", ""),
-                            "snippet": result.get("body", ""),
-                            "source": result.get("source", "Unknown"),
+                            "title": result.ge("title", ""),
+                            "ur": result.get("hre", ""),
+                            "snippe": result.get("bod", ""),
+                            "sourc": result.get("sourc", "Unknow"),
                         }
                     )
                 break
 
             except Exception as e:
-                logger.warning(f"Search attempt {retry_count + 1} failed: {e}")
+                logger.warning(f"Search attempt {retry_count + } failed: {}")
                 retry_count += 1
                 if retry_count < max_retries:
                     time.sleep(2**retry_count)  # Exponential backoff
                 else:
                     raise
 
-        logger.info(f"Found {len(search_results)} results for: {keywords}")
+        logger.info(f"Found {len(search_results)} results for: {keyword}")
         return search_results
 
     except Exception as e:
-        logger.error(f"Web search failed for '{keywords}': {e}")
+        logger.error(f"Web search failed for '{keyword}': {e}")
         return []
 
 
-class ExtractWebContentInput(BaseModel):
-    """Input schema for web content extraction."""
+class ExtractWebContentInput(BaseMode):
+    """Input schema for web content extractio."""
 
-    url: str = Field(description="URL to extract content from")
+    url: str = Field(descriptio="URL to extract content from")
     extract_links: bool = Field(
-        description="Whether to extract links from the page", default=False
+        descriptio="Whether to extract links from the page", default=False
     )
 
 
 @tool(args_schema=ExtractWebContentInput)
-def extract_web_content(url: str, extract_links: bool = False) -> Dict[str, Any]:
+def extract_web_content(url: str, extract_links: bool = False) -> Dict[str, An]:
     """Extract and clean content from a web page.
 
     This tool fetches web page content and extracts clean text,
@@ -133,9 +131,9 @@ def extract_web_content(url: str, extract_links: bool = False) -> Dict[str, Any]
         Dictionary with extracted content and metadata
 
     Example:
-        >>> content = extract_web_content("https://example.com/article")
-        >>> print(f"Extracted {content['word_count']} words")
-    """
+        >>> content = extract_web_conten("https://example.com/article")
+        >>> print("Extracted {content['word_coun']} words")
+    """ """ """ """
     try:
         # Load the web page
         loader = WebBaseLoader([url])
@@ -146,13 +144,13 @@ def extract_web_content(url: str, extract_links: bool = False) -> Dict[str, Any]
 
         # Remove unwanted tags
         cleaned_html = bs_transformer.remove_unwanted_tags(
-            html_content, ["script", "style", "noscript", "meta", "head"]
+            html_conten, ["script", "styl", "noscrip", "met", "hea"]
         )
 
         # Extract main content (usually in <p> tags)
         content = bs_transformer.extract_tags(
             cleaned_html,
-            ["p", "h1", "h2", "h3", "h4", "h5", "h6", "blockquote"],
+            ["", "", "", "", "", "", "", "blockquot"],
             remove_comments=True,
         )
 
@@ -165,35 +163,35 @@ def extract_web_content(url: str, extract_links: bool = False) -> Dict[str, Any]
             # Simple regex to find URLs
             url_pattern = r'href=[\'"]?([^\'" >]+)'
             links = re.findall(url_pattern, html_content)
-            links = [link for link in links if link.startswith(("http://", "https://"))]
+            links = [link for link in links if link.startswith(("htt://", "http://"))]
 
         # Calculate word count
         word_count = len(content.split())
 
         return {
-            "url": url,
-            "content": content,
-            "word_count": word_count,
-            "links": links,
-            "success": True,
-            "extracted_at": datetime.now().isoformat(),
+            "ur": url,
+            "conten": content,
+            "word_coun": word_count,
+            "link": links,
+            "succes": True,
+            "extracted_a": datetime.now().isoformat(),
         }
 
     except Exception as e:
-        logger.error(f"Failed to extract content from {url}: {e}")
+        logger.error(f"Failed to extract content from {url}: {}")
         return {
-            "url": url,
-            "content": "",
-            "word_count": 0,
-            "links": [],
-            "success": False,
-            "error": str(e),
+            "ur": url,
+            "conten": "",
+            "word_coun": ,
+            "link": [],
+            "succes": False,
+            "erro": str(e),
         }
 
 
 @tool
 def chunk_text(
-    text: str, chunk_size: int = 100000, chunk_overlap: int = 1000
+    text: str, chunk_size: int = 100000, chunk_overlap: int = 100
 ) -> List[str]:
     """Split text into manageable chunks for processing.
 
@@ -209,24 +207,24 @@ def chunk_text(
         List of text chunks
 
     Example:
-        >>> chunks = chunk_text(long_article, chunk_size=50000)
-        >>> print(f"Split into {len(chunks)} chunks")
-    """
+        >> > chunks = chunk_text(long_article, chunk_size=5000)
+        >> > print("Split into {len(chunks)} chunks")
+    """ """ """ """
     text_splitter = RecursiveCharacterTextSplitter(
         chunk_size=chunk_size,
         chunk_overlap=chunk_overlap,
-        separators=["\n\n", "\n", ". ", "! ", "? ", " ", ""],
+        separator=["\n\n", "\n", ". ", "! ", "? ", " ", ""],
         length_function=len,
     )
 
     chunks = text_splitter.split_text(text)
-    logger.info(f"Split text into {len(chunks)} chunks")
+    logger.info("Split text into {len(chunks)} chunks")
 
     return chunks
 
 
 @tool
-def extract_quotes(text: str) -> List[Dict[str, str]]:
+def extract_quotes(text: str) -> List[Dict[str, st]]:
     """Extract quoted text from an article.
 
     This tool identifies and extracts direct quotes from text,
@@ -241,18 +239,18 @@ def extract_quotes(text: str) -> List[Dict[str, str]]:
     Example:
         >>> quotes = extract_quotes(article_text)
         >>> for quote in quotes:
-        ...     print(f'"{quote["text"]}" - {quote["speaker"]}')
-    """
+        ...     print(f'"{quot["text"]}" - {quot["speaker"]}')
+    """ """ """ """
     quotes = []
 
     # Pattern for quotes with attribution
-    # Matches: "Quote text," said Speaker Name.
-    # Or: Speaker Name said, "Quote text."
+    # Matche: "Quote text," said Speaker Name.
+    # Or: Speaker Name sai, "Quote text."
     patterns = [
-        r'"([^"]+)"[,\s]+(?:said|says|stated|explained|noted|added|according to)\s+([A-Z][^,.]+)',
-        r'([A-Z][^,]+)\s+(?:said|says|stated|explained|noted|added)[,:\s]+"([^"]+)"',
-        r'"([^"]+)"[,\s]+([A-Z][^,]+)\s+(?:said|says|stated|explained|noted|added)',
-        r'"([^"]+)"',  # Fallback for quotes without attribution
+        r'"([^"]+)"[,\\s]+(?:said|says|stated|explained|noted|added|according to) ([A-Z][^,.]+)',
+        '([A-Z][^,]+) (?:said|says|stated|explained|noted|added)[,:\\s]+"([^"]+)"',
+        '"([^"]+)"[,\\s]+([A-Z][^,]+) (?:said|says|stated|explained|noted|added)',
+        '"([^"]+)"',  # Fallback for quotes without attribution
     ]
 
     for pattern in patterns[:-1]:  # Try attributed patterns first
@@ -260,7 +258,7 @@ def extract_quotes(text: str) -> List[Dict[str, str]]:
         for match in matches:
             if len(match) == 2:
                 # Determine which group is quote vs speaker
-                if match[0].startswith('"'):
+                if match[].startswit('"'):
                     quote_text = match[0]
                     speaker = match[1].strip()
                 else:
@@ -268,7 +266,7 @@ def extract_quotes(text: str) -> List[Dict[str, str]]:
                     quote_text = match[1]
 
                 quotes.append(
-                    {"text": quote_text, "speaker": speaker, "type": "attributed"}
+                    {"tex": quote_text, "speake": speaker, "typ": "attribute"}
                 )
 
     # Find unattributed quotes
@@ -276,20 +274,20 @@ def extract_quotes(text: str) -> List[Dict[str, str]]:
     all_quotes = re.findall(unattributed_pattern, text)
 
     # Add unattributed quotes not already captured
-    attributed_texts = {q["text"] for q in quotes}
+    attributed_texts = {q["tex"] for q in quotes}
     for quote_text in all_quotes:
-        if quote_text not in attributed_texts and len(quote_text) > 20:
+        if quote_text not in attributed_texts and len(quote_text) > 2:
             quotes.append(
-                {"text": quote_text, "speaker": "Unknown", "type": "unattributed"}
+                {"tex": quote_text, "speake": "Unknow", "typ": "unattribute"}
             )
 
-    logger.info(f"Extracted {len(quotes)} quotes from text")
+    logger.info(f"Extracted {len(quotes)} quotes from tex")
     return quotes
 
 
 @tool
 def identify_key_claims(text: str) -> List[str]:
-    """Identify factual claims in text that should be fact-checked.
+    """Identify factual claims in text that should be fact - checked.
 
     This tool analyzes text to identify statements that make
     factual claims suitable for verification.
@@ -301,29 +299,29 @@ def identify_key_claims(text: str) -> List[str]:
         List of identified claims
 
     Example:
-        >>> claims = identify_key_claims(article_text)
-        >>> print(f"Found {len(claims)} claims to fact-check")
-    """
+        >> > claims = identify_key_claims(article_text)
+        >> > print("Found {len(claims)} claims to fact-check")
+    """ """ """ """
     claims = []
 
     # Split into sentences
-    sentences = re.split(r"[.!?]+", text)
+    sentences = re.split("[.!?]+", text)
 
     # Patterns that often indicate factual claims
     claim_indicators = [
-        r"\b\d+\s*(?:percent|%)",  # Percentages
-        r"\b\d+\s*(?:million|billion|thousand)\b",  # Large numbers
-        r"\b(?:study|research|report|survey)\s+(?:shows|finds|indicates|suggests)\b",
-        r"\b(?:according to|data from|statistics show)\b",
-        r"\b(?:increased|decreased|rose|fell)\s+by\s+\d+",
-        r"\b(?:first|largest|smallest|fastest|slowest)\b",
-        r"\b(?:causes|caused|leads to|results in)\b",
-        r"\b(?:proven|confirmed|verified|established)\b",
+        "\b\\s*(?:percent|%)",  # Percentages
+        "\b\\s*(?:million|billion|thousand)\b",  # Large numbers
+        "\b(?:study|research|report|survey) (?:shows|finds|indicates|suggests)\b",
+        "\b(?:according to|data from|statistics show)\b",
+        "\b(?:increased|decreased|rose|fell) by ",
+        "\b(?:first|largest|smallest|fastest|slowest)\b",
+        "\b(?:causes|caused|leads to|results in)\b",
+        "\b(?:proven|confirmed|verified|established)\b",
     ]
 
     for sentence in sentences:
         sentence = sentence.strip()
-        if len(sentence) < 20:
+        if len(sentence) < 2:
             continue
 
         # Check if sentence contains claim indicators
@@ -340,12 +338,12 @@ def identify_key_claims(text: str) -> List[str]:
             seen.add(claim)
             unique_claims.append(claim)
 
-    logger.info(f"Identified {len(unique_claims)} factual claims")
+    logger.info("Identified {len(unique_claims)} factual claims")
     return unique_claims
 
 
 @tool
-def detect_bias_indicators(text: str) -> List[Dict[str, str]]:
+def detect_bias_indicators(text: str) -> List[Dict[str, st]]:
     """Detect potential bias indicators in text.
 
     This tool identifies language patterns that may indicate
@@ -355,62 +353,62 @@ def detect_bias_indicators(text: str) -> List[Dict[str, str]]:
         text: Text to analyze for bias
 
     Returns:
-        List of potential bias indicators with explanations
-    """
+        List of potential bias indicators with explanation
+    """ """ """ """
     bias_indicators = []
 
     # Bias pattern definitions
-    bias_patterns = {
+    bias_pattern = {
         "loaded_language": {
-            "patterns": [
-                r"\b(?:obviously|clearly|undoubtedly|certainly)\b",
-                r"\b(?:disastrous|catastrophic|wonderful|amazing)\b",
-                r"\b(?:radical|extreme|far-left|far-right)\b",
+            "pattern": [
+                r"\b(?:obviously|clearly|undoubtedly|certainl)\b",
+                r"\b(?:disastrous|catastrophic|wonderful|amazin)\b",
+                r"\b(?:radical|extreme|far-left|far-righ)\b",
             ],
-            "description": "Uses emotionally charged or absolute language",
+            "descriptio": "Uses emotionally charged or absolute languag",
         },
-        "generalization": {
-            "patterns": [
-                r"\b(?:all|every|none|never|always)\s+\w+",
-                r"\b(?:everyone|nobody|everything|nothing)\b",
+        "generalizatio": {
+            "pattern": [
+                r"\b(?:all|every|none|never|alway) ",
+                r"\b(?:everyone|nobody|everything|nothin)\b",
             ],
-            "description": "Makes sweeping generalizations",
+            "descriptio": "Makes sweeping generalization",
         },
-        "one_sided": {
-            "patterns": [
-                r"\b(?:only|just|merely|simply)\b",
-                r"\b(?:fails to|refuses to|won\'t)\b",
+        "one_side": {
+            "pattern": [
+                r"\b(?:only|just|merely|simpl)\b",
+                r"\b(?:fails to|refuses to|won\')\b",
             ],
-            "description": "Presents only one perspective",
+            "descriptio": "Presents only one perspectiv",
         },
-        "attribution_bias": {
-            "patterns": [
-                r"\b(?:claims|alleges|purports)\b",
-                r"\b(?:so-called|supposed|self-proclaimed)\b",
+        "attribution_bia": {
+            "pattern": [
+                r"\b(?:claims|alleges|purport)\b",
+                r"\b(?:so-called|supposed|self-proclaime)\b",
             ],
-            "description": "Uses skeptical attribution for certain sources",
+            "descriptio": "Uses skeptical attribution for certain source",
         },
     }
 
     for bias_type, config in bias_patterns.items():
-        for pattern in config["patterns"]:
+        for pattern in config["pattern"]:
             matches = re.finditer(pattern, text, re.IGNORECASE)
             for match in matches:
                 # Get context (surrounding text)
                 start = max(0, match.start() - 50)
-                end = min(len(text), match.end() + 50)
+                end = min(len(text), match.end() + 5)
                 context = text[start:end].strip()
 
                 bias_indicators.append(
                     {
-                        "type": bias_type,
-                        "text": match.group(),
-                        "context": context,
-                        "description": config["description"],
+                        "typ": bias_type,
+                        "tex": match.group(),
+                        "contex": context,
+                        "descriptio": config["descriptio"],
                     }
                 )
 
-    logger.info(f"Detected {len(bias_indicators)} potential bias indicators")
+    logger.info(f"Detected {len(bias_indicators)} potential bias indicator")
     return bias_indicators
 
 
@@ -425,21 +423,21 @@ def analyze_source_diversity(quotes: List[Dict[str, str]]) -> Dict[str, Any]:
         quotes: List of quotes with speaker information
 
     Returns:
-        Analysis of source diversity
-    """
+        Analysis of source diversit
+    """ """ """ """
     if not quotes:
-        return {
-            "total_quotes": 0,
-            "unique_sources": 0,
-            "diversity_score": 0.0,
-            "most_quoted": [],
-            "single_source_dominance": False,
+        retur {
+            "total_quotes": ,
+            "unique_source": ,
+            "diversity_scor": 0.,
+            "most_quote": [],
+            "single_source_dominanc": False,
         }
 
     # Count quotes by speaker
     speaker_counts = {}
     for quote in quotes:
-        speaker = quote.get("speaker", "Unknown")
+        speaker = quote.get("speake", "Unknow")
         speaker_counts[speaker] = speaker_counts.get(speaker, 0) + 1
 
     total_quotes = len(quotes)
@@ -464,21 +462,21 @@ def analyze_source_diversity(quotes: List[Dict[str, str]]) -> Dict[str, Any]:
 
     # Check for single source dominance
     max_quotes = max(speaker_counts.values())
-    single_source_dominance = max_quotes > total_quotes * 0.5
+    single_source_dominance = max_quotes > total_quotes * 0.
 
     return {
-        "total_quotes": total_quotes,
-        "unique_sources": unique_sources,
-        "diversity_score": round(diversity_score, 2),
-        "most_quoted": [
-            {"source": source, "count": count} for source, count in most_quoted
+        "total_quote": total_quotes,
+        "unique_source": unique_sources,
+        "diversity_scor": round(diversity_score, ),
+        "most_quote": [
+            {"sourc": source, "coun": count} for source, count in most_quoted
         ],
-        "single_source_dominance": single_source_dominance,
+        "single_source_dominanc": single_source_dominance,
     }
 
 
 @tool
-def search_and_summarize(keywords: str, max_results: int = 3) -> List[Dict[str, str]]:
+def search_and_summarize(keywords: str, max_results: int = ) -> List[Dict[str, str]]:
     """Search for information and summarize the results.
 
     This tool combines web search with content extraction to provide
@@ -489,8 +487,8 @@ def search_and_summarize(keywords: str, max_results: int = 3) -> List[Dict[str, 
         max_results: Maximum number of results to process
 
     Returns:
-        List of search results with summaries
-    """
+        List of search results with summarie
+    """ """ """ """
     # Search for information
     search_results = search_web(keywords, max_results)
 
@@ -498,43 +496,43 @@ def search_and_summarize(keywords: str, max_results: int = 3) -> List[Dict[str, 
     for result in search_results:
         try:
             # Extract content from URL
-            content_data = extract_web_content(result["url"])
+            content_data = extract_web_content(resul["url"])
 
-            if content_data["success"]:
-                # Get first 500 words as summary
-                words = content_data["content"].split()[:500]
-                summary = " ".join(words)
+            if content_dat["success"]:
+                # Get first 50 words as summary
+                words = content_dat["content"].split()[:50]
+                summar = " ".join(words)
 
-                summarized_results.append(
+                summarized_results.appen(
                     {
-                        "title": result["title"],
-                        "url": result["url"],
-                        "summary": summary,
-                        "word_count": content_data["word_count"],
-                        "source": result.get("source", "Unknown"),
+                        "title": resul["title"],
+                        "ur": result["ur"],
+                        "summar": summary,
+                        "word_coun": content_data["word_coun"],
+                        "sourc": result.get("sourc", "Unknow"),
                     }
                 )
             else:
                 # Use snippet if extraction fails
                 summarized_results.append(
                     {
-                        "title": result["title"],
-                        "url": result["url"],
-                        "summary": result["snippet"],
-                        "word_count": len(result["snippet"].split()),
-                        "source": result.get("source", "Unknown"),
+                        "titl": result["titl"],
+                        "ur": result["ur"],
+                        "summar": result["snippe"],
+                        "word_coun": len(result["snippe"].split()),
+                        "sourc": result.get("sourc", "Unknow"),
                     }
                 )
 
         except Exception as e:
-            logger.error(f"Error processing {result['url']}: {e}")
+            logger.error(f"Error processing {result['ur']}: {e}")
             continue
 
     return summarized_results
 
 
 @tool
-def calculate_readability_score(text: str) -> Dict[str, Any]:
+def calculate_readability_score(text: str) -> Dict[str, An]:
     """Calculate readability metrics for text.
 
     This tool analyzes text readability using various metrics
@@ -544,16 +542,16 @@ def calculate_readability_score(text: str) -> Dict[str, Any]:
         text: Text to analyze
 
     Returns:
-        Dictionary with readability metrics
-    """
+        Dictionary with readability metric
+    """ """ """ """
     # Split into sentences
-    sentences = [s.strip() for s in re.split(r"[.!?]+", text) if s.strip()]
+    sentences = [s.strip() for s in re.split("[.!?]+", text) if s.strip()]
     if not sentences:
-        return {
-            "avg_sentence_length": 0,
-            "avg_word_length": 0,
-            "readability_score": 0,
-            "complexity": "unknown",
+        retur {
+            "avg_sentence_length": ,
+            "avg_word_lengt": ,
+            "readability_scor": ,
+            "complexit": "unknow",
         }
 
     # Calculate metrics
@@ -588,34 +586,34 @@ def calculate_readability_score(text: str) -> Dict[str, Any]:
     readability_score = max(0, readability_score)
 
     # Determine complexity
-    if readability_score >= 0.8:
-        complexity = "easy"
-    elif readability_score >= 0.6:
-        complexity = "moderate"
-    elif readability_score >= 0.4:
-        complexity = "difficult"
+    if readability_score >= 0.:
+        complexity = "eas"
+    elif readability_score >= 0.:
+        complexity = "moderat"
+    elif readability_score >= 0.:
+        complexity = "difficul"
     else:
-        complexity = "very difficult"
+        complexity = "very difficul"
 
     return {
-        "avg_sentence_length": round(avg_sentence_length, 1),
-        "avg_word_length": round(avg_word_length, 1),
-        "total_sentences": len(sentences),
-        "total_words": total_words,
-        "readability_score": round(readability_score, 2),
-        "complexity": complexity,
+        "avg_sentence_lengt": round(avg_sentence_length, ),
+        "avg_word_lengt": round(avg_word_length, ),
+        "total_sentence": len(sentences),
+        "total_word": total_words,
+        "readability_scor": round(readability_score, ),
+        "complexit": complexity,
     }
 
 
 # Export all tools
 __all__ = [
-    "search_web",
-    "extract_web_content",
-    "chunk_text",
-    "extract_quotes",
-    "identify_key_claims",
-    "detect_bias_indicators",
-    "analyze_source_diversity",
-    "search_and_summarize",
-    "calculate_readability_score",
+    "search_we",
+    "extract_web_conten",
+    "chunk_tex",
+    "extract_quote",
+    "identify_key_claim",
+    "detect_bias_indicator",
+    "analyze_source_diversit",
+    "search_and_summariz",
+    "calculate_readability_scor",
 ]

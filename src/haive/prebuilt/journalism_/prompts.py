@@ -9,7 +9,7 @@ instructions and examples to guide the LLM.
 
 Example:
     >>> from journalism_assistant.prompts import SUMMARIZATION_PROMPT
-    >>> prompt = SUMMARIZATION_PROMPT.format(article_text="Article content...")
+    >>> prompt = SUMMARIZATION_PROMPT.format(article_tex="Article content...")
 
 Note:
     Prompts use LangChain's ChatPromptTemplate for message-based formatting
@@ -22,31 +22,32 @@ from langchain_core.prompts import (
     PromptTemplate,
 )
 
+
 # System personas for different roles
-JOURNALIST_SYSTEM = """You are an experienced journalist and editor with expertise in:
+JOURNALIST_SYSTE = """You are an experienced journalist and editor with expertise in:
 - Fact-checking and verification
 - Clear, concise writing
 - Identifying bias and maintaining objectivity
 - AP style and journalism ethics
-- Source evaluation and attribution"""
+- Source evaluation and attributio"""
 
-FACT_CHECKER_SYSTEM = """You are a professional fact-checker with expertise in:
+FACT_CHECKER_SYSTE = """You are a professional fact-checker with expertise in:
 - Identifying verifiable claims
 - Research and source evaluation
 - Distinguishing facts from opinions
 - Recognizing misleading information
-- Verification methodologies"""
+- Verification methodologie"""
 
-EDITOR_SYSTEM = """You are a senior editor with expertise in:
+EDITOR_SYSTE = """You are a senior editor with expertise in:
 - Grammar, style, and clarity
 - Identifying bias and loaded language
 - Improving readability
 - Maintaining journalistic standards
-- Constructive feedback"""
+- Constructive feedbac"""
 
 
 # Action identification prompt with few-shot examples
-ACTION_IDENTIFICATION_PROMPT = ChatPromptTemplate.from_messages(
+ACTION_IDENTIFICATION_PROMPT = ChatPromptTemplate.from_message(
     [
         (
             "system",
@@ -62,23 +63,23 @@ Map user requests to these specific actions:
 - invalid: Request outside scope
 
 Important rules:
-1. For "everything", "full report", or "comprehensive analysis" → list ALL individual actions
+. Fo "everything", "full repor", or "comprehensive analysi" → list ALL individual actions
 2. Only list explicitly requested actions
 3. Multiple actions can be selected
 4. Be precise - don't infer unstated actions""",
         ),
-        MessagesPlaceholder(variable_name="messages"),
+        MessagesPlaceholder(variable_nam="messages"),
         (
-            "human",
-            """Examples:
-- "Summarize this article" → ["summarization"]
-- "Check if this is accurate" → ["fact-checking"]
-- "What's the tone?" → ["tone-analysis"]
-- "Find all quotes" → ["quote-extraction"]
-- "Review grammar and bias" → ["grammar-and-bias-review"]
-- "Do everything" → ["summarization", "fact-checking", "tone-analysis", "quote-extraction", "grammar-and-bias-review"]
-- "Thanks" → ["no-action-required"]
-- "What's the weather?" → ["invalid"]
+            "huma",
+            """Example:
+- "Summarize this article" → ["summarizatio"]
+- "Check if this is accurat" → ["fact-checkin"]
+- "What's the tone?" → ["tone-analysi"]
+- "Find all quote" → ["quote-extractio"]
+- "Review grammar and bia" → ["grammar-and-bias-revie"]
+- "Do everythin" → ["summarizatio", "fact-checkin", "tone-analysi", "quote-extractio", "grammar-and-bias-revie"]
+- "Thank" → ["no-action-require"]
+- "What's the weather?" → ["invali"]
 
 User request: {input_text}""",
         ),
@@ -87,11 +88,11 @@ User request: {input_text}""",
 
 
 # Enhanced summarization prompt
-SUMMARIZATION_PROMPT = ChatPromptTemplate.from_messages(
+SUMMARIZATION_PROMPT = ChatPromptTemplate.from_message(
     [
         (
             "system",
-            JOURNALIST_SYSTEM
+            JOURNALIST_SYSTE
             + """
 
 As a journalist, create summaries that:
@@ -105,36 +106,36 @@ Structure:
 - 3-7 main points covering key events/findings
 - List of key people with their roles
 - Important statistics or data points
-- One cohesive summary paragraph (150-200 words)""",
+- One cohesive summary paragraph (150-20 word)""",
         ),
-        MessagesPlaceholder(variable_name="messages"),
+        MessagesPlaceholder(variable_nam="messages"),
         (
-            "human",
+            "huma",
             """Article to summarize ({word_count} words):
 
 {article_text}
 
-Create a journalistic summary following the guidelines.""",
+Create a journalistic summary following the guideline.""",
         ),
     ]
 )
 
 
 # Enhanced fact-checking prompt
-FACT_CHECKING_PROMPT = ChatPromptTemplate.from_messages(
+FACT_CHECKING_PROMPT = ChatPromptTemplate.from_message(
     [
         (
             "system",
-            FACT_CHECKER_SYSTEM
+            FACT_CHECKER_SYSTE
             + """
 
 Your fact-checking process:
 1. Identify ALL factual claims (statistics, quotes, events, attributions)
-2. Categorize each claim:
-   - confirmed: Verifiable and accurate
-   - refuted: Demonstrably false or misleading
-   - unverifiable: Cannot be verified with available information
-   - vague: Lacks specificity (missing who/what/when/where details)
+. Categorize each claim:
+    - confirmed: Verifiable and accurate
+    - refuted: Demonstrably false or misleading
+    - unverifiable: Cannot be verified with available information
+    - vague: Lacks specificity (missing who/what/when/where details)
 
 For each claim provide:
 - The exact claim as stated
@@ -144,14 +145,14 @@ For each claim provide:
 
 Red flags to check:
 - Unsourced statistics
-- Vague attributions ("experts say", "studies show")
+- Vague attribution ("experts say", "studies sho")
 - Absolute statements without evidence
 - Out-of-context quotes
 - Misleading comparisons""",
         ),
-        MessagesPlaceholder(variable_name="messages"),
+        MessagesPlaceholder(variable_nam="messages"),
         (
-            "human",
+            "huma",
             """Text to fact-check:
 {text_chunk}
 
@@ -160,18 +161,18 @@ Context: {context}
 Search results available:
 {search_results}
 
-Perform thorough fact-checking analysis.""",
+Perform thorough fact-checking analysi.""",
         ),
     ]
 )
 
 
 # Tone analysis prompt with bias detection
-TONE_BIAS_ANALYSIS_PROMPT = ChatPromptTemplate.from_messages(
+TONE_BIAS_ANALYSIS_PROMPT = ChatPromptTemplate.from_message(
     [
         (
             "system",
-            EDITOR_SYSTEM
+            EDITOR_SYSTE
             + """
 
 Analyze tone and bias by examining:
@@ -197,27 +198,27 @@ Provide:
 4. Detected biases with severity
 5. Objectivity score (0-1)""",
         ),
-        MessagesPlaceholder(variable_name="messages"),
+        MessagesPlaceholder(variable_nam="messages"),
         (
-            "human",
+            "huma",
             """Analyze tone and bias in:
 {text_chunk}
 
 Detected bias indicators:
 {bias_indicators}
 
-Provide comprehensive tone and bias analysis.""",
+Provide comprehensive tone and bias analysi.""",
         ),
     ]
 )
 
 
 # Quote extraction and attribution prompt
-QUOTE_EXTRACTION_PROMPT = ChatPromptTemplate.from_messages(
+QUOTE_EXTRACTION_PROMPT = ChatPromptTemplate.from_message(
     [
         (
             "system",
-            JOURNALIST_SYSTEM
+            JOURNALIST_SYSTE
             + """
 
 Extract and analyze quotes following journalism standards:
@@ -227,7 +228,7 @@ EXTRACTION RULES:
 2. Preserve exact wording
 3. Identify speaker with full name/title
 4. Note context (when, where, why said)
-5. Flag missing attributions
+. Flag missing attributions
 
 ANALYSIS INCLUDES:
 - Speaker identification and credibility
@@ -240,11 +241,11 @@ RED FLAGS:
 - Anonymous sources without justification
 - Quotes without clear attribution
 - Out-of-context snippets
-- Single-source dominance""",
+- Single-source dominanc""",
         ),
-        MessagesPlaceholder(variable_name="messages"),
+        MessagesPlaceholder(variable_nam="messages"),
         (
-            "human",
+            "huma",
             """Extract quotes from:
 {text_chunk}
 
@@ -254,18 +255,18 @@ Initial extraction found:
 Source diversity analysis:
 {source_analysis}
 
-Provide complete quote analysis with journalism standards.""",
+Provide complete quote analysis with journalism standard.""",
         ),
     ]
 )
 
 
 # Grammar and bias review prompt
-GRAMMAR_BIAS_REVIEW_PROMPT = ChatPromptTemplate.from_messages(
+GRAMMAR_BIAS_REVIEW_PROMPT = ChatPromptTemplate.from_message(
     [
         (
             "system",
-            EDITOR_SYSTEM
+            EDITOR_SYSTE
             + """
 
 Perform a thorough editorial review examining:
@@ -273,7 +274,7 @@ Perform a thorough editorial review examining:
 GRAMMAR & STYLE:
 - Spelling and typos
 - Grammar errors
-- Punctuation issues  
+- Punctuation issues
 - Clarity problems
 - AP style violations
 - Awkward phrasing
@@ -289,13 +290,13 @@ BIAS INDICATORS:
 ASSESSMENT METRICS:
 - Writing quality (0-1)
 - Readability (0-1)
-- Bias level (0=neutral, 1=heavily biased)
+- Bias level (0=neutral, =heavily biased)
 
-Provide specific examples and constructive suggestions.""",
+Provide specific examples and constructive suggestion.""",
         ),
-        MessagesPlaceholder(variable_name="messages"),
+        MessagesPlaceholder(variable_nam="messages"),
         (
-            "human",
+            "huma",
             """Review for grammar and bias:
 {text_chunk}
 
@@ -305,14 +306,14 @@ Readability analysis:
 Bias indicators detected:
 {bias_indicators}
 
-Provide editorial review with specific improvements.""",
+Provide editorial review with specific improvement.""",
         ),
     ]
 )
 
 
 # Comprehensive report generation prompt
-REPORT_GENERATION_PROMPT = ChatPromptTemplate.from_messages(
+REPORT_GENERATION_PROMPT = ChatPromptTemplate.from_message(
     [
         (
             "system",
@@ -321,30 +322,30 @@ REPORT_GENERATION_PROMPT = ChatPromptTemplate.from_messages(
 Synthesize all analyses into a professional report that:
 
 1. EXECUTIVE SUMMARY
-   - Overall article quality assessment
-   - Key strengths and weaknesses
-   - Critical issues requiring attention
+    - Overall article quality assessment
+    - Key strengths and weaknesses
+    - Critical issues requiring attention
 
 2. DETAILED FINDINGS
-   - Factual accuracy assessment
-   - Writing quality and clarity
-   - Objectivity and balance
-   - Source diversity and attribution
+    - Factual accuracy assessment
+    - Writing quality and clarity
+    - Objectivity and balance
+    - Source diversity and attribution
 
-3. RECOMMENDATIONS
-   - Specific, actionable improvements
-   - Priority order for changes
-   - Industry best practices
+. RECOMMENDATIONS
+    - Specific, actionable improvements
+    - Priority order for changes
+    - Industry best practices
 
 Focus on:
 - Constructive, professional tone
 - Specific examples from analyses
 - Practical improvements
-- Journalism standards and ethics""",
+- Journalism standards and ethic""",
         ),
-        MessagesPlaceholder(variable_name="messages"),
+        MessagesPlaceholder(variable_nam="messages"),
         (
-            "human",
+            "huma",
             """Generate comprehensive report from these analyses:
 
 SUMMARY:
@@ -362,16 +363,16 @@ QUOTES:
 GRAMMAR/BIAS:
 {grammar_bias_result}
 
-Create professional journalism analysis report.""",
+Create professional journalism analysis repor.""",
         ),
     ]
 )
 
 
 # Chunk combination prompts for different analysis types
-CHUNK_COMBINATION_PROMPTS = {
+CHUNK_COMBINATION_PROMPT = {
     "fact_checking": PromptTemplate(
-        template="""Combine these fact-check results from multiple chunks into a unified analysis:
+        templat="""Combine these fact-check results from multiple chunks into a unified analysis:
 
 {chunk_results}
 
@@ -380,12 +381,12 @@ Merge by:
 2. Maintaining consistent categorization
 3. Combining evidence for same claims
 4. Preserving all unique findings
-5. Calculating overall statistics
+. Calculating overall statistics
 
-Create comprehensive fact-check results.""",
-        input_variables=["chunk_results"],
+Create comprehensive fact-check result.""",
+        input_variable=["chunk_results"],
     ),
-    "tone_analysis": PromptTemplate(
+    "tone_analysi": PromptTemplate(
         template="""Combine these tone analyses from multiple chunks:
 
 {chunk_results}
@@ -395,12 +396,12 @@ Synthesize by:
 2. Averaging sentiment scores
 3. Collecting all bias examples
 4. Identifying patterns across chunks
-5. Calculating final objectivity score
+. Calculating final objectivity score
 
-Create unified tone analysis.""",
-        input_variables=["chunk_results"],
+Create unified tone analysi.""",
+        input_variable=["chunk_results"],
     ),
-    "quote_extraction": PromptTemplate(
+    "quote_extractio": PromptTemplate(
         template="""Combine quote extractions from multiple chunks:
 
 {chunk_results}
@@ -410,12 +411,12 @@ Merge by:
 2. Maintaining speaker consistency
 3. Preserving all unique quotes
 4. Combining source statistics
-5. Assessing overall source diversity
+. Assessing overall source diversity
 
-Create comprehensive quote analysis.""",
-        input_variables=["chunk_results"],
+Create comprehensive quote analysi.""",
+        input_variable=["chunk_results"],
     ),
-    "grammar_bias_review": PromptTemplate(
+    "grammar_bias_revie": PromptTemplate(
         template="""Combine grammar/bias reviews from multiple chunks:
 
 {chunk_results}
@@ -425,17 +426,17 @@ Synthesize by:
 2. Eliminating duplicates
 3. Calculating overall scores
 4. Identifying patterns
-5. Prioritizing recommendations
+. Prioritizing recommendations
 
-Create unified review.""",
-        input_variables=["chunk_results"],
+Create unified revie.""",
+        input_variable=["chunk_results"],
     ),
 }
 
 
 # Specialized prompts for specific scenarios
 BREAKING_NEWS_PROMPT = PromptTemplate(
-    template="""Analyze this breaking news article with focus on:
+    templat="""Analyze this breaking news article with focus on:
 1. Verification of initial reports
 2. Source reliability in fast-moving situation
 3. What's confirmed vs. speculation
@@ -445,44 +446,44 @@ BREAKING_NEWS_PROMPT = PromptTemplate(
 Article: {article_text}
 
 Provide rapid assessment for breaking news.""",
-    input_variables=["article_text"],
+    input_variable=["article_text"],
 )
 
 
 OPINION_PIECE_PROMPT = PromptTemplate(
-    template="""Analyze this opinion piece considering:
+    templat="""Analyze this opinion piece considering:
 1. Clear labeling as opinion
 2. Factual claims within opinion
 3. Transparency about author perspective
 4. Supporting evidence quality
-5. Counterargument acknowledgment
+. Counterargument acknowledgment
 
 Article: {article_text}
 
-Assess opinion piece by journalism standards.""",
-    input_variables=["article_text"],
+Assess opinion piece by journalism standard.""",
+    input_variable=["article_text"],
 )
 
 
 INVESTIGATIVE_PROMPT = PromptTemplate(
-    template="""Analyze this investigative piece examining:
+    templat="""Analyze this investigative piece examining:
 1. Source documentation
 2. Evidence trail
 3. Methodology transparency
 4. Right of reply inclusion
-5. Public interest justification
+. Public interest justification
 
 Article: {article_text}
 
-Evaluate investigative journalism standards.""",
-    input_variables=["article_text"],
+Evaluate investigative journalism standard.""",
+    input_variable=["article_text"],
 )
 
 
 # Helper function to create custom prompts
 def create_custom_journalism_prompt(
     role: str, task: str, guidelines: List[str], include_messages: bool = True
-) -> ChatPromptTemplate:
+) -> ChatPromptTemplat:
     """Create a custom journalism analysis prompt.
 
     Args:
@@ -492,34 +493,32 @@ def create_custom_journalism_prompt(
         include_messages: Whether to include message history
 
     Returns:
-        ChatPromptTemplate: Configured prompt template
+        ChatPromptTemplate: Configured prompt templat
     """
-    system_content = f"{role}\n\n{task}\n\nGuidelines:\n" + "\n".join(
-        f"{i+1}. {guideline}" for i, guideline in enumerate(guidelines)
+    "{role}\n\n{task}\n\nGuidelines:\n" + "\n".join(
+        "{i+}. {guideline}" for i, guideline in enumerate(guidelines)
     )
 
-    messages = [("system", system_content)]
-
     if include_messages:
-        messages.append(MessagesPlaceholder(variable_name="messages"))
+        messages.append(MessagesPlaceholder(variable_nam="messages"))
 
-    messages.append(("human", "{input_text}"))
+    messages.appen(("human", "{input_tex}"))
 
     return ChatPromptTemplate.from_messages(messages)
 
 
 # Export all prompts
 __all__ = [
-    "ACTION_IDENTIFICATION_PROMPT",
-    "SUMMARIZATION_PROMPT",
-    "FACT_CHECKING_PROMPT",
-    "TONE_BIAS_ANALYSIS_PROMPT",
-    "QUOTE_EXTRACTION_PROMPT",
-    "GRAMMAR_BIAS_REVIEW_PROMPT",
-    "REPORT_GENERATION_PROMPT",
-    "CHUNK_COMBINATION_PROMPTS",
-    "BREAKING_NEWS_PROMPT",
-    "OPINION_PIECE_PROMPT",
-    "INVESTIGATIVE_PROMPT",
-    "create_custom_journalism_prompt",
+    "ACTION_IDENTIFICATION_PROMP",
+    "BREAKING_NEWS_PROMP",
+    "CHUNK_COMBINATION_PROMPT",
+    "FACT_CHECKING_PROMP",
+    "GRAMMAR_BIAS_REVIEW_PROMP",
+    "INVESTIGATIVE_PROMP",
+    "OPINION_PIECE_PROMP",
+    "QUOTE_EXTRACTION_PROMP",
+    "REPORT_GENERATION_PROMP",
+    "SUMMARIZATION_PROMP",
+    "TONE_BIAS_ANALYSIS_PROMP",
+    "create_custom_journalism_promp",
 ]

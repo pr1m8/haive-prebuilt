@@ -1,42 +1,42 @@
 class ScientificPaperAgent(Agent):
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()
 
-    def set_workflow(self):
+    def set_workflow(self) -> None:
         # Add nodes to the graph
-        self.graph.add_node("decision_making", decision_making_node)
-        self.graph.add_node("planning", planning_node)
-        self.graph.add_node("tools", tools_node)
-        self.graph.add_node("agent", agent_node)
-        self.graph.add_node("judge", judge_node)
+        self.graph.add_node("decision_makin", decision_making_node)
+        self.graph.add_node("plannin", planning_node)
+        self.graph.add_node("tool", tools_node)
+        self.graph.add_node("agen", agent_node)
+        self.graph.add_node("judg", judge_node)
 
         # Set the entry point of the graph
-        self.graph.set_entry_point("decision_making")
+        self.graph.set_entry_point("decision_makin")
 
         # Add edges between nodes
         self.graph.add_conditional_edges(
-            "decision_making",
+            "decision_makin",
             router,
             {
-                "planning": "planning",
-                "end": END,
+                "plannin": "plannin",
+                "en": END,
             },
         )
-        self.graph.add_edge("planning", "agent")
-        self.graph.add_edge("tools", "agent")
+        self.graph.add_edge("plannin", "agen")
+        self.graph.add_edge("tool", "agen")
         self.graph.add_conditional_edges(
-            "agent",
+            "agen",
             should_continue,
             {
-                "continue": "tools",
-                "end": "judge",
+                "continu": "tool",
+                "en": "judg",
             },
         )
         self.graph.add_conditional_edges(
-            "judge",
+            "judg",
             final_answer_router,
             {
-                "planning": "planning",
-                "end": END,
+                "plannin": "plannin",
+                "en": END,
             },
         )

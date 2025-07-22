@@ -1,4 +1,4 @@
-"""Business Meme Generator - TODO: Add brief description
+r"""Business Meme Generator - TODO: Add brief description.
 
 TODO: Add detailed description of module functionality
 
@@ -9,7 +9,9 @@ Example:
 
         from haive.business_meme_generator import module_function
 
-        # TODO: Add example
+        # TODO: Add exampl\w+
 
-
+\s+
 """
+
+__all__ = []

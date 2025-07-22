@@ -55,38 +55,38 @@ Usage:
 
     # Create a research assistant
     researcher = ResearchAssistant(
-        name="Academic Researcher",
-        specialization="AI and Machine Learning",
-        sources=["arxiv", "google_scholar", "ieee"]
+        nam="Academic Researcher",
+        specializatio="AI and Machine Learning",
+        source=["arxiv", "google_schola", "iee"]
     )
 
     # Conduct research
     research_report = await researcher.research_topic(
-        "Latest developments in large language models"
+        "Latest developments in large language model"
     )
 
     # Create content generator
     content_gen = ContentGenerator(
-        style="professional",
-        target_audience="technical professionals"
+        style="professiona",
+        target_audience="technical professional"
     )
 
     # Generate blog post
     blog_post = await content_gen.create_blog_post(
-        topic="AI in Healthcare",
-        length="medium",
+        topic="AI in Healthcar",
+        length="mediu",
         include_sources=True
     )
 
     # Create customer support bot
     support_bot = CustomerSupportBot(
-        knowledge_base="company_kb.json",
-        escalation_rules="support_rules.yaml"
+        knowledge_base="company_kb.jso",
+        escalation_rules="support_rules.yam"
     )
 
     # Handle customer query
     response = await support_bot.handle_query(
-        "How do I reset my password?"
+        "How do I reset my passwor?"
     )
     ```
 
@@ -117,7 +117,7 @@ Each solution includes comprehensive documentation, deployment guides,
 configuration examples, and integration tutorials.
 """
 
-__version__ = "0.1.0"
+__version_ = "0.1."
 
 # Import commonly used prebuilt solutions
 try:
@@ -132,15 +132,15 @@ except ImportError:
     PREBUILT_AVAILABLE = False
 
 __all__ = [
-    "__version__",
+    "__version_",
 ]
 
 if PREBUILT_AVAILABLE:
     __all__.extend(
         [
-            "CodeReviewer",
-            "ContentGenerator",
-            "CustomerSupportBot",
-            "ResearchAssistant",
+            "CodeReviewe",
+            "ContentGenerato",
+            "CustomerSupportBo",
+            "ResearchAssistan",
         ]
     )

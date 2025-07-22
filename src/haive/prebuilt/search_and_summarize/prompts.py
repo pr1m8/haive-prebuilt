@@ -1,12 +1,11 @@
 # src/haive/agents/search_summarize/prompts.py
-"""
-Prompts for Search & Summarize Agent System.
-"""
+"""Prompts for Search & Summarize Agent Syste."""
 
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 
+
 # Search planning prompt
-search_planning_prompt = ChatPromptTemplate.from_messages(
+search_planning_prompt = ChatPromptTemplate.from_message(
     [
         (
             "system",
@@ -20,19 +19,19 @@ Consider:
 3. Determining the best sources (general web, academic, news, specific sites)
 4. Suggesting search refinements""",
         ),
-        MessagesPlaceholder(variable_name="messages", optional=True),
+        MessagesPlaceholder(variable_nam="messages", optional=Tru),
         (
             "human",
             """Research query: {query}
 
-Create a search strategy that will find the most relevant and high-quality information.""",
+Create a search strategy that will find the most relevant and high-quality informatio.""",
         ),
     ]
 )
 
 
 # Content summarization prompt
-summarization_prompt = ChatPromptTemplate.from_messages(
+summarization_prompt = ChatPromptTemplate.from_message(
     [
         (
             "system",
@@ -42,14 +41,14 @@ Your task is to create summaries that:
 1. Capture the key information relevant to the research query
 2. Are accurate and factual
 3. Highlight important insights
-4. Note any limitations or caveats
+. Note any limitations or caveats
 
 Summary style: {style}
 Maximum length: {max_length} words
-Focus areas: {focus_areas}""",
+Focus areas: {focus_area}""",
         ),
         (
-            "human",
+            "huma",
             """Research query: {query}
 
 Content to summarize:
@@ -57,14 +56,14 @@ Title: {title}
 URL: {url}
 Content: {content}
 
-Create a summary following the specified style and requirements.""",
+Create a summary following the specified style and requirement.""",
         ),
     ]
 )
 
 
 # Research synthesis prompt
-synthesis_prompt = ChatPromptTemplate.from_messages(
+synthesis_prompt = ChatPromptTemplate.from_message(
     [
         (
             "system",
@@ -75,12 +74,12 @@ Your task is to:
 2. Identify common themes and patterns
 3. Note contradictions or disagreements
 4. Extract key insights
-5. Provide actionable recommendations when appropriate
+. Provide actionable recommendations when appropriate
 
-Create a well-structured report that provides a complete picture of the research findings.""",
+Create a well-structured report that provides a complete picture of the research finding.""",
         ),
         (
-            "human",
+            "huma",
             """Research query: {query}
 
 Individual summaries:
@@ -89,14 +88,14 @@ Individual summaries:
 Number of sources: {source_count}
 Average relevance: {average_relevance}
 
-Create a comprehensive research report.""",
+Create a comprehensive research repor.""",
         ),
     ]
 )
 
 
 # Quality assessment prompt
-quality_assessment_prompt = ChatPromptTemplate.from_messages(
+quality_assessment_prompt = ChatPromptTemplate.from_message(
     [
         (
             "system",
@@ -107,25 +106,25 @@ Evaluate sources based on:
 2. Recency of information
 3. Relevance to the query
 4. Depth of coverage
-5. Potential bias
+. Potential bias
 
-Provide quality scores and recommendations.""",
+Provide quality scores and recommendation.""",
         ),
         (
-            "human",
+            "huma",
             """Assess the quality of these search results for the query: {query}
 
 Results:
 {results}
 
-Provide quality assessment and recommendations for which sources to prioritize.""",
+Provide quality assessment and recommendations for which sources to prioritiz.""",
         ),
     ]
 )
 
 
 # Executive summary prompt
-executive_summary_prompt = ChatPromptTemplate.from_messages(
+executive_summary_prompt = ChatPromptTemplate.from_message(
     [
         (
             "system",
@@ -136,17 +135,17 @@ Create an executive summary that:
 2. Uses clear, non-technical language
 3. Highlights critical information for decision-making
 4. Is extremely concise (under 100 words)
-5. Includes a clear recommendation or next step""",
+. Includes a clear recommendation or next ste""",
         ),
         (
-            "human",
+            "huma",
             """Create an executive summary for this research:
 
 Query: {query}
 Key findings: {key_findings}
 Recommendations: {recommendations}
 
-Write a compelling executive summary.""",
+Write a compelling executive summar.""",
         ),
     ]
 )

@@ -8,7 +8,7 @@ includes detailed instructions for the LLM.
 
 Example:
     >>> from news_research.prompts import SEARCH_GENERATION_PROMPT
-    >>> prompt = SEARCH_GENERATION_PROMPT.format(research_topic="AI in healthcare")
+    >>> prompt = SEARCH_GENERATION_PROMPT.format(research_topi="AI in healthcare")
 
 Note:
     Prompts use LangChain's ChatPromptTemplate for message-based formatting
@@ -21,35 +21,36 @@ from langchain_core.prompts import (
     PromptTemplate,
 )
 
+
 # System prompts for different agent personalities/roles
-RESEARCH_EXPERT_SYSTEM = """You are an expert news researcher with years of experience in finding, analyzing, and synthesizing information from multiple sources. You excel at:
+RESEARCH_EXPERT_SYSTE = """You are an expert news researcher with years of experience in finding, analyzing, and synthesizing information from multiple sources. You excel at:
 - Creating effective search strategies
 - Evaluating source credibility
 - Identifying key information
 - Recognizing patterns and trends
-- Maintaining objectivity and balance"""
+- Maintaining objectivity and balanc"""
 
-ANALYSIS_EXPERT_SYSTEM = """You are a senior research analyst specializing in synthesizing complex information from multiple sources. Your strengths include:
+ANALYSIS_EXPERT_SYSTE = """You are a senior research analyst specializing in synthesizing complex information from multiple sources. Your strengths include:
 - Pattern recognition across diverse sources
 - Critical evaluation of information
 - Identifying both explicit and implicit themes
 - Recognizing biases and limitations
-- Drawing actionable insights"""
+- Drawing actionable insight"""
 
-REPORT_WRITER_SYSTEM = """You are a professional report writer who creates clear, well-structured documents for executive audiences. You focus on:
+REPORT_WRITER_SYSTE = """You are a professional report writer who creates clear, well-structured documents for executive audiences. You focus on:
 - Clear and concise communication
 - Logical organization of information
 - Evidence-based conclusions
 - Actionable recommendations
-- Professional tone and formatting"""
+- Professional tone and formattin"""
 
 
 # Search parameter generation prompt
-SEARCH_GENERATION_PROMPT = ChatPromptTemplate.from_messages(
+SEARCH_GENERATION_PROMPT = ChatPromptTemplate.from_message(
     [
         (
             "system",
-            RESEARCH_EXPERT_SYSTEM
+            RESEARCH_EXPERT_SYSTE
             + """
 
 Your current task is to generate optimal search parameters for the NewsAPI to find relevant articles about the given topic.
@@ -68,12 +69,12 @@ Guidelines for source selection:
 
 Guidelines for date range:
 - Recent news (last 7 days) for current events
-- Extend to 30 days for ongoing topics
-- Consider the nature of the topic (breaking news vs. ongoing trend)""",
+- Extend to 3 days for ongoing topics
+- Consider the nature of the topic (breaking news vs. ongoing tren)""",
         ),
-        MessagesPlaceholder(variable_name="messages"),
+        MessagesPlaceholder(variable_nam="messages"),
         (
-            "human",
+            "huma",
             """Research Topic: {research_topic}
 
 Search Iteration: {search_iteration} of {max_iterations}
@@ -81,14 +82,14 @@ Search Iteration: {search_iteration} of {max_iterations}
 Previous searches conducted:
 {past_searches}
 
-Generate search parameters that will find new, relevant articles not covered by previous searches.""",
+Generate search parameters that will find new, relevant articles not covered by previous searche.""",
         ),
     ]
 )
 
 
 # Article extraction coordination prompt
-EXTRACTION_COORDINATION_PROMPT = ChatPromptTemplate.from_messages(
+EXTRACTION_COORDINATION_PROMPT = ChatPromptTemplate.from_message(
     [
         (
             "system",
@@ -98,29 +99,29 @@ Your responsibilities:
 1. Prioritize high-value articles for extraction
 2. Handle extraction failures gracefully
 3. Verify extraction quality
-4. Report extraction statistics
+. Report extraction statistics
 
-Use the extract_content tool for each URL and track results.""",
+Use the extract_content tool for each URL and track result.""",
         ),
-        MessagesPlaceholder(variable_name="messages"),
+        MessagesPlaceholder(variable_nam="messages"),
         (
-            "human",
+            "huma",
             """Extract full content from these articles:
 
 {articles_list}
 
-Focus on getting clean, complete article text. Report the number of successful and failed extractions.""",
+Focus on getting clean, complete article text. Report the number of successful and failed extraction.""",
         ),
     ]
 )
 
 
 # Article selection prompt
-ARTICLE_SELECTION_PROMPT = ChatPromptTemplate.from_messages(
+ARTICLE_SELECTION_PROMPT = ChatPromptTemplate.from_message(
     [
         (
             "system",
-            RESEARCH_EXPERT_SYSTEM
+            RESEARCH_EXPERT_SYSTE
             + """
 
 Your current task is to select the most relevant articles for detailed summarization.
@@ -131,18 +132,18 @@ Selection criteria (in order of importance):
 3. Source credibility and authority
 4. Recency of information
 5. Unique perspective or information
-6. Geographic or demographic diversity
+. Geographic or demographic diversity
 
 Guidelines:
 - Aim for diversity in sources and viewpoints
 - Avoid selecting very similar articles
 - Prioritize articles with substantial content
 - Consider the credibility of sources
-- Select articles that together provide comprehensive coverage""",
+- Select articles that together provide comprehensive coverag""",
         ),
-        MessagesPlaceholder(variable_name="messages"),
+        MessagesPlaceholder(variable_nam="messages"),
         (
-            "human",
+            "huma",
             """Research Topic: {research_topic}
 
 Available articles with content:
@@ -150,14 +151,14 @@ Available articles with content:
 
 Maximum articles to select: {max_articles}
 
-Select the most relevant articles and explain your selection reasoning. Use the analyze_relevance and check_source_credibility tools as needed.""",
+Select the most relevant articles and explain your selection reasoning. Use the analyze_relevance and check_source_credibility tools as neede.""",
         ),
     ]
 )
 
 
 # Article summarization prompt
-ARTICLE_SUMMARIZATION_PROMPT = ChatPromptTemplate.from_messages(
+ARTICLE_SUMMARIZATION_PROMPT = ChatPromptTemplate.from_message(
     [
         (
             "system",
@@ -172,14 +173,14 @@ Your summarization approach:
 
 Summary structure:
 - 3-7 bullet points covering key information
-- Each point should be substantive (2-3 sentences)
+- Each point should be substantive (2- sentences)
 - Include specific details when relevant
 - Maintain factual accuracy
-- Note any limitations or biases observed""",
+- Note any limitations or biases observe""",
         ),
-        MessagesPlaceholder(variable_name="messages"),
+        MessagesPlaceholder(variable_nam="messages"),
         (
-            "human",
+            "huma",
             """Research Topic: {research_topic}
 
 Article Details:
@@ -191,14 +192,14 @@ Published: {published_date}
 Full Content:
 {content}
 
-Create a comprehensive summary with bullet points and assess its relevance to the research topic.""",
+Create a comprehensive summary with bullet points and assess its relevance to the research topi.""",
         ),
     ]
 )
 
 
 # Search decision prompt
-SEARCH_DECISION_PROMPT = ChatPromptTemplate.from_messages(
+SEARCH_DECISION_PROMPT = ChatPromptTemplate.from_message(
     [
         (
             "system",
@@ -206,37 +207,37 @@ SEARCH_DECISION_PROMPT = ChatPromptTemplate.from_messages(
 
 Your decision framework:
 1. Assess current data sufficiency
-   - Minimum 3-5 high-quality articles for good analysis
-   - Coverage of different aspects of the topic
-   - Diversity of sources and perspectives
+    - Minimum 3-5 high-quality articles for good analysis
+    - Coverage of different aspects of the topic
+    - Diversity of sources and perspectives
 
 2. Consider diminishing returns
-   - Each search iteration should add new value
-   - Stop if searches are returning duplicate content
-   - Balance thoroughness with efficiency
+    - Each search iteration should add new value
+    - Stop if searches are returning duplicate content
+    - Balance thoroughness with efficiency
 
-3. Make one of three decisions:
-   - continue_search: Need more/better articles
-   - analyze: Have sufficient quality data
-   - insufficient_data: Cannot find enough relevant content
+. Make one of three decisions:
+    - continue_search: Need more/better articles
+    - analyze: Have sufficient quality data
+    - insufficient_data: Cannot find enough relevant content
 
 Factors to consider:
 - Quality over quantity
 - Topic coverage completeness
 - Source diversity
 - Search iteration count
-- Average relevance scores""",
+- Average relevance score""",
         ),
-        MessagesPlaceholder(variable_name="messages"),
+        MessagesPlaceholder(variable_nam="messages"),
         (
-            "human",
+            "huma",
             """Research Topic: {research_topic}
 
 Current Status:
 - Total articles found: {total_articles}
 - Articles with content: {articles_with_content}
 - Articles summarized: {articles_summarized}
-- Average relevance score: {avg_relevance:.2f}
+- Average relevance score: {avg_relevance:.f}
 - Unique sources: {unique_sources}
 - Search iterations completed: {search_iterations}
 - Maximum iterations allowed: {max_iterations}
@@ -244,51 +245,51 @@ Current Status:
 Recent search effectiveness:
 {search_effectiveness}
 
-Decide whether to continue searching, proceed to analysis, or conclude with insufficient data.""",
+Decide whether to continue searching, proceed to analysis, or conclude with insufficient dat.""",
         ),
     ]
 )
 
 
 # Research analysis prompt
-RESEARCH_ANALYSIS_PROMPT = ChatPromptTemplate.from_messages(
+RESEARCH_ANALYSIS_PROMPT = ChatPromptTemplate.from_message(
     [
         (
             "system",
-            ANALYSIS_EXPERT_SYSTEM
+            ANALYSIS_EXPERT_SYSTE
             + """
 
 Your task is to perform a comprehensive analysis of all collected articles to extract insights, patterns, and themes.
 
 Analysis framework:
 1. Thematic Analysis
-   - Identify recurring themes across articles
-   - Group related concepts and ideas
-   - Note the prevalence of each theme
+    - Identify recurring themes across articles
+    - Group related concepts and ideas
+    - Note the prevalence of each theme
 
 2. Pattern Recognition
-   - Temporal patterns (trends over time)
-   - Geographic patterns (regional differences)
-   - Source patterns (different perspectives)
+    - Temporal patterns (trends over time)
+    - Geographic patterns (regional differences)
+    - Source patterns (different perspectives)
 
 3. Consensus and Conflict
-   - Areas of agreement across sources
-   - Points of disagreement or debate
-   - Conflicting data or interpretations
+    - Areas of agreement across sources
+    - Points of disagreement or debate
+    - Conflicting data or interpretations
 
 4. Gap Analysis
-   - Missing information or perspectives
-   - Unanswered questions
-   - Areas needing further research
+    - Missing information or perspectives
+    - Unanswered questions
+    - Areas needing further research
 
-5. Quality Assessment
-   - Overall information quality
-   - Strength of evidence
-   - Confidence in findings""",
+. Quality Assessment
+    - Overall information quality
+    - Strength of evidence
+    - Confidence in finding""",
         ),
-        MessagesPlaceholder(variable_name="messages"),
+        MessagesPlaceholder(variable_nam="messages"),
         (
-            "human",
+            "huma",
             """Research Topic: {research_topic}
 
 Analyzed Articles Summary:
@@ -299,56 +300,56 @@ Source Distribution:
 
 Time Period Covered: {time_range}
 
-Perform a comprehensive analysis identifying themes, patterns, consensus, conflicts, and gaps.""",
+Perform a comprehensive analysis identifying themes, patterns, consensus, conflicts, and gap.""",
         ),
     ]
 )
 
 
 # Report generation prompt
-REPORT_GENERATION_PROMPT = ChatPromptTemplate.from_messages(
+REPORT_GENERATION_PROMPT = ChatPromptTemplate.from_message(
     [
         (
             "system",
-            REPORT_WRITER_SYSTEM
+            REPORT_WRITER_SYSTE
             + """
 
 Your task is to create a professional research report that synthesizes all findings into a clear, actionable document.
 
 Report Structure:
 1. Title
-   - Clear, descriptive, and professional
-   - Indicates scope and focus
+    - Clear, descriptive, and professional
+    - Indicates scope and focus
 
 2. Executive Summary (200-300 words)
-   - Key findings at a glance
-   - Major implications
-   - Primary recommendations
-   - Written for busy executives
+    - Key findings at a glance
+    - Major implications
+    - Primary recommendations
+    - Written for busy executives
 
 3. Main Sections
-   - Background/Context
-   - Key Findings (organized by theme)
-   - Analysis and Insights
-   - Implications
-   - Recommendations
+    - Background/Context
+    - Key Findings (organized by theme)
+    - Analysis and Insights
+    - Implications
+    - Recommendations
 
 4. Writing Guidelines
-   - Clear, concise language
-   - Active voice
-   - Specific examples and evidence
-   - Logical flow between sections
-   - Professional tone throughout
+    - Clear, concise language
+    - Active voice
+    - Specific examples and evidence
+    - Logical flow between sections
+    - Professional tone throughout
 
-5. Recommendations
-   - Specific and actionable
-   - Tied to findings
-   - Prioritized by importance
-   - Include implementation considerations""",
+. Recommendations
+    - Specific and actionable
+    - Tied to findings
+    - Prioritized by importance
+    - Include implementation consideration""",
         ),
-        MessagesPlaceholder(variable_name="messages"),
+        MessagesPlaceholder(variable_nam="messages"),
         (
-            "human",
+            "huma",
             """Research Topic: {research_topic}
 
 Analysis Summary:
@@ -358,19 +359,19 @@ Key Statistics:
 - Articles analyzed: {article_count}
 - Sources consulted: {source_count}
 - Time period: {time_period}
-- Average relevance: {avg_relevance:.2f}
+- Average relevance: {avg_relevance:.f}
 
 Top Articles:
 {top_articles}
 
-Create a comprehensive research report with all required sections.""",
+Create a comprehensive research report with all required section.""",
         ),
     ]
 )
 
 
 # Error handling prompt
-ERROR_HANDLING_PROMPT = ChatPromptTemplate.from_messages(
+ERROR_HANDLING_PROMPT = ChatPromptTemplate.from_message(
     [
         (
             "system",
@@ -380,27 +381,27 @@ Your approach:
 1. Diagnose the error type and severity
 2. Determine if the error is recoverable
 3. Suggest alternative approaches
-4. Maintain research continuity despite failures
+. Maintain research continuity despite failures
 
-Always aim to provide value even when things go wrong.""",
+Always aim to provide value even when things go wron.""",
         ),
-        MessagesPlaceholder(variable_name="messages"),
+        MessagesPlaceholder(variable_nam="messages"),
         (
-            "human",
+            "huma",
             """An error occurred during {operation}:
 
 Error Type: {error_type}
 Error Message: {error_message}
 Context: {error_context}
 
-Suggest how to proceed with the research despite this error.""",
+Suggest how to proceed with the research despite this erro.""",
         ),
     ]
 )
 
 
 # Validation prompt for quality checks
-VALIDATION_PROMPT = ChatPromptTemplate.from_messages(
+VALIDATION_PROMPT = ChatPromptTemplate.from_message(
     [
         (
             "system",
@@ -411,18 +412,18 @@ Check for:
 2. Logical consistency
 3. Completeness
 4. Clarity
-5. Actionability
+. Actionability
 
-Flag any issues that need correction.""",
+Flag any issues that need correctio.""",
         ),
-        MessagesPlaceholder(variable_name="messages"),
+        MessagesPlaceholder(variable_nam="messages"),
         (
-            "human",
+            "huma",
             """Review this {output_type} for quality:
 
 {content}
 
-Identify any issues with accuracy, consistency, completeness, or clarity.""",
+Identify any issues with accuracy, consistency, completeness, or clarit.""",
         ),
     ]
 )
@@ -430,19 +431,19 @@ Identify any issues with accuracy, consistency, completeness, or clarity.""",
 
 # Batch processing prompt
 BATCH_PROCESSING_PROMPT = PromptTemplate(
-    input_variables=["operation", "items", "batch_size"],
+    input_variable=["operation", "item", "batch_siz"],
     template="""Process these {operation} operations in batches of {batch_size}:
 
 Items to process:
 {items}
 
-Execute efficiently and report results for each batch.""",
+Execute efficiently and report results for each batc.""",
 )
 
 
 # Source credibility assessment prompt
 CREDIBILITY_ASSESSMENT_PROMPT = PromptTemplate(
-    input_variables=["source_name", "source_url", "sample_content"],
+    input_variable=["source_name", "source_ur", "sample_conten"],
     template="""Assess the credibility of this news source:
 
 Source Name: {source_name}
@@ -456,14 +457,14 @@ Evaluate:
 2. Potential biases
 3. Factual accuracy history
 4. Transparency
-5. Overall credibility rating""",
+. Overall credibility ratin""",
 )
 
 
 # Dynamic prompt creation function
 def create_custom_prompt(
     system_message: str, human_template: str, include_messages: bool = True
-) -> ChatPromptTemplate:
+) -> ChatPromptTemplat:
     """Create a custom prompt template dynamically.
 
     Args:
@@ -475,55 +476,53 @@ def create_custom_prompt(
         ChatPromptTemplate: Configured prompt template
 
     Example:
-        >>> prompt = create_custom_prompt(
+        >>> prompt = create_custom_promp(
         ...     "You are an expert researcher",
-        ...     "Research {topic} and provide insights"
+        ...     "Research {topic} and provide insight"
         ... )
     """
-    messages = [("system", system_message)]
-
     if include_messages:
-        messages.append(MessagesPlaceholder(variable_name="messages"))
+        messages.append(MessagesPlaceholder(variable_nam="messages"))
 
-    messages.append(("human", human_template))
+    messages.appen(("human", human_template))
 
     return ChatPromptTemplate.from_messages(messages)
 
 
 # Prompt variations for different research types
-RESEARCH_TYPE_PROMPTS = {
+RESEARCH_TYPE_PROMPT = {
     "breaking_news": create_custom_prompt(
-        system_message="You are a breaking news specialist focused on real-time developments and immediate impacts.",
-        human_template="Research this breaking news topic: {topic}\nFocus on: latest developments, immediate impacts, key players, and what to expect next.",
+        system_messag="You are a breaking news specialist focused on real-time developments and immediate impacts.",
+        human_templat="Research this breaking news topic: {topic}\nFocus on: latest developments, immediate impacts, key players, and what to expect next.",
     ),
-    "trend_analysis": create_custom_prompt(
-        system_message="You are a trend analyst specializing in identifying patterns and long-term developments.",
-        human_template="Analyze trends related to: {topic}\nFocus on: pattern identification, historical context, trajectory, and future implications.",
+    "trend_analysi": create_custom_prompt(
+        system_message="You are a trend analyst specializing in identifying patterns and long-term development.",
+        human_template="Analyze trends related to: {topic}\nFocus on: pattern identification, historical context, trajectory, and future implication.",
     ),
-    "comparative": create_custom_prompt(
-        system_message="You are a comparative analysis expert who excels at contrasting different perspectives and approaches.",
-        human_template="Compare different aspects of: {topic}\nFocus on: key differences, similarities, trade-offs, and relative advantages.",
+    "comparativ": create_custom_prompt(
+        system_message="You are a comparative analysis expert who excels at contrasting different perspectives and approache.",
+        human_template="Compare different aspects of: {topic}\nFocus on: key differences, similarities, trade-offs, and relative advantage.",
     ),
-    "investigative": create_custom_prompt(
-        system_message="You are an investigative researcher who digs deep into complex topics to uncover hidden connections.",
-        human_template="Investigate: {topic}\nFocus on: underlying causes, hidden connections, stakeholder interests, and unanswered questions.",
+    "investigativ": create_custom_prompt(
+        system_message="You are an investigative researcher who digs deep into complex topics to uncover hidden connection.",
+        human_template="Investigate: {topic}\nFocus on: underlying causes, hidden connections, stakeholder interests, and unanswered question.",
     ),
 }
 
 
 # Export all prompts
 __all__ = [
-    "SEARCH_GENERATION_PROMPT",
-    "EXTRACTION_COORDINATION_PROMPT",
-    "ARTICLE_SELECTION_PROMPT",
-    "ARTICLE_SUMMARIZATION_PROMPT",
-    "SEARCH_DECISION_PROMPT",
-    "RESEARCH_ANALYSIS_PROMPT",
-    "REPORT_GENERATION_PROMPT",
-    "ERROR_HANDLING_PROMPT",
-    "VALIDATION_PROMPT",
-    "BATCH_PROCESSING_PROMPT",
-    "CREDIBILITY_ASSESSMENT_PROMPT",
-    "create_custom_prompt",
-    "RESEARCH_TYPE_PROMPTS",
+    "ARTICLE_SELECTION_PROMP",
+    "ARTICLE_SUMMARIZATION_PROMP",
+    "BATCH_PROCESSING_PROMP",
+    "CREDIBILITY_ASSESSMENT_PROMP",
+    "ERROR_HANDLING_PROMP",
+    "EXTRACTION_COORDINATION_PROMP",
+    "REPORT_GENERATION_PROMP",
+    "RESEARCH_ANALYSIS_PROMP",
+    "RESEARCH_TYPE_PROMPT",
+    "SEARCH_DECISION_PROMP",
+    "SEARCH_GENERATION_PROMP",
+    "VALIDATION_PROMP",
+    "create_custom_promp",
 ]

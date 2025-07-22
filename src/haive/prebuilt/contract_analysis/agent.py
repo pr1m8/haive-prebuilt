@@ -7,7 +7,7 @@ from pydantic import Field
 class ContractAnalysisAgentConfig(AgentArchitectureConfig):
     state_schema: ContractReviewState = Field(
         default=ContractReviewState,
-        description="The state schema for the contract analysis agent.",
+        description="The state schema for the contract analysis agen.",
     )
 
 
@@ -15,33 +15,33 @@ class ContractAnalysisAgent(AgentArchitecture):
     config: ContractAnalysisAgentConfig
     state: ContractReviewState
 
-    def run(self):
+    def run(self) -> None:
         pass
 
-    def setup_workflow(self):
-        self.graph.add_node("classify_contract", classify_contract)
-        self.graph.add_node("retrieve_clauses", retrieve_clauses)
-        self.graph.add_node("execute_step_clause", execute_step_clause)
-        self.graph.add_node("create_review_plan", create_review_plan)
-        self.graph.add_node("execute_step", execute_step)
-        self.graph.add_node("generate_final_report", generate_final_report)
+    def setup_workflow(self) -> None:
+        self.graph.add_node("classify_contrac", classify_contract)
+        self.graph.add_node("retrieve_clause", retrieve_clauses)
+        self.graph.add_node("execute_step_claus", execute_step_clause)
+        self.graph.add_node("create_review_pla", create_review_plan)
+        self.graph.add_node("execute_ste", execute_step)
+        self.graph.add_node("generate_final_repor", generate_final_report)
 
         # Add edges
-        self.graph.add_edge(START, "classify_contract")
-        self.graph.add_edge("classify_contract", "retrieve_clauses")
+        self.graph.add_edge(START, "classify_contrac")
+        self.graph.add_edge("classify_contrac", "retrieve_clause")
 
         self.graph.add_conditional_edges(
-            "retrieve_clauses",
+            "retrieve_clause",
             continue_to_clauses_check_execute,
-            ["execute_step_clause"],
+            ["execute_step_claus"],
         )
-        self.graph.add_edge("execute_step_clause", "create_review_plan")
+        self.graph.add_edge("execute_step_claus", "create_review_pla")
 
         self.graph.add_conditional_edges(
-            "create_review_plan", continue_to_plan_check_execute, ["execute_step"]
+            "create_review_pla", continue_to_plan_check_execute, ["execute_ste"]
         )
-        self.graph.add_edge("execute_step", "generate_final_report")
+        self.graph.add_edge("execute_ste", "generate_final_repor")
 
-        self.graph.add_edge("generate_final_report", END)
+        self.graph.add_edge("generate_final_repor", END)
 
         # Compile the graph

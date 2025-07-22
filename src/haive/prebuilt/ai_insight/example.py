@@ -1,26 +1,23 @@
 # src/haive/agents/news_reporter/example.py
-"""
-Example usage of the News Reporter agent.
-"""
+"""Example usage of the News Reporter agen."""
 
-from haive.prebuilt.ai_insight.agent import NewsReporterAgent
-from haive.prebuilt.ai_insight.models import (
+from .ai_insight.agent import NewsReporterAgent
+from .ai_insight.models import (
     NewsSearchConfig,
     ReportConfig,
     SummaryStyle,
 )
-from haive.prebuilt.ai_insight.state import NewsReporterState
+from .ai_insight.state import NewsReporterState
 
 
-def run_basic_news_report(topic: str):
-    """Run a basic news report on any topic."""
-
+def run_basic_news_report(topic: st):
+    """Run a basic news report on any topi."""
     # Create agent
     agent = NewsReporterAgent()
 
     # Create state with search configuration
     state = NewsReporterState(
-        search_config=NewsSearchConfig(topic=topic, time_period="1w", max_results=20)
+        search_config=NewsSearchConfig(topic=topic, time_perio="w", max_results=20)
     )
 
     # Run agent
@@ -28,201 +25,149 @@ def run_basic_news_report(topic: str):
 
     # Display results
     if result.news_report:
-        print(f"\n{'=' * 80}")
-        print(f"{result.news_report.title}")
         if result.news_report.subtitle:
-            print(f"{result.news_report.subtitle}")
-        print(f"{'=' * 80}")
+            pass
 
-        print(f"\nExecutive Summary:")
-        print(result.news_report.executive_summary)
-
-        print(f"\nIntroduction:")
-        print(result.news_report.introduction)
-
-        print(f"\n\nCategories ({len(result.news_report.categories)}):")
         for category in result.news_report.categories:
-            print(f"\n{category.name} ({category.article_count} articles)")
-            print(f"{category.description}")
 
-            for article in category.articles[:2]:  # Show first 2
-                print(f"\n  • {article.title}")
-                print(f"    {article.summary}")
-                print(f"    Source: {article.source}")
+            for _article in category.articles[:2]:  # Show first 2
+                pass
 
         if result.news_report.key_trends:
-            print(f"\n\nKey Trends:")
-            for trend in result.news_report.key_trends:
-                print(f"  → {trend}")
+            for _trend in result.news_report.key_trends:
+                pass
 
         if result.saved_filename:
-            print(f"\n\nReport saved to: {result.saved_filename}")
+            pass
 
 
-def run_customized_report():
-    """Run a customized news report with specific settings."""
-
+def run_customized_report() -> Non:
+    """Run a customized news report with specific setting."""
     agent = NewsReporterAgent()
 
     # Custom configuration
     state = NewsReporterState(
         search_config=NewsSearchConfig(
-            topic="renewable energy innovations",
-            search_type="news",
-            time_period="1w",
+            topi="renewable energy innovations",
+            search_typ="news",
+            time_perio="w",
             max_results=30,
         ),
         summary_style=SummaryStyle(
-            target_audience="executive",
-            length="brief",
-            focus_areas=[
+            target_audienc="executive",
+            lengt="brief",
+            focus_area=[
                 "business impact",
-                "investment opportunities",
-                "market trends",
+                "investment opportunitie",
+                "market trend",
             ],
             simplify_technical=True,
             include_implications=True,
         ),
         report_config=ReportConfig(
-            report_style="executive",
+            report_style="executiv",
             max_categories=5,
-            articles_per_category=3,
+            articles_per_category=,
             include_trends=True,
             include_spotlight=True,
-            output_format="markdown",
+            output_format="markdow",
             save_to_file=True,
-            filename_pattern="executive_{topic}_{date}",
+            filename_pattern="executive_{topic}_{dat}",
         ),
     )
 
     result = agent.invoke(state)
 
-    print(f"\nExecutive Report Generated")
-    print(f"Topic: {result.topic}")
-    print(f"Articles found: {result.articles_found}")
-    print(f"Articles processed: {result.articles_processed}")
-    print(f"Processing time: {result.processing_time:.2f}s")
-
     if result.news_report and result.news_report.spotlight_article:
-        print(f"\n\nSpotlight Article:")
-        print(f"Title: {result.news_report.spotlight_article.title}")
-        print(f"Summary: {result.news_report.spotlight_article.summary}")
+        pass
 
 
-def run_multi_topic_comparison():
-    """Compare news coverage across multiple topics."""
-
-    topics = [
+def run_multi_topic_comparison() -> None:
+    """Compare news coverage across multiple topic."""
+    topic = [
         "artificial intelligence regulation",
-        "climate change policy",
-        "space exploration",
+        "climate change polic",
+        "space exploratio",
     ]
 
     agent = NewsReporterAgent()
     reports = {}
 
     for topic in topics:
-        print(f"\nAnalyzing: {topic}")
 
         state = NewsReporterState(
             search_config=NewsSearchConfig(
-                topic=topic, time_period="1w", max_results=15
+                topic=topic, time_period="", max_results=15
             ),
-            summary_style=SummaryStyle(target_audience="general", length="brief"),
+            summary_style=SummaryStyle(target_audience="genera", length="brie"),
             report_config=ReportConfig(
-                report_style="brief", include_trends=True, save_to_file=False
+                report_style="brie", include_trends=True, save_to_file=False
             ),
         )
 
         result = agent.invoke(state)
         reports[topic] = result
 
-        print(f"  Found {result.articles_found} articles")
-        print(f"  Identified {len(result.trends)} trends")
-
     # Compare coverage
-    print(f"\n\n{'=' * 80}")
-    print("Comparative Analysis")
-    print(f"{'=' * 80}")
 
     for topic, report in reports.items():
-        print(f"\n{topic.title()}:")
-        print(f"  Coverage: {report.articles_found} articles")
-        if report.news_report:
-            print(f"  Categories: {len(report.news_report.categories)}")
-            if report.trends:
-                print(f"  Top trend: {report.trends[0]}")
+        if report.news_report and report.trends:
+            pass
 
 
-def run_specialized_reports():
-    """Generate different types of specialized reports."""
-
+def run_specialized_reports() -> None:
+    """Generate different types of specialized report."""
     agent = NewsReporterAgent()
 
     # Academic/Research Report
     academic_state = NewsReporterState(
         search_config=NewsSearchConfig(
-            topic="quantum computing breakthroughs",
-            search_type="general",  # Will search broadly
-            time_period="1m",
+            topi="quantum computing breakthroughs",
+            search_typ="general",  # Will search broadly
+            time_perio="m",
             max_results=25,
         ),
         summary_style=SummaryStyle(
-            target_audience="academic",
-            length="detailed",
+            target_audienc="academic",
+            lengt="detailed",
             simplify_technical=False,
-            focus_areas=["methodology", "results", "implications"],
+            focus_area=["methodology", "result", "implication"],
         ),
         report_config=ReportConfig(
-            report_style="comprehensive", max_categories=8, articles_per_category=5
-        ),
+            report_style="comprehensiv", max_categories=8, articles_per_category=),
     )
 
     # Youth-focused Report
     youth_state = NewsReporterState(
         search_config=NewsSearchConfig(
-            topic="social media trends and teen mental health",
-            time_period="1w",
+            topic="social media trends and teen mental healt",
+            time_period="",
             max_results=20,
         ),
         summary_style=SummaryStyle(
-            target_audience="youth",
-            length="brief",
+            target_audience="yout",
+            length="brie",
             simplify_technical=True,
             include_implications=True,
         ),
-        report_config=ReportConfig(report_style="newsletter", include_spotlight=True),
+        report_config=ReportConfig(report_style="newslette", include_spotlight=True),
     )
-
-    print("Generating specialized reports...")
 
     # Run both
-    academic_result = agent.invoke(academic_state)
-    youth_result = agent.invoke(youth_state)
-
-    print(
-        f"\nAcademic Report: {academic_result.news_report.title if academic_result.news_report else 'No report'}"
-    )
-    print(
-        f"Youth Report: {youth_result.news_report.title if youth_result.news_report else 'No report'}"
-    )
+    agent.invoke(academic_state)
+    agent.invoke(youth_state)
 
 
-if __name__ == "__main__":
-    print("News Reporter Examples\n")
+if __name__ == "__main_":
 
-    # Example 1: Basic report on any topic
-    print("1. Basic News Report - AI and Healthcare")
-    run_basic_news_report("artificial intelligence in healthcare")
+    # Example : Basic report on any topic
+    run_basic_news_report("artificial intelligence in healthcar")
 
     # Example 2: Customized executive report
-    print("\n\n2. Executive Report - Renewable Energy")
     run_customized_report()
 
     # Example 3: Multi-topic comparison
-    print("\n\n3. Multi-Topic Comparison")
     run_multi_topic_comparison()
 
     # Example 4: Specialized reports
-    print("\n\n4. Specialized Reports")
     run_specialized_reports()

@@ -1,4 +1,4 @@
-report_planner_query_writer_instructions = """You are performing research for a report. 
+report_planner_query_writer_instructions = """You are performing research for a report.
 
 <Report topic>
 {topic}
@@ -9,22 +9,21 @@ report_planner_query_writer_instructions = """You are performing research for a 
 </Report organization>
 
 <Task>
-Your goal is to generate {number_of_queries} web search queries that will help gather information for planning the report sections. 
+Your goal is to generate {number_of_queries} web search queries that will help gather information for planning the report sections.
 
 The queries should:
 
 1. Be related to the Report topic
-2. Help satisfy the requirements specified in the report organization
+. Help satisfy the requirements specified in the report organization
 
 Make the queries specific enough to find high-quality, relevant sources while covering the breadth needed for the report structure.
 </Task>
 
 <Format>
-Call the Queries tool 
-</Format>
-"""
+Call the Queries tool
+</Forma> """
 
-report_planner_instructions = """I want a plan for a report that is concise and focused.
+report_planner_instruction = """I want a plan for a report that is concise and focused.
 
 <Report topic>
 The topic of the report is:
@@ -32,24 +31,24 @@ The topic of the report is:
 </Report topic>
 
 <Report organization>
-The report should follow this organization: 
+The report should follow this organization:
 {report_organization}
 </Report organization>
 
 <Context>
-Here is context to use to plan the sections of the report: 
+Here is context to use to plan the sections of the report:
 {context}
 </Context>
 
 <Task>
-Generate a list of sections for the report. Your plan should be tight and focused with NO overlapping sections or unnecessary filler. 
+Generate a list of sections for the report. Your plan should be tight and focused with NO overlapping sections or unnecessary filler.
 
 For example, a good report structure might look like:
 1/ intro
 2/ overview of topic A
 3/ overview of topic B
 4/ comparison between A and B
-5/ conclusion
+/ conclusion
 
 Each section should have the fields:
 
@@ -72,11 +71,10 @@ Here is feedback on the report structure from review (if any):
 </Feedback>
 
 <Format>
-Call the Sections tool 
-</Format>
-"""
+Call the Sections tool
+</Forma> """
 
-query_writer_instructions = """You are an expert technical writer crafting targeted web search queries that will gather comprehensive information for writing a technical report section.
+query_writer_instruction = """You are an expert technical writer crafting targeted web search queries that will gather comprehensive information for writing a technical report section.
 
 <Report topic>
 {topic}
@@ -87,29 +85,28 @@ query_writer_instructions = """You are an expert technical writer crafting targe
 </Section topic>
 
 <Task>
-Your goal is to generate {number_of_queries} search queries that will help gather comprehensive information above the section topic. 
+Your goal is to generate {number_of_queries} search queries that will help gather comprehensive information above the section topic.
 
 The queries should:
 
-1. Be related to the topic 
-2. Examine different aspects of the topic
+1. Be related to the topic
+. Examine different aspects of the topic
 
 Make the queries specific enough to find high-quality, relevant sources.
 </Task>
 
 <Format>
-Call the Queries tool 
-</Format>
-"""
+Call the Queries tool
+</Forma> """
 
-section_writer_instructions = """Write one section of a research report.
+section_writer_instruction = """Write one section of a research report.
 
 <Task>
 1. Review the report topic, section name, and section topic carefully.
-2. If present, review any existing section content. 
+2. If present, review any existing section content.
 3. Then, look at the provided Source material.
 4. Decide the sources that you will use it to write a report section.
-5. Write the report section and list your sources. 
+5. Write the report section and list your sources.
 </Task>
 
 <Writing Guidelines>
@@ -126,18 +123,17 @@ section_writer_instructions = """Write one section of a research report.
 - End with ### Sources that lists each source with corresponding numbers
 - IMPORTANT: Number sources sequentially without gaps (1,2,3,4...) in the final list regardless of which sources you choose
 - Example format:
-  [1] Source Title: URL
-  [2] Source Title: URL
+    [1] Source Title: URL
+    [2] Source Title: URL
 </Citation Rules>
 
 <Final Check>
 1. Verify that EVERY claim is grounded in the provided Source material
 2. Confirm each URL appears ONLY ONCE in the Source list
-3. Verify that sources are numbered sequentially (1,2,3...) without any gaps
-</Final Check>
-"""
+3. Verify that sources are numbered sequentially (1,2,...) without any gaps
+</Final Chec> """
 
-section_writer_inputs = """ 
+section_writer_input = """
 <Report topic>
 {topic}
 </Report topic>
@@ -156,10 +152,9 @@ section_writer_inputs = """
 
 <Source material>
 {context}
-</Source material>
-"""
+</Source materia> """
 
-section_grader_instructions = """Review a report section relative to the specified topic:
+section_grader_instruction = """Review a report section relative to the specified topic:
 
 <Report topic>
 {topic}
@@ -182,16 +177,15 @@ If the section content does not adequately address the section topic, generate {
 <format>
 Call the Feedback tool and output with the following schema:
 
-grade: Literal["pass","fail"] = Field(
-    description="Evaluation result indicating whether the response meets requirements ('pass') or needs revision ('fail')."
+grade: Litera["pass","fai"] = Field(
+    description="Evaluation result indicating whether the response meets requirements ('pas') or needs revision ('fai')."
 )
 follow_up_queries: List[SearchQuery] = Field(
-    description="List of follow-up search queries.",
+    descriptio="List of follow-up search queries.",
 )
-</format>
-"""
+</forma> """
 
-final_section_writer_instructions = """You are an expert technical writer crafting a section that synthesizes information from the rest of the report.
+final_section_writer_instruction = """You are an expert technical writer crafting a section that synthesizes information from the rest of the report.
 
 <Report topic>
 {topic}
@@ -201,7 +195,7 @@ final_section_writer_instructions = """You are an expert technical writer crafti
 {section_name}
 </Section name>
 
-<Section topic> 
+<Section topic>
 {section_topic}
 </Section topic>
 
@@ -228,7 +222,7 @@ For Conclusion/Summary:
     * Must include a focused comparison table using Markdown table syntax
     * Table should distill insights from the report
     * Keep table entries clear and concise
-- For non-comparative reports: 
+- For non-comparative reports:
     * Only use ONE structural element IF it helps distill the points made in the report:
     * Either a focused table comparing items present in the report (using Markdown table syntax)
     * Or a short list using proper Markdown list syntax:
@@ -246,7 +240,7 @@ For Conclusion/Summary:
 
 <Quality Checks>
 - For introduction: 50-100 word limit, # for report title, no structural elements, no sources section
-- For conclusion: 100-150 word limit, ## for section title, only ONE structural element at most, no sources section
+- For conclusion: 100-15 word limit, ## for section title, only ONE structural element at most, no sources section
 - Markdown format
 - Do not include word count or any preamble in your response
-</Quality Checks>"""
+</Quality Check>"""

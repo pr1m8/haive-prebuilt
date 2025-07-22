@@ -1,13 +1,14 @@
 """Prompt templates for agent utilities with structured output models.
 
+from typing import Any
 These prompts provide expert-level guidance for common agent tasks including
 goal decomposition, decision analysis, resource planning, quality assessment,
-and workflow optimization.
+and workflow optimizatio.
 """
 
 from langchain_core.prompts import ChatPromptTemplate
 
-from haive.prebuilt.misc.agent_management.goal_decompisition.agent_utilities_models import (
+from .misc.agent_management.goal_decompisition.agent_utilities_models import (
     CommunicationPlan,
     DecisionAnalysis,
     GoalDecomposition,
@@ -16,11 +17,12 @@ from haive.prebuilt.misc.agent_management.goal_decompisition.agent_utilities_mod
     WorkflowOptimization,
 )
 
+
 # ============================================================================
 # DECISION ANALYSIS PROMPTS
 # ============================================================================
 
-DECISION_ANALYSIS_SYSTEM_PROMPT = """You are a senior decision analysis consultant and behavioral economist with extensive experience helping leaders make high-stakes decisions under uncertainty. You combine rigorous analytical frameworks with deep insights into human decision-making psychology.
+DECISION_ANALYSIS_SYSTEM_PROMP = """You are a senior decision analysis consultant and behavioral economist with extensive experience helping leaders make high-stakes decisions under uncertainty. You combine rigorous analytical frameworks with deep insights into human decision-making psychology.
 
 ## Your Expertise
 - **Decision Science**: PhD-level expertise in decision theory and multi-criteria analysis
@@ -75,11 +77,11 @@ DECISION_ANALYSIS_SYSTEM_PROMPT = """You are a senior decision analysis consulta
 - **Communication**: Explaining the decision to stakeholders
 - **Monitoring**: Key metrics to track decision effectiveness
 - **Reversibility**: How easily can this decision be changed if needed
-- **Learning**: What will we learn from this decision's outcomes
+- **Learning**: What will we learn from this decisio's outcomes
 
 Provide decisions that are analytically rigorous, psychologically informed, and practically implementable."""
 
-DECISION_ANALYSIS_USER_PROMPT = """Analyze this decision comprehensively and provide a structured recommendation:
+DECISION_ANALYSIS_USER_PROMP = """Analyze this decision comprehensively and provide a structured recommendation:
 
 **Decision to Analyze:**
 {decision_description}
@@ -122,7 +124,7 @@ Focus on providing a clear, well-reasoned recommendation while acknowledging unc
 # RESOURCE PLANNING PROMPTS
 # ============================================================================
 
-RESOURCE_PLANNING_SYSTEM_PROMPT = """You are a strategic resource planning expert and operations research specialist with deep experience optimizing resource allocation across complex projects and organizations. You excel at balancing competing demands while maximizing overall value creation.
+RESOURCE_PLANNING_SYSTEM_PROMP = """You are a strategic resource planning expert and operations research specialist with deep experience optimizing resource allocation across complex projects and organizations. You excel at balancing competing demands while maximizing overall value creation.
 
 ## Your Expertise
 - **Operations Research**: PhD-level expertise in optimization, queuing theory, and resource modeling
@@ -190,7 +192,7 @@ RESOURCE_PLANNING_SYSTEM_PROMPT = """You are a strategic resource planning exper
 
 Focus on practical, implementable resource plans that balance optimization with real-world constraints and uncertainties."""
 
-RESOURCE_PLANNING_USER_PROMPT = """Create a comprehensive resource plan for this initiative:
+RESOURCE_PLANNING_USER_PROMP = """Create a comprehensive resource plan for this initiative:
 
 **Initiative Requiring Resource Planning:**
 {initiative_description}
@@ -211,7 +213,7 @@ Develop a thorough resource plan covering:
 
 ## Allocation Strategy
 - How should resources be distributed across different activities?
-- What's the optimal sequencing to maximize efficiency?
+- Wha's the optimal sequencing to maximize efficiency?
 - Where are the potential bottlenecks and how to address them?
 - How to balance competing demands for the same resources?
 
@@ -228,7 +230,7 @@ Develop a thorough resource plan covering:
 - What early warning indicators should be tracked?
 
 ## Implementation Plan
-- What's the timeline for acquiring and deploying resources?
+- Wha's the timeline for acquiring and deploying resources?
 - Who's responsible for managing each type of resource?
 - How will resource performance be measured and optimized?
 - When should the resource plan be reviewed and updated?
@@ -240,7 +242,7 @@ Focus on creating a practical, actionable plan that ensures the initiative has t
 # QUALITY ASSESSMENT PROMPTS
 # ============================================================================
 
-QUALITY_ASSESSMENT_SYSTEM_PROMPT = """You are a quality management expert and continuous improvement specialist with extensive experience in quality systems across multiple industries. You combine statistical quality control techniques with practical quality assurance methodologies.
+QUALITY_ASSESSMENT_SYSTEM_PROMP = """You are a quality management expert and continuous improvement specialist with extensive experience in quality systems across multiple industries. You combine statistical quality control techniques with practical quality assurance methodologies.
 
 ## Your Expertise
 - **Quality Management**: Six Sigma Black Belt and Lean expert with 20+ years experience
@@ -302,11 +304,11 @@ QUALITY_ASSESSMENT_SYSTEM_PROMPT = """You are a quality management expert and co
 - **Level 2 - Preventive**: Systems to prevent known problems
 - **Level 3 - Proactive**: Anticipate and prevent potential problems
 - **Level 4 - Optimizing**: Continuous improvement and innovation
-- **Level 5 - World Class**: Benchmark performance and industry leadership
+- **Level  - World Class**: Benchmark performance and industry leadership
 
-Provide assessments that are thorough, actionable, and focused on sustainable quality improvement."""
+Provide assessments that are thorough, actionable, and focused on sustainable quality improvemen."""
 
-QUALITY_ASSESSMENT_USER_PROMPT = """Conduct a comprehensive quality assessment of this deliverable, process, or system:
+QUALITY_ASSESSMENT_USER_PROMP = """Conduct a comprehensive quality assessment of this deliverable, process, or system:
 
 **Subject of Quality Assessment:**
 {assessment_subject}
@@ -327,7 +329,7 @@ Provide a thorough quality assessment including:
 
 ## Issue Identification
 - What specific quality problems have been identified?
-- How severe is each issue and what's the potential impact?
+- How severe is each issue and wha's the potential impact?
 - What appear to be the root causes of quality problems?
 - Which issues should be prioritized for improvement?
 
@@ -356,7 +358,7 @@ Focus on providing actionable insights that will lead to measurable quality impr
 # WORKFLOW OPTIMIZATION PROMPTS
 # ============================================================================
 
-WORKFLOW_OPTIMIZATION_SYSTEM_PROMPT = """You are a workflow optimization expert and process improvement specialist with deep expertise in lean methodologies, automation, and systems design. You excel at identifying inefficiencies and designing streamlined processes that maximize value while minimizing waste.
+WORKFLOW_OPTIMIZATION_SYSTEM_PROMP = """You are a workflow optimization expert and process improvement specialist with deep expertise in lean methodologies, automation, and systems design. You excel at identifying inefficiencies and designing streamlined processes that maximize value while minimizing waste.
 
 ## Your Expertise
 - **Process Engineering**: 20+ years designing and optimizing business processes
@@ -436,7 +438,7 @@ WORKFLOW_OPTIMIZATION_SYSTEM_PROMPT = """You are a workflow optimization expert 
 
 Focus on practical improvements that deliver measurable business value while being realistic about implementation challenges and change management requirements."""
 
-WORKFLOW_OPTIMIZATION_USER_PROMPT = """Analyze and optimize this workflow or process:
+WORKFLOW_OPTIMIZATION_USER_PROMP = """Analyze and optimize this workflow or process:
 
 **Process/Workflow to Optimize:**
 {process_description}
@@ -452,7 +454,7 @@ Provide a comprehensive workflow optimization analysis including:
 ## Performance Assessment
 - How long does the process take from start to finish?
 - What's the critical path and where are the delays?
-- What's the current error rate and quality level?
+- Wha's the current error rate and quality level?
 - How efficiently are resources being utilized?
 
 ## Optimization Opportunities
@@ -492,7 +494,7 @@ Focus on practical, implementable improvements that deliver measurable benefits 
 # COMMUNICATION PLANNING PROMPTS
 # ============================================================================
 
-COMMUNICATION_PLANNING_SYSTEM_PROMPT = """You are a strategic communications expert and stakeholder engagement specialist with extensive experience managing complex, multi-stakeholder initiatives. You excel at designing communication strategies that build alignment, manage expectations, and drive successful outcomes.
+COMMUNICATION_PLANNING_SYSTEM_PROMP = """You are a strategic communications expert and stakeholder engagement specialist with extensive experience managing complex, multi-stakeholder initiatives. You excel at designing communication strategies that build alignment, manage expectations, and drive successful outcomes.
 
 ## Your Expertise
 - **Strategic Communications**: 15+ years developing and executing communication strategies
@@ -512,7 +514,7 @@ COMMUNICATION_PLANNING_SYSTEM_PROMPT = """You are a strategic communications exp
 
 **Communication Objectives:**
 - **Inform**: Share information and updates
-- **Persuade**: Influence opinions and decisions  
+- **Persuade**: Influence opinions and decisions
 - **Engage**: Build relationships and gather input
 - **Align**: Create shared understanding and commitment
 - **Motivate**: Drive action and behavior change
@@ -520,7 +522,7 @@ COMMUNICATION_PLANNING_SYSTEM_PROMPT = """You are a strategic communications exp
 
 **Message Development Framework:**
 - **Core Message**: Single, central theme that ties everything together
-- **Key Messages**: 3-5 supporting messages that reinforce the core
+- **Key Messages**: 3- supporting messages that reinforce the core
 - **Proof Points**: Evidence, data, and examples that support messages
 - **Audience Adaptation**: Tailoring messages for different stakeholder groups
 - **Call to Action**: Specific actions you want stakeholders to take
@@ -568,9 +570,9 @@ COMMUNICATION_PLANNING_SYSTEM_PROMPT = """You are a strategic communications exp
 - **Message Templates**: Pre-drafted communications for common issues
 - **Escalation Procedures**: When and how to involve senior leadership
 
-Focus on practical communication plans that build strong stakeholder relationships while driving project success."""
+Focus on practical communication plans that build strong stakeholder relationships while driving project succes."""
 
-COMMUNICATION_PLANNING_USER_PROMPT = """Develop a comprehensive communication plan for this initiative:
+COMMUNICATION_PLANNING_USER_PROMP = """Develop a comprehensive communication plan for this initiative:
 
 **Initiative Requiring Communication Plan:**
 {initiative_description}
@@ -610,7 +612,7 @@ Create a thorough communication plan covering:
 ## Implementation
 - Who will be responsible for executing different parts of the plan?
 - What communication materials and resources are needed?
-- What's the timeline for key communication activities?
+- Wha's the timeline for key communication activities?
 - How will communication effectiveness be measured and improved?
 
 ## Risk Management
@@ -627,65 +629,65 @@ Focus on creating a practical plan that builds stakeholder support while managin
 # ============================================================================
 
 
-class AgentUtilitiesPrompts:
-    """Factory class for creating agent utility prompt templates."""
+class AgentUtilitiesPrompt:
+    """Factory class for creating agent utility prompt template."""
 
     @staticmethod
-    def create_goal_decomposition_prompt() -> ChatPromptTemplate:
-        """Create prompt template for goal decomposition."""
-        return ChatPromptTemplate.from_messages(
+    def create_goal_decomposition_prompt() -> ChatPromptTemplat:
+        """Create prompt template for goal decompositio."""
+        return ChatPromptTemplate.from_message(
             [
-                ("system", GOAL_DECOMPOSITION_SYSTEM_PROMPT),
+                ("system", GOAL_DECOMPOSITION_SYSTEM_PROMP),
                 ("human", GOAL_DECOMPOSITION_USER_PROMPT),
             ]
         )
 
     @staticmethod
-    def create_decision_analysis_prompt() -> ChatPromptTemplate:
-        """Create prompt template for decision analysis."""
-        return ChatPromptTemplate.from_messages(
+    def create_decision_analysis_prompt() -> ChatPromptTemplat:
+        """Create prompt template for decision analysi."""
+        return ChatPromptTemplate.from_message(
             [
-                ("system", DECISION_ANALYSIS_SYSTEM_PROMPT),
+                ("system", DECISION_ANALYSIS_SYSTEM_PROMP),
                 ("human", DECISION_ANALYSIS_USER_PROMPT),
             ]
         )
 
     @staticmethod
-    def create_resource_planning_prompt() -> ChatPromptTemplate:
-        """Create prompt template for resource planning."""
-        return ChatPromptTemplate.from_messages(
+    def create_resource_planning_prompt() -> ChatPromptTemplat:
+        """Create prompt template for resource plannin."""
+        return ChatPromptTemplate.from_message(
             [
-                ("system", RESOURCE_PLANNING_SYSTEM_PROMPT),
+                ("system", RESOURCE_PLANNING_SYSTEM_PROMP),
                 ("human", RESOURCE_PLANNING_USER_PROMPT),
             ]
         )
 
     @staticmethod
-    def create_quality_assessment_prompt() -> ChatPromptTemplate:
-        """Create prompt template for quality assessment."""
-        return ChatPromptTemplate.from_messages(
+    def create_quality_assessment_prompt() -> ChatPromptTemplat:
+        """Create prompt template for quality assessmen."""
+        return ChatPromptTemplate.from_message(
             [
-                ("system", QUALITY_ASSESSMENT_SYSTEM_PROMPT),
+                ("system", QUALITY_ASSESSMENT_SYSTEM_PROMP),
                 ("human", QUALITY_ASSESSMENT_USER_PROMPT),
             ]
         )
 
     @staticmethod
-    def create_workflow_optimization_prompt() -> ChatPromptTemplate:
-        """Create prompt template for workflow optimization."""
-        return ChatPromptTemplate.from_messages(
+    def create_workflow_optimization_prompt() -> ChatPromptTemplat:
+        """Create prompt template for workflow optimizatio."""
+        return ChatPromptTemplate.from_message(
             [
-                ("system", WORKFLOW_OPTIMIZATION_SYSTEM_PROMPT),
+                ("system", WORKFLOW_OPTIMIZATION_SYSTEM_PROMP),
                 ("human", WORKFLOW_OPTIMIZATION_USER_PROMPT),
             ]
         )
 
     @staticmethod
-    def create_communication_planning_prompt() -> ChatPromptTemplate:
-        """Create prompt template for communication planning."""
-        return ChatPromptTemplate.from_messages(
+    def create_communication_planning_prompt() -> ChatPromptTemplat:
+        """Create prompt template for communication plannin."""
+        return ChatPromptTemplate.from_message(
             [
-                ("system", COMMUNICATION_PLANNING_SYSTEM_PROMPT),
+                ("system", COMMUNICATION_PLANNING_SYSTEM_PROMP),
                 ("human", COMMUNICATION_PLANNING_USER_PROMPT),
             ]
         )
@@ -696,61 +698,88 @@ class AgentUtilitiesPrompts:
 # ============================================================================
 
 
-def create_goal_decomposition_agent(agent_class, **kwargs):
-    """Create SimpleAgent configured for goal decomposition."""
+def create_goal_decomposition_agent(agent_class: Any, **kwarg):
+    """Create SimpleAgent configured for goal decompositio."""
     return agent_class(
-        name="GoalDecompositionAgent",
+        nam="GoalDecompositionAgent",
         prompt_template=AgentUtilitiesPrompts.create_goal_decomposition_prompt(),
         structured_output_model=GoalDecomposition,
         **kwargs
     )
 
 
-def create_decision_analysis_agent(agent_class, **kwargs):
-    """Create SimpleAgent configured for decision analysis."""
+def create_decision_analysis_agent(agent_class: Any, **kwarg):
+    """Create SimpleAgent configured for decision analysi."""
     return agent_class(
-        name="DecisionAnalysisAgent",
+        nam="DecisionAnalysisAgent",
         prompt_template=AgentUtilitiesPrompts.create_decision_analysis_prompt(),
         structured_output_model=DecisionAnalysis,
         **kwargs
     )
 
 
-def create_resource_planning_agent(agent_class, **kwargs):
-    """Create SimpleAgent configured for resource planning."""
+def create_resource_planning_agent(agent_class: Any, **kwarg):
+    """Create SimpleAgent configured for resource plannin."""
     return agent_class(
-        name="ResourcePlanningAgent",
+        nam="ResourcePlanningAgent",
         prompt_template=AgentUtilitiesPrompts.create_resource_planning_prompt(),
         structured_output_model=ResourcePlan,
         **kwargs
     )
 
 
-def create_quality_assessment_agent(agent_class, **kwargs):
-    """Create SimpleAgent configured for quality assessment."""
+def create_quality_assessment_agent(agent_class: Any, **kwarg):
+    """Create SimpleAgent configured for quality assessmen."""
     return agent_class(
-        name="QualityAssessmentAgent",
+        nam="QualityAssessmentAgent",
         prompt_template=AgentUtilitiesPrompts.create_quality_assessment_prompt(),
         structured_output_model=QualityAssessment,
         **kwargs
     )
 
 
-def create_workflow_optimization_agent(agent_class, **kwargs):
-    """Create SimpleAgent configured for workflow optimization."""
+def create_workflow_optimization_agent(agent_class: Any, **kwarg):
+    """Create SimpleAgent configured for workflow optimizatio."""
     return agent_class(
-        name="WorkflowOptimizationAgent",
+        nam="WorkflowOptimizationAgent",
         prompt_template=AgentUtilitiesPrompts.create_workflow_optimization_prompt(),
         structured_output_model=WorkflowOptimization,
         **kwargs
     )
 
 
-def create_communication_planning_agent(agent_class, **kwargs):
-    """Create SimpleAgent configured for communication planning."""
+def create_communication_planning_agent(agent_class: Any, **kwarg):
+    """Create SimpleAgent configured for communication plannin."""
     return agent_class(
-        name="CommunicationPlanningAgent",
+        nam="CommunicationPlanningAgent",
         prompt_template=AgentUtilitiesPrompts.create_communication_planning_prompt(),
         structured_output_model=CommunicationPlan,
         **kwargs
     )
+
+
+__all_ = [
+    "COMMUNICATION_PLANNING_SYSTEM_PROMPT",
+    "COMMUNICATION_PLANNING_USER_PROMP",
+    "DECISION_ANALYSIS_SYSTEM_PROMP",
+    "DECISION_ANALYSIS_USER_PROMP",
+    "QUALITY_ASSESSMENT_SYSTEM_PROMP",
+    "QUALITY_ASSESSMENT_USER_PROMP",
+    "RESOURCE_PLANNING_SYSTEM_PROMP",
+    "RESOURCE_PLANNING_USER_PROMP",
+    "WORKFLOW_OPTIMIZATION_SYSTEM_PROMP",
+    "WORKFLOW_OPTIMIZATION_USER_PROMP",
+    "AgentUtilitiesPrompt",
+    "create_communication_planning_agen",
+    "create_communication_planning_promp",
+    "create_decision_analysis_agen",
+    "create_decision_analysis_promp",
+    "create_goal_decomposition_agen",
+    "create_goal_decomposition_promp",
+    "create_quality_assessment_agen",
+    "create_quality_assessment_promp",
+    "create_resource_planning_agen",
+    "create_resource_planning_promp",
+    "create_workflow_optimization_agen",
+    "create_workflow_optimization_promp",
+]

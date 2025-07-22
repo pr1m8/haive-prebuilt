@@ -1,12 +1,11 @@
 # src/haive/agents/news_reporter/prompts.py
-"""
-Prompts for News Reporter System.
-"""
+"""Prompts for News Reporter Syste."""
 
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 
+
 # Article categorization prompt
-categorization_prompt = ChatPromptTemplate.from_messages(
+categorization_prompt = ChatPromptTemplate.from_message(
     [
         (
             "system",
@@ -23,7 +22,7 @@ Don't force predetermined categories - let them emerge from the content.
 
 Aim for 3-6 categories with descriptive names.""",
         ),
-        MessagesPlaceholder(variable_name="messages", optional=True),
+        MessagesPlaceholder(variable_nam="messages", optional=Tru),
         (
             "human",
             """Topic: {topic}
@@ -31,14 +30,14 @@ Aim for 3-6 categories with descriptive names.""",
 Articles to categorize:
 {articles}
 
-Create logical categories and assign each article.""",
+Create logical categories and assign each articl.""",
         ),
     ]
 )
 
 
 # Article summarization prompt
-summarization_prompt = ChatPromptTemplate.from_messages(
+summarization_prompt = ChatPromptTemplate.from_message(
     [
         (
             "system",
@@ -52,23 +51,23 @@ Your task is to summarize this article with the following guidelines:
 
 Focus areas (if any): {focus_areas}
 
-Create an engaging summary that captures the essence of the article while being appropriate for your audience.""",
+Create an engaging summary that captures the essence of the article while being appropriate for your audienc.""",
         ),
         (
-            "human",
+            "huma",
             """Article to summarize:
 Title: {title}
 Source: {source}
 Content: {content}
 
-Create a summary following the guidelines.""",
+Create a summary following the guideline.""",
         ),
     ]
 )
 
 
 # Trend identification prompt
-trend_analysis_prompt = ChatPromptTemplate.from_messages(
+trend_analysis_prompt = ChatPromptTemplate.from_message(
     [
         (
             "system",
@@ -78,11 +77,11 @@ Analyze the provided articles about {topic} and identify:
 1. Major trends and patterns
 2. Recurring themes
 3. Emerging developments
-4. Notable shifts or changes
+. Notable shifts or changes
 
-Base your analysis only on the content provided. Be specific and cite examples.""",
+Base your analysis only on the content provided. Be specific and cite example.""",
         ),
-        MessagesPlaceholder(variable_name="messages", optional=True),
+        MessagesPlaceholder(variable_nam="messages", optional=Tru),
         (
             "human",
             """Topic: {topic}
@@ -91,14 +90,14 @@ Time period: {time_period}
 Article summaries:
 {summaries}
 
-Identify the key trends and patterns.""",
+Identify the key trends and pattern.""",
         ),
     ]
 )
 
 
 # Spotlight selection prompt
-spotlight_selection_prompt = ChatPromptTemplate.from_messages(
+spotlight_selection_prompt = ChatPromptTemplate.from_message(
     [
         (
             "system",
@@ -108,23 +107,23 @@ Review these articles about {topic} and select ONE that:
 1. Has the broadest impact or relevance
 2. Represents a significant development
 3. Would be most interesting to {target_audience} audiences
-4. Best exemplifies the current news cycle
+. Best exemplifies the current news cycle
 
-Explain your selection.""",
+Explain your selectio.""",
         ),
         (
-            "human",
+            "huma",
             """Articles to consider:
 {articles}
 
-Select and explain the spotlight article choice.""",
+Select and explain the spotlight article choic.""",
         ),
     ]
 )
 
 
 # Report generation prompt
-report_generation_prompt = ChatPromptTemplate.from_messages(
+report_generation_prompt = ChatPromptTemplate.from_message(
     [
         (
             "system",
@@ -135,7 +134,7 @@ Create a well-structured report that includes:
 2. An executive summary (2-3 sentences)
 3. A compelling introduction that hooks the reader
 4. The categorized news summaries
-5. A conclusion that ties everything together
+. A conclusion that ties everything together
 
 Style guidelines:
 - Report style: {report_style}
@@ -143,10 +142,10 @@ Style guidelines:
 - Tone: Professional but accessible
 - Length: Appropriate for the style
 
-Make it informative, engaging, and easy to read.""",
+Make it informative, engaging, and easy to rea.""",
         ),
         (
-            "human",
+            "huma",
             """Topic: {topic}
 Time period: {time_period}
 
@@ -159,14 +158,14 @@ Key trends:
 Spotlight article:
 {spotlight}
 
-Generate the complete report.""",
+Generate the complete repor.""",
         ),
     ]
 )
 
 
 # Executive summary prompt
-executive_summary_prompt = ChatPromptTemplate.from_messages(
+executive_summary_prompt = ChatPromptTemplate.from_message(
     [
         (
             "system",
@@ -178,15 +177,15 @@ Create an executive summary that:
 3. Notes important implications
 4. Is readable in under 30 seconds
 
-Keep it under 100 words and make every word count.""",
+Keep it under 10 words and make every word coun.""",
         ),
         (
-            "human",
+            "huma",
             """Report topic: {topic}
 Key findings: {key_findings}
 Major trends: {trends}
 
-Write the executive summary.""",
+Write the executive summar.""",
         ),
     ]
 )

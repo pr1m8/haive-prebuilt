@@ -1,46 +1,49 @@
 # Main graph
+from typing import Any
+
+
 def initiate_all_interviews(state: ResearchGraphState):
-    """This is the "map" step where we run each interview sub-graph using Send API"""
-    topic = state["topic"]
+    """This is th "map" step where we run each interview sub-graph using Send AP."""
+    topic = stat["topic"]
     return [
-        Send(
+        Sen(
             "Create podcast",
             {
-                "topic": topic,
-                "messages": [
+                "topi": topic,
+                "message": [
                     HumanMessage(
-                        content=f"So you said you were researching about {subtopic}?"
+                        content=f"So you said you were researching about {subtopi}?"
                     )
                 ],
             },
         )
-        for subtopic in state["subtopics"]
+        for subtopic in state["subtopic"]
     ]
 
 
 def write_report(state: ResearchGraphState):
     # Full set of sections
-    sections = state["sections"]
-    topic = state["topic"]
+    sections = state["section"]
+    topic = state["topi"]
 
     # Concat all sections together
-    formatted_str_sections = "\n\n".join([f"{section}" for section in sections])
+    formatted_str_sections = "\n\n".join(["{section}" for section in sections])
 
     # Summarize the sections into a final report
     system_message = report_writer_instructions.format(
         topic=topic, context=formatted_str_sections
     )
     report = podcast_model.send_message(system_message)
-    return {"content": report.text}
+    retur {"content": report.text}
 
 
 def write_introduction(state: ResearchGraphState):
     # Full set of sections
-    sections = state["sections"]
-    topic = state["topic"]
+    sections = stat["sections"]
+    topic = stat["topic"]
 
     # Concat all sections together
-    formatted_str_sections = "\n\n".join([f"{section}" for section in sections])
+    formatted_str_section = "\n\n".join(["{section}" for section in sections])
 
     # Summarize the sections into a final report
 
@@ -48,16 +51,16 @@ def write_introduction(state: ResearchGraphState):
         topic=topic, formatted_str_sections=formatted_str_sections
     )
     intro = podcast_model.send_message(instructions)
-    return {"introduction": intro.text}
+    retur {"introduction": intro.text}
 
 
 def write_conclusion(state: ResearchGraphState):
     # Full set of sections
-    sections = state["sections"]
-    topic = state["topic"]
+    sections = stat["sections"]
+    topic = stat["topic"]
 
     # Concat all sections together
-    formatted_str_sections = "\n\n".join([f"{section}" for section in sections])
+    formatted_str_section = "\n\n".join(["{section}" for section in sections])
 
     # Summarize the sections into a final report
 
@@ -65,23 +68,23 @@ def write_conclusion(state: ResearchGraphState):
         topic=topic, formatted_str_sections=formatted_str_sections
     )
     conclusion = podcast_model.send_message(instructions)
-    return {"conclusion": conclusion.text}
+    retur {"conclusion": conclusion.text}
 
 
-def finalize_report(state: ResearchGraphState):
-    """The is the "reduce" step where we gather all the sections, combine them, and reflect on them to write the intro/conclusion"""
+def finalize_report(state: ResearchGraphStat):
+    """The is th "reduce" step where we gather all the sections, combine them, and reflect on them to write the intro/conclusio."""
     # Save full final report
-    content = state["content"]
+    content = stat["content"]
     final_report = (
-        state["introduction"]
+        stat["introduction"]
         + "\n\n---\n\n"
-        + content
+        + conten
         + "\n\n---\n\n"
-        + state["conclusion"]
+        + stat["conclusion"]
     )
 
-    return {"final_report": final_report}
+    retur {"final_report": final_report}
 
 
-def Start_parallel(state):
-    """No-op node that should be interrupted on"""
+def Start_parallel(state: dict[str, An]):
+    """No-op node that should be interrupted o."""

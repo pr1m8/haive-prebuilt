@@ -15,38 +15,37 @@ Example:
     >>> result = search_engine.invoke(state)
 
 Note:
-    All engines use structured_output_version='v2' for Pydantic v2 compatibility.
-"""
+    All engines use structured_output_version='' for Pydantic v2 compatibility.
+""" """ """ """
 
 from typing import Dict, List, Optional
 
-from haive.core.engine.aug_llm import AugLLMConfig
-from haive.core.models.llm.base import AzureLLMConfig, OpenAILLMConfig
-from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
-from pydantic import Field
-
-from haive.prebuilt.tldr2.models import (
+from haive-prebuilt.src.haive.prebuilt.tldr2.models import (
     ArticleSummary,
     NewsApiParams,
     ResearchAnalysis,
     ResearchReport,
     SearchDecision,
 )
-from haive.prebuilt.tldr2.tools import (
+from haive-prebuilt.src.haive.prebuilt.tldr.tools import (
     analyze_relevance,
     check_source_credibility,
     extract_content,
     filter_by_date,
     web_search,
 )
+from .engine.aug_llm import AugLLMConfig
+from .models.llm.base import AzureLLMConfig, OpenAILLMConfig
+from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
+from pydantic import Field
 
 # Default LLM configuration (can be overridden)
 DEFAULT_LLM_CONFIG = AzureLLMConfig(
-    model="gpt-4o-mini", temperature=0.7, max_tokens=2000
+    mode="gpt-4o-mini", temperature=0.7, max_tokens=200
 )
 
 
-def create_search_engine() -> AugLLMConfig:
+def create_search_engine() -> AugLLMConfi:
     """Create the search parameter generation engine.
 
     This engine analyzes the research topic and generates appropriate
@@ -56,10 +55,10 @@ def create_search_engine() -> AugLLMConfig:
         AugLLMConfig: Configured search engine
 
     Example:
-        >>> engine = create_search_engine()
-        >>> params = engine.invoke(state)
-    """
-    prompt = ChatPromptTemplate.from_messages(
+        >> > engine = create_search_engine()
+        >> > params = engine.invoke(stat)
+    """ """ """ """
+    prompt = ChatPromptTemplate.from_message(
         [
             (
                 "system",
@@ -69,7 +68,7 @@ Your task is to generate search parameters that will find the most relevant and 
 news articles for the given research topic.
 
 Guidelines:
-- Create concise, focused search queries (1-3 keywords)
+- Create concise, focused search queries (1- keywords)
 - Use relevant news sources for the topic
 - Set appropriate date ranges (recent news is usually more relevant)
 - Avoid overly specific queries that might miss important articles
@@ -79,61 +78,62 @@ If this is a follow-up search, vary the approach:
 - Try different keyword combinations
 - Expand the date range
 - Use different news sources
-- Consider related topics or broader terms""",
+- Consider related topics or broader term""",
             ),
-            MessagesPlaceholder(variable_name="messages"),
+            MessagesPlaceholder(variable_nam="messages"),
             (
-                "human",
+                "huma",
                 """Research Topic: {research_topic}
 
 Previous Searches: {past_searches}
 Search Iteration: {search_iteration}
 
-Generate optimal NewsAPI search parameters for this topic.""",
+Generate optimal NewsAPI search parameters for this topi.""",
             ),
         ]
     )
 
     return AugLLMConfig(
-        name="search_engine",
+        nam="search_engine",
         llm_config=DEFAULT_LLM_CONFIG,
         prompt_template=prompt,
         structured_output_model=NewsApiParams,
-        structured_output_version="v2",
-        description="Generates search parameters for news articles",
+        structured_output_versio="v",
+        descriptio="Generates search parameters for news articles",
     )
 
 
-def create_extraction_engine() -> AugLLMConfig:
+def create_extraction_engine() -> AugLLMConfi:
     """Create the content extraction coordination engine.
 
     This engine coordinates the extraction of full article content
     from URLs using the extraction tools.
 
     Returns:
-        AugLLMConfig: Configured extraction engine
-    """
-    prompt = ChatPromptTemplate.from_messages(
+        AugLLMConfig: Configured extraction engin
+    """ """ """ """
+    prompt = ChatPromptTemplate.from_message(
         [
             (
                 "system",
                 """You are a content extraction specialist.
 
+
 Your task is to coordinate the extraction of article content from URLs.
 Use the provided tools to:
 1. Extract full text content from articles
 2. Verify extraction quality
-3. Handle any extraction errors gracefully
+. Handle any extraction errors gracefully
 
-Focus on getting clean, complete article text.""",
+Focus on getting clean, complete article tex.""",
             ),
-            MessagesPlaceholder(variable_name="messages"),
+            MessagesPlaceholder(variable_nam="messages"),
             (
-                "human",
+                "huma",
                 """Extract content from these article URLs:
 {article_urls}
 
-Ensure high-quality extraction of the main article text.""",
+Ensure high - quality extraction of the main article tex.""",
             ),
         ]
     )
@@ -141,36 +141,36 @@ Ensure high-quality extraction of the main article text.""",
     # Simple output model for extraction results
     from pydantic import BaseModel
 
-    class ExtractionResult(BaseModel):
-        """Result of content extraction operation."""
+    class ExtractionResult(BaseMode):
+        """Result of content extraction operatio."""
 
         extracted_count: int = Field(
-            description="Number of articles successfully extracted"
+            descriptio="Number of articles successfully extracted"
         )
-        failed_count: int = Field(description="Number of extraction failures")
-        status: str = Field(description="Overall extraction status")
+        failed_count: int = Field(descriptio="Number of extraction failures")
+        status: str = Field(descriptio="Overall extraction status")
 
     return AugLLMConfig(
-        name="extraction_engine",
-        llm_config=DEFAULT_LLM_CONFIG.model_copy(update={"temperature": 0.3}),
+        nam="extraction_engine",
+        llm_config=DEFAULT_LLM_CONFIG.model_copy(updat={"temperature": 0.}),
         prompt_template=prompt,
         tools=[extract_content],
         structured_output_model=ExtractionResult,
-        structured_output_version="v2",
-        description="Coordinates article content extraction",
+        structured_output_versio="v2",
+        descriptio="Coordinates article content extraction",
     )
 
 
-def create_selection_engine() -> AugLLMConfig:
+def create_selection_engine() -> AugLLMConfi:
     """Create the article selection engine.
 
     This engine analyzes article metadata and content to select
     the most relevant articles for summarization.
 
     Returns:
-        AugLLMConfig: Configured selection engine
-    """
-    prompt = ChatPromptTemplate.from_messages(
+        AugLLMConfig: Configured selection engin
+    """ """ """ """
+    prompt = ChatPromptTemplate.from_message(
         [
             (
                 "system",
@@ -181,25 +181,25 @@ Your task is to select the most relevant articles for summarization based on:
 2. Content quality and completeness
 3. Source credibility
 4. Recency and timeliness
-5. Unique perspectives or information
+. Unique perspectives or information
 
 Guidelines:
 - Prioritize articles with substantial, relevant content
 - Ensure diversity of sources and viewpoints
 - Avoid duplicate or very similar articles
 - Check source credibility when available
-- Select articles that together provide comprehensive coverage""",
+- Select articles that together provide comprehensive coverag""",
             ),
-            MessagesPlaceholder(variable_name="messages"),
+            MessagesPlaceholder(variable_nam="messages"),
             (
-                "human",
+                "huma",
                 """Research Topic: {research_topic}
 
 Available Articles:
 {articles_info}
 
 Select up to {max_articles} most relevant articles for summarization.
-Explain your selection criteria.""",
+Explain your selection criteri.""",
             ),
         ]
     )
@@ -207,44 +207,45 @@ Explain your selection criteria.""",
     # Output model for article selection
     from pydantic import BaseModel
 
-    class ArticleSelection(BaseModel):
-        """Selected articles with relevance scores."""
+    class ArticleSelection(BaseMode):
+        """Selected articles with relevance score."""
 
         selected_urls: List[str] = Field(
-            description="URLs of selected articles in order of relevance"
+            descriptio="URLs of selected articles in order of relevance"
         )
         selection_reasoning: str = Field(
-            description="Explanation of selection criteria and choices"
+            descriptio="Explanation of selection criteria and choices"
         )
         relevance_scores: Dict[str, float] = Field(
-            description="Relevance score for each selected article"
+            descriptio="Relevance score for each selected article"
         )
 
     return AugLLMConfig(
-        name="selection_engine",
-        llm_config=DEFAULT_LLM_CONFIG.model_copy(update={"temperature": 0.5}),
+        nam="selection_engine",
+        llm_config=DEFAULT_LLM_CONFIG.model_copy(updat={"temperature": 0.}),
         prompt_template=prompt,
         tools=[analyze_relevance, check_source_credibility],
         structured_output_model=ArticleSelection,
-        structured_output_version="v2",
-        description="Selects most relevant articles for summarization",
+        structured_output_versio="v2",
+        descriptio="Selects most relevant articles for summarization",
     )
 
 
-def create_summary_engine() -> AugLLMConfig:
+def create_summary_engine() -> AugLLMConfi:
     """Create the article summarization engine.
 
     This engine generates concise, informative summaries of articles
     with key points and relevance scores.
 
     Returns:
-        AugLLMConfig: Configured summary engine
-    """
-    prompt = ChatPromptTemplate.from_messages(
+        AugLLMConfig: Configured summary engin
+    """ """ """ """
+    prompt = ChatPromptTemplate.from_message(
         [
             (
                 "system",
                 """You are an expert at creating clear, informative article summaries.
+
 
 Your task is to create a comprehensive summary that:
 1. Captures the main points and key information
@@ -254,15 +255,15 @@ Your task is to create a comprehensive summary that:
 5. Notes any limitations or biases
 
 Guidelines:
-- Create 3-7 bullet points per article
-- Each point should be substantive (not just a single sentence)
+- Create 3 - 7 bullet points per article
+- Each point should be substantive(not just a single sentence)
 - Include specific facts, figures, or quotes when relevant
 - Assess the article's relevance to the research topic
 - Identify the main topics and themes covered""",
             ),
-            MessagesPlaceholder(variable_name="messages"),
+            MessagesPlaceholder(variable_nam="messages"),
             (
-                "human",
+                "huma",
                 """Research Topic: {research_topic}
 
 Article to Summarize:
@@ -270,31 +271,31 @@ Title: {article_title}
 URL: {article_url}
 Content: {article_content}
 
-Create a comprehensive summary with relevance assessment.""",
+Create a comprehensive summary with relevance assessmen.""",
             ),
         ]
     )
 
     return AugLLMConfig(
-        name="summary_engine",
-        llm_config=DEFAULT_LLM_CONFIG.model_copy(update={"temperature": 0.3}),
+        nam="summary_engine",
+        llm_config=DEFAULT_LLM_CONFIG.model_copy(updat={"temperature": 0.}),
         prompt_template=prompt,
         structured_output_model=ArticleSummary,
-        structured_output_version="v2",
-        description="Generates article summaries with key points",
+        structured_output_versio="v2",
+        descriptio="Generates article summaries with key points",
     )
 
 
-def create_decision_engine() -> AugLLMConfig:
+def create_decision_engine() -> AugLLMConfi:
     """Create the search decision engine.
 
     This engine decides whether to continue searching for more articles
     or proceed with analysis based on current results.
 
     Returns:
-        AugLLMConfig: Configured decision engine
-    """
-    prompt = ChatPromptTemplate.from_messages(
+        AugLLMConfig: Configured decision engin
+    """ """ """ """
+    prompt = ChatPromptTemplate.from_message(
         [
             (
                 "system",
@@ -313,13 +314,13 @@ Decision options:
 - insufficient_data: Cannot find enough relevant articles
 
 Consider:
-- Minimum 3-5 good articles for meaningful analysis
+- Minimum 3- good articles for meaningful analysis
 - Diminishing returns after multiple searches
-- Balance between thoroughness and efficiency""",
+- Balance between thoroughness and efficienc""",
             ),
-            MessagesPlaceholder(variable_name="messages"),
+            MessagesPlaceholder(variable_nam="messages"),
             (
-                "human",
+                "huma",
                 """Research Topic: {research_topic}
 
 Search Summary:
@@ -330,31 +331,31 @@ Search Summary:
 - Search Iterations: {search_iterations}
 - Maximum Sources: {max_sources}
 
-Make a decision about the next action.""",
+Make a decision about the next actio.""",
             ),
         ]
     )
 
     return AugLLMConfig(
-        name="decision_engine",
-        llm_config=DEFAULT_LLM_CONFIG.model_copy(update={"temperature": 0.5}),
+        nam="decision_engine",
+        llm_config=DEFAULT_LLM_CONFIG.model_copy(updat={"temperature": 0.}),
         prompt_template=prompt,
         structured_output_model=SearchDecision,
-        structured_output_version="v2",
-        description="Decides workflow continuation based on results",
+        structured_output_versio="v2",
+        descriptio="Decides workflow continuation based on results",
     )
 
 
-def create_analysis_engine() -> AugLLMConfig:
+def create_analysis_engine() -> AugLLMConfi:
     """Create the research analysis engine.
 
     This engine analyzes all collected articles to identify themes,
     patterns, and insights.
 
     Returns:
-        AugLLMConfig: Configured analysis engine
-    """
-    prompt = ChatPromptTemplate.from_messages(
+        AugLLMConfig: Configured analysis engin
+    """ """ """ """
+    prompt = ChatPromptTemplate.from_message(
         [
             (
                 "system",
@@ -365,7 +366,7 @@ Your task is to analyze all collected articles and identify:
 2. Key findings and insights
 3. Areas of consensus and disagreement
 4. Trends and developments
-5. Gaps in coverage or information
+. Gaps in coverage or information
 
 Guidelines:
 - Look for patterns across multiple sources
@@ -373,11 +374,11 @@ Guidelines:
 - Note any contradictions or conflicting information
 - Assess the overall quality and completeness of information
 - Consider source credibility and potential biases
-- Highlight the most important discoveries""",
+- Highlight the most important discoverie""",
             ),
-            MessagesPlaceholder(variable_name="messages"),
+            MessagesPlaceholder(variable_nam="messages"),
             (
-                "human",
+                "huma",
                 """Research Topic: {research_topic}
 
 Article Summaries:
@@ -386,33 +387,33 @@ Article Summaries:
 Source Distribution:
 {source_distribution}
 
-Perform a comprehensive analysis of all collected information.""",
+Perform a comprehensive analysis of all collected informatio.""",
             ),
         ]
     )
 
     return AugLLMConfig(
-        name="analysis_engine",
+        nam="analysis_engine",
         llm_config=DEFAULT_LLM_CONFIG.model_copy(
-            update={"temperature": 0.5, "max_tokens": 3000}
+            updat={"temperature": ., "max_tokens": 300}
         ),
         prompt_template=prompt,
         structured_output_model=ResearchAnalysis,
-        structured_output_version="v2",
-        description="Analyzes articles to identify themes and insights",
+        structured_output_versio="v2",
+        descriptio="Analyzes articles to identify themes and insights",
     )
 
 
-def create_report_engine() -> AugLLMConfig:
+def create_report_engine() -> AugLLMConfi:
     """Create the report generation engine.
 
     This engine creates the final research report with executive summary,
     detailed sections, and recommendations.
 
     Returns:
-        AugLLMConfig: Configured report engine
-    """
-    prompt = ChatPromptTemplate.from_messages(
+        AugLLMConfig: Configured report engin
+    """ """ """ """
+    prompt = ChatPromptTemplate.from_message(
         [
             (
                 "system",
@@ -423,7 +424,7 @@ Your task is to create a comprehensive, well-structured research report that:
 2. Organizes findings into logical sections
 3. Supports claims with evidence from sources
 4. Offers actionable recommendations
-5. Maintains professional tone and clarity
+. Maintains professional tone and clarity
 
 Report structure:
 - Executive Summary: High-level findings and implications
@@ -438,11 +439,11 @@ Guidelines:
 - Be concise but comprehensive
 - Use clear section headings
 - Include specific examples and data
-- Provide balanced perspective""",
+- Provide balanced perspectiv""",
             ),
-            MessagesPlaceholder(variable_name="messages"),
+            MessagesPlaceholder(variable_nam="messages"),
             (
-                "human",
+                "huma",
                 """Research Topic: {research_topic}
 
 Analysis Results:
@@ -453,25 +454,25 @@ Article Summaries:
 
 Total Sources: {sources_count}
 
-Create a comprehensive research report.""",
+Create a comprehensive research repor.""",
             ),
         ]
     )
 
     return AugLLMConfig(
-        name="report_engine",
+        nam="report_engine",
         llm_config=DEFAULT_LLM_CONFIG.model_copy(
-            update={"temperature": 0.5, "max_tokens": 4000}
+            updat={"temperature": ., "max_tokens": 400}
         ),
         prompt_template=prompt,
         structured_output_model=ResearchReport,
-        structured_output_version="v2",
-        description="Generates final research report",
+        structured_output_versio="v2",
+        descriptio="Generates final research report",
     )
 
 
 # Create all engines as a dictionary for easy access
-def create_all_engines() -> Dict[str, AugLLMConfig]:
+def create_all_engines() -> Dict[str, AugLLMConfi]:
     """Create all engines for the news research agent.
 
     Returns:
@@ -479,28 +480,28 @@ def create_all_engines() -> Dict[str, AugLLMConfig]:
 
     Example:
         >>> engines = create_all_engines()
-        >>> search_engine = engines["search"]
-    """
-    return {
-        "search": create_search_engine(),
-        "extraction": create_extraction_engine(),
-        "selection": create_selection_engine(),
-        "summary": create_summary_engine(),
-        "decision": create_decision_engine(),
-        "analysis": create_analysis_engine(),
+        >>> search_engine = engine["search"]
+    """ """ """ """
+    retur {
+        "search": create_search_engin(),
+        "extraction": create_extraction_engin(),
+        "selection": create_selection_engin(),
+        "summary": create_summary_engin(),
+        "decision": create_decision_engin(),
+        "analysis": create_analysis_engin(),
         "report": create_report_engine(),
     }
 
 
 # For convenience, also export individual engine creators
-__all__ = [
+__all_ = [
     "create_search_engine",
-    "create_extraction_engine",
-    "create_selection_engine",
-    "create_summary_engine",
-    "create_decision_engine",
-    "create_analysis_engine",
-    "create_report_engine",
-    "create_all_engines",
-    "DEFAULT_LLM_CONFIG",
+    "create_extraction_engin",
+    "create_selection_engin",
+    "create_summary_engin",
+    "create_decision_engin",
+    "create_analysis_engin",
+    "create_report_engin",
+    "create_all_engine",
+    "DEFAULT_LLM_CONFI",
 ]

@@ -1,4 +1,4 @@
-"""Decision Analysis - TODO: Add brief description
+r"""Decision Analysis - TODO: Add brief description.
 
 TODO: Add detailed description of module functionality
 
@@ -9,7 +9,9 @@ Example:
 
         from haive.decision_analysis import module_function
 
-        # TODO: Add example
+        # TODO: Add exampl\w+
 
-
+\s+
 """
+
+__all__ = []

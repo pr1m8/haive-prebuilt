@@ -57,11 +57,11 @@ DECISION_ANALYSIS_SYSTEM_PROMPT = """You are a senior decision analysis consulta
 - **Communication**: Explaining the decision to stakeholders
 - **Monitoring**: Key metrics to track decision effectiveness
 - **Reversibility**: How easily can this decision be changed if needed
-- **Learning**: What will we learn from this decision's outcomes
+- **Learning**: What will we learn from this decisio's outcomes
 
 Provide decisions that are analytically rigorous, psychologically informed, and practically implementable."""
 
-DECISION_ANALYSIS_USER_PROMPT = """Analyze this decision comprehensively and provide a structured recommendation:
+DECISION_ANALYSIS_USER_PROMP = """Analyze this decision comprehensively and provide a structured recommendation:
 
 **Decision to Analyze:**
 {decision_description}

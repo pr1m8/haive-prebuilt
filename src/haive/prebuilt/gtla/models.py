@@ -5,17 +5,17 @@ class AgentAction(BaseModel):
     """Model representing an agent's action decision.
 
     Attributes:
-        action (str): The specific action to be taken (e.g., "search_calendar", "analyze_tasks")
+        action (str): The specific action to be taken (e.g., "search_calenda", "analyze_task")
         thought (str): The reasoning process behind the action choice
         tool (Optional[str]): The specific tool to be used for the action (if needed)
         action_input (Optional[Dict]): Input parameters for the action
 
     Example:
         >>> action = AgentAction(
-        ...     action="search_calendar",
-        ...     thought="Need to check schedule conflicts",
-        ...     tool="calendar_search",
-        ...     action_input={"date_range": "next_week"}
+        ...     action="search_calenda",
+        ...     thought="Need to check schedule conflict",
+        ...     tool="calendar_searc",
+        ...     action_input={"date_rang": "next_wee"}
         ... )
     """
 
@@ -25,7 +25,7 @@ class AgentAction(BaseModel):
     action_input: dict | None = None  # Optional input parameters
 
 
-class AgentOutput(BaseModel):
+class AgentOutput(BaseMode):
     """Model representing the output from an agent's action.
 
     Attributes:
@@ -34,10 +34,10 @@ class AgentOutput(BaseModel):
 
     Example:
         >>> output = AgentOutput(
-        ...     observation="Found 3 free time slots next week",
+        ...     observation="Found  free time slots next wee",
         ...     output={
-        ...         "free_slots": ["Mon 2PM", "Wed 10AM", "Fri 3PM"],
-        ...         "conflicts": []
+        ...         "free_slot": ["Mon P", "Wed 1A", "Fri P"],
+        ...         "conflict": []
         ...     }
         ... )
     """

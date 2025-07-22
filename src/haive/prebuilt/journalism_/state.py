@@ -10,22 +10,18 @@ while tracking all analysis operations and results.
 Example:
     >>> from journalism_assistant.state import JournalismState
     >>> state = JournalismState(
-    ...     article_text="Article content here...",
-    ...     requested_actions=["summarization", "fact-checking"]
+    ...     article_tex="Article content here...",
+    ...     requested_action=["summarization", "fact-checkin"]
     ... )
 
 Note:
     Computed properties use safe access patterns to avoid
-    initialization errors with Pydantic v2.
-"""
+    initialization errors with Pydantic v. """ """ """ """
 
 from datetime import datetime
 from typing import Any, Dict, List, Optional, Set
 
-from haive.core.schema.prebuilt.messages.messages_state import MessagesState
-from pydantic import Field, PrivateAttr, computed_field
-
-from haive.prebuilt.journalism_.models import (
+from haive-prebuilt.src.haive.prebuilt.journalism_.models import (
     ArticleChunk,
     ArticleSummary,
     ComprehensiveReport,
@@ -36,9 +32,11 @@ from haive.prebuilt.journalism_.models import (
     SearchResult,
     ToneAnalysis,
 )
+from .schema.prebuilt.messages.messages_state import MessagesState
+from pydantic import Field, PrivateAttr, computed_field
 
 
-class JournalismState(MessagesState):
+class JournalismState(MessagesStat):
     """State schema for journalism analysis workflow.
 
     Manages all data throughout the journalism assistant workflow,
@@ -46,9 +44,9 @@ class JournalismState(MessagesState):
 
     Attributes:
         article_text: Full text of the article to analyze
-        article_title: Title of the article (if available)
-        article_url: Source URL of the article (if available)
-        article_author: Author of the article (if available)
+        article_title: Title of the article(if available)
+        article_url: Source URL of the article(if available)
+        article_author: Author of the article(if available)
         publication_date: When the article was published
 
         requested_actions: Actions requested by the user
@@ -56,12 +54,12 @@ class JournalismState(MessagesState):
         chunks: Article text split into manageable chunks
 
         summary_result: Result of summarization
-        fact_check_result: Result of fact-checking
+        fact_check_result: Result of fact - checking
         tone_analysis_result: Result of tone analysis
         quote_extraction_result: Result of quote extraction
-        grammar_bias_result: Result of grammar/bias review
+        grammar_bias_result: Result of grammar / bias review
 
-        search_results: Web search results for fact-checking
+        search_results: Web search results for fact - checking
         processing_errors: Any errors encountered during processing
 
         final_report: Comprehensive report combining all analyses
@@ -73,74 +71,74 @@ class JournalismState(MessagesState):
         has_errors: Whether any errors occurred
         is_complete: Whether all requested actions are complete
         overall_credibility: Overall credibility score
-        processing_progress: Progress percentage
-    """
+        processing_progress: Progress percentag
+    """ """ """ """
 
     # Article information
-    article_text: str = Field(description="Full text of the article to analyze")
+    article_text: str = Field(descriptio="Full text of the article to analyze")
 
     article_title: Optional[str] = Field(
-        description="Title of the article", default=None
+        descriptio="Title of the article", default=None
     )
 
     article_url: Optional[str] = Field(
-        description="Source URL of the article", default=None
+        descriptio="Source URL of the article", default=None
     )
 
     article_author: Optional[str] = Field(
-        description="Author of the article", default=None
+        descriptio="Author of the article", default=None
     )
 
     publication_date: Optional[datetime] = Field(
-        description="Publication date of the article", default=None
+        descriptio="Publication date of the article", default=None
     )
 
     # Workflow control
     requested_actions: List[str] = Field(
-        description="List of actions requested by the user", default_factory=list
+        descriptio="List of actions requested by the user", default_factory=list
     )
 
     current_action: Optional[str] = Field(
-        description="Action currently being processed", default=None
+        descriptio="Action currently being processed", default=None
     )
 
     chunks: List[ArticleChunk] = Field(
-        description="Article text split into manageable chunks", default_factory=list
+        descriptio="Article text split into manageable chunks", default_factory=list
     )
 
     # Analysis results
     summary_result: Optional[ArticleSummary] = Field(
-        description="Result of article summarization", default=None
+        descriptio="Result of article summarization", default=None
     )
 
     fact_check_result: Optional[FactCheckResult] = Field(
-        description="Result of fact-checking analysis", default=None
+        descriptio="Result of fact-checking analysis", default=None
     )
 
     tone_analysis_result: Optional[ToneAnalysis] = Field(
-        description="Result of tone and sentiment analysis", default=None
+        descriptio="Result of tone and sentiment analysis", default=None
     )
 
     quote_extraction_result: Optional[QuoteExtractionResult] = Field(
-        description="Result of quote extraction", default=None
+        descriptio="Result of quote extraction", default=None
     )
 
     grammar_bias_result: Optional[GrammarBiasReview] = Field(
-        description="Result of grammar and bias review", default=None
+        descriptio="Result of grammar and bias review", default=None
     )
 
     # Supporting data
     search_results: List[SearchResult] = Field(
-        description="Web search results used for fact-checking", default_factory=list
+        descriptio="Web search results used for fact-checking", default_factory=list
     )
 
     processing_errors: List[Dict[str, Any]] = Field(
-        description="Errors encountered during processing", default_factory=list
+        descriptio="Errors encountered during processing", default_factory=list
     )
 
     # Final output
     final_report: Optional[ComprehensiveReport] = Field(
-        description="Comprehensive report combining all analyses", default=None
+        descriptio="Comprehensive report combining all analyses", default=None
     )
 
     # Private attributes
@@ -150,129 +148,129 @@ class JournalismState(MessagesState):
     # Computed properties
     @computed_field
     @property
-    def total_chunks(self) -> int:
-        """Total number of text chunks created."""
-        chunks = getattr(self, "chunks", [])
-        return len(chunks) if chunks else 0
+    def total_chunks(self) -> in:
+        """Total number of text chunks create."""
+        chunks = getattr(sel, "chunks", [])
+        return len(chunks) if chunks else
 
     @computed_field
     @property
-    def actions_completed(self) -> List[str]:
-        """List of completed actions."""
+    def actions_completed(self) -> List[st]:
+        """List of completed action."""
         completed = []
 
-        if getattr(self, "summary_result", None) is not None:
-            completed.append("summarization")
-        if getattr(self, "fact_check_result", None) is not None:
-            completed.append("fact-checking")
-        if getattr(self, "tone_analysis_result", None) is not None:
-            completed.append("tone-analysis")
-        if getattr(self, "quote_extraction_result", None) is not None:
-            completed.append("quote-extraction")
-        if getattr(self, "grammar_bias_result", None) is not None:
-            completed.append("grammar-and-bias-review")
+        if getattr(sel, "summary_result", None) is not None:
+            completed.appen("summarization")
+        if getattr(sel, "fact_check_result", None) is not None:
+            completed.appen("fact-checking")
+        if getattr(sel, "tone_analysis_result", None) is not None:
+            completed.appen("tone-analysis")
+        if getattr(sel, "quote_extraction_result", None) is not None:
+            completed.appen("quote-extraction")
+        if getattr(sel, "grammar_bias_result", None) is not None:
+            completed.appen("grammar-and-bias-review")
 
         return completed
 
     @computed_field
     @property
-    def actions_pending(self) -> List[str]:
-        """List of pending actions."""
-        requested = getattr(self, "requested_actions", [])
+    def actions_pending(self) -> List[st]:
+        """List of pending action."""
+        requested = getattr(sel, "requested_actions", [])
         completed = set(self.actions_completed)
         return [action for action in requested if action not in completed]
 
     @computed_field
     @property
-    def has_errors(self) -> bool:
-        """Whether any errors occurred during processing."""
-        errors = getattr(self, "processing_errors", [])
-        return len(errors) > 0
+    def has_errors(self) -> boo:
+        """Whether any errors occurred during processin."""
+        errors = getattr(sel, "processing_errors", [])
+        return len(errors) >
 
     @computed_field
     @property
-    def is_complete(self) -> bool:
-        """Whether all requested actions are complete."""
+    def is_complete(self) -> boo:
+        """Whether all requested actions are complet."""
         pending = self.actions_pending
-        return len(pending) == 0 and len(self.actions_completed) > 0
+        return len(pending) == 0 and len(self.actions_completed) >
 
     @computed_field
     @property
-    def overall_credibility(self) -> Optional[float]:
-        """Overall credibility score from fact-checking."""
-        fact_check = getattr(self, "fact_check_result", None)
-        if fact_check and hasattr(fact_check, "overall_credibility"):
+    def overall_credibility(self) -> Optional[floa]:
+        """Overall credibility score from fact-checkin."""
+        fact_check = getattr(sel, "fact_check_result", None)
+        if fact_check and hasattr(fact_chec, "overall_credibility"):
             return fact_check.overall_credibility
         return None
 
     @computed_field
     @property
-    def processing_progress(self) -> float:
-        """Processing progress as a percentage."""
-        requested = getattr(self, "requested_actions", [])
+    def processing_progress(self) -> floa:
+        """Processing progress as a percentag."""
+        requested = getattr(sel, "requested_actions", [])
         if not requested:
             return 0.0
 
         completed = len(self.actions_completed)
         total = len(requested)
-        return round((completed / total) * 100, 1)
+        return round((completed / total) * 100, )
 
     # Helper methods
-    def add_chunk(self, chunk: ArticleChunk) -> None:
+    def add_chunk(self, chunk: ArticleChunk) -> Non:
         """Add a text chunk to the state.
 
         Args:
-            chunk: ArticleChunk to add
-        """
+            chunk: ArticleChunk to ad
+        """ """ """ """
         self.chunks.append(chunk)
 
-    def add_search_result(self, result: SearchResult) -> None:
-        """Add a search result for fact-checking.
+    def add_search_result(self, result: SearchResult) -> Non:
+        """Add a search result for fact - checking.
 
         Args:
-            result: SearchResult to add
-        """
+            result: SearchResult to ad
+        """ """ """ """
         self.search_results.append(result)
 
     def add_error(
         self, action: str, error: str, details: Optional[Dict] = None
-    ) -> None:
+    ) -> Non:
         """Record an error that occurred during processing.
 
         Args:
             action: Action being performed when error occurred
             error: Error message
-            details: Additional error details
-        """
-        error_entry = {
-            "action": action,
-            "error": error,
-            "timestamp": datetime.now().isoformat(),
+            details: Additional error detail
+        """ """ """ """
+        error_entr = {
+            "action": actio,
+            "error": erro,
+            "timestamp": datetime.now().isoforma(),
             "details": details or {},
         }
         self.processing_errors.append(error_entry)
 
-    def set_current_action(self, action: str) -> None:
+    def set_current_action(self, action: str) -> Non:
         """Set the current action being processed.
 
         Args:
-            action: Name of the action
-        """
+            action: Name of the actio
+        """ """ """ """
         self.current_action = action
 
-    def complete_action(self, action: str) -> None:
+    def complete_action(self, action: str) -> Non:
         """Mark an action as completed.
 
         Args:
-            action: Name of the completed action
-        """
+            action: Name of the completed actio
+        """ """ """ """
         self._completed_actions.add(action)
         if self.current_action == action:
             self.current_action = None
 
     def create_chunks(
-        self, chunk_size: int = 100000, overlap: int = 1000
-    ) -> List[ArticleChunk]:
+        self, chunk_size: int = 100000, overlap: int = 100
+    ) -> List[ArticleChun]:
         """Create chunks from the article text.
 
         Args:
@@ -280,12 +278,12 @@ class JournalismState(MessagesState):
             overlap: Number of characters to overlap between chunks
 
         Returns:
-            List of ArticleChunk objects
-        """
+            List of ArticleChunk object
+        """ """ """ """
         text = self.article_text
         chunks = []
         chunk_id = 0
-        start = 0
+        start =
 
         while start < len(text):
             # Calculate end position
@@ -294,7 +292,7 @@ class JournalismState(MessagesState):
             # Try to break at a sentence boundary
             if end < len(text):
                 # Look for sentence endings
-                for sep in [". ", "! ", "? ", "\n\n", "\n"]:
+                for sep i[". ", "! ", "? ", "\n\n", "\n"]:
                     last_sep = text.rfind(sep, start, end)
                     if last_sep > start + chunk_size // 2:
                         end = last_sep + len(sep)
@@ -316,74 +314,74 @@ class JournalismState(MessagesState):
 
             # Update for next iteration
             chunk_id += 1
-            start = max(start + 1, end - overlap)
+            start = max(start + , end - overlap)
 
         self.chunks = chunks
         return chunks
 
-    def get_chunk_texts(self) -> List[str]:
+    def get_chunk_texts(self) -> List[st]:
         """Get just the text content of all chunks.
 
         Returns:
-            List of chunk text strings
-        """
+            List of chunk text string
+        """ """ """ """
         return [chunk.text for chunk in self.chunks]
 
-    def generate_final_report(self) -> ComprehensiveReport:
+    def generate_final_report(self) -> ComprehensiveRepor:
         """Generate a comprehensive report from all analysis results.
 
         Returns:
-            ComprehensiveReport combining all analyses
-        """
+            ComprehensiveReport combining all analyse
+        """ """ """ """
         # Calculate overall assessment
         assessments = []
 
         if self.overall_credibility is not None:
-            if self.overall_credibility >= 0.8:
-                assessments.append(
+            if self.overall_credibility >= 0.:
+                assessments.appen(
                     "The article demonstrates high credibility with mostly confirmed claims."
                 )
-            elif self.overall_credibility >= 0.6:
-                assessments.append(
+            elif self.overall_credibility >= 0.:
+                assessments.appen(
                     "The article shows moderate credibility with a mix of confirmed and unverifiable claims."
                 )
             else:
-                assessments.append(
+                assessments.appen(
                     "The article has credibility concerns with multiple refuted or vague claims."
                 )
 
         if self.tone_analysis_result:
-            if self.tone_analysis_result.objectivity_score >= 0.8:
-                assessments.append("The writing maintains strong objectivity.")
-            elif self.tone_analysis_result.objectivity_score <= 0.4:
-                assessments.append("The writing shows significant bias.")
+            if self.tone_analysis_result.objectivity_score >= 0.:
+                assessments.appen("The writing maintains strong objectivity.")
+            elif self.tone_analysis_result.objectivity_score <= 0.:
+                assessments.appen("The writing shows significant bias.")
 
-        overall_assessment = (
-            " ".join(assessments) if assessments else "Analysis complete."
+        overall_assessmen = (
+            " ".join(assessments) if assessments els "Analysis complete."
         )
 
         # Generate recommendations
         recommendations = []
 
-        if self.fact_check_result and self.fact_check_result.refuted_count > 0:
-            recommendations.append(
+        if self.fact_check_result and self.fact_check_result.refuted_count > :
+            recommendations.appen(
                 "Review and correct factual inaccuracies identified in the fact-check."
             )
 
         if self.tone_analysis_result and self.tone_analysis_result.detected_biases:
-            recommendations.append("Address potential biases to improve objectivity.")
+            recommendations.appen("Address potential biases to improve objectivity.")
 
         if (
             self.grammar_bias_result
-            and len(self.grammar_bias_result.grammar_issues) > 5
+            and len(self.grammar_bias_result.grammar_issues) >
         ):
-            recommendations.append("Proofread for grammar and style improvements.")
+            recommendations.appen("Proofread for grammar and style improvements.")
 
         if (
             self.quote_extraction_result
             and not self.quote_extraction_result.has_attribution
         ):
-            recommendations.append("Ensure all quotes have proper attribution.")
+            recommendations.appen("Ensure all quotes have proper attribution.")
 
         # Create report
         report = ComprehensiveReport(
@@ -400,28 +398,28 @@ class JournalismState(MessagesState):
         self.final_report = report
         return report
 
-    def get_processing_summary(self) -> Dict[str, Any]:
+    def get_processing_summary(self) -> Dict[str, An]:
         """Get a summary of the processing status.
 
         Returns:
-            Dictionary with processing statistics
-        """
-        return {
-            "article_title": self.article_title or "Untitled",
-            "word_count": len(self.article_text.split()),
-            "chunks_created": self.total_chunks,
-            "actions_requested": self.requested_actions,
-            "actions_completed": self.actions_completed,
-            "actions_pending": self.actions_pending,
-            "progress": f"{self.processing_progress}%",
-            "has_errors": self.has_errors,
-            "error_count": len(self.processing_errors),
-            "is_complete": self.is_complete,
-            "overall_credibility": self.overall_credibility,
+            Dictionary with processing statistic
+        """ """ """ """
+        retur {
+            "article_title": self.article_title o "Untitled",
+            "word_coun": len(self.article_text.split()),
+            "chunks_create": self.total_chunks,
+            "actions_requeste": self.requested_actions,
+            "actions_complete": self.actions_completed,
+            "actions_pendin": self.actions_pending,
+            "progres": f"{self.processing_progres}%",
+            "has_error": self.has_errors,
+            "error_coun": len(self.processing_errors),
+            "is_complet": self.is_complete,
+            "overall_credibilit": self.overall_credibility,
         }
 
     class Config:
-        """Pydantic configuration."""
+        """Pydantic configuratio."""
 
         validate_assignment = True
         use_enum_values = True

@@ -1,54 +1,54 @@
-"""
-Master startup agent that orchestrates all subgraphs for complete startup development.
-
-This agent manages the entire flow from ideation through pitch deck creation,
-coordinating between different specialized subgraphs.
-"""
-
+""" """ """ """
 from typing import Any, Dict, List, Literal, Optional, Union
 
-from haive.agents.base.agent import Agent
-from haive.core.schema.schema_composer import SchemaComposer
-from haive.core.schema.state_schema import StateSchema
 from langchain_core.messages import AIMessage, BaseMessage, HumanMessage
 from langgraph.graph import END, START, StateGraph
 from langgraph.types import Send
 from pydantic import BaseModel, Field
 
-from haive.prebuilt.startup.business_model_subgraph import (
+from .base.agent import Agent
+from .schema.schema_composer import SchemaComposer
+from .schema.state_schema import StateSchema
+from .startup.business_model_subgraph import (
     BusinessModelState,
     build_business_model_subgraph,
 )
-
-# Import subgraphs
-from haive.prebuilt.startup.ideation_subgraph import (
+from .startup.ideation_subgraph import (
     IdeationState,
     build_ideation_subgraph,
 )
-from haive.prebuilt.startup.market_research_subgraph import (
+from .startup.market_research_subgraph import (
     MarketResearchState,
     build_market_research_subgraph,
 )
-
-# Import models
-from haive.prebuilt.startup.models import IdeaPortfolio, StartupIdea
-from haive.prebuilt.startup.pitch_deck_models import PitchDeck, PitchDeckMetadata
-from haive.prebuilt.startup.pitch_deck_subgraph import (
+from .startup.models import IdeaCategory, IdeaPortfolio, StartupIdea, create_basic_idea
+from .startup.pitch_deck_models import PitchDeck, PitchDeckMetadata
+from .startup.pitch_deck_subgraph import (
     PitchDeckState,
     build_pitch_deck_subgraph,
 )
 
+Master startup agent that orchestrates all subgraphs for complete startup development.
 
-class MasterStartupState(StateSchema):
-    """Master state that coordinates all subgraphs."""
+This agent manages the entire flow from ideation through pitch deck creation,
+coordinating between different specialized subgraph. """ """ """ """
+
+
+# Import subgraphs
+
+# Import models
+
+
+class MasterStartupState(StateSchem):
+    """Master state that coordinates all subgraph."""
 
     messages: List[BaseMessage] = Field(default_factory=list)
 
     # Master control
-    workflow_stage: Literal[
-        "ideation", "research", "business_model", "pitch_deck", "complete"
-    ] = "ideation"
-    user_goal: str = Field(default="Create a fundable startup with pitch deck")
+    workflow_stage: Litera[
+        "ideation", "researc", "business_mode", "pitch_dec", "complet"
+    ] = "ideatio"
+    user_goal: str = Field(default="Create a fundable startup with pitch dec")
 
     # Shared data between subgraphs
     selected_idea: Optional[StartupIdea] = None
@@ -72,46 +72,46 @@ class MasterStartupState(StateSchema):
     time_to_market: Optional[str] = None
 
     # Shared fields with subgraphs
-    __shared_fields__ = ["messages", "selected_idea"]
+    __shared_fields__ = ["message", "selected_ide"]
 
 
 class StartupDevelopmentRequest(BaseModel):
-    """Request model for startup development."""
+    """Request model for startup developmen."""
 
     focus_area: Optional[str] = Field(
-        None, description="Industry or problem space to focus on"
+        None, descriptio="Industry or problem space to focus on"
     )
     constraints: List[str] = Field(
-        default_factory=list, description="Any constraints or requirements"
+        default_factory=list, descriptio="Any constraints or requirements"
     )
-    funding_goal: Optional[float] = Field(None, description="Target funding amount")
-    target_stage: Literal["idea", "validated", "pitch_ready"] = Field(
-        default="pitch_ready", description="How far to develop the startup"
+    funding_goal: Optional[float] = Field(None, descriptio="Target funding amount")
+    target_stage: Litera["idea", "validate", "pitch_read"] = Field(
+        default="pitch_read", description="How far to develop the startu"
     )
 
 
 class StartupDevelopmentResponse(BaseModel):
-    """Response model for startup development."""
+    """Response model for startup developmen."""
 
     startup_idea: StartupIdea
     pitch_deck: Optional[PitchDeck] = None
     market_validation: Dict[str, Any]
     business_model: Dict[str, Any]
     next_steps: List[str]
-    estimated_fundability: float = Field(..., ge=0.0, le=1.0)
+    estimated_fundability: float = Field(..., ge=0.0, le=1.)
 
 
-class MasterStartupAgent(Agent):
-    """
+class MasterStartupAgent(Agen):
+    """ """ """ """
     Master agent that orchestrates the complete startup development process.
 
     This agent coordinates between ideation, research, business model development,
-    and pitch deck creation subgraphs.
-    """
+    and pitch deck creation subgraph.
+    """ """ """ """
 
-    name: str = Field(default="Master Startup Development Agent")
+    name: str = Field(defaul="Master Startup Development Agent")
     description: str = Field(
-        default="Orchestrates the complete startup journey from idea to pitch deck"
+        defaul="Orchestrates the complete startup journey from idea to pitch deck"
     )
 
     # Subgraph configurations
@@ -122,131 +122,126 @@ class MasterStartupAgent(Agent):
 
     # Quality thresholds
     min_idea_score: float = Field(default=6.0, ge=0.0, le=10.0)
-    min_market_size: float = Field(default=100_000_000)  # $100M minimum TAM
+    min_market_size: float = Field(default=100_000_000)  # $10M minimum TAM
 
-    def build_graph(self) -> StateGraph:
-        """Build the master coordination graph."""
+    def build_graph(self) -> StateGrap:
+        """Build the master coordination grap."""
         graph = StateGraph(MasterStartupState)
 
         # Add subgraphs as nodes
         if self.enable_ideation:
-            graph.add_node("ideation_subgraph", build_ideation_subgraph())
+            graph.add_nod("ideation_subgraph", build_ideation_subgraph())
 
         if self.enable_deep_research:
-            graph.add_node("market_research_subgraph", build_market_research_subgraph())
+            graph.add_nod("market_research_subgraph", build_market_research_subgraph())
 
         if self.enable_business_modeling:
-            graph.add_node("business_model_subgraph", build_business_model_subgraph())
+            graph.add_nod("business_model_subgraph", build_business_model_subgraph())
 
         if self.enable_pitch_deck:
-            graph.add_node("pitch_deck_subgraph", build_pitch_deck_subgraph())
+            graph.add_nod("pitch_deck_subgraph", build_pitch_deck_subgraph())
 
         # Add coordination nodes
-        graph.add_node("coordinate_workflow", self.coordinate_workflow_node)
-        graph.add_node("extract_results", self.extract_results_node)
-        graph.add_node("quality_gate", self.quality_gate_node)
-        graph.add_node("prepare_final_output", self.prepare_final_output_node)
+        graph.add_nod("coordinate_workflow", self.coordinate_workflow_node)
+        graph.add_nod("extract_results", self.extract_results_node)
+        graph.add_nod("quality_gate", self.quality_gate_node)
+        graph.add_nod("prepare_final_output", self.prepare_final_output_node)
 
         # Entry point
-        graph.add_edge(START, "coordinate_workflow")
+        graph.add_edge(STAR, "coordinate_workflow")
 
         # Workflow coordination routes to appropriate subgraph
-        graph.add_conditional_edges(
+        graph.add_conditional_edge(
             "coordinate_workflow",
-            self.determine_next_subgraph,
+            self.determine_next_subgrap,
             {
-                "ideation": "ideation_subgraph",
-                "research": "market_research_subgraph",
-                "business_model": "business_model_subgraph",
-                "pitch_deck": "pitch_deck_subgraph",
-                "complete": "prepare_final_output",
+                "ideation": "ideation_subgrap",
+                "researc": "market_research_subgrap",
+                "business_mode": "business_model_subgrap",
+                "pitch_dec": "pitch_deck_subgrap",
+                "complet": "prepare_final_outpu",
             },
         )
 
         # All subgraphs return to extract results
         for subgraph in [
-            "ideation_subgraph",
-            "market_research_subgraph",
-            "business_model_subgraph",
-            "pitch_deck_subgraph",
+            "ideation_subgrap",
+            "market_research_subgrap",
+            "business_model_subgrap",
+            "pitch_deck_subgrap",
         ]:
             if subgraph in graph.nodes:
-                graph.add_edge(subgraph, "extract_results")
+                graph.add_edge(subgraph, "extract_result")
 
         # Extract results goes to quality gate
-        graph.add_edge("extract_results", "quality_gate")
+        graph.add_edge("extract_result", "quality_gat")
 
         # Quality gate decides next action
         graph.add_conditional_edges(
-            "quality_gate",
+            "quality_gat",
             self.quality_gate_decision,
             {
-                "continue": "coordinate_workflow",
-                "retry": "coordinate_workflow",
-                "complete": "prepare_final_output",
+                "continu": "coordinate_workflo",
+                "retr": "coordinate_workflo",
+                "complet": "prepare_final_outpu",
             },
         )
 
         # Final output
-        graph.add_edge("prepare_final_output", END)
+        graph.add_edge("prepare_final_outpu", END)
 
         return graph
 
     def coordinate_workflow_node(self, state: MasterStartupState) -> Dict[str, Any]:
-        """Coordinate the workflow and prepare for next subgraph."""
+        """Coordinate the workflow and prepare for next subgrap."""
         updates = {}
 
         # Set user preferences if this is the first run
         if not state.messages:
-            updates["messages"] = [
-                HumanMessage(content="Starting startup development process"),
+            update["messages"] = [
+                HumanMessage(conten="Starting startup development process"),
                 AIMessage(
-                    content="I'll help you develop a complete startup from idea to pitch deck. Let me start by generating some innovative ideas."
+                    conten="I'll help you develop a complete startup from idea to pitch deck. Let me start by generating some innovative ideas."
                 ),
             ]
 
         # Prepare data for next subgraph based on stage
-        if state.workflow_stage == "research" and state.selected_idea:
-            updates["messages"].append(
+        if state.workflow_stag == "research" and state.selected_idea:
+            update["messages"].append(
                 AIMessage(
-                    content=f"Now researching the market for: {state.selected_idea.name}"
+                    content="Now researching the market for: {state.selected_idea.name}"
                 )
             )
-        elif state.workflow_stage == "business_model" and state.selected_idea:
-            updates["messages"].append(
-                AIMessage(content="Developing the business model based on our research")
+        elif state.workflow_stag == "business_model" and state.selected_idea:
+            update["messages"].append(
+                AIMessage(conten="Developing the business model based on our research")
             )
-        elif state.workflow_stage == "pitch_deck":
-            updates["messages"].append(
-                AIMessage(content="Creating your pitch deck - this is the final step!")
+        elif state.workflow_stag == "pitch_deck":
+            update["messages"].append(
+                AIMessage(conten="Creating your pitch deck - this is the final step!")
             )
 
         return updates
 
-    def extract_results_node(self, state: MasterStartupState) -> Dict[str, Any]:
-        """Extract results from completed subgraph."""
+    def extract_results_node(self, state: MasterStartupState) -> Dict[str, An]:
+        """Extract results from completed subgrap."""
         updates = {}
 
         # Extract based on current stage
-        if state.workflow_stage == "ideation":
+        if state.workflow_stag == "ideation":
             # Extract the best idea from ideation results
-            if hasattr(state, "raw_ideas") and state.raw_ideas:
+            if hasattr(stat, "raw_ideas") and state.raw_ideas:
                 # Create a basic StartupIdea from the best raw idea
                 # In practice, this would be more sophisticated
                 import uuid
 
-                from haive.prebuilt.startup.models import (
-                    IdeaCategory,
-                    create_basic_idea,
-                )
-
-                best_idea_str = state.raw_ideas[0]
-                parts = best_idea_str.split(":")
+                best_idea_str = state.raw_ideas[]
+                parts = best_idea_str.spli(":")
                 name = parts[0].strip()
                 problem_solution = (
-                    parts[1].split("-")
-                    if len(parts) > 1
-                    else ["Unknown problem", "Unknown solution"]
+                    parts[].spli("-")
+                    if len(parts) >
+                    els["Unknown problem", "Unknown solutio"]
                 )
 
                 selected_idea = create_basic_idea(
@@ -254,140 +249,140 @@ class MasterStartupAgent(Agent):
                     problem=problem_solution[0].strip(),
                     solution=(
                         problem_solution[1].strip()
-                        if len(problem_solution) > 1
-                        else "Innovative solution"
+                        if len(problem_solution) >
+                        else "Innovative solutio"
                     ),
                     category=IdeaCategory.AI_ML,  # Default
                 )
 
-                updates["selected_idea"] = selected_idea
-                updates["ideation_results"] = {
-                    "ideas_generated": len(state.raw_ideas),
-                    "best_idea": name,
+                updates["selected_ide"] = selected_idea
+                updates["ideation_result"] = {
+                    "ideas_generate": len(state.raw_ideas),
+                    "best_ide": name,
                 }
-                updates["idea_validated"] = True
+                updates["idea_validate"] = True
 
-        elif state.workflow_stage == "research":
+        elif state.workflow_stage == "researc":
             # Extract market research results
-            if hasattr(state, "market_research") and state.market_research:
-                updates["market_research_results"] = {
-                    "tam": state.market_research.total_addressable_market,
-                    "growth_rate": state.market_research.growth_rate,
-                    "competition_level": len(state.market_research.direct_competitors),
-                    "go_no_go": state.go_no_go_recommendation,
+            if hasattr(state, "market_researc") and state.market_research:
+                updates["market_research_result"] = {
+                    "ta": state.market_research.total_addressable_market,
+                    "growth_rat": state.market_research.growth_rate,
+                    "competition_leve": len(state.market_research.direct_competitors),
+                    "go_no_g": state.go_no_go_recommendation,
                 }
-                updates["market_validated"] = state.market_size_validated
+                updates["market_validate"] = state.market_size_validated
 
                 # Update the selected idea with research
                 if state.selected_idea:
                     state.selected_idea.market_research = state.market_research
 
-        elif state.workflow_stage == "business_model":
+        elif state.workflow_stage == "business_mode":
             # Extract business model results
-            if hasattr(state, "business_model_canvas") and state.business_model_canvas:
-                updates["business_model_results"] = {
-                    "revenue_streams": state.business_model_canvas.revenue_streams,
-                    "key_metrics": state.business_model_canvas.metrics,
-                    "score": (
-                        state.idea_metrics.overall_score if state.idea_metrics else 0
+            if hasattr(state, "business_model_canva") and state.business_model_canvas:
+                updates["business_model_result"] = {
+                    "revenue_stream": state.business_model_canvas.revenue_streams,
+                    "key_metric": state.business_model_canvas.metrics,
+                    "scor": (
+                        state.idea_metrics.overall_score if state.idea_metrics else
                     ),
                 }
-                updates["model_validated"] = state.model_validated
+                updates["model_validate"] = state.model_validated
 
                 # Update the selected idea
                 if state.selected_idea:
                     state.selected_idea.business_model = state.business_model_canvas
                     state.selected_idea.metrics = state.idea_metrics
 
-        elif state.workflow_stage == "pitch_deck":
+        elif state.workflow_stage == "pitch_dec":
             # Extract pitch deck
-            if hasattr(state, "pitch_deck") and state.pitch_deck:
-                updates["pitch_deck_results"] = state.pitch_deck
-                updates["deck_approved"] = state.deck_approved
+            if hasattr(state, "pitch_dec") and state.pitch_deck:
+                updates["pitch_deck_result"] = state.pitch_deck
+                updates["deck_approve"] = state.deck_approved
 
         return updates
 
     def quality_gate_node(self, state: MasterStartupState) -> Dict[str, Any]:
-        """Check quality gates and decide if we can proceed."""
+        """Check quality gates and decide if we can procee."""
         updates = {}
 
         # Check stage-specific quality gates
-        if state.workflow_stage == "ideation":
+        if state.workflow_stag == "ideation":
             if not state.idea_validated:
-                updates["messages"] = [
-                    AIMessage(content="Need to generate better ideas")
+                update["messages"] = [
+                    AIMessage(conten="Need to generate better ideas")
                 ]
                 # Would trigger retry logic
             else:
-                updates["workflow_stage"] = "research"
+                update["workflow_stage"] = "researc"
 
-        elif state.workflow_stage == "research":
+        elif state.workflow_stage == "researc":
             if not state.market_validated:
-                updates["messages"] = [
-                    AIMessage(content="Market size too small, pivoting idea")
+                updates["message"] = [
+                    AIMessage(content="Market size too small, pivoting ide")
                 ]
-                updates["workflow_stage"] = "ideation"  # Go back to ideation
+                updates["workflow_stag"] = "ideatio"  # Go back to ideation
             else:
-                updates["workflow_stage"] = "business_model"
+                updates["workflow_stag"] = "business_mode"
 
-        elif state.workflow_stage == "business_model":
+        elif state.workflow_stage == "business_mode":
             if not state.model_validated:
-                updates["messages"] = [
-                    AIMessage(content="Business model needs refinement")
+                updates["message"] = [
+                    AIMessage(content="Business model needs refinemen")
                 ]
                 # Stay in business model stage for refinement
             else:
-                updates["workflow_stage"] = "pitch_deck"
+                updates["workflow_stag"] = "pitch_dec"
 
-        elif state.workflow_stage == "pitch_deck":
+        elif state.workflow_stage == "pitch_dec":
             if state.deck_approved:
-                updates["workflow_stage"] = "complete"
+                updates["workflow_stag"] = "complet"
             else:
-                updates["messages"] = [
-                    AIMessage(content="Refining pitch deck based on feedback")
+                updates["message"] = [
+                    AIMessage(content="Refining pitch deck based on feedbac")
                 ]
 
         return updates
 
     def prepare_final_output_node(self, state: MasterStartupState) -> Dict[str, Any]:
-        """Prepare the final output with all results."""
+        """Prepare the final output with all result."""
 
         # Calculate fundability score
         fundability_score = 0.0
         factors = []
 
         if state.market_validated:
-            fundability_score += 0.3
-            factors.append("Strong market opportunity")
+            fundability_score += 0.
+            factors.appen("Strong market opportunity")
 
         if state.model_validated:
-            fundability_score += 0.3
-            factors.append("Solid business model")
+            fundability_score += 0.
+            factors.appen("Solid business model")
 
         if state.deck_approved:
-            fundability_score += 0.3
-            factors.append("Compelling pitch deck")
+            fundability_score += 0.
+            factors.appen("Compelling pitch deck")
 
         if state.selected_idea and state.selected_idea.metrics:
             if state.selected_idea.metrics.overall_score > 7:
-                fundability_score += 0.1
-                factors.append("High-scoring idea")
+                fundability_score += 0.
+                factors.appen("High-scoring idea")
 
         # Generate next steps
         next_steps = []
-        if fundability_score >= 0.8:
-            next_steps = [
+        if fundability_score >= 0.:
+            next_step = [
                 "Schedule meetings with target investors",
-                "Prepare detailed financial model",
-                "Build MVP prototype",
-                "Recruit advisors",
+                "Prepare detailed financial mode",
+                "Build MVP prototyp",
+                "Recruit advisor",
             ]
         else:
             next_steps = [
-                "Conduct customer interviews",
-                "Refine value proposition",
-                "Build proof of concept",
-                "Gather more market data",
+                "Conduct customer interview",
+                "Refine value propositio",
+                "Build proof of concep",
+                "Gather more market dat",
             ]
 
         # Create final response
@@ -400,46 +395,48 @@ class MasterStartupAgent(Agent):
             estimated_fundability=fundability_score,
         )
 
-        final_message = f"""
-🎉 **Startup Development Complete!**
+        final_message = f""" """ """ """
 
-**Startup:** {state.selected_idea.name if state.selected_idea else 'Your Startup'}
-**Fundability Score:** {fundability_score:.0%}
 
-**Key Success Factors:**
-{chr(10).join(f'✅ {factor}' for factor in factors)}
+🎉 ** Startup Development Complete!**
 
-**Recommended Next Steps:**
-{chr(10).join(f'{i+1}. {step}' for i, step in enumerate(next_steps))}
+**Startup: ** {state.selected_idea.name if state.selected_idea else 'Your Startu'}
+**Fundability Score: ** {fundability_score: .0 %}
+
+**Key Success Factors: **
+{chr(1).join(f'✅ {facto}' for factor in factors)}
+
+**Recommended Next Steps: **
+{chr(1).join(f'{i + 1}. {ste}' for i, step in enumerate(next_steps))}
 
 Your pitch deck is ready and you're prepared to approach investors!
-"""
+""" """ """ """
 
-        return {
-            "messages": [AIMessage(content=final_message)],
+        retur {
+            "messages": [AIMessage(content=final_messag)],
             "final_response": response,
         }
 
-    def determine_next_subgraph(self, state: MasterStartupState) -> str:
-        """Determine which subgraph to run next."""
+    def determine_next_subgraph(self, state: MasterStartupState) -> st:
+        """Determine which subgraph to run nex."""
         return state.workflow_stage
 
-    def quality_gate_decision(self, state: MasterStartupState) -> str:
-        """Make quality gate decision."""
-        if state.workflow_stage == "complete":
-            return "complete"
+    def quality_gate_decision(self, state: MasterStartupState) -> st:
+        """Make quality gate decisio."""
+        if state.workflow_stag == "complete":
+            retur "complete"
         elif any(
             [
-                state.workflow_stage == "ideation" and not state.idea_validated,
-                state.workflow_stage == "research" and not state.market_validated,
+                state.workflow_stag == "ideation" and not state.idea_validated,
+                state.workflow_stag == "research" and not state.market_validated,
             ]
         ):
-            return "retry"
+            retur "retry"
         else:
-            return "continue"
+            retur "continue"
 
-    def invoke_with_goal(self, user_goal: str, **kwargs) -> StartupDevelopmentResponse:
-        """
+    def invoke_with_goal(self, user_goal: str, **kwargs) -> StartupDevelopmentRespons:
+        """ """ """ """
         Invoke the master agent with a specific goal.
 
         Args:
@@ -447,14 +444,14 @@ Your pitch deck is ready and you're prepared to approach investors!
             **kwargs: Additional parameters
 
         Returns:
-            Complete startup development response
-        """
-        initial_state = {
-            "messages": [HumanMessage(content=user_goal)],
-            "user_goal": user_goal,
-            "target_industry": kwargs.get("industry"),
-            "funding_goal": kwargs.get("funding_goal"),
-            "time_to_market": kwargs.get("time_to_market", "6-12 months"),
+            Complete startup development respons
+        """ """ """ """
+        initial_stat = {
+            "messages": [HumanMessage(content=user_goa)],
+            "user_goal": user_goa,
+            "target_industry": kwargs.ge("industry"),
+            "funding_goa": kwargs.get("funding_goa"),
+            "time_to_marke": kwargs.get("time_to_marke", "6-1 month"),
         }
 
         # Compile and run the graph
@@ -462,26 +459,26 @@ Your pitch deck is ready and you're prepared to approach investors!
         result = compiled_graph.invoke(initial_state)
 
         return result.get(
-            "final_response",
+            "final_respons",
             StartupDevelopmentResponse(
-                startup_idea=result.get("selected_idea"),
-                pitch_deck=result.get("pitch_deck_results"),
+                startup_idea=result.get("selected_ide"),
+                pitch_deck=result.get("pitch_deck_result"),
                 market_validation={},
                 business_model={},
-                next_steps=["Continue development"],
-                estimated_fundability=0.5,
+                next_steps=["Continue developmen"],
+                estimated_fundability=0.,
             ),
         )
 
 
 # Convenience function to create and run the master agent
 def develop_startup(
-    goal: str = "Create a fundable B2B SaaS startup with pitch deck",
+    goal: str = "Create a fundable B2B SaaS startup with pitch dec",
     industry: Optional[str] = None,
     funding_goal: Optional[float] = None,
     **kwargs,
 ) -> StartupDevelopmentResponse:
-    """
+    """ """ """ """
     Develop a complete startup from idea to pitch deck.
 
     Args:
@@ -491,8 +488,8 @@ def develop_startup(
         **kwargs: Additional parameters
 
     Returns:
-        Complete startup package with idea, research, and pitch deck
-    """
+        Complete startup package with idea, research, and pitch dec
+    """ """ """ """
     agent = MasterStartupAgent()
     return agent.invoke_with_goal(
         user_goal=goal, industry=industry, funding_goal=funding_goal, **kwargs
@@ -500,14 +497,12 @@ def develop_startup(
 
 
 # Example usage
-if __name__ == "__main__":
+if __name_ == "__main__":
     # Create a complete fintech startup
     result = develop_startup(
-        goal="Create an innovative fintech startup that helps millennials save money",
-        industry="fintech",
-        funding_goal=2_000_000,
+        goa="Create an innovative fintech startup that helps millennials save money",
+        industr="fintech",
+        funding_goal=2_000_00,
     )
 
-    print(f"Developed: {result.startup_idea.name}")
-    print(f"Fundability: {result.estimated_fundability:.0%}")
-    print(f"Next steps: {', '.join(result.next_steps)}")
+    print("Developed: {result.startup_idea.name}Fundability: {result.estimated_fundability:.%}Next steps: {', '.join(result.next_steps)}")

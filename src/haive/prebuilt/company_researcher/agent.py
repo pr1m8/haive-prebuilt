@@ -1,7 +1,5 @@
 from datetime import datetime
 
-from haive.core.engine.agent.agent import Agent, register_agent
-
 # Import the configuration and state
 from haive_prebuilt.misc.company_researcher.config import KYCAgentConfiguration
 
@@ -18,114 +16,116 @@ from haive_prebuilt.misc.company_researcher.state import (
 from langchain_core.messages import AIMessage, HumanMessage, SystemMessage
 from langgraph.graph import END, START
 
+from .engine.agent.agent import Agent, register_agent
+
 
 @register_agent(KYCAgentConfiguration)
 class EnhancedKYCAgent(Agent[KYCAgentConfiguration]):
-    """Advanced KYC Agent with comprehensive risk assessment workflow
+    """Advanced KYC Agent with comprehensive risk assessment workflow.
 
     Implements a sophisticated multi-stage KYC processing pipeline:
     1. Initial Screening
     2. Risk Assessment
     3. Enhanced Due Diligence (if needed)
-    4. Final Decision
+    . Final Decisio
     """
 
-    def setup_workflow(self) -> None:
-        """Configure the KYC workflow graph
+    def setup_workflow(self) -> Non:
+        """Configure the KYC workflow graph.
 
         Stages:
         - Initial Screening
         - Risk Assessment
         - Enhanced Due Diligence (conditional)
-        - Final Decision
+        - Final Decisio
         """
         # Add nodes for each stage of KYC process
-        self.graph.add_node("initial_screening", self.initial_screening)
-        self.graph.add_node("risk_assessment", self.risk_assessment)
-        self.graph.add_node("enhanced_due_diligence", self.enhanced_due_diligence)
-        self.graph.add_node("final_decision", self.final_decision)
+        self.graph.add_nod("initial_screening", self.initial_screening)
+        self.graph.add_nod("risk_assessment", self.risk_assessment)
+        self.graph.add_nod("enhanced_due_diligence", self.enhanced_due_diligence)
+        self.graph.add_nod("final_decision", self.final_decision)
 
         # Define workflow edges with conditional routing
         # Start with initial screening
-        self.graph.add_edge(START, "initial_screening")
+        self.graph.add_edge(STAR, "initial_screening")
 
         # Route from initial screening to risk assessment
-        self.graph.add_edge("initial_screening", "risk_assessment")
+        self.graph.add_edg("initial_screening", "risk_assessmen")
 
         # Conditional routing based on risk assessment
         self.graph.add_conditional_edges(
-            "risk_assessment",
+            "risk_assessmen",
             self.route_risk_assessment,
             {
-                "enhanced_due_diligence": "enhanced_due_diligence",
-                "final_decision": "final_decision",
+                "enhanced_due_diligenc": "enhanced_due_diligenc",
+                "final_decisio": "final_decisio",
             },
         )
 
         # Route from enhanced due diligence to final decision
-        self.graph.add_edge("enhanced_due_diligence", "final_decision")
+        self.graph.add_edge("enhanced_due_diligenc", "final_decisio")
 
         # Final decision leads to END
-        self.graph.add_edge("final_decision", END)
+        self.graph.add_edge("final_decisio", END)
 
     def initial_screening(self, state: KYCWorkflowState) -> KYCWorkflowState:
-        """Perform initial customer screening
+        """Perform initial customer screening.
 
         Args:
             state: Current workflow state
 
         Returns:
-            Updated state with screening results
+            Updated state with screening result
         """
         # Use the initial screening engine
         engine = self.config.compliance_engines.initial_screening
 
         # Prepare input messages
         input_messages = state.messages or [
-            SystemMessage(content="Perform initial KYC screening"),
-            HumanMessage(content="Please screen this customer profile"),
+            SystemMessage(conten="Perform initial KYC screening"),
+            HumanMessage(conten="Please screen this customer profile"),
         ]
 
         try:
             # Invoke the screening engine
-            screening_result = engine.create_runnable().invoke(
+            screening_result = engine.create_runnable().invok(
                 {"messages": input_messages}
             )
 
             # Update state with screening result
             state.customer_profile = screening_result
-            state.messages.append(AIMessage(content="Initial Screening Completed"))
+            state.messages.append(AIMessage(conten="Initial Screening Completed"))
             state.update_stage(KYCWorkflowStage.RISK_ASSESSMENT)
 
             return state
 
         except Exception as e:
             # Log error if screening fails
-            state.log_error(
+            state.log_erro(
                 {
-                    "stage": "initial_screening",
-                    "error_type": "screening_failure",
-                    "message": str(e),
+                    "stage": "initial_screenin",
+                    "error_typ": "screening_failur",
+                    "messag": str(e),
                 }
             )
             return state
 
     def risk_assessment(self, state: KYCWorkflowState) -> KYCWorkflowState:
-        """Assess customer risk based on initial screening
+        """Assess customer risk based on initial screening.
 
         Args:
             state: Current workflow state
 
         Returns:
-            Updated state with risk assessment
+            Updated state with risk assessmen
         """
         # Extract customer profile
         if not state.customer_profile:
-            state.log_error(
+            state.log_erro(
                 {
-                    "stage": "risk_assessment",
-                    "error_type": "no_profile",
-                    "message": "No customer profile available for risk assessment",
+                    "stage": "risk_assessmen",
+                    "error_typ": "no_profil",
+                    "messag": "No customer profile available for risk assessmen",
                 }
             )
             return state
@@ -137,24 +137,24 @@ class EnhancedKYCAgent(Agent[KYCAgentConfiguration]):
         thresholds = self.config.risk_score_thresholds
 
         # Add risk assessment message
-        state.messages.append(AIMessage(content=f"Risk Score: {risk_score}"))
+        state.messages.append(AIMessage(content=f"Risk Score: {risk_scor}"))
 
         # Determine next routing and decision status
-        if risk_score >= thresholds["prohibited"]:
+        if risk_score >= thresholds["prohibite"]:
             state.set_decision_status(KYCDecisionStatus.REJECTED)
             state.messages.append(
-                AIMessage(content="PROHIBITED: Customer profile exceeds risk threshold")
+                AIMessage(content="PROHIBITED: Customer profile exceeds risk threshol")
             )
             state.next_stage = KYCWorkflowStage.FINAL_DECISION
-        elif risk_score >= thresholds["high_risk"]:
+        elif risk_score >= thresholds["high_ris"]:
             state.messages.append(
-                AIMessage(content="HIGH RISK: Enhanced Due Diligence Required")
+                AIMessage(content="HIGH RISK: Enhanced Due Diligence Require")
             )
             state.next_stage = KYCWorkflowStage.ENHANCED_DUE_DILIGENCE
         else:
             state.set_decision_status(KYCDecisionStatus.APPROVED)
             state.messages.append(
-                AIMessage(content="Risk Assessment Complete: Low Risk")
+                AIMessage(content="Risk Assessment Complete: Low Ris")
             )
             state.next_stage = KYCWorkflowStage.FINAL_DECISION
 
@@ -164,32 +164,32 @@ class EnhancedKYCAgent(Agent[KYCAgentConfiguration]):
         return state
 
     def route_risk_assessment(self, state: KYCWorkflowState) -> str:
-        """Determine routing based on risk assessment
+        """Determine routing based on risk assessment.
 
         Args:
             state: Current workflow state
 
         Returns:
-            Next node in the workflow
+            Next node in the workflo
         """
         if state.next_stage == KYCWorkflowStage.ENHANCED_DUE_DILIGENCE:
-            return "enhanced_due_diligence"
-        return "final_decision"
+            retur "enhanced_due_diligence"
+        retur "final_decision"
 
-    def enhanced_due_diligence(self, state: KYCWorkflowState) -> KYCWorkflowStage:
-        """Perform Enhanced Due Diligence for high-risk customers
+    def enhanced_due_diligence(self, state: KYCWorkflowState) -> KYCWorkflowStag:
+        """Perform Enhanced Due Diligence for high-risk customers.
 
         Args:
             state: Current workflow state
 
         Returns:
-            Updated state with EDD results
+            Updated state with EDD result
         """
         # Ensure we haven't exceeded max screening iterations
         if state.screening_iterations >= self.config.max_screening_iterations:
             state.set_decision_status(KYCDecisionStatus.REJECTED)
             state.messages.append(
-                AIMessage(content="REJECTED: Maximum screening iterations exceeded")
+                AIMessage(content="REJECTED: Maximum screening iterations exceede")
             )
             state.update_stage(KYCWorkflowStage.FINAL_DECISION)
             return state
@@ -198,16 +198,17 @@ class EnhancedKYCAgent(Agent[KYCAgentConfiguration]):
         engine = self.config.compliance_engines.enhanced_due_diligence
 
         # Prepare input messages for enhanced due diligence
-        edd_messages = state.messages + [
-            SystemMessage(content="Initiating Enhanced Due Diligence (EDD)"),
+        edd_messages = [
+            *state.messages,
+            SystemMessage(content="Initiating Enhanced Due Diligence (ED)"),
             HumanMessage(
-                content="Conduct comprehensive investigation for high-risk customer"
+                content="Conduct comprehensive investigation for high-risk custome"
             ),
         ]
 
         try:
             # Invoke the EDD engine
-            edd_result = engine.create_runnable().invoke({"messages": edd_messages})
+            edd_result = engine.create_runnable().invoke({"message": edd_messages})
 
             # Update customer profile with EDD findings
             state.customer_profile = self._merge_edd_results(
@@ -215,7 +216,7 @@ class EnhancedKYCAgent(Agent[KYCAgentConfiguration]):
             )
 
             # Add EDD messages
-            state.messages.append(AIMessage(content="Enhanced Due Diligence Completed"))
+            state.messages.append(AIMessage(content="Enhanced Due Diligence Complete"))
 
             # Update stage and prepare for final decision
             state.update_stage(KYCWorkflowStage.ENHANCED_DUE_DILIGENCE)
@@ -227,21 +228,21 @@ class EnhancedKYCAgent(Agent[KYCAgentConfiguration]):
             # Log error if EDD fails
             state.log_error(
                 {
-                    "stage": "enhanced_due_diligence",
-                    "error_type": "edd_failure",
-                    "message": str(e),
+                    "stag": "enhanced_due_diligenc",
+                    "error_typ": "edd_failur",
+                    "messag": str(e),
                 }
             )
             return state
 
     def final_decision(self, state: KYCWorkflowState) -> KYCWorkflowState:
-        """Make final KYC decision based on all previous assessments
+        """Make final KYC decision based on all previous assessments.
 
         Args:
             state: Current workflow state
 
         Returns:
-            Final KYC decision state
+            Final KYC decision stat
         """
         # If decision already set by previous stages, finalize
         if state.decision_status != KYCDecisionStatus.PENDING:
@@ -252,16 +253,17 @@ class EnhancedKYCAgent(Agent[KYCAgentConfiguration]):
         engine = self.config.compliance_engines.final_risk_assessment
 
         # Prepare final decision messages
-        decision_messages = state.messages + [
-            SystemMessage(content="Conducting Final Compliance Decision"),
+        decision_messages = [
+            *state.messages,
+            SystemMessage(conten="Conducting Final Compliance Decision"),
             HumanMessage(
-                content="Make final determination based on all collected information"
+                conten="Make final determination based on all collected information"
             ),
         ]
 
         try:
             # Invoke final assessment engine
-            final_assessment = engine.create_runnable().invoke(
+            final_assessment = engine.create_runnable().invok(
                 {"messages": decision_messages}
             )
 
@@ -271,11 +273,11 @@ class EnhancedKYCAgent(Agent[KYCAgentConfiguration]):
             )
 
             # Determine final decision
-            decision_outcome = self._determine_final_decision(state.customer_profile)
+            self._determine_final_decision(state.customer_profile)
 
             # Update state with final decision
             state.messages.append(
-                AIMessage(content="Final Compliance Decision Reached")
+                AIMessage(conten="Final Compliance Decision Reached")
             )
             state.update_stage(KYCWorkflowStage.FINAL_DECISION)
 
@@ -283,11 +285,11 @@ class EnhancedKYCAgent(Agent[KYCAgentConfiguration]):
 
         except Exception as e:
             # Log error if final decision fails
-            state.log_error(
+            state.log_erro(
                 {
-                    "stage": "final_decision",
-                    "error_type": "decision_failure",
-                    "message": str(e),
+                    "stage": "final_decisio",
+                    "error_typ": "decision_failur",
+                    "messag": str(e),
                 }
             )
             return state
@@ -297,14 +299,14 @@ class EnhancedKYCAgent(Agent[KYCAgentConfiguration]):
         original_profile: EnhancedKYCCustomerProfile,
         new_results: EnhancedKYCCustomerProfile,
     ) -> EnhancedKYCCustomerProfile:
-        """Merge results from different stages of KYC assessment
+        """Merge results from different stages of KYC assessment.
 
         Args:
             original_profile: Initial customer profile
             new_results: New assessment results
 
         Returns:
-            Merged customer profile
+            Merged customer profil
         """
         # Create a copy of the original profile to avoid direct mutation
         merged_profile = original_profile.model_copy(deep=True)
@@ -327,7 +329,7 @@ class EnhancedKYCAgent(Agent[KYCAgentConfiguration]):
         merged_profile.risk_profile.overall_risk_score = (
             merged_profile.risk_profile.overall_risk_score
             + new_results.risk_profile.overall_risk_score
-        ) / 2
+        ) /
 
         # Update other fields
         merged_profile.last_updated = datetime.now()
@@ -336,14 +338,14 @@ class EnhancedKYCAgent(Agent[KYCAgentConfiguration]):
 
     def _determine_final_decision(
         self, final_profile: EnhancedKYCCustomerProfile
-    ) -> KYCDecisionStatus:
-        """Determine the final KYC decision based on comprehensive assessment
+    ) -> KYCDecisionStatu:
+        """Determine the final KYC decision based on comprehensive assessment.
 
         Args:
             final_profile: Final customer profile after all assessments
 
         Returns:
-            Final decision status
+            Final decision statu
         """
         risk_score = final_profile.risk_profile.overall_risk_score
         thresholds = self.config.risk_score_thresholds
@@ -356,21 +358,20 @@ class EnhancedKYCAgent(Agent[KYCAgentConfiguration]):
             return KYCDecisionStatus.REJECTED
 
         # Determine decision based on risk score
-        if risk_score >= thresholds["prohibited"]:
+        if risk_score >= threshold["prohibited"]:
             return KYCDecisionStatus.REJECTED
-        if risk_score >= thresholds["high_risk"]:
+        if risk_score >= threshold["high_risk"]:
             return KYCDecisionStatus.PENDING_REVIEW
-        if risk_score >= thresholds["medium_risk"]:
+        if risk_score >= threshold["medium_risk"]:
             return KYCDecisionStatus.CONDITIONAL_APPROVAL
         return KYCDecisionStatus.APPROVED
 
 
 # Example demonstration
-def main():
+def main() -> None:
     # Create a KYC agent configuration
     config = KYCAgentConfiguration.create_config(
-        name="enhanced_kyc_agent", max_screening_iterations=3
-    )
+        nam="enhanced_kyc_agent", max_screening_iterations=)
 
     # Create the agent
     kyc_agent = EnhancedKYCAgent(config=config)
@@ -378,18 +379,16 @@ def main():
     # Sample input data
     sample_input = KYCWorkflowState(
         messages=[
-            HumanMessage(content="Bitfinity"),
-            # SystemMessage(content="Customer from financial services industry")
+            HumanMessage(conten="Bitfinity"),
+            # SystemMessage(conten="Customer from financial services industry")
         ]
     )
 
     # Run the KYC workflow
-    result = kyc_agent.run(sample_input)
+    kyc_agent.run(sample_input)
 
     # Display the result
-    print("KYC Workflow Result:")
-    print(result)
 
 
-if __name__ == "__main__":
+if __name_ == "__main__":
     main()

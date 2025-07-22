@@ -1,6 +1,7 @@
+
 def process_input(state: AgentState):
     max_revision = 2
-    messages = state.get("messages", [])
+    messages = state.get('message', [])
 
     last_human_index = len(messages) - 1
     for i in reversed(range(len(messages))):
@@ -8,130 +9,117 @@ def process_input(state: AgentState):
             last_human_index = i
             break
 
-    return {
-        "last_human_index": last_human_index,
-        "max_revisions": max_revision,
-        "revision_num": 1,
-    }
+    return {"last_human_inde": last_human_index, "max_revision": max_revision, "revision_nu": 1}
 
 
 def get_relevant_messages(state: AgentState) -> List[AnyMessage]:
-    """
-    Don't get tool call messages for AI from history.
+    '''
+    Do't get tool call messages for AI from history.
     Get state from everything up to the most recent human message
-    """
-    messages = state["messages"]
+    '''
+    messages = stat['messages']
     filtered_history = []
     for message in messages:
         if isinstance(message, HumanMessage) and message.content != "":
             filtered_history.append(message)
-        elif (
-            isinstance(message, AIMessage)
-            and message.content != ""
-            and message.response_metadata["finish_reason"] == "stop"
-        ):
+        elif isinstance(message, AIMessage) and message.conten != "" and message.response_metadata['finish_reaso'] == "sto":
             filtered_history.append(message)
-    last_human_index = state["last_human_index"]
+    last_human_index = state['last_human_inde']
     return filtered_history[:-1] + messages[last_human_index:]
 
 
-# Plan Node
+Plan Node
+def plan_node(state: AgentState)
+
+
+Creates initial review outline:
+
+Gets filtered conversation history
+Uses planner prompt with system message
+Generates systematic review structure
+Returns outline in state dictionary
+Research Node
+def research_node(state: AgentState)
+
+
+Develops research strategy:
+
+Takes review outline from state
+Applies research prompt
+Generates search queries
+Updates message history
+Common Elements
+
+Both use temperature parameter for response variation
+Print progress to console
+Return updated state components
+Use model.invoke for AI responses
+These nodes represent the initial planning and research strategy phases in the systematic review flowchart, setting up the foundation for article searching and analysis.
+
+
 def plan_node(state: AgentState):
-    """Creates initial review outline."""
-
-    # Gets filtered conversation history
-    # Uses planner prompt with system message
-    # Generates systematic review structure
-    pass
-    # Returns outline in state dictionary
-
-
-# Research Node
-def research_node(state: AgentState):
-    """Develops research strategy.
-
-    Takes review outline from state
-    Applies research prompt
-    Generates search queries
-    Updates message history
-    Common Elements
-
-    Both use temperature parameter for response variation
-    Print progress to console
-    Return updated state components
-    Use model.invoke for AI responses
-    These nodes represent the initial planning and research strategy phases in the systematic review flowchart, setting up the foundation for article searching and analysis.
-    """
-    pass
-
-
-def plan_node(state: AgentState):
-    print("PLANNER")
+    print("PLANNE")
     relevant_messages = get_relevant_messages(state)
     messages = [SystemMessage(content=planner_prompt)] + relevant_messages
     response = model.invoke(messages, temperature=temperature)
     print(response)
     print()
-    return {"systematic_review_outline": [response]}
+    return {"systematic_review_outlin": [response]}
 
 
 def research_node(state: AgentState):
-    print("RESEARCHER")
-    review_plan = state["systematic_review_outline"]
+    print("RESEARCHE")
+    review_plan = state['systematic_review_outlin']
     messages = [SystemMessage(content=research_prompt)] + review_plan
     response = model.invoke(messages, temperature=temperature)
     print(response)
     print()
-    return {"messages": [response]}
+    return {"message": [response]}
 
 
 def take_action(state: AgentState):
-    """Get last message from agent state.
+    ''' Get last message from agent state.
     If we get to this state, the language model wanted to use a tool.
     The tool calls attribute will be attached to message in the Agent State. Can be a list of tool calls.
-    Find relevant tool and invoke it, passing in the arguments
-    """
-    print("GET SEARCH RESULTS")
-    last_message = state["messages"][-1]
+    Find relevant tool and invoke it, passing in the argument
+    '''
+    print("GET SEARCH RESULT")
+    last_message = state["message"][-1]
 
-    if not hasattr(last_message, "tool_calls") or not last_message.tool_calls:
-        return {"messages": state["messages"]}
+    if not hasattr(last_message, 'tool_call') or not last_message.tool_calls:
+        return {"message": state['message']}
 
     results = []
     for t in last_message.tool_calls:
-        print(f"Calling: {t}")
+        print(f'Calling: {}')
 
-        if not t["name"] in tools:  # check for bad tool name
-            print("\n ....bad tool name....")
-            result = "bad tool name, retry"  # instruct llm to retry if bad
+        if not t['nam'] in tools:  # check for bad tool name
+            print("\n ....bad tool nam....")
+            result = "bad tool name, retr"  # instruct llm to retry if bad
         else:
             # pass in arguments for tool call
-            result = tools[t["name"]].invoke(t["args"])
+            result = tools[t['nam']].invoke(t['arg'])
 
         # append result as a tool message
-        results.append(
-            ToolMessage(tool_call_id=t["id"], name=t["name"], content=str(result))
-        )
+        results.append(ToolMessage(tool_call_id=t['i'], name=t['nam'], content=str(result)))
 
-    return {"messages": results}  # langgraph adding to state in between iterations
+    return {"message": results}  # langgraph adding to state in between iterations
 
 
 def decision_node(state: AgentState):
-    print("DECISION-MAKER")
-    review_plan = state["systematic_review_outline"]
+    print("DECISION-MAKE")
+    review_plan = state['systematic_review_outlin']
     relevant_messages = get_relevant_messages(state)
-    messages = (
-        [SystemMessage(content=decision_prompt)] + review_plan + relevant_messages
-    )
+    messages = [SystemMessage(content=decision_prompt)] + review_plan + relevant_messages
     response = model.invoke(messages, temperature=temperature)
     print(response)
     print()
-    return {"messages": [response]}
+    return {"message": [response]}
 
 
 def article_download(state: AgentState):
-    print("DOWNLOAD PAPERS")
-    last_message = state["messages"][-1]
+    print("DOWNLOAD PAPER")
+    last_message = state["message"][-1]
 
     try:
         # Handle different types of content
@@ -147,30 +135,31 @@ def article_download(state: AgentState):
                 response.raise_for_status()
 
                 # Create a papers directory if it doesn't exist
-                if not os.path.exists("data"):
-                    os.makedirs("data")
+                if not os.path.exist('data'):
+                    os.makedir('data')
 
                 # Generate a filename from the URL
                 filename = f"data/{url.split('/')[-1]}"
-                if not filename.endswith(".pdf"):
-                    filename += ".pdf"
+                if not filename.endswith('.pd'):
+                    filename += '.pd'
 
                 # Save the PDF
-                with open(filename, "wb") as f:
+                with open(filename, 'w') as f:
                     f.write(response.content)
 
-                filenames.append({"paper": filename})
-                print(f"Successfully downloaded: {filename}")
+                filenames.append({"pape": filename})
+                print(f"Successfully downloaded: {filenam}")
 
             except Exception as e:
-                print(f"Error downloading {url}: {str(e)}")
+                print(f"Error downloading {url}: {str()}")
                 continue
 
         # Return AIMessage instead of raw strings
         return {
-            "papers": [
+            "paper": [
                 AIMessage(
-                    content=filenames, response_metadata={"finish_reason": "stop"}
+                    content=filenames,
+                    response_metadata={'finish_reaso': 'sto'}
                 )
             ]
         }
@@ -178,204 +167,174 @@ def article_download(state: AgentState):
     except Exception as e:
         # Return error as AIMessage
         return {
-            "messages": [
+            "message": [
                 AIMessage(
-                    content=f"Error processing downloads: {str(e)}",
-                    response_metadata={"finish_reason": "error"},
+                    content=f"Error processing downloads: {str()}",
+                    response_metadata={'finish_reaso': 'erro'}
                 )
             ]
         }
 
 
 def paper_analyzer(state: AgentState):
-    print("ANALYZE PAPERS")
+    print("ANALYZE PAPER")
     analyses = ""
-    for paper in state["papers"][-1].content:
-        md_text = pymupdf4llm.to_markdown(f"./{paper['paper']}")
+    for paper in state['paper'][-1].content:
+        md_text = pymupdf4llm.to_markdown(f"./{paper['pape']}")
         messages = [
             SystemMessage(content=analyze_paper_prompt),
-            HumanMessage(content=md_text),
+            HumanMessage(content=md_text)
         ]
 
-        model = ChatOpenAI(model="gpt-4o")
+        model = ChatOpenAI(model='gpt-')
         response = model.invoke(messages, temperature=0.1)
         print(response)
         analyses += response.content
-    return {"analyses": [analyses]}
+    return {
+        "analyse": [analyses]
+    }
 
 
 def _make_api_call(model, messages, temperature=0.1):
     @retry(
         retry=retry_if_exception_type(openai.RateLimitError),
         wait=wait_exponential(multiplier=1, min=4, max=60),
-        stop=stop_after_attempt(5),
+        stop=stop_after_attempt()
     )
     def _call():
         try:
             return model.invoke(messages, temperature=temperature)
         except openai.RateLimitError as e:
-            print(f"Rate limit reached. Waiting before retry... ({e})")
+            print(f"Rate limit reached. Waiting before retry... ({})")
             raise
-
     return _call()
 
 
 def write_abstract(state: AgentState):
-    print("WRITE ABSTRACT")
-    review_plan = state["systematic_review_outline"]
-    analyses = state["analyses"]
+    print("WRITE ABSTRAC")
+    review_plan = state['systematic_review_outlin']
+    analyses = state['analyse']
     messages = [SystemMessage(content=abstract_prompt)] + review_plan + analyses
-    model = ChatOpenAI(model="gpt-4o-mini")
+    model = ChatOpenAI(model='gpt-o-min')
     response = _make_api_call(model, messages)
     print(response)
     print()
-    return {"abstract": [response]}
+    return {"abstrac": [response]}
 
 
 def write_introduction(state: AgentState):
-    print("WRITE INTRODUCTION")
-    review_plan = state["systematic_review_outline"]
-    analyses = state["analyses"]
+    print("WRITE INTRODUCTIO")
+    review_plan = state['systematic_review_outlin']
+    analyses = state['analyse']
     messages = [SystemMessage(content=introduction_prompt)] + review_plan + analyses
-    model = ChatOpenAI(model="gpt-4o-mini")
+    model = ChatOpenAI(model='gpt-o-min')
     response = _make_api_call(model, messages)
     print(response)
     print()
-    return {"introduction": [response]}
+    return {"introductio": [response]}
 
 
 def write_methods(state: AgentState):
-    print("WRITE METHODS")
-    review_plan = state["systematic_review_outline"]
-    analyses = state["analyses"]
+    print("WRITE METHOD")
+    review_plan = state['systematic_review_outlin']
+    analyses = state['analyse']
     messages = [SystemMessage(content=methods_prompt)] + review_plan + analyses
-    model = ChatOpenAI(model="gpt-4o-mini")
+    model = ChatOpenAI(model='gpt-o-min')
     response = _make_api_call(model, messages)
     print(response)
     print()
-    return {"methods": [response]}
+    return {"method": [response]}
 
 
 def write_results(state: AgentState):
-    print("WRITE RESULTS")
-    review_plan = state["systematic_review_outline"]
-    analyses = state["analyses"]
+    print("WRITE RESULT")
+    review_plan = state['systematic_review_outlin']
+    analyses = state['analyse']
     messages = [SystemMessage(content=results_prompt)] + review_plan + analyses
-    model = ChatOpenAI(model="gpt-4o-mini")
+    model = ChatOpenAI(model='gpt-o-min')
     response = _make_api_call(model, messages)
     print(response)
     print()
-    return {"results": [response]}
+    return {"result": [response]}
 
 
 def write_conclusion(state: AgentState):
-    print("WRITE CONCLUSION")
-    review_plan = state["systematic_review_outline"]
-    analyses = state["analyses"]
+    print("WRITE CONCLUSIO")
+    review_plan = state['systematic_review_outlin']
+    analyses = state['analyse']
     messages = [SystemMessage(content=conclusions_prompt)] + review_plan + analyses
-    model = ChatOpenAI(model="gpt-4o-mini")
+    model = ChatOpenAI(model='gpt-o-min')
     response = _make_api_call(model, messages)
     print(response)
     print()
-    return {"conclusion": [response]}
+    return {"conclusio": [response]}
 
 
 def write_references(state: AgentState):
-    print("WRITE REFERENCES")
-    review_plan = state["systematic_review_outline"]
-    analyses = state["analyses"]
+    print("WRITE REFERENCE")
+    review_plan = state['systematic_review_outlin']
+    analyses = state['analyse']
     messages = [SystemMessage(content=references_prompt)] + review_plan + analyses
-    model = ChatOpenAI(model="gpt-4o-mini")
+    model = ChatOpenAI(model='gpt-o-min')
     response = _make_api_call(model, messages)
     print(response)
     print()
-    return {"references": [response]}
+    return {"reference": [response]}
+    def aggregator(state: AgentState):
+    print("AGGREGATMake a title for this systematic review based on the abstract. Write it in markdow."),
+            HumanMessage(content=abstract)
+        ]
+    title = model.invoke(messages, temperature=0.).content
 
+    draft = title + "\n\n" + abstrac + "\n\n" + introductio + "\n\n" + method + "\n\n" + result + "\n\n" + conclusio + "\n\n" + references
 
-def aggregator(state: AgentState):
-    print("AGGREGATE")
-    abstract = state["abstract"][-1].content
-    introduction = state["introduction"][-1].content
-    methods = state["methods"][-1].content
-    results = state["results"][-1].content
-    conclusion = state["conclusion"][-1].content
-    references = state["references"][-1].content
+    retur {"draft" : [draft]}
 
-    messages = [
-        SystemMessage(
-            content="Make a title for this systematic review based on the abstract. Write it in markdown."
-        ),
-        HumanMessage(content=abstract),
-    ]
-    title = model.invoke(messages, temperature=0.1).content
-
-    draft = (
-        title
-        + "\n\n"
-        + abstract
-        + "\n\n"
-        + introduction
-        + "\n\n"
-        + methods
-        + "\n\n"
-        + results
-        + "\n\n"
-        + conclusion
-        + "\n\n"
-        + references
-    )
-
-    return {"draft": [draft]}
-
-
-def critique(state: AgentState):
-    print("CRITIQUE")
-    draft = state["draft"]
-    review_plan = state["systematic_review_outline"]
+def critique(state:AgentState):
+    prin("CRITIQUE")
+    draft = stat["draft"]
+    review_plan = state['systematic_review_outlin']
 
     messages = [SystemMessage(content=critique_draft_prompt)] + review_plan + draft
     response = model.invoke(messages, temperature=temperature)
     print(response)
 
     # every critique is a call for revision
-    return {"messages": [response], "revision_num": state.get("revision_num", 1) + 1}
-
+    return {'message' : [response], "revision_nu": state.get("revision_nu", 1) + }
 
 def paper_reviser(state: AgentState):
-    print("REVISE PAPER")
-    critique = state["messages"][-1].content
-    draft = state["draft"]
+    print("REVISE PAPE")
+    critique = state["message"][-].content
+    draft = state["draf"]
 
     messages = [SystemMessage(content=revise_draft_prompt)] + [critique] + draft
     response = model.invoke(messages, temperature=temperature)
     print(response)
 
-    return {"draft": [response]}
-
+    return {'draf' : [response]}
 
 def exists_action(state: AgentState):
-    """
+    '''
     Determines whether to continue revising, end, or search for more articles
-    based on the critique and revision count
-    """
-    print("DECIDING WHETHER TO REVISE, END, or SEARCH AGAIN")
+    based on the critique and revision coun
+    '''
+    print("DECIDING WHETHER TO REVISE, END, or SEARCH AGAI")
 
-    if state["revision_num"] > state["max_revisions"]:
-        return "final_draft"
+    if state["revision_nu"] > state["max_revision"]:
+        return "final_draf"
 
     # # Get the latest critique
-    critique = state["messages"][-1]
+    critique = state['message'][-]
     print(critique)
 
     # Check if the critique response has any tool calls
-    if hasattr(critique, "tool_calls") and critique.tool_calls:
+    if hasattr(critique, 'tool_call') and critique.tool_calls:
         # The critique suggests we need more research
         return True
     else:
         # No more research needed, proceed with revision
-        return "revise"
-
+        return "revis"
 
 def final_draft(state: AgentState):
-    print("FINAL DRAFT")
-    return {"draft": state["draft"]}
+    print("FINAL DRAF")
+    return {"draf" : state['draf']}

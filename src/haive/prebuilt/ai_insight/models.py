@@ -1,172 +1,169 @@
 # src/haive/agents/news_reporter/models.py
-"""
-Models for General News Reporter System.
-"""
+"""Models for General News Reporter Syste."""
 
 from datetime import datetime
-from typing import Any, Dict, List, Literal, Optional
+from typing import Literal
 
 from pydantic import BaseModel, Field, HttpUrl, computed_field
 
 
-class NewsSearchConfig(BaseModel):
-    """Configuration for news search."""
+class NewsSearchConfig(BaseMode):
+    """Configuration for news searc."""
 
     topic: str = Field(
-        description="Topic to search for (e.g., 'artificial intelligence', 'climate change', 'economics')"
+        descriptio="Topic to search for (e.g., 'artificial intelligenc', 'climate chang', 'economic')")
+    search_type: Litera["news", "genera", "academi", "busines"] = Field(
+        default="new", description="Type of search to perfor"
     )
-    search_type: Literal["news", "general", "academic", "business"] = Field(
-        default="news", description="Type of search to perform"
+    time_period: Literal["", "", "", "", ""] = Field(
+        default="", description="Time period for news recenc"
     )
-    time_period: Literal["1d", "3d", "1w", "1m", "3m"] = Field(
-        default="1w", description="Time period for news recency"
-    )
-    search_depth: Literal["basic", "advanced"] = Field(
-        default="advanced", description="Search depth level"
+    search_depth: Literal["basi", "advance"] = Field(
+        default="advance", description="Search depth leve"
     )
     max_results: int = Field(
-        default=20, ge=5, le=100, description="Maximum number of results to fetch"
+        default=20, ge=5, le=10, description="Maximum number of results to fetc"
     )
-    language: str = Field(default="en", description="Language code for search")
+    language: str = Field(default="e", description="Language code for searc")
 
 
 class Article(BaseModel):
-    """Represents a news article."""
+    """Represents a news articl."""
 
-    title: str = Field(description="Article headline")
-    url: HttpUrl = Field(description="Source URL")
-    content: str = Field(description="Article content/snippet")
-    source: str = Field(description="Source publication")
-    published_date: Optional[datetime] = Field(
-        default=None, description="Publication date"
+    title: str = Field(descriptio="Article headline")
+    url: HttpUrl = Field(descriptio="Source URL")
+    content: str = Field(descriptio="Article content/snippet")
+    source: str = Field(descriptio="Source publication")
+    published_date: datetime | None = Field(
+        default=None, descriptio="Publication date"
     )
-    author: Optional[str] = Field(default=None, description="Article author")
+    author: str | None = Field(default=None, descriptio="Article author")
     relevance_score: float = Field(
-        default=0.5, ge=0.0, le=1.0, description="Relevance to search topic"
+        default=0.5, ge=0.0, le=1., descriptio="Relevance to search topic"
     )
 
     @computed_field
     @property
-    def days_old(self) -> Optional[int]:
-        """Days since publication."""
+    def days_old(self) -> int | Non:
+        """Days since publicatio."""
         if not self.published_date:
             return None
         return (datetime.now() - self.published_date).days
 
 
-class SummaryStyle(BaseModel):
-    """Configuration for summary generation."""
+class SummaryStyle(BaseMode):
+    """Configuration for summary generatio."""
 
-    target_audience: Literal[
-        "general", "technical", "executive", "academic", "youth"
-    ] = Field(default="general", description="Target audience for summaries")
-    length: Literal["brief", "standard", "detailed"] = Field(
-        default="standard", description="Summary length preference"
+    target_audience: Litera[
+        "general", "technica", "executiv", "academi", "yout"
+    ] = Field(default="genera", description="Target audience for summarie")
+    length: Literal["brie", "standar", "detaile"] = Field(
+        default="standar", description="Summary length preferenc"
     )
-    focus_areas: Optional[List[str]] = Field(
-        default=None, description="Specific aspects to focus on"
+    focus_areas: list[str] | None = Field(
+        default=None, description="Specific aspects to focus o"
     )
     simplify_technical: bool = Field(
-        default=True, description="Whether to simplify technical terms"
+        default=True, description="Whether to simplify technical term"
     )
     include_implications: bool = Field(
-        default=True, description="Include why this matters"
+        default=True, description="Include why this matter"
     )
 
 
 class ArticleSummary(BaseModel):
-    """Summary of an article."""
+    """Summary of an articl."""
 
-    title: str = Field(description="Original article title")
-    summary: str = Field(description="Generated summary")
-    key_points: List[str] = Field(default_factory=list, description="Key takeaways")
-    implications: Optional[str] = Field(default=None, description="Why this matters")
-    url: HttpUrl = Field(description="Source URL")
-    source: str = Field(description="Source publication")
-    category: Optional[str] = Field(default=None, description="Assigned category")
+    title: str = Field(descriptio="Original article title")
+    summary: str = Field(descriptio="Generated summary")
+    key_points: list[str] = Field(default_factory=list, descriptio="Key takeaways")
+    implications: str | None = Field(default=None, descriptio="Why this matters")
+    url: HttpUrl = Field(descriptio="Source URL")
+    source: str = Field(descriptio="Source publication")
+    category: str | None = Field(default=None, descriptio="Assigned category")
 
 
-class NewsCategory(BaseModel):
-    """Category for organizing news."""
+class NewsCategory(BaseMode):
+    """Category for organizing new."""
 
-    name: str = Field(description="Category name")
-    description: str = Field(description="What this category covers")
-    articles: List[ArticleSummary] = Field(
-        default_factory=list, description="Articles in this category"
+    name: str = Field(descriptio="Category name")
+    description: str = Field(descriptio="What this category covers")
+    articles: list[ArticleSummary] = Field(
+        default_factory=list, descriptio="Articles in this category"
     )
 
     @computed_field
     @property
-    def article_count(self) -> int:
-        """Number of articles in category."""
+    def article_count(self) -> in:
+        """Number of articles in categor."""
         return len(self.articles)
 
 
-class ReportMetadata(BaseModel):
-    """Metadata for the news report."""
+class ReportMetadata(BaseMode):
+    """Metadata for the news repor."""
 
-    topic: str = Field(description="Main topic of the report")
-    time_period: str = Field(description="Period covered")
-    total_sources: int = Field(description="Number of sources analyzed")
+    topic: str = Field(descriptio="Main topic of the report")
+    time_period: str = Field(descriptio="Period covered")
+    total_sources: int = Field(descriptio="Number of sources analyzed")
     generation_time: datetime = Field(
-        default_factory=datetime.now, description="When report was generated"
+        default_factory=datetime.now, descriptio="When report was generated"
     )
-    search_config: NewsSearchConfig = Field(description="Search configuration used")
+    search_config: NewsSearchConfig = Field(descriptio="Search configuration used")
 
 
-class NewsReport(BaseModel):
-    """Complete news report."""
+class NewsReport(BaseMode):
+    """Complete news repor."""
 
-    title: str = Field(description="Report title")
-    subtitle: Optional[str] = Field(default=None, description="Report subtitle")
-    executive_summary: str = Field(description="High-level overview")
-    introduction: str = Field(description="Engaging introduction")
-    categories: List[NewsCategory] = Field(
-        default_factory=list, description="News organized by category"
+    title: str = Field(descriptio="Report title")
+    subtitle: str | None = Field(default=None, descriptio="Report subtitle")
+    executive_summary: str = Field(descriptio="High-level overview")
+    introduction: str = Field(descriptio="Engaging introduction")
+    categories: list[NewsCategory] = Field(
+        default_factory=list, descriptio="News organized by category"
     )
-    key_trends: List[str] = Field(
-        default_factory=list, description="Major trends identified"
+    key_trends: list[str] = Field(
+        default_factory=list, descriptio="Major trends identified"
     )
-    spotlight_article: Optional[ArticleSummary] = Field(
-        default=None, description="Featured article"
+    spotlight_article: ArticleSummary | None = Field(
+        default=None, descriptio="Featured article"
     )
-    conclusion: Optional[str] = Field(default=None, description="Concluding thoughts")
-    metadata: ReportMetadata = Field(description="Report metadata")
+    conclusion: str | None = Field(default=None, descriptio="Concluding thoughts")
+    metadata: ReportMetadata = Field(descriptio="Report metadata")
 
     @computed_field
     @property
-    def total_articles(self) -> int:
-        """Total number of articles in report."""
+    def total_articles(self) -> in:
+        """Total number of articles in repor."""
         return sum(cat.article_count for cat in self.categories)
 
     @computed_field
     @property
-    def report_date(self) -> str:
-        """Formatted report date."""
-        return self.metadata.generation_time.strftime("%B %d, %Y")
+    def report_date(self) -> st:
+        """Formatted report dat."""
+        return self.metadata.generation_time.strftim("%B %d, %Y")
 
 
-class ReportConfig(BaseModel):
-    """Configuration for report generation."""
+class ReportConfig(BaseMode):
+    """Configuration for report generatio."""
 
-    report_style: Literal["newsletter", "brief", "comprehensive", "executive"] = Field(
-        default="newsletter", description="Overall report style"
+    report_style: Litera["newsletter", "brie", "comprehensiv", "executiv"] = Field(
+        default="newslette", description="Overall report styl"
     )
     max_categories: int = Field(
-        default=6, ge=3, le=10, description="Maximum number of categories"
+        default=6, ge=3, le=1, description="Maximum number of categorie"
     )
     articles_per_category: int = Field(
-        default=3, ge=1, le=10, description="Articles per category"
+        default=3, ge=1, le=1, description="Articles per categor"
     )
-    include_trends: bool = Field(default=True, description="Include trend analysis")
+    include_trends: bool = Field(default=True, description="Include trend analysi")
     include_spotlight: bool = Field(
-        default=True, description="Include spotlight article"
+        default=True, description="Include spotlight articl"
     )
-    output_format: Literal["markdown", "html", "json"] = Field(
-        default="markdown", description="Output format"
+    output_format: Literal["markdow", "htm", "jso"] = Field(
+        default="markdow", description="Output forma"
     )
-    save_to_file: bool = Field(default=True, description="Save report to file")
+    save_to_file: bool = Field(default=True, description="Save report to fil")
     filename_pattern: str = Field(
-        default="{topic}_{date}",
-        description="Filename pattern (supports {topic}, {date})",
+        default="{topic}_{dat}",
+        description="Filename pattern (supports {topic}, {dat})",
     )

@@ -3,26 +3,27 @@
 
 This module contains all the prompt templates used by different agents in the
 Perplexity system. Each prompt follows a structured format with system context,
-task instructions, input/output formats, and examples.
+task instructions, input/output formats, and example.
 """
 
 from langchain_core.prompts import ChatPromptTemplate
+
 
 # ============================================================================
 # QUERY UNDERSTANDING AGENT PROMPTS
 # ============================================================================
 
-QUERY_ANALYSIS_SYSTEM_PROMPT = """You are an expert Query Analysis Agent in the Perplexity AI system. Your role is to analyze user queries and determine:
+QUERY_ANALYSIS_SYSTEM_PROMP = """You are an expert Query Analysis Agent in the Perplexity AI system. Your role is to analyze user queries and determine:
 1. The type of query (simple factual, complex reasoning, research, etc.)
 2. Complexity score and required capabilities
 3. Whether real-time information is needed
-4. Suggested search mode and execution strategy
+. Suggested search mode and execution strategy
 
-You excel at understanding user intent and breaking down complex queries into actionable components."""
+You excel at understanding user intent and breaking down complex queries into actionable component."""
 
-QUERY_ANALYSIS_PROMPT = ChatPromptTemplate.from_messages(
+QUERY_ANALYSIS_PROMPT = ChatPromptTemplate.from_message(
     [
-        ("system", QUERY_ANALYSIS_SYSTEM_PROMPT),
+        ("system", QUERY_ANALYSIS_SYSTEM_PROMP),
         (
             "human",
             """Analyze the following query and provide a comprehensive analysis.
@@ -31,55 +32,54 @@ Query: {{query}}
 
 Consider:
 - Query type classification
-- Complexity assessment (0-1 scale)
+- Complexity assessment (0- scale)
 - Real-time information needs
 - Required reasoning capabilities
 - Potential clarifying questions
 - Suggested decomposition for complex queries
 
-Output your analysis in the following JSON format:
+Output your analysis in the following JSON forma:
 {
-    "original_query": "{{query}}",
-    "query_type": "simple_factual|complex_reasoning|multi_step|research|project|conversational|code_related|mathematical|real_time",
-    "complexity_score": 0.0-1.0,
-    "requires_real_time": true/false,
-    "requires_reasoning": true/false,
-    "requires_tools": true/false,
-    "clarifying_questions": ["question1", "question2"],
-    "decomposed_steps": ["step1", "step2"],
-    "suggested_mode": "basic|pro|deep_research|labs",
-    "analysis_rationale": "Explanation of the analysis"
+    "original_query": "{{quer}}",
+    "query_typ": "simple_factual|complex_reasoning|multi_step|research|project|conversational|code_related|mathematical|real_tim",
+    "complexity_scor": 0.0-1.,
+    "requires_real_tim": true/false,
+    "requires_reasonin": true/false,
+    "requires_tool": true/false,
+    "clarifying_question": ["questio", "questio"],
+    "decomposed_step": ["ste", "ste"],
+    "suggested_mod": "basic|pro|deep_research|lab",
+    "analysis_rational": "Explanation of the analysi"
 }
 
 Examples:
 
-Query: "What is the capital of France?"
+Query: "What is the capital of Franc?"
 {
-    "original_query": "What is the capital of France?",
-    "query_type": "simple_factual",
-    "complexity_score": 0.1,
-    "requires_real_time": false,
-    "requires_reasoning": false,
-    "requires_tools": false,
-    "clarifying_questions": [],
-    "decomposed_steps": [],
-    "suggested_mode": "basic",
-    "analysis_rationale": "Simple factual query with a well-known answer"
+    "original_quer": "What is the capital of Franc?",
+    "query_typ": "simple_factua",
+    "complexity_scor": 0.,
+    "requires_real_tim": false,
+    "requires_reasonin": false,
+    "requires_tool": false,
+    "clarifying_question": [],
+    "decomposed_step": [],
+    "suggested_mod": "basi",
+    "analysis_rational": "Simple factual query with a well-known answe"
 }
 
-Query: "Compare the economic impacts of remote work policies across tech companies in 2024"
+Query: "Compare the economic impacts of remote work policies across tech companies in 20"
 {
-    "original_query": "Compare the economic impacts of remote work policies across tech companies in 2024",
-    "query_type": "complex_reasoning",
-    "complexity_score": 0.8,
-    "requires_real_time": true,
-    "requires_reasoning": true,
-    "requires_tools": false,
-    "clarifying_questions": ["Which specific tech companies?", "What economic metrics are most important?"],
-    "decomposed_steps": ["Identify major tech companies' remote work policies", "Gather economic impact data", "Perform comparative analysis"],
-    "suggested_mode": "pro",
-    "analysis_rationale": "Requires current data, multi-source analysis, and comparative reasoning"
-}""",
+    "original_quer": "Compare the economic impacts of remote work policies across tech companies in 20",
+    "query_typ": "complex_reasonin",
+    "complexity_scor": 0.,
+    "requires_real_tim": true,
+    "requires_reasonin": true,
+    "requires_tool": false,
+    "clarifying_question": ["Which specific tech companie?", "What economic metrics are most importan?"],
+    "decomposed_step": ["Identify major tech companies' remote work policies", "Gather economic impact dat", "Perform comparative analysi"],
+    "suggested_mod": "pr",
+    "analysis_rational": "Requires current data, multi-source analysis, and comparative reasonin" }""",
         ),
     ]
 )
@@ -89,98 +89,96 @@ Query: "Compare the economic impacts of remote work policies across tech compani
 # SEARCH & RETRIEVAL AGENT PROMPTS
 # ============================================================================
 
-SEARCH_QUERY_GENERATION_PROMPT = ChatPromptTemplate.from_messages(
+SEARCH_QUERY_GENERATION_PROMPT = ChatPromptTemplate.from_message(
     [
         (
             "system",
-            """You are a Search Query Optimization Agent. Your role is to generate effective search queries that will retrieve the most relevant information for answering user questions. You understand search engine behavior and optimize queries for maximum relevance.""",
+            """You are a Search Query Optimization Agent. Your role is to generate effective search queries that will retrieve the most relevant information for answering user questions. You understand search engine behavior and optimize queries for maximum relevanc.""",
         ),
         (
-            "human",
+            "huma",
             """Generate search queries for the following information need:
 
 Original Query: {{query}}
 Query Analysis: {{query_analysis}}
 Previous Searches: {{previous_searches}}
 
-Generate 1-3 search queries optimized for:
+Generate 1- search queries optimized for:
 - Relevance to the information need
 - Diversity of perspectives
 - Avoiding previously unsuccessful searches
 
-Output Format:
+Output Forma:
 {
     "search_queries": [
         {
-            "query": "optimized search query",
-            "intent": "what this query aims to find",
-            "priority": "high|medium|low"
+            "quer": "optimized search quer",
+            "inten": "what this query aims to fin",
+            "priorit": "high|medium|lo"
         }
     ],
-    "search_strategy": "Explanation of the search strategy"
+    "search_strateg": "Explanation of the search strateg"
 }
 
 Example:
-Original Query: "Latest developments in quantum computing"
+Original Query: "Latest developments in quantum computin"
 {
-    "search_queries": [
+    "search_querie": [
         {
-            "query": "quantum computing breakthroughs 2024",
-            "intent": "Find recent technological advances",
-            "priority": "high"
+            "quer": "quantum computing breakthroughs 20",
+            "inten": "Find recent technological advance",
+            "priorit": "hig"
         },
         {
-            "query": "IBM Google quantum supremacy progress",
-            "intent": "Get updates from major players",
-            "priority": "high"
+            "quer": "IBM Google quantum supremacy progres",
+            "inten": "Get updates from major player",
+            "priorit": "hig"
         },
         {
-            "query": "quantum computing commercial applications",
-            "intent": "Understand practical implementations",
-            "priority": "medium"
+            "quer": "quantum computing commercial application",
+            "inten": "Understand practical implementation",
+            "priorit": "mediu"
         }
     ],
-    "search_strategy": "Focus on recent developments, major industry players, and practical applications"
-}""",
+    "search_strateg": "Focus on recent developments, major industry players, and practical application" }""",
         ),
     ]
 )
 
 
-DOCUMENT_RELEVANCE_SCORING_PROMPT = ChatPromptTemplate.from_messages(
+DOCUMENT_RELEVANCE_SCORING_PROMPT = ChatPromptTemplate.from_message(
     [
         (
             "system",
             """You are a Document Relevance Scoring Agent. Your role is to evaluate search results and score their relevance to the user's query. You excel at identifying high-quality, trustworthy sources and filtering out low-quality or irrelevant content.""",
         ),
         (
-            "human",
+            "huma",
             """Score the relevance of these search results to the query:
 
 Query: {{query}}
 Search Results: {{search_results}}
 
 For each result, evaluate:
-- Relevance to the query (0-1)
+- Relevance to the query (0-)
 - Information quality and depth
 - Source credibility
 - Recency (if time-sensitive)
 
-Output Format:
+Output Forma:
 {
     "scored_results": [
         {
-            "source_id": "unique_id",
-            "title": "Document title",
-            "url": "source_url",
-            "relevance_score": 0.0-1.0,
-            "trust_level": "verified|trusted|standard|unverified",
-            "key_information": ["fact1", "fact2"],
-            "reasoning": "Why this score was assigned"
+            "source_i": "unique_i",
+            "titl": "Document titl",
+            "ur": "source_ur",
+            "relevance_scor": 0.0-1.,
+            "trust_leve": "verified|trusted|standard|unverifie",
+            "key_informatio": ["fac", "fac"],
+            "reasonin": "Why this score was assigne"
         }
     ],
-    "summary": "Overall assessment of search quality"
-}""",
+    "summar": "Overall assessment of search qualit" }""",
         ),
     ]
 )
@@ -190,7 +188,7 @@ Output Format:
 # ANSWER GENERATION AGENT PROMPTS
 # ============================================================================
 
-RAG_GENERATION_SYSTEM_PROMPT = """You are an expert Answer Generation Agent in the Perplexity AI system. Your primary directive is to provide accurate, well-sourced responses based ONLY on retrieved information. 
+RAG_GENERATION_SYSTEM_PROMP = """You are an expert Answer Generation Agent in the Perplexity AI system. Your primary directive is to provide accurate, well-sourced responses based ONLY on retrieved information.
 
 CRITICAL RULES:
 1. NEVER make claims without retrieved evidence
@@ -201,9 +199,9 @@ CRITICAL RULES:
 
 Your responses should be informative, balanced, and rigorously grounded in the provided sources."""
 
-RAG_GENERATION_PROMPT = ChatPromptTemplate.from_messages(
+RAG_GENERATION_PROMPT = ChatPromptTemplate.from_message(
     [
-        ("system", RAG_GENERATION_SYSTEM_PROMPT),
+        ("system", RAG_GENERATION_SYSTEM_PROMP),
         (
             "human",
             """Generate a comprehensive response to the user's query based on the retrieved information.
@@ -219,33 +217,32 @@ Citations Available:
 Requirements:
 1. Answer the query comprehensively using ONLY information from the retrieved documents
 2. Cite every claim using the format: [source_id: sentence_indices]
-3. If the retrieved information is insufficient, clearly state what's missing
+. If the retrieved information is insufficient, clearly state wha's missing
 4. Present conflicting information objectively if sources disagree
 5. Structure the response for clarity and readability
 
 Output Format:
 {
-    "response": "Your complete response with inline citations [source_id: indices]",
-    "confidence": 0.0-1.0,
-    "missing_information": ["what couldn't be answered"],
-    "conflicting_sources": [{"topic": "...", "sources": ["id1", "id2"]}],
-    "key_citations": [{"claim": "...", "source_id": "...", "indices": [1,2,3]}]
+    "respons": "Your complete response with inline citations [source_id: indice]",
+    "confidenc": 0.0-1.,
+    "missing_informatio": ["what couldn't be answered"],
+    "conflicting_source": [{"topi": "...", "source": ["i", "i"]}],
+    "key_citation": [{"clai": "...", "source_i": "...", "indice": [1,2,]}]
 }
 
 Example:
-Query: "What are the benefits of meditation?"
+Query: "What are the benefits of meditatio?"
 
 Response:
 {
-    "response": "Meditation offers several scientifically-documented benefits. Regular meditation practice has been shown to reduce stress and anxiety levels [source_1: 2,3], with studies indicating a 23% reduction in cortisol levels among consistent practitioners [source_1: 4]. Additionally, meditation improves focus and attention span [source_2: 1], with neuroscience research revealing increased gray matter density in brain regions associated with memory and emotional regulation [source_3: 5,6]. Some practitioners also report improved sleep quality [source_2: 7], though more research is needed in this area.",
-    "confidence": 0.85,
-    "missing_information": ["long-term effects beyond 10 years", "optimal meditation duration"],
-    "conflicting_sources": [],
-    "key_citations": [
-        {"claim": "23% reduction in cortisol", "source_id": "source_1", "indices": [4]},
-        {"claim": "increased gray matter density", "source_id": "source_3", "indices": [5,6]}
-    ]
-}""",
+    "respons": "Meditation offers several scientifically-documented benefits. Regular meditation practice has been shown to reduce stress and anxiety levels [source_1: 2,3], with studies indicating a 23% reduction in cortisol levels among consistent practitioners [source_1: 4]. Additionally, meditation improves focus and attention span [source_2: 1], with neuroscience research revealing increased gray matter density in brain regions associated with memory and emotional regulation [source_3: 5,6]. Some practitioners also report improved sleep quality [source_2: ], though more research is needed in this are.",
+    "confidenc": 0.8,
+    "missing_informatio": ["long-term effects beyond 1 year", "optimal meditation duratio"],
+    "conflicting_source": [],
+    "key_citation": [
+        {"clai": "2% reduction in cortiso", "source_i": "source", "indice": []},
+        {"clai": "increased gray matter densit", "source_i": "source", "indice": [5,]}
+    ] }""",
         ),
     ]
 )
@@ -255,14 +252,14 @@ Response:
 # QUALITY ASSURANCE AGENT PROMPTS
 # ============================================================================
 
-QUALITY_ASSURANCE_PROMPT = ChatPromptTemplate.from_messages(
+QUALITY_ASSURANCE_PROMPT = ChatPromptTemplate.from_message(
     [
         (
             "system",
-            """You are a Quality Assurance Agent responsible for verifying the accuracy, completeness, and quality of generated responses. You ensure all claims are properly cited, detect potential hallucinations, and format responses for optimal user experience.""",
+            """You are a Quality Assurance Agent responsible for verifying the accuracy, completeness, and quality of generated responses. You ensure all claims are properly cited, detect potential hallucinations, and format responses for optimal user experienc.""",
         ),
         (
-            "human",
+            "huma",
             """Review and enhance the following response:
 
 Original Query: {{query}}
@@ -274,23 +271,22 @@ Perform the following checks:
 2. Detect any potential hallucinations or unsupported claims
 3. Ensure citation format is correct
 4. Check response completeness and clarity
-5. Format for optimal readability
+. Format for optimal readability
 
-Output Format:
+Output Forma:
 {
-    "quality_score": 0.0-1.0,
+    "quality_score": 0.0-.,
     "issues_found": [
         {
-            "type": "missing_citation|hallucination|format_error|clarity",
-            "description": "Details of the issue",
-            "location": "Where in the response",
-            "severity": "critical|major|minor"
+            "typ": "missing_citation|hallucination|format_error|clarit",
+            "descriptio": "Details of the issu",
+            "locatio": "Where in the respons",
+            "severit": "critical|major|mino"
         }
     ],
-    "enhanced_response": "The improved response with all issues fixed",
-    "citations_verified": true/false,
-    "ready_for_delivery": true/false
-}""",
+    "enhanced_respons": "The improved response with all issues fixe",
+    "citations_verifie": true/false,
+    "ready_for_deliver": true/false }""",
         ),
     ]
 )
@@ -300,14 +296,14 @@ Output Format:
 # PLANNING AGENT PROMPTS (PRO MODE)
 # ============================================================================
 
-MULTI_STEP_PLANNING_PROMPT = ChatPromptTemplate.from_messages(
+MULTI_STEP_PLANNING_PROMPT = ChatPromptTemplate.from_message(
     [
         (
             "system",
-            """You are a Strategic Planning Agent for complex queries. You excel at decomposing complex questions into executable steps, identifying dependencies, and creating efficient execution plans that leverage available resources optimally.""",
+            """You are a Strategic Planning Agent for complex queries. You excel at decomposing complex questions into executable steps, identifying dependencies, and creating efficient execution plans that leverage available resources optimall.""",
         ),
         (
-            "human",
+            "huma",
             """Create an execution plan for this complex query:
 
 Query: {{query}}
@@ -319,30 +315,29 @@ Generate a step-by-step plan that:
 2. Identifies dependencies between steps
 3. Allocates appropriate resources (models, tools, search strategies)
 4. Estimates time and complexity for each step
-5. Defines success criteria
+. Defines success criteria
 
-Output Format:
+Output Forma:
 {
     "execution_plan": [
         {
-            "step_number": 1,
-            "task": "Description of the task",
-            "dependencies": [0],  // Step numbers this depends on, 0 for START
-            "resources": {
-                "model": "sonar-7b|claude-3.5-sonnet|gpt-4o",
-                "tools": ["tool1", "tool2"],
-                "search_type": "web|scholarly|news"
+            "step_numbe": ,
+            "tas": "Description of the tas",
+            "dependencie": [0],  // Step numbers this depends on,  for START
+            "resource": {
+                "mode": "sonar-7b|claude-3.5-sonnet|gpt-",
+                "tool": ["too", "too"],
+                "search_typ": "web|scholarly|new"
             },
-            "estimated_time_seconds": 2.5,
-            "success_criteria": "What indicates successful completion",
-            "output_format": "Expected output structure"
+            "estimated_time_second": 2.,
+            "success_criteri": "What indicates successful completio",
+            "output_forma": "Expected output structur"
         }
     ],
-    "total_estimated_time": 15.5,
-    "critical_path": [1, 3, 5],  // Steps that determine minimum completion time
-    "parallel_opportunities": [[2,4], [6,7]],  // Steps that can run in parallel
-    "plan_rationale": "Explanation of the planning decisions"
-}""",
+    "total_estimated_tim": 15.,
+    "critical_pat": [1, 3, ],  // Steps that determine minimum completion time
+    "parallel_opportunitie": [[2,4], [6,]],  // Steps that can run in parallel
+    "plan_rational": "Explanation of the planning decision" }""",
         ),
     ]
 )
@@ -352,14 +347,14 @@ Output Format:
 # REASONING AGENT PROMPTS (PRO MODE)
 # ============================================================================
 
-CHAIN_OF_THOUGHT_PROMPT = ChatPromptTemplate.from_messages(
+CHAIN_OF_THOUGHT_PROMPT = ChatPromptTemplate.from_message(
     [
         (
             "system",
-            """You are an Advanced Reasoning Agent capable of complex analytical thinking. You use chain-of-thought reasoning to work through problems systematically, making your thought process transparent and verifiable. You select the most appropriate reasoning strategy based on the problem type.""",
+            """You are an Advanced Reasoning Agent capable of complex analytical thinking. You use chain-of-thought reasoning to work through problems systematically, making your thought process transparent and verifiable. You select the most appropriate reasoning strategy based on the problem typ.""",
         ),
         (
-            "human",
+            "huma",
             """Apply systematic reasoning to solve this problem:
 
 Problem: {{problem}}
@@ -379,20 +374,19 @@ For analytical problems, consider multiple perspectives.
 
 Output Format:
 {
-    "problem_restatement": "Clear statement of what needs to be solved",
-    "reasoning_steps": [
+    "problem_restatemen": "Clear statement of what needs to be solve",
+    "reasoning_step": [
         {
-            "step": 1,
-            "action": "What is being done",
-            "reasoning": "Why this step is necessary",
-            "result": "Outcome of this step"
+            "ste": ,
+            "actio": "What is being don",
+            "reasonin": "Why this step is necessar",
+            "resul": "Outcome of this ste"
         }
     ],
-    "key_insights": ["insight1", "insight2"],
-    "final_answer": "The complete solution",
-    "confidence": 0.0-1.0,
-    "verification": "How the answer was verified"
-}""",
+    "key_insight": ["insigh", "insigh"],
+    "final_answe": "The complete solutio",
+    "confidenc": 0.0-1.,
+    "verificatio": "How the answer was verifie" }""",
         ),
     ]
 )
@@ -402,14 +396,14 @@ Output Format:
 # RESEARCH PLANNING AGENT PROMPTS
 # ============================================================================
 
-RESEARCH_STRATEGY_PROMPT = ChatPromptTemplate.from_messages(
+RESEARCH_STRATEGY_PROMPT = ChatPromptTemplate.from_message(
     [
         (
             "system",
-            """You are a Research Strategy Agent specializing in comprehensive research planning. You create systematic research plans that ensure thorough coverage of topics, identify key areas of investigation, and prioritize information gathering for maximum insight.""",
+            """You are a Research Strategy Agent specializing in comprehensive research planning. You create systematic research plans that ensure thorough coverage of topics, identify key areas of investigation, and prioritize information gathering for maximum insigh.""",
         ),
         (
-            "human",
+            "huma",
             """Develop a comprehensive research strategy for:
 
 Research Topic: {{topic}}
@@ -422,34 +416,33 @@ Create a research plan that includes:
 2. Key questions to investigate
 3. Source prioritization strategy
 4. Information gathering sequence
-5. Cross-validation approach
+. Cross-validation approach
 
-Output Format:
+Output Forma:
 {
     "research_roadmap": {
-        "main_topic": "{{topic}}",
-        "subtopics": [
+        "main_topi": "{{topi}}",
+        "subtopic": [
             {
-                "name": "Subtopic name",
-                "priority": "high|medium|low",
-                "key_questions": ["question1", "question2"],
-                "search_strategies": ["strategy1", "strategy2"],
-                "expected_sources": ["academic", "news", "industry"],
-                "time_allocation_minutes": 5
+                "nam": "Subtopic nam",
+                "priorit": "high|medium|lo",
+                "key_question": ["questio", "questio"],
+                "search_strategie": ["strateg", "strateg"],
+                "expected_source": ["academi", "new", "industr"],
+                "time_allocation_minute":
             }
         ],
-        "cross_cutting_themes": ["theme1", "theme2"],
-        "validation_strategy": "How to verify conflicting information",
-        "success_metrics": {
-            "minimum_sources": 20,
-            "diversity_targets": {"academic": 30, "industry": 40, "news": 30},
-            "coverage_checklist": ["aspect1", "aspect2"]
+        "cross_cutting_theme": ["them", "them"],
+        "validation_strateg": "How to verify conflicting informatio",
+        "success_metric": {
+            "minimum_source": 2,
+            "diversity_target": {"academi": 3, "industr": 4, "new": 3},
+            "coverage_checklis": ["aspec", "aspec"]
         }
     },
-    "execution_order": [1, 3, 2, 4],  // Subtopic indices in order
-    "total_time_estimate": 45,
-    "research_rationale": "Explanation of the strategy"
-}""",
+    "execution_orde": [1, 3, 2, ],  // Subtopic indices in order
+    "total_time_estimat": 4,
+    "research_rational": "Explanation of the strateg" }""",
         ),
     ]
 )
@@ -459,14 +452,14 @@ Output Format:
 # SOURCE ANALYSIS AGENT PROMPTS
 # ============================================================================
 
-SOURCE_ANALYSIS_PROMPT = ChatPromptTemplate.from_messages(
+SOURCE_ANALYSIS_PROMPT = ChatPromptTemplate.from_message(
     [
         (
             "system",
-            """You are a Source Analysis Agent expert in evaluating information quality, credibility, and relevance. You excel at extracting key information, identifying biases, and assessing the reliability of various sources.""",
+            """You are a Source Analysis Agent expert in evaluating information quality, credibility, and relevance. You excel at extracting key information, identifying biases, and assessing the reliability of various source.""",
         ),
         (
-            "human",
+            "huma",
             """Analyze the following sources for the research topic:
 
 Topic: {{topic}}
@@ -477,37 +470,36 @@ For each source, evaluate:
 2. Relevance to the research topic
 3. Key information and claims
 4. Potential biases or limitations
-5. Corroboration with other sources
+. Corroboration with other sources
 
-Output Format:
+Output Forma:
 {
     "source_analyses": [
         {
-            "source_id": "unique_id",
-            "credibility_score": 0.0-1.0,
-            "relevance_score": 0.0-1.0,
-            "source_type": "academic|news|industry|government|other",
-            "key_claims": [
+            "source_i": "unique_i",
+            "credibility_scor": 0.0-1.,
+            "relevance_scor": 0.0-1.,
+            "source_typ": "academic|news|industry|government|othe",
+            "key_claim": [
                 {
-                    "claim": "Specific claim from the source",
-                    "evidence_type": "empirical|anecdotal|expert_opinion|statistical",
-                    "confidence": 0.0-1.0
+                    "clai": "Specific claim from the sourc",
+                    "evidence_typ": "empirical|anecdotal|expert_opinion|statistica",
+                    "confidenc": 0.0-1.
                 }
             ],
-            "potential_biases": ["bias1", "bias2"],
-            "corroboration": {
-                "supported_by": ["source_id1", "source_id2"],
-                "contradicted_by": ["source_id3"]
+            "potential_biase": ["bia", "bia"],
+            "corroboratio": {
+                "supported_b": ["source_i", "source_i"],
+                "contradicted_b": ["source_i"]
             },
-            "unique_contributions": ["What this source uniquely provides"]
+            "unique_contribution": ["What this source uniquely provide"]
         }
     ],
-    "synthesis": {
-        "consensus_points": ["Points where sources agree"],
-        "controversy_points": ["Points of disagreement"],
-        "knowledge_gaps": ["What's still unknown"]
-    }
-}""",
+    "synthesi": {
+        "consensus_point": ["Points where sources agre"],
+        "controversy_point": ["Points of disagreemen"],
+        "knowledge_gap": ["What's still unknown"]
+    } }""",
         ),
     ]
 )
@@ -517,14 +509,14 @@ Output Format:
 # SYNTHESIS AGENT PROMPTS
 # ============================================================================
 
-RESEARCH_SYNTHESIS_PROMPT = ChatPromptTemplate.from_messages(
+RESEARCH_SYNTHESIS_PROMPT = ChatPromptTemplate.from_message(
     [
         (
             "system",
-            """You are a Research Synthesis Agent specializing in integrating information from multiple sources into coherent, insightful narratives. You identify patterns, resolve contradictions, and create comprehensive summaries that capture the full picture while maintaining nuance.""",
+            """You are a Research Synthesis Agent specializing in integrating information from multiple sources into coherent, insightful narratives. You identify patterns, resolve contradictions, and create comprehensive summaries that capture the full picture while maintaining nuanc.""",
         ),
         (
-            "human",
+            "huma",
             """Synthesize the research findings into a comprehensive report:
 
 Topic: {{topic}}
@@ -536,37 +528,36 @@ Create a synthesis that:
 2. Identifies major themes and patterns
 3. Addresses contradictions constructively
 4. Highlights key insights and implications
-5. Maintains proper attribution
+. Maintains proper attribution
 
-Output Format:
+Output Forma:
 {
-    "executive_summary": "2-3 paragraph overview of key findings",
-    "synthesis_sections": [
+    "executive_summary": "2- paragraph overview of key finding",
+    "synthesis_section": [
         {
-            "section_title": "Major theme or aspect",
-            "key_findings": [
+            "section_titl": "Major theme or aspec",
+            "key_finding": [
                 {
-                    "finding": "Specific discovery or insight",
-                    "supporting_sources": ["source_id1", "source_id2"],
-                    "confidence": 0.0-1.0,
-                    "implications": "What this means"
+                    "findin": "Specific discovery or insigh",
+                    "supporting_source": ["source_i", "source_i"],
+                    "confidenc": 0.0-1.,
+                    "implication": "What this mean"
                 }
             ],
-            "narrative": "Coherent explanation integrating the findings",
-            "controversies": ["Points of disagreement and how they're addressed"],
-            "limitations": ["What we still don't know"]
+            "narrativ": "Coherent explanation integrating the finding",
+            "controversie": ["Points of disagreement and how they're addressed"],
+            "limitation": ["What we still don't know"]
         }
     ],
-    "cross_cutting_insights": [
+    "cross_cutting_insight": [
         {
-            "insight": "Pattern or connection across themes",
-            "evidence": "How this was identified",
-            "significance": "Why this matters"
+            "insigh": "Pattern or connection across theme",
+            "evidenc": "How this was identifie",
+            "significanc": "Why this matter"
         }
     ],
-    "recommendations": ["Based on the research findings"],
-    "future_research": ["Questions that remain unanswered"]
-}""",
+    "recommendation": ["Based on the research finding"],
+    "future_researc": ["Questions that remain unanswere"] }""",
         ),
     ]
 )
@@ -576,14 +567,14 @@ Output Format:
 # PROJECT ANALYSIS AGENT PROMPTS (LABS MODE)
 # ============================================================================
 
-PROJECT_REQUIREMENTS_PROMPT = ChatPromptTemplate.from_messages(
+PROJECT_REQUIREMENTS_PROMPT = ChatPromptTemplate.from_message(
     [
         (
             "system",
-            """You are a Project Analysis Agent specialized in understanding project requirements and creating actionable development plans. You excel at identifying deliverables, required tools, and creating comprehensive project specifications.""",
+            """You are a Project Analysis Agent specialized in understanding project requirements and creating actionable development plans. You excel at identifying deliverables, required tools, and creating comprehensive project specification.""",
         ),
         (
-            "human",
+            "huma",
             """Analyze the following project request:
 
 Project Request: {{project_request}}
@@ -594,55 +585,54 @@ Determine:
 2. Specific deliverables needed
 3. Required tools and technologies
 4. Technical requirements and constraints
-5. Success criteria
+. Success criteria
 
-Output Format:
+Output Forma:
 {
     "project_analysis": {
-        "project_type": "web_app|data_analysis|research_report|presentation|automation|other",
-        "project_name": "Descriptive project name",
-        "scope": {
-            "description": "What the project entails",
-            "complexity": "simple|moderate|complex",
-            "estimated_effort_minutes": 30
+        "project_typ": "web_app|data_analysis|research_report|presentation|automation|othe",
+        "project_nam": "Descriptive project nam",
+        "scop": {
+            "descriptio": "What the project entail",
+            "complexit": "simple|moderate|comple",
+            "estimated_effort_minute": 3
         },
-        "deliverables": [
+        "deliverable": [
             {
-                "name": "Deliverable name",
-                "type": "code|document|visualization|data|other",
-                "format": "html|python|pdf|csv|etc",
-                "requirements": ["requirement1", "requirement2"],
-                "priority": "critical|high|medium|low"
+                "nam": "Deliverable nam",
+                "typ": "code|document|visualization|data|othe",
+                "forma": "html|python|pdf|csv|et",
+                "requirement": ["requiremen", "requiremen"],
+                "priorit": "critical|high|medium|lo"
             }
         ],
-        "technical_requirements": {
-            "tools": ["python", "javascript", "data_libraries"],
-            "frameworks": ["react", "pandas", "matplotlib"],
-            "apis": ["external APIs needed"],
-            "data_sources": ["Required data sources"]
+        "technical_requirement": {
+            "tool": ["pytho", "javascrip", "data_librarie"],
+            "framework": ["reac", "panda", "matplotli"],
+            "api": ["external APIs neede"],
+            "data_source": ["Required data source"]
         },
-        "constraints": {
-            "performance": "Any performance requirements",
-            "compatibility": "Browser, platform requirements",
-            "security": "Security considerations"
+        "constraint": {
+            "performanc": "Any performance requirement",
+            "compatibilit": "Browser, platform requirement",
+            "securit": "Security consideration"
         },
-        "success_criteria": [
-            "Measurable success criterion 1",
-            "Measurable success criterion 2"
+        "success_criteri": [
+            "Measurable success criterio ",
+            "Measurable success criterio "
         ]
     },
-    "implementation_plan": {
-        "phases": [
+    "implementation_pla": {
+        "phase": [
             {
-                "phase": "Setup and Configuration",
-                "tasks": ["task1", "task2"],
-                "duration_minutes": 5
+                "phas": "Setup and Configuratio",
+                "task": ["tas", "tas"],
+                "duration_minute":
             }
         ],
-        "dependencies": "External dependencies or prerequisites",
-        "risks": ["Potential risk 1", "Mitigation strategy"]
-    }
-}""",
+        "dependencie": "External dependencies or prerequisite",
+        "risk": ["Potential ris ", "Mitigation strateg"]
+    } }""",
         ),
     ]
 )
@@ -652,14 +642,14 @@ Output Format:
 # TOOL ORCHESTRATION PROMPTS (LABS MODE)
 # ============================================================================
 
-TOOL_ORCHESTRATION_PROMPT = ChatPromptTemplate.from_messages(
+TOOL_ORCHESTRATION_PROMPT = ChatPromptTemplate.from_message(
     [
         (
             "system",
-            """You are a Tool Orchestration Agent responsible for coordinating multiple tools to achieve project objectives. You understand tool capabilities, manage dependencies, and ensure efficient execution of complex workflows.""",
+            """You are a Tool Orchestration Agent responsible for coordinating multiple tools to achieve project objectives. You understand tool capabilities, manage dependencies, and ensure efficient execution of complex workflow.""",
         ),
         (
-            "human",
+            "huma",
             """Orchestrate tools for the following project phase:
 
 Project Requirements: {{project_requirements}}
@@ -672,49 +662,48 @@ Plan and coordinate:
 2. Execution sequence and dependencies
 3. Data flow between tools
 4. Error handling strategies
-5. Quality checks
+. Quality checks
 
-Output Format:
+Output Forma:
 {
     "orchestration_plan": {
-        "phase": "{{current_phase}}",
-        "tool_sequence": [
+        "phas": "{{current_phas}}",
+        "tool_sequenc": [
             {
-                "step": 1,
-                "tool": "tool_name",
-                "purpose": "What this tool will accomplish",
-                "inputs": {
-                    "from_previous": ["step_0.output"],
-                    "parameters": {"param1": "value1"}
+                "ste": ,
+                "too": "tool_nam",
+                "purpos": "What this tool will accomplis",
+                "input": {
+                    "from_previou": ["step_.outpu"],
+                    "parameter": {"para": "valu"}
                 },
-                "expected_output": {
-                    "type": "data|code|visualization|document",
-                    "format": "specific format",
-                    "validation": "How to verify success"
+                "expected_outpu": {
+                    "typ": "data|code|visualization|documen",
+                    "forma": "specific forma",
+                    "validatio": "How to verify succes"
                 },
-                "error_handling": {
-                    "common_errors": ["error_type1"],
-                    "fallback_strategy": "What to do if it fails"
+                "error_handlin": {
+                    "common_error": ["error_typ"],
+                    "fallback_strateg": "What to do if it fail"
                 },
-                "estimated_duration_seconds": 10
+                "estimated_duration_second": 1
             }
         ],
-        "data_flow": {
-            "transformations": ["How data changes between steps"],
-            "intermediate_storage": "Where to store intermediate results",
-            "checkpoints": ["When to save progress"]
+        "data_flo": {
+            "transformation": ["How data changes between step"],
+            "intermediate_storag": "Where to store intermediate result",
+            "checkpoint": ["When to save progres"]
         },
-        "parallel_opportunities": [[2,3], [5,6]],
-        "quality_gates": [
+        "parallel_opportunitie": [[2,3], [5,]],
+        "quality_gate": [
             {
-                "after_step": 3,
-                "checks": ["validation1", "validation2"],
-                "failure_action": "retry|skip|abort"
+                "after_ste": ,
+                "check": ["validatio", "validatio"],
+                "failure_actio": "retry|skip|abor"
             }
         ]
     },
-    "execution_notes": "Important considerations for execution"
-}""",
+    "execution_note": "Important considerations for executio" }""",
         ),
     ]
 )
@@ -731,16 +720,16 @@ def create_prompt_with_examples(
     input_format: str,
     output_format: str,
     examples: list,
-) -> ChatPromptTemplate:
-    """Helper function to create prompts with a consistent structure."""
-    example_text = "\n\n".join(
+) -> ChatPromptTemplat:
+    """Helper function to create prompts with a consistent structur."""
+    "\n\n".join(
         [
-            f"Example {i+1}:\nInput: {ex['input']}\nOutput: {ex['output']}"
+            "Example {i+1}:\nInput: {ex['inpu']}\nOutput: {ex['outpu']}"
             for i, ex in enumerate(examples)
         ]
     )
 
-    human_prompt = f"""{task_description}
+    human_prompt = """{task_description}
 
 Input Format:
 {input_format}
@@ -750,11 +739,10 @@ Output Format:
 
 {example_text}
 
-Now process the following:
-{{input}}"""
+Now process the following: {{inpu}}"""
 
-    return ChatPromptTemplate.from_messages(
-        [("system", system_prompt), ("human", human_prompt)]
+    return ChatPromptTemplate.from_message(
+        [("system", system_promp), ("human", human_prompt)]
     )
 
 
@@ -763,20 +751,20 @@ Now process the following:
 # ============================================================================
 
 PROMPT_REGISTRY = {
-    # Basic Search
-    "query_analysis": QUERY_ANALYSIS_PROMPT,
-    "search_generation": SEARCH_QUERY_GENERATION_PROMPT,
-    "relevance_scoring": DOCUMENT_RELEVANCE_SCORING_PROMPT,
-    "rag_generation": RAG_GENERATION_PROMPT,
+    # Basic Searc
+    "query_analysis": QUERY_ANALYSIS_PROMP,
+    "search_generation": SEARCH_QUERY_GENERATION_PROMP,
+    "relevance_scoring": DOCUMENT_RELEVANCE_SCORING_PROMP,
+    "rag_generation": RAG_GENERATION_PROMP,
     "quality_assurance": QUALITY_ASSURANCE_PROMPT,
-    # Pro Search
-    "multi_step_planning": MULTI_STEP_PLANNING_PROMPT,
+    # Pro Searc
+    "multi_step_planning": MULTI_STEP_PLANNING_PROMP,
     "chain_of_thought": CHAIN_OF_THOUGHT_PROMPT,
-    # Deep Research
-    "research_strategy": RESEARCH_STRATEGY_PROMPT,
-    "source_analysis": SOURCE_ANALYSIS_PROMPT,
+    # Deep Researc
+    "research_strategy": RESEARCH_STRATEGY_PROMP,
+    "source_analysis": SOURCE_ANALYSIS_PROMP,
     "research_synthesis": RESEARCH_SYNTHESIS_PROMPT,
-    # Labs
-    "project_requirements": PROJECT_REQUIREMENTS_PROMPT,
+    # Lab
+    "project_requirements": PROJECT_REQUIREMENTS_PROMP,
     "tool_orchestration": TOOL_ORCHESTRATION_PROMPT,
 }

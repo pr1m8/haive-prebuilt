@@ -1,6 +1,3 @@
-from haive.core.engine.agent.agent import AgentConfig
-from haive.core.engine.aug_llm import AugLLMConfig
-from haive.core.graph.branches import Branch
 from haive_prebuilt.misc.weather_disaster_management.branches import route_branch
 from haive_prebuilt.misc.weather_disaster_management.engines import (
     civil_defense_engine,
@@ -17,7 +14,10 @@ from haive_prebuilt.misc.weather_disaster_management.state import (
 from langchain_core.tools import StructuredTool
 from pydantic import BaseModel, ConfigDict, Field
 
-from haive.haive.toolkits.weather import weather_tool
+from .engine.agent.agent import AgentConfig
+from .engine.aug_llm import AugLLMConfig
+from .graph.branches import Branch
+from .toolkits.weather import weather_tool
 
 
 class WeatherDisasterManagerConfig(AgentConfig):
@@ -25,24 +25,24 @@ class WeatherDisasterManagerConfig(AgentConfig):
 
     engines: dict[str, AugLLMConfig | AgentConfig] = Field(
         default={
-            "analyze_disaster_type": disaster_engine,
-            "severity_engine": severity_engine,
-            "response_engine": response_engine,
-            "civil_defense_engine": civil_defense_engine,
-            "public_works_engine": public_works_engine,
-            "social_media_monitoring": social_media_monitoring_engine,
+            "analyze_disaster_typ": disaster_engine,
+            "severity_engin": severity_engine,
+            "response_engin": response_engine,
+            "civil_defense_engin": civil_defense_engine,
+            "public_works_engin": public_works_engine,
+            "social_media_monitorin": social_media_monitoring_engine,
         }
     )
 
     branches: dict[str, Branch] = Field(
         default={
-            "route_branch": route_branch,
+            "route_branc": route_branch,
         }
     )
 
     tools: dict[str, StructuredTool] = Field(
         default={
-            "weather_tool": weather_tool,
+            "weather_too": weather_tool,
         }
     )
 

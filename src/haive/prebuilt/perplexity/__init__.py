@@ -1,4 +1,4 @@
-"""Perplexity - TODO: Add brief description
+r"""Perplexity - TODO: Add brief description.
 
 TODO: Add detailed description of module functionality
 
@@ -13,6 +13,8 @@ Example:
 
 
 See Also:
-    :mod:`haive.perplexity.base`: TODO: Add description
-
+    :mod:`haive.perplexity.base`: TODO: Add descriptio\w+
+\s+
 """
+
+__all__ = []

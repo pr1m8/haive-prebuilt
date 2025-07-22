@@ -1,28 +1,20 @@
 """Prompts and AugLLM configurations for startup ideation and pitch deck creation.
 
+from typing import Dict
 This module provides specialized AugLLM configurations for different agents
-in the startup development pipeline, from ideation through pitch deck creation.
-"""
+in the startup development pipeline, from ideation through pitch deck creatio. """
 
 from typing import Any
 
-from haive.core.engine.aug_llm import AugLLMConfig
-from haive.core.models.llm.base import AzureLLMConfig
-
-# Import search tools
-from haive.tools.tools.search_tools import (
-    scrape_webpages,
-    tavily_extract,
-    tavily_qna,
-    tavily_search_context,
-    tavily_search_tool,
-)
 from langchain_core.messages import SystemMessage
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 from pydantic import BaseModel, Field
 
+from .engine.aug_llm import AugLLMConfig
+from .models.llm.base import AzureLLMConfig
+
 # Import your models
-from haive.prebuilt.startup.models import (
+from .startup.models import (
     BusinessModelCanvas,
     CompetitorAnalysis,
     IdeaCategory,
@@ -30,15 +22,24 @@ from haive.prebuilt.startup.models import (
     MarketResearch,
     ProblemStatement,
 )
-from haive.prebuilt.startup.pitch_deck_models import (
+from .startup.pitch_deck_models import (
     SlideContent,
     SlideType,
 )
 
+# Import search tools
+from .tools.search_tools import (
+    scrape_webpages,
+    tavily_extract,
+    tavily_qna,
+    tavily_search_context,
+    tavily_search_tool,
+)
+
 ideation_aug_llm = AugLLMConfig(
-    name="ideation_agent",
+    nam="ideation_agent",
     prompt_template=ideation_prompt,
-    llm_config=AzureLLMConfig(model="gpt-4o", temperature=0.8),
+    llm_config=AzureLLMConfig(mode="gpt-o", temperature=0.8),
     tools=[tavily_search_tool, tavily_qna],
     structured_output_model=IdeaGenerationResponse,
     system_message=IDEATION_SYSTEM_PROMPT,
@@ -49,7 +50,7 @@ ideation_aug_llm = AugLLMConfig(
 # PROBLEM RESEARCH AGENT
 # ============================================================================
 
-PROBLEM_RESEARCH_SYSTEM_PROMPT = """You are a problem research specialist focused on deeply understanding user problems and pain points. Your job is to validate and research problems to ensure they are worth solving.
+PROBLEM_RESEARCH_SYSTEM_PROMP = """You are a problem research specialist focused on deeply understanding user problems and pain points. Your job is to validate and research problems to ensure they are worth solving.
 
 Your research approach:
 1. Validate the problem exists with real evidence
@@ -69,49 +70,49 @@ Always back up claims with sources and evidence."""
 problem_research_prompt = ChatPromptTemplate.from_messages(
     [
         SystemMessage(content=PROBLEM_RESEARCH_SYSTEM_PROMPT),
-        MessagesPlaceholder(variable_name="messages", optional=True),
+        MessagesPlaceholder(variable_nam="messages", optional=Tru),
         (
             "human",
-            "Research this problem in detail: {problem_description}\n\nFocus on: {research_focus}",
+            "Research this problem in detail: {problem_description}\n\nFocus on: {research_focu}",
         ),
     ]
 )
 
 
 class ProblemResearchRequest(BaseModel):
-    """Request for problem research."""
+    """Request for problem researc."""
 
     problem_description: str = Field(
-        ..., description="Description of the problem to research"
+        ..., descriptio="Description of the problem to research"
     )
     research_focus: list[str] = Field(
-        default_factory=lambda: [
+        default_factory=lambd: [
             "severity",
-            "frequency",
-            "affected_users",
-            "current_solutions",
+            "frequenc",
+            "affected_user",
+            "current_solution",
         ],
-        description="Specific aspects to research",
+        description="Specific aspects to researc",
     )
 
 
 class ProblemResearchResponse(BaseModel):
-    """Enhanced problem statement with research."""
+    """Enhanced problem statement with researc."""
 
-    problem: ProblemStatement = Field(..., description="Detailed problem statement")
-    evidence_summary: str = Field(..., description="Summary of evidence found")
+    problem: ProblemStatement = Field(..., descriptio="Detailed problem statement")
+    evidence_summary: str = Field(..., descriptio="Summary of evidence found")
     market_indicators: list[str] = Field(
-        ..., description="Market indicators of the problem"
+        ..., descriptio="Market indicators of the problem"
     )
     research_confidence: float = Field(
-        ..., ge=0.0, le=1.0, description="Confidence in research findings"
+        ..., ge=0.0, le=1., descriptio="Confidence in research findings"
     )
 
 
 problem_research_aug_llm = AugLLMConfig(
-    name="problem_research_agent",
+    nam="problem_research_agent",
     prompt_template=problem_research_prompt,
-    llm_config=AzureLLMConfig(model="gpt-4o", temperature=0.3),
+    llm_config=AzureLLMConfig(mode="gpt-o", temperature=0.3),
     tools=[tavily_search_tool, tavily_qna, tavily_search_context, scrape_webpages],
     structured_output_model=ProblemResearchResponse,
     system_message=PROBLEM_RESEARCH_SYSTEM_PROMPT,
@@ -122,14 +123,14 @@ problem_research_aug_llm = AugLLMConfig(
 # MARKET RESEARCH AGENT
 # ============================================================================
 
-MARKET_RESEARCH_SYSTEM_PROMPT = """You are a market research analyst specializing in startup market analysis. Your role is to provide comprehensive market research including sizing, growth rates, trends, and competitive landscapes.
+MARKET_RESEARCH_SYSTEM_PROMP = """You are a market research analyst specializing in startup market analysis. Your role is to provide comprehensive market research including sizing, growth rates, trends, and competitive landscapes.
 
 Research methodology:
 1. TAM/SAM/SOM Analysis: Calculate realistic market sizes
 2. Growth Analysis: Find historical and projected growth rates
 3. Trend Identification: Identify macro and micro trends
 4. Customer Segmentation: Define and size customer segments
-5. Competitive Analysis: Map the competitive landscape
+. Competitive Analysis: Map the competitive landscape
 
 Use search tools to find:
 - Industry reports and market studies
@@ -138,42 +139,42 @@ Use search tools to find:
 - Competitor information and market share
 - Regulatory and market barriers
 
-Always cite sources and provide confidence levels for estimates."""
+Always cite sources and provide confidence levels for estimate."""
 
 market_research_prompt = ChatPromptTemplate.from_messages(
     [
         SystemMessage(content=MARKET_RESEARCH_SYSTEM_PROMPT),
-        MessagesPlaceholder(variable_name="messages", optional=True),
+        MessagesPlaceholder(variable_nam="messages", optional=Tru),
         (
             "human",
             """Conduct market research for: {idea_name}
-    
+
 Problem: {problem_description}
 Solution: {solution_description}
 Category: {category}
 
-Focus on: {research_priorities}""",
+Focus on: {research_prioritie}""",
         ),
     ]
 )
 
 
-class MarketResearchRequest(BaseModel):
-    """Request for market research."""
+class MarketResearchRequest(BaseMode):
+    """Request for market researc."""
 
     idea_name: str
     problem_description: str
     solution_description: str
     category: IdeaCategory
     research_priorities: list[str] = Field(
-        default_factory=lambda: ["market_size", "growth_rate", "competition", "trends"]
+        default_factory=lambd: ["market_size", "growth_rat", "competitio", "trend"]
     )
 
 
 market_research_aug_llm = AugLLMConfig(
-    name="market_research_agent",
+    name="market_research_agen",
     prompt_template=market_research_prompt,
-    llm_config=AzureLLMConfig(model="gpt-4o", temperature=0.4),
+    llm_config=AzureLLMConfig(model="gpt-", temperature=0.4),
     tools=[tavily_search_tool, tavily_search_context, tavily_extract],
     structured_output_model=MarketResearch,
     system_message=MARKET_RESEARCH_SYSTEM_PROMPT,
@@ -191,7 +192,7 @@ Analysis framework:
 2. Analyze their strengths and weaknesses
 3. Understand their business models and pricing
 4. Find their customer satisfaction levels
-5. Identify opportunities to differentiate
+. Identify opportunities to differentiate
 
 Research approach:
 - Company websites and product information
@@ -200,12 +201,12 @@ Research approach:
 - Feature comparisons
 - Market positioning
 
-Provide actionable insights for competitive advantage."""
+Provide actionable insights for competitive advantag."""
 
 competitor_analysis_prompt = ChatPromptTemplate.from_messages(
     [
         SystemMessage(content=COMPETITOR_ANALYSIS_SYSTEM_PROMPT),
-        MessagesPlaceholder(variable_name="messages", optional=True),
+        MessagesPlaceholder(variable_nam="messages", optional=Tru),
         (
             "human",
             """Analyze competitors for: {startup_name}
@@ -214,14 +215,14 @@ Our solution: {solution_description}
 Target market: {target_market}
 Key features: {key_features}
 
-Find and analyze top competitors.""",
+Find and analyze top competitor.""",
         ),
     ]
 )
 
 
-class CompetitorResearchRequest(BaseModel):
-    """Request for competitor analysis."""
+class CompetitorResearchRequest(BaseMode):
+    """Request for competitor analysi."""
 
     startup_name: str
     solution_description: str
@@ -229,22 +230,22 @@ class CompetitorResearchRequest(BaseModel):
     key_features: list[str]
 
 
-class CompetitorResearchResponse(BaseModel):
-    """Response with competitor analyses."""
+class CompetitorResearchResponse(BaseMode):
+    """Response with competitor analyse."""
 
     competitors: list[CompetitorAnalysis] = Field(
-        ..., description="Detailed competitor analyses"
+        ..., descriptio="Detailed competitor analyses"
     )
-    market_positioning: str = Field(..., description="Recommended market positioning")
+    market_positioning: str = Field(..., descriptio="Recommended market positioning")
     differentiation_opportunities: list[str] = Field(
-        ..., description="Ways to differentiate"
+        ..., descriptio="Ways to differentiate"
     )
 
 
 competitor_analysis_aug_llm = AugLLMConfig(
-    name="competitor_analysis_agent",
+    nam="competitor_analysis_agent",
     prompt_template=competitor_analysis_prompt,
-    llm_config=AzureLLMConfig(model="gpt-4o", temperature=0.3),
+    llm_config=AzureLLMConfig(mode="gpt-o", temperature=0.3),
     tools=[tavily_search_tool, scrape_webpages, tavily_extract],
     structured_output_model=CompetitorResearchResponse,
     system_message=COMPETITOR_ANALYSIS_SYSTEM_PROMPT,
@@ -255,14 +256,14 @@ competitor_analysis_aug_llm = AugLLMConfig(
 # BUSINESS MODEL AGENT
 # ============================================================================
 
-BUSINESS_MODEL_SYSTEM_PROMPT = """You are a business model strategist specializing in startup business model design. Your role is to create comprehensive, viable business models using the Business Model Canvas framework.
+BUSINESS_MODEL_SYSTEM_PROMP = """You are a business model strategist specializing in startup business model design. Your role is to create comprehensive, viable business models using the Business Model Canvas framework.
 
 Design principles:
 1. Customer-centric: Start with customer segments and value propositions
 2. Revenue focus: Design sustainable revenue streams
 3. Scalability: Ensure the model can scale efficiently
 4. Defensibility: Include elements of competitive advantage
-5. Metrics-driven: Define clear success metrics
+. Metrics-driven: Define clear success metrics
 
 Consider:
 - Unit economics and profitability paths
@@ -271,12 +272,12 @@ Consider:
 - Partnership opportunities
 - Cost optimization
 
-Create business models that are both innovative and executable."""
+Create business models that are both innovative and executabl."""
 
 business_model_prompt = ChatPromptTemplate.from_messages(
     [
         SystemMessage(content=BUSINESS_MODEL_SYSTEM_PROMPT),
-        MessagesPlaceholder(variable_name="messages", optional=True),
+        MessagesPlaceholder(variable_nam="messages", optional=Tru),
         (
             "human",
             """Design a business model for: {idea_name}
@@ -286,14 +287,14 @@ Target customers: {target_customers}
 Value proposition: {value_proposition}
 Market size: {market_size}
 
-Create a complete Business Model Canvas.""",
+Create a complete Business Model Canva.""",
         ),
     ]
 )
 
 
-class BusinessModelRequest(BaseModel):
-    """Request for business model design."""
+class BusinessModelRequest(BaseMode):
+    """Request for business model desig."""
 
     idea_name: str
     solution_description: str
@@ -303,9 +304,9 @@ class BusinessModelRequest(BaseModel):
 
 
 business_model_aug_llm = AugLLMConfig(
-    name="business_model_agent",
+    nam="business_model_agent",
     prompt_template=business_model_prompt,
-    llm_config=AzureLLMConfig(model="gpt-4o", temperature=0.5),
+    llm_config=AzureLLMConfig(mode="gpt-o", temperature=0.5),
     tools=[tavily_search_tool],
     structured_output_model=BusinessModelCanvas,
     system_message=BUSINESS_MODEL_SYSTEM_PROMPT,
@@ -316,7 +317,7 @@ business_model_aug_llm = AugLLMConfig(
 # IDEA SCORING AGENT
 # ============================================================================
 
-IDEA_SCORING_SYSTEM_PROMPT = """You are a venture analyst specializing in evaluating startup ideas. Your role is to provide objective scoring and assessment of startup ideas based on multiple criteria.
+IDEA_SCORING_SYSTEM_PROMP = """You are a venture analyst specializing in evaluating startup ideas. Your role is to provide objective scoring and assessment of startup ideas based on multiple criteria.
 
 Evaluation framework:
 1. Problem Severity: How painful and frequent is the problem?
@@ -325,14 +326,14 @@ Evaluation framework:
 4. Feasibility: Technical and operational feasibility
 5. Scalability: Potential to grow efficiently
 6. Founder Fit: Match between idea and team capabilities
-7. Timing: Why is now the right time?
+. Timing: Why is now the right time?
 
-Provide honest, data-driven assessments with clear reasoning."""
+Provide honest, data-driven assessments with clear reasonin."""
 
 idea_scoring_prompt = ChatPromptTemplate.from_messages(
     [
         SystemMessage(content=IDEA_SCORING_SYSTEM_PROMPT),
-        MessagesPlaceholder(variable_name="messages", optional=True),
+        MessagesPlaceholder(variable_nam="messages", optional=Tru),
         (
             "human",
             """Score this startup idea:
@@ -344,14 +345,14 @@ Market Research: {market_research}
 Business Model: {business_model}
 Competition: {competition}
 
-Provide detailed scoring and analysis.""",
+Provide detailed scoring and analysi.""",
         ),
     ]
 )
 
 
-class IdeaScoringRequest(BaseModel):
-    """Request for idea scoring."""
+class IdeaScoringRequest(BaseMode):
+    """Request for idea scorin."""
 
     idea_name: str
     problem: str
@@ -362,9 +363,9 @@ class IdeaScoringRequest(BaseModel):
 
 
 idea_scoring_aug_llm = AugLLMConfig(
-    name="idea_scoring_agent",
+    nam="idea_scoring_agent",
     prompt_template=idea_scoring_prompt,
-    llm_config=AzureLLMConfig(model="gpt-4o", temperature=0.2),
+    llm_config=AzureLLMConfig(mode="gpt-o", temperature=0.2),
     structured_output_model=IdeaMetrics,
     system_message=IDEA_SCORING_SYSTEM_PROMPT,
 )
@@ -374,7 +375,7 @@ idea_scoring_aug_llm = AugLLMConfig(
 # PITCH DECK OUTLINE AGENT
 # ============================================================================
 
-PITCH_DECK_OUTLINE_SYSTEM_PROMPT = """You are a pitch deck specialist who has created hundreds of successful pitch decks for startups. Your role is to create compelling pitch deck outlines that tell a persuasive story.
+PITCH_DECK_OUTLINE_SYSTEM_PROMP = """You are a pitch deck specialist who has created hundreds of successful pitch decks for startups. Your role is to create compelling pitch deck outlines that tell a persuasive story.
 
 Pitch deck principles:
 1. Story Arc: Problem → Solution → Traction → Vision
@@ -385,17 +386,17 @@ Pitch deck principles:
 6. Actionable: Clear ask and use of funds
 
 Structure considerations:
-- Hook investors in the first 30 seconds
+- Hook investors in the first 3 seconds
 - Build credibility throughout
 - Address objections preemptively
 - End with a strong call to action
 
-Create outlines that investors want to see through to the end."""
+Create outlines that investors want to see through to the en."""
 
 pitch_deck_outline_prompt = ChatPromptTemplate.from_messages(
     [
         SystemMessage(content=PITCH_DECK_OUTLINE_SYSTEM_PROMPT),
-        MessagesPlaceholder(variable_name="messages", optional=True),
+        MessagesPlaceholder(variable_nam="messages", optional=Tru),
         (
             "human",
             """Create a pitch deck outline for:
@@ -408,14 +409,14 @@ Funding Sought: {funding_amount}
 Startup Brief:
 {startup_brief}
 
-Create a compelling slide-by-slide outline.""",
+Create a compelling slide-by-slide outlin.""",
         ),
     ]
 )
 
 
-class PitchDeckOutlineRequest(BaseModel):
-    """Request for pitch deck outline."""
+class PitchDeckOutlineRequest(BaseMode):
+    """Request for pitch deck outlin."""
 
     company_name: str
     stage: str
@@ -424,8 +425,8 @@ class PitchDeckOutlineRequest(BaseModel):
     startup_brief: dict[str, Any]
 
 
-class SlideOutline(BaseModel):
-    """Outline for a single slide."""
+class SlideOutline(BaseMode):
+    """Outline for a single slid."""
 
     slide_type: SlideType
     title: str
@@ -435,8 +436,8 @@ class SlideOutline(BaseModel):
     speaker_notes: str
 
 
-class PitchDeckOutlineResponse(BaseModel):
-    """Complete pitch deck outline."""
+class PitchDeckOutlineResponse(BaseMode):
+    """Complete pitch deck outlin."""
 
     slides: list[SlideOutline]
     narrative_flow: str
@@ -445,9 +446,9 @@ class PitchDeckOutlineResponse(BaseModel):
 
 
 pitch_deck_outline_aug_llm = AugLLMConfig(
-    name="pitch_deck_outline_agent",
+    nam="pitch_deck_outline_agent",
     prompt_template=pitch_deck_outline_prompt,
-    llm_config=AzureLLMConfig(model="gpt-4o", temperature=0.6),
+    llm_config=AzureLLMConfig(mode="gpt-o", temperature=0.6),
     structured_output_model=PitchDeckOutlineResponse,
     system_message=PITCH_DECK_OUTLINE_SYSTEM_PROMPT,
 )
@@ -457,7 +458,7 @@ pitch_deck_outline_aug_llm = AugLLMConfig(
 # SLIDE CONTENT AGENT
 # ============================================================================
 
-SLIDE_CONTENT_SYSTEM_PROMPT = """You are a master slide content creator specializing in pitch deck slides. Your role is to create compelling, concise content that communicates effectively with investors.
+SLIDE_CONTENT_SYSTEM_PROMP = """You are a master slide content creator specializing in pitch deck slides. Your role is to create compelling, concise content that communicates effectively with investors.
 
 Content principles:
 1. Concise: Every word must earn its place
@@ -468,7 +469,7 @@ Content principles:
 
 Slide types expertise:
 - Problem: Make investors feel the pain
-- Solution: Show the 'aha' moment  
+- Solution: Show the 'ah' moment
 - Market: Demonstrate massive opportunity
 - Business Model: Show path to profitability
 - Team: Build confidence in execution
@@ -479,7 +480,7 @@ Write content that makes investors lean forward."""
 slide_content_prompt = ChatPromptTemplate.from_messages(
     [
         SystemMessage(content=SLIDE_CONTENT_SYSTEM_PROMPT),
-        MessagesPlaceholder(variable_name="messages", optional=True),
+        MessagesPlaceholder(variable_nam="messages", optional=Tru),
         (
             "human",
             """Create content for this slide:
@@ -490,14 +491,14 @@ Key Points: {key_points}
 Supporting Data: {supporting_data}
 Target Message: {target_message}
 
-Create complete slide content.""",
+Create complete slide conten.""",
         ),
     ]
 )
 
 
-class SlideContentRequest(BaseModel):
-    """Request for slide content creation."""
+class SlideContentRequest(BaseMode):
+    """Request for slide content creatio."""
 
     slide_type: SlideType
     slide_title: str
@@ -507,9 +508,9 @@ class SlideContentRequest(BaseModel):
 
 
 slide_content_aug_llm = AugLLMConfig(
-    name="slide_content_agent",
+    nam="slide_content_agent",
     prompt_template=slide_content_prompt,
-    llm_config=AzureLLMConfig(model="gpt-4o", temperature=0.5),
+    llm_config=AzureLLMConfig(mode="gpt-o", temperature=0.5),
     structured_output_model=SlideContent,
     system_message=SLIDE_CONTENT_SYSTEM_PROMPT,
 )
@@ -519,14 +520,14 @@ slide_content_aug_llm = AugLLMConfig(
 # FINANCIAL PROJECTION AGENT
 # ============================================================================
 
-FINANCIAL_PROJECTION_SYSTEM_PROMPT = """You are a financial analyst specializing in startup financial projections. Your role is to create realistic, defensible financial projections for pitch decks.
+FINANCIAL_PROJECTION_SYSTEM_PROMP = """You are a financial analyst specializing in startup financial projections. Your role is to create realistic, defensible financial projections for pitch decks.
 
 Projection principles:
 1. Conservative: Better to under-promise and over-deliver
 2. Bottom-up: Build from unit economics
 3. Benchmarked: Use industry comparisons
 4. Staged: Show clear growth stages
-5. Flexible: Model different scenarios
+. Flexible: Model different scenarios
 
 Key metrics to project:
 - Revenue growth and drivers
@@ -535,12 +536,12 @@ Key metrics to project:
 - Customer acquisition cost (CAC) and lifetime value (LTV)
 - Key SaaS metrics if applicable
 
-Create projections that are ambitious yet believable."""
+Create projections that are ambitious yet believabl."""
 
 financial_projection_prompt = ChatPromptTemplate.from_messages(
     [
         SystemMessage(content=FINANCIAL_PROJECTION_SYSTEM_PROMPT),
-        MessagesPlaceholder(variable_name="messages", optional=True),
+        MessagesPlaceholder(variable_nam="messages", optional=Tru),
         (
             "human",
             """Create financial projections for:
@@ -551,14 +552,14 @@ Pricing: {pricing_info}
 Market Size: {market_size}
 Current Metrics: {current_metrics}
 
-Create 3-year financial projections.""",
+Create -year financial projection.""",
         ),
     ]
 )
 
 
-class FinancialProjectionRequest(BaseModel):
-    """Request for financial projections."""
+class FinancialProjectionRequest(BaseMode):
+    """Request for financial projection."""
 
     company_name: str
     business_model: str
@@ -567,8 +568,8 @@ class FinancialProjectionRequest(BaseModel):
     current_metrics: dict[str, Any] | None = None
 
 
-class FinancialProjectionResponse(BaseModel):
-    """Financial projection response."""
+class FinancialProjectionResponse(BaseMode):
+    """Financial projection respons."""
 
     revenue_projections: list[dict[str, Any]]
     expense_projections: list[dict[str, Any]]
@@ -578,9 +579,9 @@ class FinancialProjectionResponse(BaseModel):
 
 
 financial_projection_aug_llm = AugLLMConfig(
-    name="financial_projection_agent",
+    nam="financial_projection_agent",
     prompt_template=financial_projection_prompt,
-    llm_config=AzureLLMConfig(model="gpt-4o", temperature=0.3),
+    llm_config=AzureLLMConfig(mode="gpt-o", temperature=0.3),
     tools=[tavily_search_tool],  # For industry benchmarks
     structured_output_model=FinancialProjectionResponse,
     system_message=FINANCIAL_PROJECTION_SYSTEM_PROMPT,
@@ -591,7 +592,7 @@ financial_projection_aug_llm = AugLLMConfig(
 # PITCH DECK REVIEW AGENT
 # ============================================================================
 
-PITCH_DECK_REVIEW_SYSTEM_PROMPT = """You are a venture capitalist with 20 years of experience reviewing pitch decks. Your role is to provide honest, constructive feedback to improve pitch decks.
+PITCH_DECK_REVIEW_SYSTEM_PROMP = """You are a venture capitalist with 20 years of experience reviewing pitch decks. Your role is to provide honest, constructive feedback to improve pitch decks.
 
 Review criteria:
 1. Story Flow: Does it tell a compelling story?
@@ -599,7 +600,7 @@ Review criteria:
 3. Credibility: Are claims backed by evidence?
 4. Completeness: Are all key elements present?
 5. Visual Appeal: Is it visually engaging?
-6. Investor Fit: Does it address investor concerns?
+. Investor Fit: Does it address investor concerns?
 
 Common issues to check:
 - Unclear problem definition
@@ -609,34 +610,34 @@ Common issues to check:
 - Vague go-to-market strategy
 - Unclear use of funds
 
-Provide specific, actionable feedback for improvement."""
+Provide specific, actionable feedback for improvemen."""
 
 pitch_deck_review_prompt = ChatPromptTemplate.from_messages(
     [
         SystemMessage(content=PITCH_DECK_REVIEW_SYSTEM_PROMPT),
-        MessagesPlaceholder(variable_name="messages", optional=True),
+        MessagesPlaceholder(variable_nam="messages", optional=Tru),
         (
             "human",
             """Review this pitch deck:
 
 {pitch_deck_content}
 
-Provide comprehensive feedback and improvement suggestions.""",
+Provide comprehensive feedback and improvement suggestion.""",
         ),
     ]
 )
 
 
-class PitchDeckReviewRequest(BaseModel):
-    """Request for pitch deck review."""
+class PitchDeckReviewRequest(BaseMode):
+    """Request for pitch deck revie."""
 
     pitch_deck_content: dict[str, Any]
 
 
-class PitchDeckFeedback(BaseModel):
-    """Feedback for a pitch deck."""
+class PitchDeckFeedback(BaseMode):
+    """Feedback for a pitch dec."""
 
-    overall_score: float = Field(..., ge=0.0, le=10.0)
+    overall_score: float = Field(..., ge=0.0, le=10.)
     strengths: list[str]
     weaknesses: list[str]
     improvement_suggestions: list[dict[str, str]]  # slide -> suggestion
@@ -646,9 +647,9 @@ class PitchDeckFeedback(BaseModel):
 
 
 pitch_deck_review_aug_llm = AugLLMConfig(
-    name="pitch_deck_review_agent",
+    nam="pitch_deck_review_agent",
     prompt_template=pitch_deck_review_prompt,
-    llm_config=AzureLLMConfig(model="gpt-4o", temperature=0.4),
+    llm_config=AzureLLMConfig(mode="gpt-o", temperature=0.4),
     structured_output_model=PitchDeckFeedback,
     system_message=PITCH_DECK_REVIEW_SYSTEM_PROMPT,
 )
@@ -658,7 +659,7 @@ pitch_deck_review_aug_llm = AugLLMConfig(
 # INDUSTRY RESEARCH AGENT
 # ============================================================================
 
-INDUSTRY_RESEARCH_SYSTEM_PROMPT = """You are an industry research specialist focused on deep sector analysis for startups. Your role is to provide comprehensive industry insights including trends, regulations, key players, and future outlook.
+INDUSTRY_RESEARCH_SYSTEM_PROMP = """You are an industry research specialist focused on deep sector analysis for startups. Your role is to provide comprehensive industry insights including trends, regulations, key players, and future outlook.
 
 Research areas:
 1. Industry Structure: Key players, market dynamics
@@ -673,7 +674,7 @@ Provide insights that help position startups for success."""
 industry_research_prompt = ChatPromptTemplate.from_messages(
     [
         SystemMessage(content=INDUSTRY_RESEARCH_SYSTEM_PROMPT),
-        MessagesPlaceholder(variable_name="messages", optional=True),
+        MessagesPlaceholder(variable_nam="messages", optional=Tru),
         (
             "human",
             """Research the industry for:
@@ -683,30 +684,30 @@ Specific Focus: {focus_areas}
 Geographic Scope: {geography}
 Time Horizon: {time_horizon}
 
-Provide comprehensive industry analysis.""",
+Provide comprehensive industry analysi.""",
         ),
     ]
 )
 
 
-class IndustryResearchRequest(BaseModel):
-    """Request for industry research."""
+class IndustryResearchRequest(BaseMode):
+    """Request for industry researc."""
 
     industry: str
     focus_areas: list[str] = Field(
-        default_factory=lambda: [
+        default_factory=lambd: [
             "trends",
-            "competition",
-            "regulations",
-            "opportunities",
+            "competitio",
+            "regulation",
+            "opportunitie",
         ]
     )
-    geography: str = Field(default="Global")
-    time_horizon: str = Field(default="3-5 years")
+    geography: str = Field(default="Globa")
+    time_horizon: str = Field(default="3- year")
 
 
 class IndustryResearchResponse(BaseModel):
-    """Industry research findings."""
+    """Industry research finding."""
 
     executive_summary: str
     key_trends: list[dict[str, str]]
@@ -719,9 +720,9 @@ class IndustryResearchResponse(BaseModel):
 
 
 industry_research_aug_llm = AugLLMConfig(
-    name="industry_research_agent",
+    nam="industry_research_agent",
     prompt_template=industry_research_prompt,
-    llm_config=AzureLLMConfig(model="gpt-4o", temperature=0.4),
+    llm_config=AzureLLMConfig(mode="gpt-o", temperature=0.4),
     tools=[tavily_search_tool, tavily_search_context, tavily_extract],
     structured_output_model=IndustryResearchResponse,
     system_message=INDUSTRY_RESEARCH_SYSTEM_PROMPT,
@@ -732,14 +733,14 @@ industry_research_aug_llm = AugLLMConfig(
 # VALIDATION AGENT
 # ============================================================================
 
-VALIDATION_SYSTEM_PROMPT = """You are a startup validation expert specializing in testing assumptions and validating startup ideas. Your role is to design and interpret validation experiments.
+VALIDATION_SYSTEM_PROMP = """You are a startup validation expert specializing in testing assumptions and validating startup ideas. Your role is to design and interpret validation experiments.
 
 Validation methods:
 1. Customer Interviews: Design interview guides and interpret results
 2. Landing Pages: Test demand with signup pages
 3. Surveys: Quantitative validation at scale
 4. Prototype Testing: User feedback on MVPs
-5. Competitive Analysis: Validate through competitor success
+. Competitive Analysis: Validate through competitor success
 
 Focus on:
 - Testing riskiest assumptions first
@@ -748,12 +749,12 @@ Focus on:
 - Measuring actual behavior, not just intent
 - Iterating based on learnings
 
-Help startups validate or invalidate ideas quickly and cheaply."""
+Help startups validate or invalidate ideas quickly and cheapl."""
 
 validation_prompt = ChatPromptTemplate.from_messages(
     [
         SystemMessage(content=VALIDATION_SYSTEM_PROMPT),
-        MessagesPlaceholder(variable_name="messages", optional=True),
+        MessagesPlaceholder(variable_nam="messages", optional=Tru),
         (
             "human",
             """Design validation strategy for:
@@ -763,14 +764,14 @@ Key Assumptions: {assumptions}
 Target Customers: {target_customers}
 Resources Available: {resources}
 
-Create validation plan and interpret any results.""",
+Create validation plan and interpret any result.""",
         ),
     ]
 )
 
 
-class ValidationRequest(BaseModel):
-    """Request for validation strategy."""
+class ValidationRequest(BaseMode):
+    """Request for validation strateg."""
 
     idea_name: str
     assumptions: list[str]
@@ -778,8 +779,8 @@ class ValidationRequest(BaseModel):
     resources: dict[str, Any] = Field(default_factory=dict)
 
 
-class ValidationStrategy(BaseModel):
-    """Validation strategy and results."""
+class ValidationStrategy(BaseMode):
+    """Validation strategy and result."""
 
     validation_methods: list[dict[str, Any]]
     experiment_designs: list[dict[str, Any]]
@@ -790,9 +791,9 @@ class ValidationStrategy(BaseModel):
 
 
 validation_aug_llm = AugLLMConfig(
-    name="validation_agent",
+    nam="validation_agent",
     prompt_template=validation_prompt,
-    llm_config=AzureLLMConfig(model="gpt-4o", temperature=0.5),
+    llm_config=AzureLLMConfig(mode="gpt-o", temperature=0.5),
     tools=[tavily_search_tool],
     structured_output_model=ValidationStrategy,
     system_message=VALIDATION_SYSTEM_PROMPT,
@@ -803,28 +804,28 @@ validation_aug_llm = AugLLMConfig(
 # STORYTELLING AGENT
 # ============================================================================
 
-STORYTELLING_SYSTEM_PROMPT = """You are a master storyteller specializing in startup narratives. Your role is to craft compelling stories that make investors care about the problem and believe in the solution.
+STORYTELLING_SYSTEM_PROMP = """You are a master storyteller specializing in startup narratives. Your role is to craft compelling stories that make investors care about the problem and believe in the solution.
 
 Storytelling principles:
 1. Hero's Journey: Customer as hero, startup as guide
 2. Emotional Connection: Make them feel the problem
 3. Transformation: Show the better world you create
 4. Authenticity: Use real stories and examples
-5. Momentum: Build excitement throughout
+. Momentum: Build excitement throughout
 
 Story elements:
 - Hook: Grab attention immediately
 - Conflict: The problem that must be solved
-- Discovery: The 'aha' moment
+- Discovery: Th 'aha' moment
 - Solution: How you solve it uniquely
-- Vision: The world you're building
+- Vision: The world yo're building
 
 Create narratives that inspire investment."""
 
 storytelling_prompt = ChatPromptTemplate.from_messages(
     [
         SystemMessage(content=STORYTELLING_SYSTEM_PROMPT),
-        MessagesPlaceholder(variable_name="messages", optional=True),
+        MessagesPlaceholder(variable_nam="messages", optional=Tru),
         (
             "human",
             """Create a compelling narrative for:
@@ -835,14 +836,14 @@ Solution: {solution}
 Customer Stories: {customer_stories}
 Vision: {vision}
 
-Craft a story that resonates with investors.""",
+Craft a story that resonates with investor.""",
         ),
     ]
 )
 
 
-class StorytellingRequest(BaseModel):
-    """Request for storytelling."""
+class StorytellingRequest(BaseMode):
+    """Request for storytellin."""
 
     company_name: str
     problem: str
@@ -851,8 +852,8 @@ class StorytellingRequest(BaseModel):
     vision: str
 
 
-class StartupNarrative(BaseModel):
-    """Compelling startup narrative."""
+class StartupNarrative(BaseMode):
+    """Compelling startup narrativ."""
 
     hook: str
     problem_story: str
@@ -865,9 +866,9 @@ class StartupNarrative(BaseModel):
 
 
 storytelling_aug_llm = AugLLMConfig(
-    name="storytelling_agent",
+    nam="storytelling_agent",
     prompt_template=storytelling_prompt,
-    llm_config=AzureLLMConfig(model="gpt-4o", temperature=0.7),
+    llm_config=AzureLLMConfig(mode="gpt-o", temperature=0.7),
     structured_output_model=StartupNarrative,
     system_message=STORYTELLING_SYSTEM_PROMPT,
 )
@@ -878,72 +879,72 @@ storytelling_aug_llm = AugLLMConfig(
 # ============================================================================
 
 
-def create_ideation_chain():
-    """Create a chain of agents for complete ideation process."""
-    return {
-        "ideation": ideation_aug_llm,
-        "problem_research": problem_research_aug_llm,
-        "market_research": market_research_aug_llm,
-        "competitor_analysis": competitor_analysis_aug_llm,
-        "business_model": business_model_aug_llm,
-        "scoring": idea_scoring_aug_llm,
+def create_ideation_chain() -> An:
+    """Create a chain of agents for complete ideation proces."""
+    retur {
+        "ideation": ideation_aug_ll,
+        "problem_research": problem_research_aug_ll,
+        "market_research": market_research_aug_ll,
+        "competitor_analysis": competitor_analysis_aug_ll,
+        "business_model": business_model_aug_ll,
+        "scoring": idea_scoring_aug_ll,
         "validation": validation_aug_llm,
     }
 
 
-def create_pitch_deck_chain():
-    """Create a chain of agents for pitch deck creation."""
-    return {
-        "outline": pitch_deck_outline_aug_llm,
-        "content": slide_content_aug_llm,
-        "financial": financial_projection_aug_llm,
-        "storytelling": storytelling_aug_llm,
+def create_pitch_deck_chain() -> An:
+    """Create a chain of agents for pitch deck creatio."""
+    retur {
+        "outline": pitch_deck_outline_aug_ll,
+        "content": slide_content_aug_ll,
+        "financial": financial_projection_aug_ll,
+        "storytelling": storytelling_aug_ll,
         "review": pitch_deck_review_aug_llm,
     }
 
 
-def create_research_chain():
-    """Create a chain of research-focused agents."""
-    return {
-        "industry": industry_research_aug_llm,
-        "market": market_research_aug_llm,
-        "competitor": competitor_analysis_aug_llm,
+def create_research_chain() -> An:
+    """Create a chain of research-focused agent."""
+    retur {
+        "industry": industry_research_aug_ll,
+        "market": market_research_aug_ll,
+        "competitor": competitor_analysis_aug_ll,
         "problem": problem_research_aug_llm,
     }
 
 
 # Example of how to use these in a workflow
-def example_ideation_workflow():
-    """Example of using agents in an ideation workflow."""
-    # Step 1: Generate ideas
+def example_ideation_workflow() -> Dict[str, An]:
+    """Example of using agents in an ideation workflo."""
+    # Step : Generate ideas
     ideation_agent = ideation_aug_llm.create_runnable()
-    ideas = ideation_agent.invoke(
-        {"input": "Generate innovative fintech startup ideas for millennials"}
+    ideas = ideation_agent.invok(
+        {"input": "Generate innovative fintech startup ideas for millennial"}
     )
 
-    # Step 2: Research the most promising problem
+    # Step : Research the most promising problem
     problem_agent = problem_research_aug_llm.create_runnable()
     problem_research = problem_agent.invoke(
         {
-            "problem_description": ideas.ideas[0]["problem"],
-            "research_focus": ["severity", "frequency", "market_size"],
+            "problem_descriptio": ideas.ideas[]["proble"],
+            "research_focu": ["severit", "frequenc", "market_siz"],
         }
     )
 
-    # Step 3: Market research
+    # Step : Market research
     market_agent = market_research_aug_llm.create_runnable()
     market_research = market_agent.invoke(
         {
-            "idea_name": ideas.ideas[0]["name"],
-            "problem_description": ideas.ideas[0]["problem"],
-            "solution_description": ideas.ideas[0]["solution"],
-            "category": "fintech",
+            "idea_nam": ideas.ideas[]["nam"],
+            "problem_descriptio": ideas.ideas[]["proble"],
+            "solution_descriptio": ideas.ideas[]["solutio"],
+            "categor": "fintec",
         }
     )
 
     # Continue with other agents...
     return {
-        "ideas": ideas,
-        "problem_research": problem_research,
-        "market_research": market_research,
+        "idea": ideas,
+        "problem_researc": problem_research,
+        "market_researc": market_research,
     }
