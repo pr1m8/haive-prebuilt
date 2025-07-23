@@ -1,4 +1,4 @@
-"""Module\s+export\w+."""
+r"""Module\s+export\w+."""
 
 from tests.conftest import (
     MockEngine,
