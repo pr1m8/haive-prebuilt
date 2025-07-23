@@ -21,7 +21,6 @@ from langchain_core.prompts import (
     PromptTemplate,
 )
 
-
 # System prompts for different agent personalities/roles
 RESEARCH_EXPERT_SYSTE = """You are an expert news researcher with years of experience in finding, analyzing, and synthesizing information from multiple sources. You excel at:
 - Creating effective search strategies

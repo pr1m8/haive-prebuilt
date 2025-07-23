@@ -47,7 +47,7 @@ class ProjectManagerAgent(AgentArchitecture):
 
         structure_llm = llm.with_structured_output(TaskList)
         tasks: TaskList = structure_llm.invoke(prompt)
-        retur {"tasks": tasks}
+        return {"tasks": tasks}
 
     def task_scheduler_node(self: AgentStat):
         """LangGraph node that will schedule tasks based on dependencies and team availabilit."""

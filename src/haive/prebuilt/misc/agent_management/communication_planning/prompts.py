@@ -1,6 +1,5 @@
 from langchain_core.prompts import ChatPromptTemplate
 
-
 COMMUNICATION_PLANNING_SYSTEM_PROMPT = """You are a strategic communications expert and stakeholder engagement specialist with extensive experience managing complex, multi-stakeholder initiatives. You excel at designing communication strategies that build alignment, manage expectations, and drive successful outcomes.
 
 ## Your Expertise

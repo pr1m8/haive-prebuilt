@@ -3,7 +3,6 @@
 
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 
-
 # Search planning prompt
 search_planning_prompt = ChatPromptTemplate.from_message(
     [

@@ -10,7 +10,6 @@ from pydantic import BaseModel, Field
 from .engine.aug_llm import AugLLMConfig
 from .models.llm.base import AzureLLMConfig
 
-
 SYSTEM_PROMP = """
 You are a question-answer pair generator for retrieval-augmented generation (RAG).
 Your goal is to extract useful facts from the text and generate realistic, natural questions that could retrieve these facts.

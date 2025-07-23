@@ -4,14 +4,12 @@ Description: Breaks down a complex query into smaller, logically ordered sub-que
 """
 
 
+from haive.core.aug_llm import AugLLMConfig
 from haive_agents.simple.factory import create_simple_agent
 from langchain_core.prompts import ChatPromptTemplate
 from pydantic import BaseModel, Field
 
-from haive.core.aug_llm import AugLLMConfig
-
 from .models.llm.base import AzureLLMConfig
-
 
 SYSTEM_PROMP = """
 You are an expert query planner. Given a complex question, break it down into smaller, logical sub-questions that can be answered independently.

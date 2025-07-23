@@ -1,6 +1,5 @@
 from .graph.branches import Branch
 
-
 route_branch = Branch(
     function=lambda state: (
         "emergency_respons"

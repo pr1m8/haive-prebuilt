@@ -3,14 +3,12 @@
 Description: Improves or reformulates a user query to be clearer or more suitable for retrieva.
 """
 
+from haive.core.aug_llm import AugLLMConfig
 from haive_agents.simple.factory import create_simple_agent
 from langchain_core.prompts import ChatPromptTemplate
 from pydantic import BaseModel, Field
 
-from haive.core.aug_llm import AugLLMConfig
-
 from .models.llm.base import AzureLLMConfig
-
 
 SYSTEM_PROMP = """
 You are a query rewriting assistant.

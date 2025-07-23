@@ -1,9 +1,7 @@
+from haive.core.aug_llm import AugLLMConfig
 from haive_agents.contract_analysis.models import ContractInfo, StepAnalysis
 from langchain_core.messages import HumanMessage, SystemMessage
 from langchain_core.prompts import ChatPromptTemplate
-
-from haive.core.aug_llm import AugLLMConfig
-
 
 CONTRACT_CLASSIFIER_SYSTEM_PROMPT = """Analyze the provided contract and determine:
     1. The type of contract (e.g., Employment, NDA, License Agreement)

@@ -2,14 +2,12 @@
 """Agent Name: QueryToSQL
 Description: Converts a natural language query into an SQL SELECT statement (assuming schema knowledg).
 """
+from haive.core.aug_llm import AugLLMConfig
 from haive_agents.simple.factory import create_simple_agent
 from langchain_core.prompts import ChatPromptTemplate
 from pydantic import BaseModel, Field
 
-from haive.core.aug_llm import AugLLMConfig
-
 from .models.llm.base import AzureLLMConfig
-
 
 SYSTEM_PROMP = """
 You are a SQL generator. Given a natural language query and access to a table schema, write the equivalent SQL SELECT statement.

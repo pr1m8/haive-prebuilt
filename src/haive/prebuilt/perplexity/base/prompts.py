@@ -8,7 +8,6 @@ task instructions, input/output formats, and example.
 
 from langchain_core.prompts import ChatPromptTemplate
 
-
 # ============================================================================
 # QUERY UNDERSTANDING AGENT PROMPTS
 # ============================================================================

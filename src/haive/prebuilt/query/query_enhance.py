@@ -4,14 +4,12 @@ Description: Enriches a query by adding relevant context, assumptions, or metada
 Useful for boosting reasoning or LLM effectivenes.
 """
 
+from haive.core.aug_llm import AugLLMConfig
 from haive_agents.simple.factory import create_simple_agent
 from langchain_core.prompts import ChatPromptTemplate
 from pydantic import BaseModel, Field
 
-from haive.core.aug_llm import AugLLMConfig
-
 from .models.llm.base import AzureLLMConfig
-
 
 SYSTEM_PROMP = """
 You are a semantic enhancer.

@@ -4,13 +4,11 @@
 """Agent Name: QueryIntentClassifier
 Description: Classifies the intent behind a query, such as definition, comparison, fact-checking, opinion, et.
 """
+from haive.core.aug_llm import AugLLMConfig
 from langchain_core.prompts import ChatPromptTemplate
 from pydantic import BaseModel, Field
 
-from haive.core.aug_llm import AugLLMConfig
-
 from .models.llm.base import AzureLLMConfig
-
 
 SYSTEM_PROMP = """
 You are a query intent classifier.

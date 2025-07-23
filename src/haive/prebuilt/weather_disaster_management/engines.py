@@ -15,7 +15,6 @@ from haive_prebuilt.misc.weather_disaster_management.prompts import (
 from .engine.aug_llm import AugLLMConfig
 from .tools.search_tools import tavily_search_tool
 
-
 disaster_engine = AugLLMConfig(
     prompt_template=disaster_prompt,
     structured_output_model=DisasterOutput,

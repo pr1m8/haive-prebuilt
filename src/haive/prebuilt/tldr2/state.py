@@ -279,7 +279,7 @@ class NewsResearchState(MessagesStat):
 
         Returns:
             List of ArticleMetadata objects without corresponding content
-        """ """ """ """
+        """
         processed_urls = {a.url for a in self.articles_content}
         return [
             article

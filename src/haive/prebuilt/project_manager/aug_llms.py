@@ -1,4 +1,4 @@
-prompt = f""" """ """ """
+prompt = f"""
 You are an experienced project scheduler tasked with creating an optimized project timeline.
         **Given: **
             - **Tasks: ** {tasks}

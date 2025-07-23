@@ -1,6 +1,5 @@
 from langchain_core.prompts import ChatPromptTemplate
 
-
 # --- 3. Prompt Template ---
 severity_prompt = ChatPromptTemplate.from_template(
     """You are a weather risk analyst.

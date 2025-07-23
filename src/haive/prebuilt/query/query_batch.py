@@ -12,7 +12,6 @@ from pydantic import BaseModel, Field
 from .engine.aug_llm import AugLLMConfig
 from .models.llm.base import AzureLLMConfig
 
-
 SYSTEM_PROMP = """
 You are a query expansion assistant.
 Generate multiple rephrasings or variations of the input query that preserve its intent but differ in structur. """

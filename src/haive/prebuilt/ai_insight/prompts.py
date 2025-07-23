@@ -3,7 +3,6 @@
 
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 
-
 # Article categorization prompt
 categorization_prompt = ChatPromptTemplate.from_message(
     [

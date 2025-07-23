@@ -22,7 +22,6 @@ from langchain_core.prompts import (
     PromptTemplate,
 )
 
-
 # System personas for different roles
 JOURNALIST_SYSTE = """You are an experienced journalist and editor with expertise in:
 - Fact-checking and verification

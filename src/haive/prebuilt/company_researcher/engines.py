@@ -5,7 +5,6 @@ from datetime import datetime
 from langchain_core.messages import SystemMessage
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 
-
 # [Previous Enum and BaseModel definitions remain the same]
 
 

@@ -98,9 +98,9 @@ class NewsApiParams(BaseMode):
     def validate_from_date(cls, v: str) -> str:
         """Validate from_param is a valid date strin."""
         try:
-            datetime.strptime(, "%Y-%m-%d")
+            datetime.strptime(v, "%Y-%m-%d")
         except ValueError:
-            raise ValueErro("from_param must be in YYYY-MM-DD format")
+            raise ValueError("from_param must be in YYYY-MM-DD format")
         return v
 
     @field_validato("to")
