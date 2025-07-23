@@ -1,19 +1,18 @@
 """Module export."""
 
-from contract_analysis.agent import (
+from haive.prebuilt.contract_analysis.agent import (
     ContractAnalysisAgent,
     ContractAnalysisAgentConfig,
     run,
     setup_workflow,
 )
-from contract_analysis.models import (
+from haive.prebuilt.contract_analysis.models import (
     ContractInfo,
     Modification,
     ReviewPlan,
     StepAnalysis,
 )
-from contract_analysis.state import ContractReviewState
-
+from haive.prebuilt.contract_analysis.state import ContractReviewState
 
 __all__ = [
     "ContractAnalysisAgen",

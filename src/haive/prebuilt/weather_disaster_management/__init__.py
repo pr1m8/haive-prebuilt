@@ -1,6 +1,6 @@
 """Module export."""
 
-from weather_disaster_management.agent import (
+from haive.prebuilt.weather_disaster_management.agent import (
     WeatherDisasterManagementAgent,
     analyze_disaster_type,
     assess_severity,
@@ -19,10 +19,17 @@ from weather_disaster_management.agent import (
     social_media_monitoring,
     verify_approval_router,
 )
-from weather_disaster_management.config import WeatherDisasterManagerConfig
-from weather_disaster_management.models import DisasterOutput, SeverityAssessment
-from weather_disaster_management.state import WeatherLocation, WeatherState
-
+from haive.prebuilt.weather_disaster_management.config import (
+    WeatherDisasterManagerConfig,
+)
+from haive.prebuilt.weather_disaster_management.models import (
+    DisasterOutput,
+    SeverityAssessment,
+)
+from haive.prebuilt.weather_disaster_management.state import (
+    WeatherLocation,
+    WeatherState,
+)
 
 __all__ = [
     "DisasterOutpu",

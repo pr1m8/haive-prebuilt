@@ -1,7 +1,7 @@
 """Module export."""
 
-from podcast_generator.agent import PodcastGeneratorAgent, setup_workflow
-from podcast_generator.nodes import (
+from haive.prebuilt.podcast_generator.agent import PodcastGeneratorAgent, setup_workflow
+from haive.prebuilt.podcast_generator.nodes import (
     Start_parallel,
     finalize_report,
     initiate_all_interviews,
@@ -9,8 +9,7 @@ from podcast_generator.nodes import (
     write_introduction,
     write_report,
 )
-from podcast_generator.state import PodcastGeneratorState
-
+from haive.prebuilt.podcast_generator.state import PodcastGeneratorState
 
 __all__ = [
     "PodcastGeneratorAgen",

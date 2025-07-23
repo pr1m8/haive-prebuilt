@@ -1,6 +1,6 @@
 """Module export."""
 
-from ai_insight.agent import (
+from haive.prebuilt.ai_insight.agent import (
     NewsReporterAgent,
     build_graph,
     handle_insufficient_content,
@@ -9,13 +9,13 @@ from ai_insight.agent import (
     route_after_search,
     route_after_summary,
 )
-from ai_insight.example import (
+from haive.prebuilt.ai_insight.example import (
     run_basic_news_report,
     run_customized_report,
     run_multi_topic_comparison,
     run_specialized_reports,
 )
-from ai_insight.models import (
+from haive.prebuilt.ai_insight.models import (
     Article,
     ArticleSummary,
     NewsCategory,
@@ -29,7 +29,7 @@ from ai_insight.models import (
     report_date,
     total_articles,
 )
-from ai_insight.state import (
+from haive.prebuilt.ai_insight.state import (
     NewsReporterState,
     articles_found,
     articles_processed,
@@ -37,14 +37,13 @@ from ai_insight.state import (
     processing_time,
     topic,
 )
-from ai_insight.tools import (
+from haive.prebuilt.ai_insight.tools import (
     export_report_json,
     filter_articles_by_relevance,
     group_articles_by_source,
     save_report_to_file,
     search_news,
 )
-
 
 __all__ = [
     "Articl",

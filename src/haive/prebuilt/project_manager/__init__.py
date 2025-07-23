@@ -1,6 +1,6 @@
 """Module export."""
 
-from project_manager.agent import (
+from haive.prebuilt.project_manager.agent import (
     ProjectManagerAgent,
     ProjectManagerAgentConfig,
     insight_generation_node,
@@ -10,7 +10,7 @@ from project_manager.agent import (
     task_generation_node,
     task_scheduler_node,
 )
-from project_manager.models import (
+from haive.prebuilt.project_manager.models import (
     DependencyList,
     Risk,
     RiskList,
@@ -27,8 +27,7 @@ from project_manager.models import (
     Team,
     TeamMember,
 )
-from project_manager.state import ProjectManagerState
-
+from haive.prebuilt.project_manager.state import ProjectManagerState
 
 __all__ = [
     "DependencyLis",

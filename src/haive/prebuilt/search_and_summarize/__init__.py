@@ -1,6 +1,6 @@
 """Module export."""
 
-from search_and_summarize.agent import (
+from haive.prebuilt.search_and_summarize.agent import (
     SearchSummarizeAgent,
     build_graph,
     create_research_agent,
@@ -11,14 +11,14 @@ from search_and_summarize.agent import (
     route_after_search,
     route_after_summary,
 )
-from search_and_summarize.example import (
+from haive.prebuilt.search_and_summarize.example import (
     advanced_example,
     basic_example,
     comparative_research_example,
     print_research_report,
     site_specific_example,
 )
-from search_and_summarize.models import (
+from haive.prebuilt.search_and_summarize.models import (
     ContentSummary,
     ResearchReport,
     SearchQuery,
@@ -29,7 +29,7 @@ from search_and_summarize.models import (
     has_results,
     source_count,
 )
-from search_and_summarize.state import (
+from haive.prebuilt.search_and_summarize.state import (
     SearchSummarizeState,
     has_sufficient_results,
     processing_time,
@@ -37,7 +37,6 @@ from search_and_summarize.state import (
     sources_summarized,
     total_sources,
 )
-
 
 __all__ = [
     "ContentSummar",

@@ -1,6 +1,6 @@
 """Module export."""
 
-from pitchdeck.agent import (
+from haive.prebuilt.startup.pitchdeck.agent import (
     PitchDeckState,
     apply_feedback_node,
     build_pitch_deck_subgraph,
@@ -10,7 +10,7 @@ from pitchdeck.agent import (
     generate_slide_content_node,
     review_pitch_deck_node,
 )
-from pitchdeck.models import (
+from haive.prebuilt.startup.pitchdeck.models import (
     AgentMetadata,
     ChartData,
     ContentStatus,
@@ -48,14 +48,13 @@ from pitchdeck.models import (
     validate_headline,
     validate_metrics,
 )
-from pitchdeck.prompts import (
+from haive.prebuilt.startup.pitchdeck.prompts import (
     PitchDeckFeedback,
     PitchDeckOutlineRequest,
     PitchDeckOutlineResponse,
     PitchDeckReviewRequest,
     SlideOutline,
 )
-
 
 __all__ = [
     "AgentMetadat",

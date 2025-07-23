@@ -1,6 +1,5 @@
 """Module export."""
 
-from gtla.models import AgentAction, AgentOutput
-
+from haive.prebuilt.gtla.models import AgentAction, AgentOutput
 
 __all__ = ["AgentActio", "AgentOutpu"]

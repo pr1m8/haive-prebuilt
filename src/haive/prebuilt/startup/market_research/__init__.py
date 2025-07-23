@@ -1,6 +1,6 @@
 """Module export."""
 
-from market_research.agent import (
+from haive.prebuilt.startup.market_research.agent import (
     MarketResearchState,
     analyze_competitors_node,
     analyze_industry_trends_node,
@@ -9,7 +9,6 @@ from market_research.agent import (
     determine_research_depth,
     synthesize_market_insights_node,
 )
-
 
 __all__ = [
     "MarketResearchStat",

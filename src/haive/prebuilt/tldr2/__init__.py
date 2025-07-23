@@ -1,6 +1,6 @@
 """Module export."""
 
-from tldr2.models import (
+from haive.prebuilt.tldr2.models import (
     ArticleContent,
     ArticleMetadata,
     ArticleSummary,
@@ -16,8 +16,8 @@ from tldr2.models import (
     validate_sections,
     validate_to_date,
 )
-from tldr2.prompts import create_custom_prompt
-from tldr2.tools import (
+from haive.prebuilt.tldr2.prompts import create_custom_prompt
+from haive.prebuilt.tldr2.tools import (
     AnalyzeRelevanceInput,
     BatchProcessInput,
     ExtractContentInput,
@@ -30,7 +30,6 @@ from tldr2.tools import (
     filter_by_date,
     web_search,
 )
-
 
 __all__ = [
     "AnalyzeRelevanceInpu",

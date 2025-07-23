@@ -1,6 +1,6 @@
 """Module export."""
 
-from constituional_agent.utils import (
+from haive.prebuilt.constituional_agent.utils import (
     ContentAnalysisResult,
     ContentAnalyzer,
     LanguageDetectionResult,
@@ -13,7 +13,6 @@ from constituional_agent.utils import (
     detect_programming_language,
     full_analysis,
 )
-
 
 __all__ = [
     "ContentAnalysisResul",

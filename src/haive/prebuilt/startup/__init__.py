@@ -1,6 +1,6 @@
 """Module export."""
 
-from startup.prompts import (
+from haive.prebuilt.startup.prompts import (
     BusinessModelRequest,
     CompetitorResearchRequest,
     CompetitorResearchResponse,
@@ -27,7 +27,6 @@ from startup.prompts import (
     create_research_chain,
     example_ideation_workflow,
 )
-
 
 __all__ = [
     "BusinessModelReques",

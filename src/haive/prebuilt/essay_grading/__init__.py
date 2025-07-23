@@ -1,7 +1,7 @@
 """Module export."""
 
-from essay_grading.agent import EssayGradingAgent, set_workflow
-from essay_grading.nodes import (
+from haive.prebuilt.essay_grading.agent import EssayGradingAgent, set_workflow
+from haive.prebuilt.essay_grading.nodes import (
     analyze_structure,
     calculate_final_score,
     check_grammar,
@@ -9,12 +9,11 @@ from essay_grading.nodes import (
     evaluate_depth,
     extract_score,
 )
-from essay_grading.state import (
+from haive.prebuilt.essay_grading.state import (
     EssayGradingInputState,
     EssayGradingOutputState,
     EssayGradingState,
 )
-
 
 __all__ = [
     "EssayGradingAgen",

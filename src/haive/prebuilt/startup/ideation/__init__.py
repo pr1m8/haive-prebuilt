@@ -1,6 +1,6 @@
 """Module export."""
 
-from ideation.models import (
+from haive.prebuilt.startup.ideation.models import (
     BusinessModelCanvas,
     CompetitorAnalysis,
     IdeaBrainstorm,
@@ -39,7 +39,6 @@ from ideation.models import (
     validate_market_sizes,
     validate_required_lists,
 )
-
 
 __all__ = [
     "BusinessModelCanva",

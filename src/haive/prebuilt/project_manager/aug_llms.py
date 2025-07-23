@@ -1,5 +1,5 @@
 prompt = f""" """ """ """
-        You are an experienced project scheduler tasked with creating an optimized project timeline.
+You are an experienced project scheduler tasked with creating an optimized project timeline.
         **Given: **
             - **Tasks: ** {tasks}
             - **Dependencies: ** {dependencies}

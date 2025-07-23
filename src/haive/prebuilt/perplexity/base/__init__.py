@@ -1,7 +1,7 @@
 """Module export."""
 
-from base.prompts import create_prompt_with_examples
-from base.state import (
+from haive.prebuilt.perplexity.base.prompts import create_prompt_with_examples
+from haive.prebuilt.perplexity.base.state import (
     BasicSearchState,
     Citation,
     LabsState,
@@ -21,7 +21,6 @@ from base.state import (
     get_high_confidence_citations,
     should_continue,
 )
-
 
 __all__ = [
     "BasicSearchStat",

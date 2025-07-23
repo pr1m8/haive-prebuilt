@@ -1,6 +1,6 @@
 """Module export."""
 
-from company_researcher.agent import (
+from haive.prebuilt.company_researcher.agent import (
     EnhancedKYCAgent,
     enhanced_due_diligence,
     final_decision,
@@ -10,13 +10,13 @@ from company_researcher.agent import (
     route_risk_assessment,
     setup_workflow,
 )
-from company_researcher.engines import (
+from haive.prebuilt.company_researcher.engines import (
     create_enhanced_due_diligence_prompt,
     create_final_risk_assessment_prompt,
     create_initial_screening_prompt,
     main,
 )
-from company_researcher.models import (
+from haive.prebuilt.company_researcher.models import (
     ComplianceDocumentation,
     ComplianceRiskFactor,
     CustomerRiskProfile,
@@ -31,7 +31,7 @@ from company_researcher.models import (
     update_last_updated,
     validate_customer_profile,
 )
-from company_researcher.state import (
+from haive.prebuilt.company_researcher.state import (
     KYCDecisionStatus,
     KYCWorkflowStage,
     KYCWorkflowState,
@@ -39,12 +39,11 @@ from company_researcher.state import (
     set_decision_status,
     update_stage,
 )
-from company_researcher.utils import (
+from haive.prebuilt.company_researcher.utils import (
     deduplicate_sources,
     format_all_notes,
     format_sources,
 )
-
 
 __all__ = [
     "ComplianceDocumentatio",

@@ -1,6 +1,6 @@
 """Module export."""
 
-from communication_planning.models import (
+from haive.prebuilt.misc.agent_management.communication_planning.models import (
     CommunicationFrequency,
     CommunicationPlan,
     InfluenceLevel,
@@ -8,7 +8,6 @@ from communication_planning.models import (
     Stakeholder,
     StakeholderType,
 )
-
 
 __all__ = [
     "CommunicationFrequenc",
