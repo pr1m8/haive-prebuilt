@@ -100,32 +100,32 @@ class CustomerRiskProfile(BaseMode):
 
     # Prohibited Activities
     prohibited_activities: list[ProhibitedActivity] = Field(
-        default_factory=list, descriptio="List of identified prohibited activities"
+        default_factory=list, description="List of identified prohibited activities"
     )
 
     # Restricted Industries
     restricted_industries: list[RestrictedIndustry] = Field(
-        default_factory=list, descriptio="Industries requiring additional scrutiny"
+        default_factory=list, description="Industries requiring additional scrutiny"
     )
 
     # Detailed Risk Factors
     compliance_risk_factors: list[ComplianceRiskFactor] = Field(
-        default_factory=list, descriptio="Specific compliance risk indicators"
+        default_factory=list, description="Specific compliance risk indicators"
     )
 
     # Geographic Risks
     geographic_risks: dict[str, GeographicRiskProfile] = Field(
-        default_factory=dict, descriptio="Risk profile for jurisdictions of operation"
+        default_factory=dict, description="Risk profile for jurisdictions of operation"
     )
 
     # Enhanced Due Diligence Triggers
     edd_requirements: list[EnhancedDueDiligenceRequirement] = Field(
-        default_factory=list, descriptio="Triggers for Enhanced Due Diligence"
+        default_factory=list, description="Triggers for Enhanced Due Diligence"
     )
 
     # Risk Scoring
     overall_risk_score: float = Field(
-        default=0.0, ge=0.0, le=100., descriptio="Comprehensive risk score (0-100)"
+        default=0.0, ge=0.0, le=100., description="Comprehensive risk score (0-100)"
     )
 
     @field_validato("overall_risk_score", mod="before")
@@ -179,16 +179,16 @@ class OwnershipStructure(BaseMode):
     """Detailed ownership and control informatio."""
 
     ultimate_beneficial_owners: list[dict[str, Any]] = Field(
-        default_factory=list, descriptio="List of ultimate beneficial owners"
+        default_factory=list, description="List of ultimate beneficial owners"
     )
     ownership_percentage: dict[str, float] = Field(
-        default_factory=dict, descriptio="Ownership percentages for key stakeholders"
+        default_factory=dict, description="Ownership percentages for key stakeholders"
     )
     corporate_hierarchy: dict[str, Any] | None = Field(
-        default=None, descriptio="Detailed corporate ownership hierarchy"
+        default=None, description="Detailed corporate ownership hierarchy"
     )
     control_mechanisms: list[str] = Field(
-        default_factory=list, descriptio="Mechanisms of corporate control"
+        default_factory=list, description="Mechanisms of corporate control"
     )
 
 
@@ -196,16 +196,16 @@ class ComplianceDocumentation(BaseMode):
     """Comprehensive compliance documentation trackin."""
 
     verified_documents: dict[str, bool] = Field(
-        default_factory=dict, descriptio="Status of required compliance documents"
+        default_factory=dict, description="Status of required compliance documents"
     )
     document_expiration_dates: dict[str, datetime] = Field(
-        default_factory=dict, descriptio="Expiration dates for compliance documents"
+        default_factory=dict, description="Expiration dates for compliance documents"
     )
     verification_history: list[dict[str, Any]] = Field(
-        default_factory=list, descriptio="Historical record of document verifications"
+        default_factory=list, description="Historical record of document verifications"
     )
     missing_documents: list[str] = Field(
-        default_factory=list, descriptio="List of documents still required"
+        default_factory=list, description="List of documents still required"
     )
 
 
@@ -217,36 +217,36 @@ class EnhancedKYCCustomerProfile(BaseMode):
     # Basic Identification
     customer_id: str = Field(
         default_factory=lambda: "CUS-{datetime.now().strftime('%Y%m%')}-{uuid.uuid4().hex[:8]}",
-        descriptio="Unique customer identifier",
+        description="Unique customer identifier",
     )
 
     # Personal/Business Information
-    full_name: str = Field(..., descriptio="Full legal name")
-    date_of_birth: datetime | None = Field(None, descriptio="Date of birth")
-    nationality: str | None = Field(None, descriptio="Nationality")
-    business_name: str | None = Field(None, descriptio="Registered business name")
+    full_name: str = Field(..., description="Full legal name")
+    date_of_birth: datetime | None = Field(None, description="Date of birth")
+    nationality: str | None = Field(None, description="Nationality")
+    business_name: str | None = Field(None, description="Registered business name")
 
     # Comprehensive Risk Assessment
     risk_profile: CustomerRiskProfile = Field(
         default_factory=CustomerRiskProfile,
-        descriptio="Detailed customer risk profile",
+        description="Detailed customer risk profile",
     )
 
     # Ownership and Control
     ownership: OwnershipStructure | None = Field(
-        default=None, descriptio="Detailed ownership and control information"
+        default=None, description="Detailed ownership and control information"
     )
 
     # Compliance Documentation
     compliance_docs: ComplianceDocumentation = Field(
         default_factory=ComplianceDocumentation,
-        descriptio="Comprehensive compliance documentation",
+        description="Comprehensive compliance documentation",
     )
 
     # Identity Verification
     identity_verification_level: IdentityVerificationLevel = Field(
         default=IdentityVerificationLevel.BASIC,
-        descriptio="Level of identity verification completed",
+        description="Level of identity verification completed",
     )
 
     # Temporal Tracking
@@ -255,7 +255,7 @@ class EnhancedKYCCustomerProfile(BaseMode):
 
     # Additional Metadata
     additional_notes: str | None = Field(
-        None, descriptio="Additional compliance notes"
+        None, description="Additional compliance notes"
     )
 
     # Configuration for extra flexibility

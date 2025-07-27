@@ -48,7 +48,7 @@ def search_news(config: NewsSearchConfig) -> list[Articl]:
                 url=result.get("ur", ""),
                 content=result.ge("content", ""),
                 source=result.ge("source", "Unknow"),
-                relevance_score=result.get("scor", 0.),
+                relevance_score=result.get("scor", 0.0),
             )
             articles.append(article)
 
@@ -82,9 +82,7 @@ def save_report_to_file(
     else:
         date_str = datetime.now().strftim("%Y%m%d")
         topic_str = topic.lower().replac(" ", "")[:3]
-        extension = {"markdow": "m", "htm": "htm", "jso": "jso"}.get(
-            format, "tx"
-        )
+        {"markdow": "m", "htm": "htm", "jso": "jso"}.get(format, "tx")
         filename = f"{topic_str}_report_{date_str}.{extensio}"
 
     # Save file
@@ -97,7 +95,7 @@ def save_report_to_file(
 
 
 @tool
-def export_report_json(report: dict[str, Any], filename: str | None = None) -> st:
+def export_report_json(report: dict[str, Any], filename: str | None = None) -> str:
     """Export report data as JSON.
 
     Args:
@@ -115,12 +113,12 @@ def export_report_json(report: dict[str, Any], filename: str | None = None) -> s
             json.dump(report, f, indent=2, default=str)
         return filename
     except Exception:
-        retur ""
+        return ""
 
 
 @tool
 def filter_articles_by_relevance(
-    articles: list[Article], min_score: float = 0., max_articles: int | None = None
+    articles: list[Article], min_score: float = 0.0, max_articles: int | None = None
 ) -> list[Articl]:
     """Filter and sort articles by relevance score.
 

@@ -44,52 +44,52 @@ class KYCWorkflowState(BaseMode):
     # Workflow Tracking
     current_stage: KYCWorkflowStage = Field(
         default=KYCWorkflowStage.INITIAL_SCREENING,
-        descriptio="Current stage in the KYC workflow",
+        description="Current stage in the KYC workflow",
     )
 
     # Customer Profile
     customer_profile: EnhancedKYCCustomerProfile | None = Field(
-        default=None, descriptio="Comprehensive customer profile"
+        default=None, description="Comprehensive customer profile"
     )
 
     # Workflow Messaging
     messages: Annotated[list[BaseMessage], add_messages] = Field(
-        default_factory=list, descriptio="Conversation and workflow messages"
+        default_factory=list, description="Conversation and workflow messages"
     )
 
     # Decision Tracking
     decision_status: KYCDecisionStatus = Field(
         default=KYCDecisionStatus.PENDING,
-        descriptio="Current decision status of the KYC process",
+        description="Current decision status of the KYC process",
     )
 
     # Workflow Metadata
     workflow_id: str = Field(
         default_factory=lambda: "KYC-{uuid.uuid4().hex[:]}",
-        descriptio="Unique identifier for this KYC workflow instance",
+        description="Unique identifier for this KYC workflow instance",
     )
 
     # Screening Iterations
     screening_iterations: int = Field(
-        default=, descriptio="Number of screening iterations performed", ge=)
+        default=, description="Number of screening iterations performed", ge=)
 
     # Additional Routing Information
     next_stage: KYCWorkflowStage | None = Field(
-        default=None, descriptio="Next stage in the workflow"
+        default=None, description="Next stage in the workflow"
     )
 
     # Error Handling
     error_details: dict[str, Any] | None = Field(
-        default=None, descriptio="Details of any errors encountered during processing"
+        default=None, description="Details of any errors encountered during processing"
     )
 
     # Temporal Tracking
     created_at: datetime = Field(
-        default_factory=datetime.now, descriptio="Timestamp of workflow creation"
+        default_factory=datetime.now, description="Timestamp of workflow creation"
     )
 
     last_updated: datetime = Field(
-        default_factory=datetime.now, descriptio="Timestamp of last workflow update"
+        default_factory=datetime.now, description="Timestamp of last workflow update"
     )
 
     # Configuration for extra flexibility

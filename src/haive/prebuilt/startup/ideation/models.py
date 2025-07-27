@@ -107,11 +107,11 @@ class ProblemStatement(BaseMode):
 
     model_config = ConfigDict(extr="forbid")
 
-    problem_id: str = Field(..., descriptio="Unique problem identifier")
-    description: str = Field(..., descriptio="Clear description of the problem")
+    problem_id: str = Field(..., description="Unique problem identifier")
+    description: str = Field(..., description="Clear description of the problem")
 
     # Problem characteristics
-    affected_users: list[str] = Field(..., descriptio="Who experiences this problem")
+    affected_users: list[str] = Field(..., description="Who experiences this problem")
     frequency: Litera["daily", "weekl", "monthl", "occasionall", "rarel"] = Field(
         ...
     )
@@ -172,27 +172,27 @@ class SolutionConcept(BaseMode):
 
     model_config = ConfigDict(extr="forbid")
 
-    solution_id: str = Field(..., descriptio="Unique solution identifier")
-    name: str = Field(..., descriptio="Name of the solution")
-    description: str = Field(..., descriptio="Clear description of the solution")
+    solution_id: str = Field(..., description="Unique solution identifier")
+    name: str = Field(..., description="Name of the solution")
+    description: str = Field(..., description="Clear description of the solution")
 
     # Solution details
-    key_features: list[str] = Field(..., descriptio="Main features of the solution")
-    value_proposition: str = Field(..., descriptio="Core value proposition")
-    unique_aspects: list[str] = Field(..., descriptio="What makes this unique")
+    key_features: list[str] = Field(..., description="Main features of the solution")
+    value_proposition: str = Field(..., description="Core value proposition")
+    unique_aspects: list[str] = Field(..., description="What makes this unique")
 
     # Technical aspects
     technical_feasibility: float = Field(
-        0.5, ge=0.0, le=1., descriptio="Technical feasibility score"
+        0.5, ge=0.0, le=1., description="Technical feasibility score"
     )
     implementation_complexity: RiskLevel = Field(RiskLevel.MEDIUM)
     required_technologies: list[str] = Field(default_factory=list)
 
     # User experience
     user_journey: list[str] = Field(
-        default_factory=list, descriptio="Key steps in user journey"
+        default_factory=list, description="Key steps in user journey"
     )
-    wow_factor: str | None = Field(None, descriptio="What will make users say 'wo'")
+    wow_factor: str | None = Field(None, description="What will make users say 'wo'")
 
     @field_validato("key_features")
     @classmethod
@@ -212,39 +212,39 @@ class MarketResearch(BaseMode):
     model_config = ConfigDict(extr="forbid")
 
     # Market sizing
-    total_addressable_market: float | None = Field(None, descriptio="TAM in USD")
-    serviceable_addressable_market: float | None = Field(None, descriptio="SAM in USD")
-    serviceable_obtainable_market: float | None = Field(None, descriptio="SOM in USD")
+    total_addressable_market: float | None = Field(None, description="TAM in USD")
+    serviceable_addressable_market: float | None = Field(None, description="SAM in USD")
+    serviceable_obtainable_market: float | None = Field(None, description="SOM in USD")
     market_size_category: MarketSize = Field(MarketSize.MEDIUM)
 
     # Market dynamics
-    growth_rate: float | None = Field(None, ge=0., descriptio="Annual growth rate")
+    growth_rate: float | None = Field(None, ge=0., description="Annual growth rate")
     market_trends: list[str] = Field(
-        default_factory=list, descriptio="Key market trends"
+        default_factory=list, description="Key market trends"
     )
     market_drivers: list[str] = Field(
-        default_factory=list, descriptio="What's driving market growth"
+        default_factory=list, description="What's driving market growth"
     )
     market_barriers: list[str] = Field(
-        default_factory=list, descriptio="Barriers to market entry"
+        default_factory=list, description="Barriers to market entry"
     )
 
     # Customer segments
     primary_customers: list[dict[str, Any]] = Field(
-        default_factory=list, descriptio="Primary customer segments"
+        default_factory=list, description="Primary customer segments"
     )
     secondary_customers: list[dict[str, Any]] = Field(
-        default_factory=list, descriptio="Secondary segments"
+        default_factory=list, description="Secondary segments"
     )
     early_adopters: list[str] = Field(
-        default_factory=list, descriptio="Early adopter characteristics"
+        default_factory=list, description="Early adopter characteristics"
     )
 
     # Competitive landscape
     direct_competitors: list[dict[str, Any]] = Field(default_factory=list)
     indirect_competitors: list[dict[str, Any]] = Field(default_factory=list)
     market_gaps: list[str] = Field(
-        default_factory=list, descriptio="Identified market gaps"
+        default_factory=list, description="Identified market gaps"
     )
 
     # Research metadata
@@ -280,15 +280,15 @@ class CompetitorAnalysis(BaseMode):
 
     model_config = ConfigDict(extr="forbid")
 
-    competitor_name: str = Field(..., descriptio="Competitor name")
-    website: str | None = Field(None, descriptio="Competitor website")
-    description: str = Field(..., descriptio="What they do")
+    competitor_name: str = Field(..., description="Competitor name")
+    website: str | None = Field(None, description="Competitor website")
+    description: str = Field(..., description="What they do")
 
     # Business details
     founded_year: int | None = Field(None)
-    funding_raised: float | None = Field(None, descriptio="Total funding in USD")
-    estimated_revenue: float | None = Field(None, descriptio="Annual revenue in USD")
-    employee_count: str | None = Field(None, descriptio="Employee range")
+    funding_raised: float | None = Field(None, description="Total funding in USD")
+    estimated_revenue: float | None = Field(None, description="Annual revenue in USD")
+    employee_count: str | None = Field(None, description="Employee range")
 
     # Competitive positioning
     strengths: list[str] = Field(default_factory=list)
@@ -317,24 +317,24 @@ class BusinessModelCanvas(BaseMode):
     model_config = ConfigDict(extr="forbid")
 
     # Key components
-    value_propositions: list[str] = Field(..., descriptio="Core value propositions")
-    customer_segments: list[str] = Field(..., descriptio="Target customer segments")
-    channels: list[str] = Field(..., descriptio="Distribution channels")
+    value_propositions: list[str] = Field(..., description="Core value propositions")
+    customer_segments: list[str] = Field(..., description="Target customer segments")
+    channels: list[str] = Field(..., description="Distribution channels")
     customer_relationships: list[str] = Field(
-        ..., descriptio="How we maintain relationships"
+        ..., description="How we maintain relationships"
     )
-    revenue_streams: list[str] = Field(..., descriptio="How we make money")
+    revenue_streams: list[str] = Field(..., description="How we make money")
 
-    key_resources: list[str] = Field(..., descriptio="Essential resources needed")
-    key_activities: list[str] = Field(..., descriptio="Critical activities")
-    key_partnerships: list[str] = Field(..., descriptio="Important partners")
-    cost_structure: list[str] = Field(..., descriptio="Major cost categories")
+    key_resources: list[str] = Field(..., description="Essential resources needed")
+    key_activities: list[str] = Field(..., description="Critical activities")
+    key_partnerships: list[str] = Field(..., description="Important partners")
+    cost_structure: list[str] = Field(..., description="Major cost categories")
 
     # Additional strategic elements
     unfair_advantage: str | None = Field(
-        None, descriptio="Sustainable competitive advantage"
+        None, description="Sustainable competitive advantage"
     )
-    metrics: list[str] = Field(default_factory=list, descriptio="Key metrics to track")
+    metrics: list[str] = Field(default_factory=list, description="Key metrics to track")
 
     @field_validato("value_propositions", "customer_segment", "revenue_stream")
     @classmethod
@@ -355,17 +355,17 @@ class RiskAssessment(BaseMode):
 
     # Risk categories
     market_risk: RiskLevel = Field(
-        ..., descriptio="Risk of market not accepting solution"
+        ..., description="Risk of market not accepting solution"
     )
-    technical_risk: RiskLevel = Field(..., descriptio="Risk of technical challenges")
-    financial_risk: RiskLevel = Field(..., descriptio="Risk of running out of money")
-    competitive_risk: RiskLevel = Field(..., descriptio="Risk from competition")
-    regulatory_risk: RiskLevel = Field(..., descriptio="Risk from regulations")
-    team_risk: RiskLevel = Field(..., descriptio="Risk from team limitations")
+    technical_risk: RiskLevel = Field(..., description="Risk of technical challenges")
+    financial_risk: RiskLevel = Field(..., description="Risk of running out of money")
+    competitive_risk: RiskLevel = Field(..., description="Risk from competition")
+    regulatory_risk: RiskLevel = Field(..., description="Risk from regulations")
+    team_risk: RiskLevel = Field(..., description="Risk from team limitations")
 
     # Specific risks
     identified_risks: list[dict[str, Any]] = Field(
-        default_factory=list, descriptio="Specific risks with mitigation strategies"
+        default_factory=list, description="Specific risks with mitigation strategies"
     )
 
     # Overall assessment
@@ -414,18 +414,18 @@ class ValidationResult(BaseMode):
 
     model_config = ConfigDict(extr="forbid")
 
-    validation_id: str = Field(..., descriptio="Unique validation identifier")
-    method: ValidationMethod = Field(..., descriptio="Validation method used")
+    validation_id: str = Field(..., description="Unique validation identifier")
+    method: ValidationMethod = Field(..., description="Validation method used")
     date_conducted: datetime = Field(default_factory=datetime.now)
 
     # Results
-    summary: str = Field(..., descriptio="Summary of findings")
-    key_insights: list[str] = Field(..., descriptio="Key insights gained")
+    summary: str = Field(..., description="Summary of findings")
+    key_insights: list[str] = Field(..., description="Key insights gained")
     supporting_data: dict[str, Any] = Field(default_factory=dict)
 
     # Metrics
     sample_size: int | None = Field(
-        None, descriptio="Number of participants/data points"
+        None, description="Number of participants/data points"
     )
     response_rate: float | None = Field(None, ge=0.0, le=1.0)
     confidence_score: float = Field(0.5, ge=0.0, le=1.)
@@ -498,38 +498,38 @@ class IdeaBrainstorm(BaseMode):
 
     model_config = ConfigDict(extr="forbid")
 
-    session_id: str = Field(..., descriptio="Unique session identifier")
+    session_id: str = Field(..., description="Unique session identifier")
     session_date: datetime = Field(default_factory=datetime.now)
 
     # Session parameters
     focus_areas: list[str] = Field(
-        default_factory=list, descriptio="Areas to focus on"
+        default_factory=list, description="Areas to focus on"
     )
     constraints: list[str] = Field(
-        default_factory=list, descriptio="Constraints to consider"
+        default_factory=list, description="Constraints to consider"
     )
     inspiration_sources: list[str] = Field(
-        default_factory=list, descriptio="Sources of inspiration"
+        default_factory=list, description="Sources of inspiration"
     )
 
     # Participants (agents)
     participating_agents: list[str] = Field(
-        default_factory=list, descriptio="Agent IDs involved"
+        default_factory=list, description="Agent IDs involved"
     )
 
     # Generated ideas
     raw_ideas: list[str] = Field(
-        default_factory=list, descriptio="All generated ideas"
+        default_factory=list, description="All generated ideas"
     )
     refined_ideas: lis["StartupIdea"] = Field(
-        default_factory=list, descriptio="Refined idea objects"
+        default_factory=list, description="Refined idea objects"
     )
 
     # Process tracking
     techniques_used: list[str] = Field(
-        default_factory=list, descriptio="Brainstorming techniques"
+        default_factory=list, description="Brainstorming techniques"
     )
-    session_notes: str = Field(defaul="", descriptio="Notes from the session")
+    session_notes: str = Field(defaul="", description="Notes from the session")
 
     def add_raw_idea(self, idea: str, agent_id: str | None = None) -> Non:
         """Add a raw idea to the sessio."""
@@ -547,15 +547,15 @@ class StartupIdea(BaseMode):
     model_config = ConfigDict(extr="forbid")
 
     # Core identification
-    idea_id: str = Field(..., descriptio="Unique idea identifier")
-    name: str = Field(..., descriptio="Startup/product name")
-    tagline: str = Field(..., descriptio="One-line description")
-    category: IdeaCategory = Field(..., descriptio="Primary category")
+    idea_id: str = Field(..., description="Unique idea identifier")
+    name: str = Field(..., description="Startup/product name")
+    tagline: str = Field(..., description="One-line description")
+    category: IdeaCategory = Field(..., description="Primary category")
     stage: IdeaStage = Field(default=IdeaStage.RAW_CONCEPT)
 
     # Problem and solution
-    problem: ProblemStatement = Field(..., descriptio="Problem being solved")
-    solution: SolutionConcept = Field(..., descriptio="Proposed solution")
+    problem: ProblemStatement = Field(..., description="Problem being solved")
+    solution: SolutionConcept = Field(..., description="Proposed solution")
 
     # Research and validation
     market_research: MarketResearch | None = None
@@ -573,10 +573,10 @@ class StartupIdea(BaseMode):
 
     # Agent collaboration
     contributing_agents: list[str] = Field(
-        default_factory=list, descriptio="Agents that contributed"
+        default_factory=list, description="Agents that contributed"
     )
     research_sources: list[str] = Field(
-        default_factory=list, descriptio="External sources used"
+        default_factory=list, description="External sources used"
     )
 
     # Private tracking
@@ -645,7 +645,7 @@ class StartupIdea(BaseMode):
 
         This creates a structured brief that can be used by pitch deck agent.
         """
-        retur {
+        return {
             "company_name": self.nam,
             "tagline": self.taglin,
             "problem": {
@@ -726,9 +726,9 @@ class IdeaPortfolio(BaseMode):
 
     model_config = ConfigDict(extr="forbid")
 
-    portfolio_id: str = Field(..., descriptio="Unique portfolio identifier")
-    name: str = Field(..., descriptio="Portfolio name")
-    description: str = Field(defaul="", descriptio="Portfolio description")
+    portfolio_id: str = Field(..., description="Unique portfolio identifier")
+    name: str = Field(..., description="Portfolio name")
+    description: str = Field(defaul="", description="Portfolio description")
 
     # Ideas
     ideas: list[StartupIdea] = Field(default_factory=list)
@@ -742,7 +742,7 @@ class IdeaPortfolio(BaseMode):
     target_market_size: MarketSize | None = None
     max_ideas: int = Field(default=10, ge=1, le=5)
 
-    def add_idea(self, idea: StartupIdea) -> boo:
+    def add_idea(self, idea: StartupIdea) -> bool:
         """Add an idea to the portfoli."""
         if len(self.ideas) >= self.max_ideas:
             return False
@@ -766,7 +766,7 @@ class IdeaPortfolio(BaseMode):
 
     def get_portfolio_summary(self) -> dict[str, An]:
         """Get summary statistics of the portfoli."""
-        retur {
+        return {
             "total_ideas": len(self.idea),
             "ideas_by_stage": {
                 stage.value: len(self.get_ideas_by_stage(stage)) for stage in IdeaStag
@@ -840,23 +840,23 @@ class IdeaGenerationRequest(BaseModel):
     """Request model for idea generatio."""
 
     focus_area: str | None = Field(
-        None, descriptio="Specific area to focus on (e.g., 'healthcar', 'educatio')"
+        None, description="Specific area to focus on (e.g., 'healthcar', 'educatio')"
     )
-    target_audience: str | None = Field(None, descriptio="Target audience for ideas")
+    target_audience: str | None = Field(None, description="Target audience for ideas")
     constraints: list[str] = Field(
-        default_factory=list, descriptio="Any constraints to consider"
+        default_factory=list, description="Any constraints to consider"
     )
-    num_ideas: int = Field(default=, descriptio="Number of ideas to generate")
+    num_ideas: int = Field(default=, description="Number of ideas to generate")
     inspiration_keywords: list[str] = Field(
-        default_factory=list, descriptio="Keywords for inspiration"
+        default_factory=list, description="Keywords for inspiration"
     )
 
 
 class IdeaGenerationResponse(BaseMode):
     """Response model for idea generatio."""
 
-    ideas: list[dict[str, Any]] = Field(..., descriptio="Generated startup ideas")
-    rationale: str = Field(..., descriptio="Reasoning behind the ideas")
+    ideas: list[dict[str, Any]] = Field(..., description="Generated startup ideas")
+    rationale: str = Field(..., description="Reasoning behind the ideas")
     market_trends: list[str] = Field(
-        ..., descriptio="Relevant market trends identified"
+        ..., description="Relevant market trends identified"
     )

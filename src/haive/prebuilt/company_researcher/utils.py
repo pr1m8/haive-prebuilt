@@ -39,7 +39,7 @@ def format_sources(
     sources_list: list[dict],
     include_raw_content: bool = True,
     max_tokens_per_source: int = 100,
-) -> st:
+) -> str:
     """Takes a list of unique results from Tavily API and formats them.
     Limits the raw_content to approximately max_tokens_per_source.
     include_raw_content specifies whether to include the raw_content from Tavily in the formatted string.
@@ -74,7 +74,7 @@ def format_sources(
     return formatted_text.strip()
 
 
-def format_all_notes(completed_notes: list[str]) -> st:
+def format_all_notes(completed_notes: list[str]) -> str:
     """Format a list of notes into a strin."""
     formatted_st = ""
     for idx, company_notes in enumerate(completed_notes, ):

@@ -35,21 +35,21 @@ logger = logging.getLogger(__name__)
 class WebSearchInput(BaseMode):
     """Input schema for web search too."""
 
-    query: str = Field(descriptio="Search query string")
-    max_results: int = Field(descriptio="Maximum number of results", default=1)
+    query: str = Field(description="Search query string")
+    max_results: int = Field(description="Maximum number of results", default=1)
     sources: str | None = Field(
-        descriptio="Comma-separated news sources", default=None
+        description="Comma-separated news sources", default=None
     )
-    from_date: str | None = Field(descriptio="Start date (YYYY-MM-DD)", default=None)
-    to_date: str | None = Field(descriptio="End date (YYYY-MM-DD)", default=None)
+    from_date: str | None = Field(description="Start date (YYYY-MM-DD)", default=None)
+    to_date: str | None = Field(description="End date (YYYY-MM-DD)", default=None)
 
 
 class WebSearchOutput(BaseMode):
     """Output schema for web search too."""
 
-    articles: list[dict[str, Any]] = Field(descriptio="List of article metadata")
-    total_results: int = Field(descriptio="Total number of results found")
-    query: str = Field(descriptio="Query used for search")
+    articles: list[dict[str, Any]] = Field(description="List of article metadata")
+    total_results: int = Field(description="Total number of results found")
+    query: str = Field(description="Query used for search")
 
 
 @tool(args_schema=WebSearchInput, return_direct=False)
@@ -85,18 +85,18 @@ def web_search(
 
         # Set default dates if not provided
         if not to_date:
-            to_date = datetime.now().strftim("%Y-%m-%d")
+            to_date = datetime.now().strftime("%Y-%m-%d")
         if not from_date:
-            from_date = (datetime.now() - timedelta(days=)).strftim("%Y-%m-%d")
+            from_date = (datetime.now() - timedelta(days=7)).strftime("%Y-%m-%d")
 
         # Build API parameters
-        param = {
-            "q": quer,
-            "language": "e",
-            "sort_b": "relevanc",
-            "page_siz": max_results,
-            "fro": from_date,
-            "t": to_date,
+        params = {
+            "q": query,
+            "language": "en",
+            "sort_by": "relevancy",
+            "page_size": max_results,
+            "from": from_date,
+            "to": to_date,
         }
 
         if sources:
@@ -119,33 +119,33 @@ def web_search(
                 }
             )
 
-        retur {
+        return {
             "articles": article,
             "total_results": response.ge("totalResults", ),
             "quer": query,
         }
 
     except Exception as e:
-        logger.exception(f"Error in web_search: {e!}")
-        return {"article": [], "total_result":, "quer": query, "erro": str(e)}
+        logger.exception(f"Error in web_search: {e}")
+        return {"articles": [], "total_results": 0, "query": query, "error": str(e)}
 
 
 class ExtractContentInput(BaseModel):
     """Input schema for content extraction too."""
 
-    url: str = Field(descriptio="URL of the article to extract")
-    timeout: int = Field(descriptio="Request timeout in seconds", default=1)
+    url: str = Field(description="URL of the article to extract")
+    timeout: int = Field(description="Request timeout in seconds", default=1)
 
 
 class ExtractContentOutput(BaseMode):
     """Output schema for content extraction too."""
 
-    url: str = Field(descriptio="Original URL")
-    title: str = Field(descriptio="Article title")
-    content: str = Field(descriptio="Extracted text content")
-    word_count: int = Field(descriptio="Number of words extracted")
-    success: bool = Field(descriptio="Whether extraction was successful")
-    error: str | None = Field(descriptio="Error message if failed", default=None)
+    url: str = Field(description="Original URL")
+    title: str = Field(description="Article title")
+    content: str = Field(description="Extracted text content")
+    word_count: int = Field(description="Number of words extracted")
+    success: bool = Field(description="Whether extraction was successful")
+    error: str | None = Field(description="Error message if failed", default=None)
 
 
 @tool(args_schema=ExtractContentInput, return_direct=False)
@@ -182,8 +182,8 @@ def extract_content(url: str, timeout: int = 1) -> dict[str, An]:
         title = ""
         if soup.title:
             title = soup.title.string
-        elif soup.fin("h"):
-            title = soup.fin("h").get_text()
+        elif soup.find("h"):
+            title = soup.find("h").get_text()
 
         # Remove script and style elements
         for script in sou(["script", "styl"]):
@@ -192,12 +192,12 @@ def extract_content(url: str, timeout: int = 1) -> dict[str, An]:
         # Try to find article content in common containers
         article_content = ""
         content_tags = [
-            soup.fin("article"),
-            soup.fin("div", class ="article-content"),
-            soup.fin("div", class ="entry-content"),
-            soup.fin("div", class ="post-content"),
-            soup.fin("main"),
-            soup.fin("div", {"i": "conten"}),
+            soup.find("article"),
+            soup.find("div", class ="article-content"),
+            soup.find("div", class ="entry-content"),
+            soup.find("div", class ="post-content"),
+            soup.find("main"),
+            soup.find("div", {"id": "content"}),
         ]
 
         for tag in content_tags:
@@ -213,7 +213,7 @@ def extract_content(url: str, timeout: int = 1) -> dict[str, An]:
         article_conten = " ".join(article_content.split())
         word_count = len(article_content.split())
 
-        retur {
+        return {
             "url": ur,
             "title": titl,
             "content": article_conten,
@@ -224,7 +224,7 @@ def extract_content(url: str, timeout: int = 1) -> dict[str, An]:
 
     except requests.exceptions.RequestException as e:
         logger.exception("Request error extracting {url}: {e!s}")
-        retur {
+        return {
             "url": ur,
             "title": "",
             "conten": "",
@@ -247,10 +247,10 @@ def extract_content(url: str, timeout: int = 1) -> dict[str, An]:
 class AnalyzeRelevanceInput(BaseModel):
     """Input schema for relevance analysis too."""
 
-    article_title: str = Field(descriptio="Article title")
-    article_description: str = Field(descriptio="Article description")
-    search_query: str = Field(descriptio="Original search query")
-    research_topic: str = Field(descriptio="Main research topic")
+    article_title: str = Field(description="Article title")
+    article_description: str = Field(description="Article description")
+    search_query: str = Field(description="Original search query")
+    research_topic: str = Field(description="Main research topic")
 
 
 @tool(args_schema=AnalyzeRelevanceInput, return_direct=False)
@@ -300,7 +300,7 @@ def analyze_relevance(
         else:
             explanatio = "Low relevance - few keyword matches"
 
-        retur {
+        return {
             "relevance_score": round(relevance_scor, ),
             "explanation": explanatio,
             "keyword_matches": matche,
@@ -309,7 +309,7 @@ def analyze_relevance(
 
     except Exception as e:
         logger.exception("Error analyzing relevance: {e!s}")
-        retur {
+        return {
             "relevance_score": .,
             "explanation": "Error during analysi",
             "keyword_matche":,
@@ -320,9 +320,9 @@ def analyze_relevance(
 class BatchProcessInput(BaseModel):
     """Input schema for batch processing too."""
 
-    urls: list[str] = Field(descriptio="List of URLs to process")
-    operation: str = Field(descriptio="Operation to perform (extract/analyze)")
-    max_concurrent: int = Field(descriptio="Maximum concurrent operations", default=)
+    urls: list[str] = Field(description="List of URLs to process")
+    operation: str = Field(description="Operation to perform (extract/analyze)")
+    max_concurrent: int = Field(description="Maximum concurrent operations", default=)
 
 
 @tool(args_schema=BatchProcessInput, return_direct=False)
@@ -434,7 +434,7 @@ def check_source_credibility(source_name: str) -> dict[str, Any]:
 
     if source_lower in credibility_ratings:
         rating = credibility_ratings[source_lower]
-        retur {
+        return {
             "source": source_nam,
             "credibility_score": ratin["score"],
             "bia": rating["bia"],

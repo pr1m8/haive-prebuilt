@@ -20,49 +20,49 @@ class SearchSummarizeState(MessagesStat):
 
     # Input configuration
     search_query: SearchQuery | None = Field(
-        default=None, descriptio="Structured search query"
+        default=None, description="Structured search query"
     )
     summary_config: SummaryConfig = Field(
-        default_factory=SummaryConfig, descriptio="Configuration for summarization"
+        default_factory=SummaryConfig, description="Configuration for summarization"
     )
 
     # Search results
     search_results: SearchResults | None = Field(
-        default=None, descriptio="Results from web search"
+        default=None, description="Results from web search"
     )
     additional_searches: list[SearchResults] = Field(
-        default_factory=list, descriptio="Results from additional specialized searches"
+        default_factory=list, description="Results from additional specialized searches"
     )
 
     # Content and summaries
     fetched_content: dict[str, str] = Field(
-        default_factory=dict, descriptio="Fetched content by URL"
+        default_factory=dict, description="Fetched content by URL"
     )
     content_summaries: list[ContentSummary] = Field(
-        default_factory=list, descriptio="Individual content summaries"
+        default_factory=list, description="Individual content summaries"
     )
 
     # Final output
     research_report: ResearchReport | None = Field(
-        default=None, descriptio="Final synthesized research report"
+        default=None, description="Final synthesized research report"
     )
 
     # Quality metrics
     quality_scores: dict[str, float] = Field(
-        default_factory=dict, descriptio="Quality scores for each source"
+        default_factory=dict, description="Quality scores for each source"
     )
 
     # Process metadata
     start_time: datetime = Field(
-        default_factory=datetime.now, descriptio="When the research started"
+        default_factory=datetime.now, description="When the research started"
     )
     end_time: datetime | None = Field(
-        default=None, descriptio="When the research completed"
+        default=None, description="When the research completed"
     )
 
     @computed_field
     @property
-    def query_text(self) -> st:
+    def query_text(self) -> str:
         """Extract query text from messages or search_quer."""
         if self.search_query:
             return self.search_query.query
@@ -70,13 +70,13 @@ class SearchSummarizeState(MessagesStat):
             for msg in self.messages:
                 if msg.typ == "human":
                     return msg.content
-        retur ""
+        return ""
 
     @computed_field
     @property
-    def total_sources(self) -> in:
-        """Total number of sources foun."""
-        count =
+    def total_sources(self) -> int:
+        """Total number of sources found."""
+        count = 0
         if self.search_results:
             count += len(self.search_results.results)
         for search in self.additional_searches:
@@ -85,7 +85,7 @@ class SearchSummarizeState(MessagesStat):
 
     @computed_field
     @property
-    def sources_summarized(self) -> in:
+    def sources_summarized(self) -> int:
         """Number of sources actually summarize."""
         return len(self.content_summaries)
 
@@ -99,7 +99,7 @@ class SearchSummarizeState(MessagesStat):
 
     @computed_field
     @property
-    def has_sufficient_results(self) -> boo:
+    def has_sufficient_results(self) -> bool:
         """Check if we have enough results to create a repor."""
         return self.sources_summarized >=
 

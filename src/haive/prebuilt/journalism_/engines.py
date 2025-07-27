@@ -14,15 +14,14 @@ Example:
 
 Note:
     All engines use structured_output_version='' for Pydantic v2 compatibility.
-""" """ """ """
+"""
 
 from typing import Dict, List, Optional
 
-from .engine.aug_llm import AugLLMConfig
-from .models.llm.base import AzureLLMConfig, OpenAILLMConfig
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 from pydantic import Field
 
+from .engine.aug_llm import AugLLMConfig
 from .models import (
     ArticleSummary,
     ExtractedQuote,
@@ -33,6 +32,7 @@ from .models import (
     QuoteExtractionResult,
     ToneAnalysis,
 )
+from .models.llm.base import AzureLLMConfig, OpenAILLMConfig
 from .tools import (
     analyze_source_diversity,
     calculate_readability_score,
@@ -60,7 +60,7 @@ def create_action_identification_engine() -> AugLLMConfi:
 
     Returns:
         AugLLMConfig: Configured action identification engin
-    """ """ """ """
+    """
     prompt = ChatPromptTemplate.from_message([
         ("system", """You are an AI assistant that identifies journalism analysis actions from user requests.
 
@@ -89,7 +89,7 @@ Identify the journalism analysis actions requeste.""")
 
     return AugLLMConfig(
         nam="action_identification",
-        llm_config=DEFAULT_LLM_CONFIG.model_copy(updat={"temperature": 0.1}),
+        llm_config=DEFAULT_LLM_CONFIG.model_copy(update={"temperature": 0.1}),
         prompt_template=prompt,
         structured_output_model=JournalismAction,
         structured_output_version='',
@@ -105,7 +105,7 @@ def create_summarization_engine() -> AugLLMConfig:
 
     Returns:
         AugLLMConfig: Configured summarization engin
-    """ """ """ """
+    """
     prompt = ChatPromptTemplate.from_message([
         ("system", """You are an expert journalism summarizer who creates clear, concise summaries.
 

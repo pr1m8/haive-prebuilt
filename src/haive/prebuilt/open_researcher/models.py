@@ -37,5 +37,5 @@ class Feedback(BaseModel):
         description="Evaluation result indicating whether the response meets requirements ('pas') or needs revision ('fai')."
     )
     follow_up_queries: list[SearchQuery] = Field(
-        descriptio="List of follow-up search queries.",
+        description="List of follow-up search queries.",
     )

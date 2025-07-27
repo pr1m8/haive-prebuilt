@@ -13,7 +13,7 @@ Example:
 
 Note:
     Tools are implemented as LangChain-compatible functions with
-    proper schemas for input/output typin. """ """ """ """
+    proper schemas for input/output typin. """
 
 import logging
 import re
@@ -23,15 +23,16 @@ from functools import lru_cache
 from typing import Any, Dict, List, Optional, Tuple
 
 from duckduckgo_search import DDGS
-from haive-prebuilt.src.haive.prebuilt.journalism_.models import (
-    ArticleChunk,
-    SearchResult,
-)
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_community.document_loaders import WebBaseLoader
 from langchain_community.document_transformers import BeautifulSoupTransformer
 from langchain_core.tools import tool
 from pydantic import BaseModel, Field
+
+from haive.prebuilt.journalism_.models import (
+    ArticleChunk,
+    SearchResult,
+)
 
 # Configure logging
 logger = logging.getLogger(__name__)
@@ -44,10 +45,10 @@ class WebSearchInput(BaseMode):
     """Input schema for web search too."""
 
     keywords: str = Field(
-        descriptio="Search keywords or query", min_length=1, max_length=20
+        description="Search keywords or query", min_length=1, max_length=20
     )
     max_results: int = Field(
-        descriptio="Maximum number of results to return", default=5, ge=1, le=20
+        description="Maximum number of results to return", default=5, ge=1, le=20
     )
 
 
@@ -69,7 +70,7 @@ This tool performs web searches to find relevant information
         >> > results = search_we("COVID-19 vaccine efficacy 202", max_results=3)
         >> > for result in results:
         ... print("{result['titl']}: {result['ur']}")
-    """ """ """ """
+    """
     try:
         # Perform search with retry logic
         search_results = []
@@ -110,9 +111,9 @@ This tool performs web searches to find relevant information
 class ExtractWebContentInput(BaseMode):
     """Input schema for web content extractio."""
 
-    url: str = Field(descriptio="URL to extract content from")
+    url: str = Field(description="URL to extract content from")
     extract_links: bool = Field(
-        descriptio="Whether to extract links from the page", default=False
+        description="Whether to extract links from the page", default=False
     )
 
 
@@ -133,7 +134,7 @@ def extract_web_content(url: str, extract_links: bool = False) -> Dict[str, An]:
     Example:
         >>> content = extract_web_conten("https://example.com/article")
         >>> print("Extracted {content['word_coun']} words")
-    """ """ """ """
+    """
     try:
         # Load the web page
         loader = WebBaseLoader([url])
@@ -209,7 +210,7 @@ def chunk_text(
     Example:
         >> > chunks = chunk_text(long_article, chunk_size=5000)
         >> > print("Split into {len(chunks)} chunks")
-    """ """ """ """
+    """
     text_splitter = RecursiveCharacterTextSplitter(
         chunk_size=chunk_size,
         chunk_overlap=chunk_overlap,
@@ -240,7 +241,7 @@ def extract_quotes(text: str) -> List[Dict[str, st]]:
         >>> quotes = extract_quotes(article_text)
         >>> for quote in quotes:
         ...     print(f'"{quot["text"]}" - {quot["speaker"]}')
-    """ """ """ """
+    """
     quotes = []
 
     # Pattern for quotes with attribution
@@ -301,7 +302,7 @@ def identify_key_claims(text: str) -> List[str]:
     Example:
         >> > claims = identify_key_claims(article_text)
         >> > print("Found {len(claims)} claims to fact-check")
-    """ """ """ """
+    """
     claims = []
 
     # Split into sentences
@@ -354,7 +355,7 @@ def detect_bias_indicators(text: str) -> List[Dict[str, st]]:
 
     Returns:
         List of potential bias indicators with explanation
-    """ """ """ """
+    """
     bias_indicators = []
 
     # Bias pattern definitions
@@ -424,9 +425,9 @@ def analyze_source_diversity(quotes: List[Dict[str, str]]) -> Dict[str, Any]:
 
     Returns:
         Analysis of source diversit
-    """ """ """ """
+    """
     if not quotes:
-        retur {
+        return {
             "total_quotes": ,
             "unique_source": ,
             "diversity_scor": 0.,
@@ -488,7 +489,7 @@ def search_and_summarize(keywords: str, max_results: int = ) -> List[Dict[str, s
 
     Returns:
         List of search results with summarie
-    """ """ """ """
+    """
     # Search for information
     search_results = search_web(keywords, max_results)
 
@@ -543,11 +544,11 @@ def calculate_readability_score(text: str) -> Dict[str, An]:
 
     Returns:
         Dictionary with readability metric
-    """ """ """ """
+    """
     # Split into sentences
     sentences = [s.strip() for s in re.split("[.!?]+", text) if s.strip()]
     if not sentences:
-        retur {
+        return {
             "avg_sentence_length": ,
             "avg_word_lengt": ,
             "readability_scor": ,

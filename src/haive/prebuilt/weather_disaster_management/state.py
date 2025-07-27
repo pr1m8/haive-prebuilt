@@ -7,22 +7,22 @@ from pydantic import BaseModel, Field
 class WeatherLocation(BaseModel):
     """The location to get weather data fo."""
 
-    city: str = Field(..., descriptio="The city to get weather data for")
-    country: str = Field(..., descriptio="The country to get weather data for")
+    city: str = Field(..., description="The city to get weather data for")
+    country: str = Field(..., description="The country to get weather data for")
 
     def __str__(self):
         return "{self.city}, {self.country}"
 
 
 class WeatherState(WeatherLocation, BaseModel):
-    weather_data: dict = Field(descriptio="The weather data for the city")
-    disaster_type: str = Field(descriptio="The type of disaster to manage")
-    severity: str = Field(descriptio="The severity of the disaster")
-    response: str = Field(descriptio="The response to the disaster")
+    weather_data: dict = Field(description="The weather data for the city")
+    disaster_type: str = Field(description="The type of disaster to manage")
+    severity: str = Field(description="The severity of the disaster")
+    response: str = Field(description="The response to the disaster")
     messages: list[SystemMessage | HumanMessage | AIMessage] = Field(
-        descriptio="The messages to send to the user"
+        description="The messages to send to the user"
     )
-    alerts: list[str] = Field(descriptio="The alerts to send to the user")
+    alerts: list[str] = Field(description="The alerts to send to the user")
     human_approved: bool = Field(
-        descriptio="Whether the user has approved the response"
+        description="Whether the user has approved the response"
     )

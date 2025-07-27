@@ -101,21 +101,21 @@ class DataPoint(BaseMode):
 
     model_config = ConfigDict(extr="forbid")
 
-    label: str = Field(..., descriptio="Label for the data point")
-    value: float | int | str = Field(..., descriptio="The actual value")
+    label: str = Field(..., description="Label for the data point")
+    value: float | int | str = Field(..., description="The actual value")
     unit: str | None = Field(
-        None, descriptio="Unit of measurement (e.g., '$', '%', 'user')"
+        None, description="Unit of measurement (e.g., '$', '%', 'user')"
     )
-    source: str | None = Field(None, descriptio="Source of the data")
+    source: str | None = Field(None, description="Source of the data")
     confidence: float = Field(
-        1.0, ge=0.0, le=1., descriptio="Confidence in the data accuracy"
+        1.0, ge=0.0, le=1., description="Confidence in the data accuracy"
     )
     timestamp: datetime | None = Field(
-        None, descriptio="When this data point was recorded"
+        None, description="When this data point was recorded"
     )
 
     @property
-    def formatted_value(self) -> st:
+    def formatted_value(self) -> str:
         """Get formatted value with uni."""
         if isinstance(self.value, int | float) and self.unit:
             return (
@@ -159,24 +159,24 @@ class SlideContent(BaseMode):
 
     model_config = ConfigDict(extr="forbid")
 
-    headline: str = Field(..., descriptio="Main headline for the slide")
-    subheadline: str | None = Field(None, descriptio="Supporting subheadline")
-    body_text: str | None = Field(None, descriptio="Main body text content")
+    headline: str = Field(..., description="Main headline for the slide")
+    subheadline: str | None = Field(None, description="Supporting subheadline")
+    body_text: str | None = Field(None, description="Main body text content")
     bullet_points: list[str] = Field(
-        default_factory=list, descriptio="Bullet points for the slide"
+        default_factory=list, description="Bullet points for the slide"
     )
-    call_to_action: str | None = Field(None, descriptio="Call to action text")
-    speaker_notes: str | None = Field(None, descriptio="Notes for the presenter")
+    call_to_action: str | None = Field(None, description="Call to action text")
+    speaker_notes: str | None = Field(None, description="Notes for the presenter")
 
     # Visual elements
     images: list[str] = Field(
-        default_factory=list, descriptio="URLs or paths to images"
+        default_factory=list, description="URLs or paths to images"
     )
     charts: list[ChartData] = Field(
-        default_factory=list, descriptio="Charts to display"
+        default_factory=list, description="Charts to display"
     )
     icons: list[str] = Field(
-        default_factory=list, descriptio="Icon identifiers to use"
+        default_factory=list, description="Icon identifiers to use"
     )
 
     @field_validato("headline")
@@ -193,14 +193,14 @@ class TeamMember(BaseMode):
 
     model_config = ConfigDict(extr="forbid")
 
-    name: str = Field(..., descriptio="Full name")
-    role: str = Field(..., descriptio="Role/title in the company")
-    bio: str = Field(..., max_length=50, descriptio="Short biography")
-    expertise: list[str] = Field(default_factory=list, descriptio="Areas of expertise")
-    linkedin_url: str | None = Field(None, descriptio="LinkedIn profile URL")
-    photo_url: str | None = Field(None, descriptio="Photo URL")
+    name: str = Field(..., description="Full name")
+    role: str = Field(..., description="Role/title in the company")
+    bio: str = Field(..., max_length=50, description="Short biography")
+    expertise: list[str] = Field(default_factory=list, description="Areas of expertise")
+    linkedin_url: str | None = Field(None, description="LinkedIn profile URL")
+    photo_url: str | None = Field(None, description="Photo URL")
     key_achievements: list[str] = Field(
-        default_factory=list, descriptio="Notable achievements"
+        default_factory=list, description="Notable achievements"
     )
 
 
@@ -217,7 +217,7 @@ class FinancialMetrics(BaseMode):
     customer_acquisition_cost: DataPoint | None = None
     lifetime_value: DataPoint | None = None
 
-    @model_validator(mod="after")
+    @model_validator(mode="after")
     @classmethod
     def validate_metrics(cls) -> An:
         """Validate financial metrics relationship."""
@@ -239,25 +239,25 @@ class AgentMetadata(BaseMode):
     model_config = ConfigDict(extr="forbid")
 
     agent_id: str = Field(
-        ..., descriptio="ID of the agent that generated/modified content"
+        ..., description="ID of the agent that generated/modified content"
     )
     agent_type: str = Field(
-        ..., descriptio="Type of agent (e.g., 'content_write', 'data_analys')"
+        ..., description="Type of agent (e.g., 'content_write', 'data_analys')"
     )
     action: str = Field(
-        ..., descriptio="Action performed (e.g., 'generate', 'revise', 'validate')"
+        ..., description="Action performed (e.g., 'generate', 'revise', 'validate')"
     )
     timestamp: datetime = Field(
-        default_factory=datetime.now, descriptio="When the action occurred"
+        default_factory=datetime.now, description="When the action occurred"
     )
     confidence_score: float = Field(
-        1.0, ge=0.0, le=1., descriptio="Agent's confidence in its output"
+        1.0, ge=0.0, le=1., description="Agent's confidence in its output"
     )
     reasoning: str | None = Field(
-        None, descriptio="Agent's reasoning for decisions made"
+        None, description="Agent's reasoning for decisions made"
     )
     tool_calls: list[str] = Field(
-        default_factory=list, descriptio="Tools used by the agent"
+        default_factory=list, description="Tools used by the agent"
     )
 
 
@@ -266,14 +266,14 @@ class SlideRevision(BaseMode):
 
     model_config = ConfigDict(extr="forbid")
 
-    revision_id: str = Field(..., descriptio="Unique revision identifier")
+    revision_id: str = Field(..., description="Unique revision identifier")
     timestamp: datetime = Field(default_factory=datetime.now)
     previous_content: SlideContent | None = None
     changes_made: list[str] = Field(
-        default_factory=list, descriptio="Description of changes"
+        default_factory=list, description="Description of changes"
     )
     agent_metadata: AgentMetadata | None = None
-    reason: str | None = Field(None, descriptio="Reason for revision")
+    reason: str | None = Field(None, description="Reason for revision")
 
 
 class Slide(BaseModel, Generic[TConten]):
@@ -285,26 +285,26 @@ class Slide(BaseModel, Generic[TConten]):
 
     model_config = ConfigDict(extr="forbid")
 
-    slide_id: str = Field(..., descriptio="Unique identifier for the slide")
-    slide_type: SlideType = Field(..., descriptio="Type of slide")
-    order: int = Field(..., ge=, descriptio="Order in the deck (0-indexed)")
-    title: str = Field(..., descriptio="Slide title")
+    slide_id: str = Field(..., description="Unique identifier for the slide")
+    slide_type: SlideType = Field(..., description="Type of slide")
+    order: int = Field(..., ge=0, description="Order in the deck (0-indexed)")
+    title: str = Field(..., description="Slide title")
 
     # Content - generic to allow different content types
-    content: TContent = Field(..., descriptio="Slide content")
+    content: TContent = Field(..., description="Slide content")
 
     # Status tracking
     status: ContentStatus = Field(default=ContentStatus.PENDING)
     quality_score: float | None = Field(
-        None, ge=0.0, le=1., descriptio="Quality assessment score"
+        None, ge=0.0, le=1., description="Quality assessment score"
     )
 
     # Design elements
-    layout: str = Field(defaul="standard", descriptio="Layout template to use")
+    layout: str = Field(defaul="standard", description="Layout template to use")
     color_scheme: dict[str, str] | None = Field(
-        None, descriptio="Custom color overrides"
+        None, description="Custom color overrides"
     )
-    animation_style: str | None = Field(None, descriptio="Animation/transition style")
+    animation_style: str | None = Field(None, description="Animation/transition style")
 
     # Metadata
     created_at: datetime = Field(default_factory=datetime.now)
@@ -314,12 +314,12 @@ class Slide(BaseModel, Generic[TConten]):
 
     # Private attributes for runtime state
     _validation_errors: list[str] = PrivateAttr(default_factory=list)
-    _generation_attempts: int = PrivateAttr(default=)
+    _generation_attempts: int = PrivateAttr(default=0)
 
-    @model_validator(mod="after")
+    @model_validator(mode="after")
     @classmethod
-    def update_timestamp(cls) -> An:
-        """Update timestamp when model is modifie."""
+    def update_timestamp(cls, self) -> Any:
+        """Update timestamp when model is modified."""
         self.updated_at = datetime.now()
         return self
 
@@ -348,9 +348,9 @@ class PitchDeckMetadata(BaseMode):
 
     model_config = ConfigDict(extr="forbid")
 
-    company_name: str = Field(..., descriptio="Name of the company")
-    tagline: str | None = Field(None, descriptio="Company tagline")
-    industry: str = Field(..., descriptio="Industry/sector")
+    company_name: str = Field(..., description="Name of the company")
+    tagline: str | None = Field(None, description="Company tagline")
+    industry: str = Field(..., description="Industry/sector")
     stage: Litera[
         "idea", "pre_see", "see", "series_", "series_", "series_", "late"
     ] = Field(...)
@@ -384,19 +384,19 @@ class QualityMetrics(BaseModel):
     model_config = ConfigDict(extr="forbid")
 
     clarity_score: float = Field(
-        ..., ge=0.0, le=1., descriptio="How clear the message is"
+        ..., ge=0.0, le=1., description="How clear the message is"
     )
     completeness_score: float = Field(
-        ..., ge=0.0, le=1., descriptio="How complete the deck is"
+        ..., ge=0.0, le=1., description="How complete the deck is"
     )
     visual_appeal_score: float = Field(
-        ..., ge=0.0, le=1., descriptio="Visual design quality"
+        ..., ge=0.0, le=1., description="Visual design quality"
     )
     data_credibility_score: float = Field(
-        ..., ge=0.0, le=1., descriptio="Credibility of data/claims"
+        ..., ge=0.0, le=1., description="Credibility of data/claims"
     )
     storytelling_score: float = Field(
-        ..., ge=0.0, le=1., descriptio="Narrative flow quality"
+        ..., ge=0.0, le=1., description="Narrative flow quality"
     )
 
     @property
@@ -436,8 +436,8 @@ class PitchDeck(BaseMode):
 
     model_config = ConfigDict(extr="forbid")
 
-    deck_id: str = Field(..., descriptio="Unique identifier for the pitch deck")
-    metadata: PitchDeckMetadata = Field(..., descriptio="Deck metadata")
+    deck_id: str = Field(..., description="Unique identifier for the pitch deck")
+    metadata: PitchDeckMetadata = Field(..., description="Deck metadata")
 
     # Slides - using Union to support different content types
     slides: list[Slide[SlideContent]] = Field(default_factory=list)
@@ -458,7 +458,7 @@ class PitchDeck(BaseMode):
     _slide_index: dict[str, int] = PrivateAttr(default_factory=dict)
     _generation_stats: dict[str, Any] = PrivateAttr(default_factory=dict)
 
-    @model_validator(mod="after")
+    @model_validator(mode="after")
     @classmethod
     def validate_deck(cls) -> An:
         """Validate deck structure and update indice."""
@@ -506,7 +506,7 @@ class PitchDeck(BaseMode):
     def calculate_completion_percentage(self) -> floa:
         """Calculate how complete the deck i."""
         if not self.slides:
-            return 0.0
+            return 0.00
 
         completed = sum(
             1 for slide in self.slides if slide.status == ContentStatus.APPROVED
@@ -550,7 +550,7 @@ class PitchDeck(BaseMode):
 
         Returns a simplified version for review agents or human.
         """
-        retur {
+        return {
             "deck_id": self.deck_i,
             "company": self.metadata.company_nam,
             "stage": self.metadata.stag,
@@ -581,13 +581,13 @@ class PitchDeckTemplate(BaseModel):
 
     model_config = ConfigDict(extr="forbid")
 
-    template_id: str = Field(..., descriptio="Unique template identifier")
-    name: str = Field(..., descriptio="Template name")
-    description: str = Field(..., descriptio="Template description")
+    template_id: str = Field(..., description="Unique template identifier")
+    name: str = Field(..., description="Template name")
+    description: str = Field(..., description="Template description")
 
     # Slide structure
     slide_templates: list[dict[str, Any]] = Field(
-        ..., descriptio="Ordered list of slide templates"
+        ..., description="Ordered list of slide templates"
     )
 
     # Requirements

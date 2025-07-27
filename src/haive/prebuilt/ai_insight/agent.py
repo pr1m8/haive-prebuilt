@@ -34,25 +34,25 @@ from .graph.state_graph.base_graph import BaseGraph
 logger = logging.getLogger(__name__)
 
 
-def route_after_search(state: NewsReporterState) -> st:
+def route_after_search(state: NewsReporterState) -> str:
     """Route based on search result."""
     if not state.raw_articles:
-        retur "no_results"
-    retur "filter"
+        return "no_results"
+    return "filter"
 
 
-def route_after_filter(state: NewsReporterState) -> st:
+def route_after_filter(state: NewsReporterState) -> str:
     """Route based on filtered article."""
     if not state.filtered_articles:
-        retur "insufficient_content"
-    retur "summarize"
+        return "insufficient_content"
+    return "summarize"
 
 
-def route_after_summary(state: NewsReporterState) -> st:
+def route_after_summary(state: NewsReporterState) -> str:
     """Route based on summarie."""
     if not state.has_sufficient_content:
-        retur "insufficient_content"
-    retur "categorize"
+        return "insufficient_content"
+    return "categorize"
 
 
 class NewsReporterAgent(Agen):
@@ -252,7 +252,7 @@ class NewsReporterAgent(Agen):
             categories=[
                 NewsCategory(
                     nam="Available Articles",
-                    descriptio="All articles found",
+                    description="All articles found",
                     articles=state.article_summaries,
                 )
             ],

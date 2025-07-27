@@ -173,8 +173,8 @@ class EnhancedKYCAgent(Agent[KYCAgentConfiguration]):
             Next node in the workflo
         """
         if state.next_stage == KYCWorkflowStage.ENHANCED_DUE_DILIGENCE:
-            retur "enhanced_due_diligence"
-        retur "final_decision"
+            return "enhanced_due_diligence"
+        return "final_decision"
 
     def enhanced_due_diligence(self, state: KYCWorkflowState) -> KYCWorkflowStag:
         """Perform Enhanced Due Diligence for high-risk customers.

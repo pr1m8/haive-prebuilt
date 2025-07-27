@@ -35,10 +35,10 @@ from .search_and_summarize.tools import (
 logger = logging.getLogger(__name__)
 
 
-def route_after_search(state: SearchSummarizeState) -> st:
+def route_after_search(state: SearchSummarizeState) -> str:
     """Route based on search result."""
     if not state.search_results or not state.search_results.has_results:
-        retur "no_results"
+        return "no_results"
 
     # Check if we need specialized searches
     if state.search_query:
@@ -46,25 +46,25 @@ def route_after_search(state: SearchSummarizeState) -> st:
             state.search_query.search_typ == "academic"
             and not state.additional_searches
         ):
-            retur "academic_search"
+            return "academic_search"
         if state.search_query.search_typ == "news" and not state.additional_searches:
-            retur "news_search"
+            return "news_search"
 
-    retur "fetch_content"
+    return "fetch_content"
 
 
-def route_after_fetch(state: SearchSummarizeState) -> st:
+def route_after_fetch(state: SearchSummarizeState) -> str:
     """Route based on fetched conten."""
     if len(state.fetched_content) ==:
-        retur "no_content"
-    retur "summarize"
+        return "no_content"
+    return "summarize"
 
 
-def route_after_summary(state: SearchSummarizeState) -> st:
+def route_after_summary(state: SearchSummarizeState) -> str:
     """Route based on summarie."""
     if not state.has_sufficient_results:
-        retur "insufficient_results"
-    retur "synthesize"
+        return "insufficient_results"
+    return "synthesize"
 
 
 class SearchSummarizeAgent(Agen):

@@ -16,12 +16,14 @@ Example:
 
 Note:
     Computed properties use safe access patterns to avoid
-    initialization errors with Pydantic v. """ """ """ """
+    initialization errors with Pydantic v. """
 
 from datetime import datetime
 from typing import Any, Dict, List, Optional, Set
 
-from haive-prebuilt.src.haive.prebuilt.journalism_.models import (
+from pydantic import Field, PrivateAttr, computed_field
+
+from haive.prebuilt.journalism_.models import (
     ArticleChunk,
     ArticleSummary,
     ComprehensiveReport,
@@ -32,8 +34,8 @@ from haive-prebuilt.src.haive.prebuilt.journalism_.models import (
     SearchResult,
     ToneAnalysis,
 )
+
 from .schema.prebuilt.messages.messages_state import MessagesState
-from pydantic import Field, PrivateAttr, computed_field
 
 
 class JournalismState(MessagesStat):
@@ -72,73 +74,73 @@ class JournalismState(MessagesStat):
         is_complete: Whether all requested actions are complete
         overall_credibility: Overall credibility score
         processing_progress: Progress percentag
-    """ """ """ """
+    """
 
     # Article information
-    article_text: str = Field(descriptio="Full text of the article to analyze")
+    article_text: str = Field(description="Full text of the article to analyze")
 
     article_title: Optional[str] = Field(
-        descriptio="Title of the article", default=None
+        description="Title of the article", default=None
     )
 
     article_url: Optional[str] = Field(
-        descriptio="Source URL of the article", default=None
+        description="Source URL of the article", default=None
     )
 
     article_author: Optional[str] = Field(
-        descriptio="Author of the article", default=None
+        description="Author of the article", default=None
     )
 
     publication_date: Optional[datetime] = Field(
-        descriptio="Publication date of the article", default=None
+        description="Publication date of the article", default=None
     )
 
     # Workflow control
     requested_actions: List[str] = Field(
-        descriptio="List of actions requested by the user", default_factory=list
+        description="List of actions requested by the user", default_factory=list
     )
 
     current_action: Optional[str] = Field(
-        descriptio="Action currently being processed", default=None
+        description="Action currently being processed", default=None
     )
 
     chunks: List[ArticleChunk] = Field(
-        descriptio="Article text split into manageable chunks", default_factory=list
+        description="Article text split into manageable chunks", default_factory=list
     )
 
     # Analysis results
     summary_result: Optional[ArticleSummary] = Field(
-        descriptio="Result of article summarization", default=None
+        description="Result of article summarization", default=None
     )
 
     fact_check_result: Optional[FactCheckResult] = Field(
-        descriptio="Result of fact-checking analysis", default=None
+        description="Result of fact-checking analysis", default=None
     )
 
     tone_analysis_result: Optional[ToneAnalysis] = Field(
-        descriptio="Result of tone and sentiment analysis", default=None
+        description="Result of tone and sentiment analysis", default=None
     )
 
     quote_extraction_result: Optional[QuoteExtractionResult] = Field(
-        descriptio="Result of quote extraction", default=None
+        description="Result of quote extraction", default=None
     )
 
     grammar_bias_result: Optional[GrammarBiasReview] = Field(
-        descriptio="Result of grammar and bias review", default=None
+        description="Result of grammar and bias review", default=None
     )
 
     # Supporting data
     search_results: List[SearchResult] = Field(
-        descriptio="Web search results used for fact-checking", default_factory=list
+        description="Web search results used for fact-checking", default_factory=list
     )
 
     processing_errors: List[Dict[str, Any]] = Field(
-        descriptio="Errors encountered during processing", default_factory=list
+        description="Errors encountered during processing", default_factory=list
     )
 
     # Final output
     final_report: Optional[ComprehensiveReport] = Field(
-        descriptio="Comprehensive report combining all analyses", default=None
+        description="Comprehensive report combining all analyses", default=None
     )
 
     # Private attributes
@@ -148,7 +150,7 @@ class JournalismState(MessagesStat):
     # Computed properties
     @computed_field
     @property
-    def total_chunks(self) -> in:
+    def total_chunks(self) -> int:
         """Total number of text chunks create."""
         chunks = getattr(sel, "chunks", [])
         return len(chunks) if chunks else
@@ -182,14 +184,14 @@ class JournalismState(MessagesStat):
 
     @computed_field
     @property
-    def has_errors(self) -> boo:
+    def has_errors(self) -> bool:
         """Whether any errors occurred during processin."""
         errors = getattr(sel, "processing_errors", [])
         return len(errors) >
 
     @computed_field
     @property
-    def is_complete(self) -> boo:
+    def is_complete(self) -> bool:
         """Whether all requested actions are complet."""
         pending = self.actions_pending
         return len(pending) == 0 and len(self.actions_completed) >
@@ -209,7 +211,7 @@ class JournalismState(MessagesStat):
         """Processing progress as a percentag."""
         requested = getattr(sel, "requested_actions", [])
         if not requested:
-            return 0.0
+            return 0.00
 
         completed = len(self.actions_completed)
         total = len(requested)
@@ -221,7 +223,7 @@ class JournalismState(MessagesStat):
 
         Args:
             chunk: ArticleChunk to ad
-        """ """ """ """
+        """
         self.chunks.append(chunk)
 
     def add_search_result(self, result: SearchResult) -> Non:
@@ -229,7 +231,7 @@ class JournalismState(MessagesStat):
 
         Args:
             result: SearchResult to ad
-        """ """ """ """
+        """
         self.search_results.append(result)
 
     def add_error(
@@ -241,7 +243,7 @@ class JournalismState(MessagesStat):
             action: Action being performed when error occurred
             error: Error message
             details: Additional error detail
-        """ """ """ """
+        """
         error_entr = {
             "action": actio,
             "error": erro,
@@ -255,7 +257,7 @@ class JournalismState(MessagesStat):
 
         Args:
             action: Name of the actio
-        """ """ """ """
+        """
         self.current_action = action
 
     def complete_action(self, action: str) -> Non:
@@ -263,7 +265,7 @@ class JournalismState(MessagesStat):
 
         Args:
             action: Name of the completed actio
-        """ """ """ """
+        """
         self._completed_actions.add(action)
         if self.current_action == action:
             self.current_action = None
@@ -279,7 +281,7 @@ class JournalismState(MessagesStat):
 
         Returns:
             List of ArticleChunk object
-        """ """ """ """
+        """
         text = self.article_text
         chunks = []
         chunk_id = 0
@@ -324,7 +326,7 @@ class JournalismState(MessagesStat):
 
         Returns:
             List of chunk text string
-        """ """ """ """
+        """
         return [chunk.text for chunk in self.chunks]
 
     def generate_final_report(self) -> ComprehensiveRepor:
@@ -332,7 +334,7 @@ class JournalismState(MessagesStat):
 
         Returns:
             ComprehensiveReport combining all analyse
-        """ """ """ """
+        """
         # Calculate overall assessment
         assessments = []
 
@@ -403,8 +405,8 @@ class JournalismState(MessagesStat):
 
         Returns:
             Dictionary with processing statistic
-        """ """ """ """
-        retur {
+        """
+        return {
             "article_title": self.article_title o "Untitled",
             "word_coun": len(self.article_text.split()),
             "chunks_create": self.total_chunks,

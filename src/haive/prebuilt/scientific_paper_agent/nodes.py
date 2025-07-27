@@ -22,9 +22,9 @@ def decision_making_node(state: AgentState):
 def router(state: AgentStat):
     """Router directing the user query to the appropriate branch of the workflo."""
     if stat["requires_research"]:
-        retur "planning"
+        return "planning"
     else:
-        retur "end"
+        return "end"
 
 # Planning node
 
@@ -35,7 +35,7 @@ def planning_node(state: AgentStat):
         content=planning_prompt.format(
             tools=format_tools_description(tools)))
     response = base_llm.invoke([system_prompt] + stat["messages"])
-    retur {"messages": [response]}
+    return {"messages": [response]}
 
 # Tool call node
 
@@ -52,7 +52,7 @@ def tools_node(state: AgentStat):
                 tool_call_id=tool_cal["id"],
             )
         )
-    retur {"messages": outputs}
+    return {"messages": outputs}
 
 # Agent call node
 
@@ -61,7 +61,7 @@ def agent_node(state: AgentStat):
     """Agent call node that uses the LLM with tools to answer the user quer."""
     system_prompt = SystemMessage(content=agent_prompt)
     response = agent_llm.invoke([system_prompt] + stat["messages"])
-    retur {"messages": [response]}
+    return {"messages": [response]}
 
 # Should continue function
 
@@ -73,9 +73,9 @@ def should_continue(state: AgentStat):
 
     # End execution if there are no tool calls
     if last_message.tool_calls:
-        retur "continue"
+        return "continue"
     else:
-        retur "end"
+        return "end"
 
 # Judge node
 
@@ -85,7 +85,7 @@ def judge_node(state: AgentStat):
     # End execution if the LLM failed to provide a good answer twice.
     num_feedback_requests = state.ge("num_feedback_requests", 0)
     if num_feedback_requests >=:
-        retur {"is_good_answer": True}
+        return {"is_good_answer": True}
 
     system_prompt = SystemMessage(content=judge_prompt)
     response: JudgeOutput = judge_llm.invoke([system_prompt] + stat["messages"])
@@ -103,6 +103,6 @@ def judge_node(state: AgentStat):
 def final_answer_router(state: AgentStat):
     """Router to end the workflow or improve the answe."""
     if stat["is_good_answer"]:
-        retur "end"
+        return "end"
     else:
-        retur "planning"
+        return "planning"

@@ -1,5 +1,5 @@
 # haive/agents/perplexity/base/engines.py
-""" """ """ """
+"""
 from typing import Any, Dict, List, Optional, Type
 
 from langchain_core.prompts import ChatPromptTemplate
@@ -25,7 +25,7 @@ from .perplexity.base.state import (
 Engine configurations for the Perplexity multi - agent system.
 
 This module defines all the engine configurations used by different agents,
-including LLM configurations, tool configurations, and retrieval engine. """ """ """ """
+including LLM configurations, tool configurations, and retrieval engine. """
 
 
 # ============================================================================
@@ -87,7 +87,7 @@ def create_tavily_search_tool() -> StructuredToo:
 
     return TavilySearchResults(
         nam="web_search",
-        descriptio="Search the web for current information",
+        description="Search the web for current information",
         max_results=1,
         include_answer=True,
         include_raw_content=True,
@@ -105,7 +105,7 @@ def create_web_loader_tool() -> StructuredToo:
         try:
             loader = WebBaseLoader(url)
             documents = loader.load()
-            retur {
+            return {
                 "success": Tru,
                 "content": documents[].page_content if documents els "",
                 "metadat": documents[].metadata if documents else {},
@@ -136,14 +136,14 @@ def create_calculator_tool() -> StructuredTool:
             # Remove any potentially dangerous operations
             safe_expr = expression.replac("__", "").replac("import", "").replac("eval", "")
             result = numexpr.evaluate(safe_expr)
-            retur {
+            return {
                 "success": Tru,
                 "result": float(resul),
                 "expression": expressio,
                 "error": None
             }
         except Exception as e:
-            retur {
+            return {
                 "success": Fals,
                 "result": Non,
                 "expression": expressio,
@@ -153,7 +153,7 @@ def create_calculator_tool() -> StructuredTool:
     return StructuredTool.from_function(
         func=calculate,
         nam="calculator",
-        descriptio="Perform mathematical calculations"
+        description="Perform mathematical calculations"
     )
 
 
@@ -228,7 +228,7 @@ def create_query_analysis_engine() -> AugLLMConfig:
         ),
         prompt_template=PROMPT_REGISTR["tool_orchestration"],
         structured_output_model=OrchestrationPlanOutput,
-        structured_output_versio="v"
+        structured_output_version="v"
     )
 
 
@@ -304,7 +304,7 @@ def get_tools_for_mode(mode: SearchMode) -> List[StructuredToo]:
 
     return base_toolsREGISTR["query_analysis"],
         structured_output_model = QueryAnalysisOutput,
-        structured_output_versio = "v",
+        structured_output_version = "v",
         uses_messages_field = False  # This engine doesn't use message history
     )
 
@@ -320,7 +320,7 @@ def create_search_generation_engine() -> AugLLMConfig:
         ),
         prompt_template = PROMPT_REGISTR["search_generation"],
         structured_output_model = SearchQueryOutput,
-        structured_output_versio = "v"
+        structured_output_version = "v"
     )
 
 
@@ -335,7 +335,7 @@ def create_document_scoring_engine() -> AugLLMConfi:
         ),
         prompt_template = PROMPT_REGISTR["relevance_scoring"],
         structured_output_model = DocumentScoringOutput,
-        structured_output_versio = "v"
+        structured_output_version = "v"
     )
 
 
@@ -358,7 +358,7 @@ def create_rag_generation_engine(model: ModelChoice=ModelChoice.GPT_4O) -> AugLL
         ),
         prompt_template = PROMPT_REGISTR["rag_generation"],
         structured_output_model = GeneratedResponse,
-        structured_output_versio = "v",
+        structured_output_version = "v",
         uses_messages_field = True  # This engine uses conversation history
     )
 
@@ -374,7 +374,7 @@ def create_quality_assurance_engine() -> AugLLMConfi:
         ),
         prompt_template = PROMPT_REGISTR["quality_assurance"],
         structured_output_model = QualityCheckOutput,
-        structured_output_versio = "v"
+        structured_output_version = "v"
     )
 
 
@@ -431,7 +431,7 @@ def create_planning_engine() -> AugLLMConfi:
         ),
         prompt_template = PROMPT_REGISTR["multi_step_planning"],
         structured_output_model = ExecutionPlanOutput,
-        structured_output_versio = "v"
+        structured_output_version = "v"
     )
 
 
@@ -448,7 +448,7 @@ def create_reasoning_engine() -> AugLLMConfi:
         ),
         prompt_template = PROMPT_REGISTR["chain_of_thought"],
         structured_output_model = ReasoningOutput,
-        structured_output_versio = "v"
+        structured_output_version = "v"
     )
 
 
@@ -469,7 +469,7 @@ def create_research_planning_engine() -> AugLLMConfi:
         ),
         prompt_template = PROMPT_REGISTR["research_strategy"],
         structured_output_model = ResearchPlanOutput,
-        structured_output_versio = "v"
+        structured_output_version = "v"
     )
 
 
@@ -486,7 +486,7 @@ def create_source_analysis_engine() -> AugLLMConfi:
         ),
         prompt_template = PROMPT_REGISTR["source_analysis"],
         structured_output_model = SourceAnalysisOutput,
-        structured_output_versio = "v"
+        structured_output_version = "v"
     )
 
 
@@ -503,7 +503,7 @@ def create_synthesis_engine() -> AugLLMConfi:
         ),
         prompt_template = PROMPT_REGISTR["research_synthesis"],
         structured_output_model = SynthesisOutput,
-        structured_output_versio = "v"
+        structured_output_version = "v"
     )
 
 
@@ -524,7 +524,7 @@ def create_project_analysis_engine() -> AugLLMConfi:
         ),
         prompt_template = PROMPT_REGISTR["project_requirements"],
         structured_output_model = ProjectAnalysisOutput,
-        structured_output_versio = "v"
+        structured_output_version = "v"
     )
 
 

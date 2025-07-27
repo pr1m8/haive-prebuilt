@@ -14,7 +14,7 @@ test_inputs = [
     focusing on clinical trials and safety protocol""",
 
     """Find and analyze papers from 2023-202 about the application of transformer architectures in protein folding prediction,
-    specifically looking for novel architectural modifications with experimental validatio.""" """ """ """
+    specifically looking for novel architectural modifications with experimental validatio."""
 ]
 
 # Run tests and store the results for later visualisation

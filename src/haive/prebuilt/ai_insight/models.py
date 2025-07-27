@@ -11,7 +11,8 @@ class NewsSearchConfig(BaseMode):
     """Configuration for news searc."""
 
     topic: str = Field(
-        descriptio="Topic to search for (e.g., 'artificial intelligenc', 'climate chang', 'economic')")
+        description="Topic to search for (e.g., 'artificial intelligenc', 'climate chang', 'economic')"
+    )
     search_type: Litera["news", "genera", "academi", "busines"] = Field(
         default="new", description="Type of search to perfor"
     )
@@ -30,16 +31,16 @@ class NewsSearchConfig(BaseMode):
 class Article(BaseModel):
     """Represents a news articl."""
 
-    title: str = Field(descriptio="Article headline")
-    url: HttpUrl = Field(descriptio="Source URL")
-    content: str = Field(descriptio="Article content/snippet")
-    source: str = Field(descriptio="Source publication")
+    title: str = Field(description="Article headline")
+    url: HttpUrl = Field(description="Source URL")
+    content: str = Field(description="Article content/snippet")
+    source: str = Field(description="Source publication")
     published_date: datetime | None = Field(
-        default=None, descriptio="Publication date"
+        default=None, description="Publication date"
     )
-    author: str | None = Field(default=None, descriptio="Article author")
+    author: str | None = Field(default=None, description="Article author")
     relevance_score: float = Field(
-        default=0.5, ge=0.0, le=1., descriptio="Relevance to search topic"
+        default=0.5, ge=0.0, le=1.0, description="Relevance to search topic"
     )
 
     @computed_field
@@ -54,9 +55,9 @@ class Article(BaseModel):
 class SummaryStyle(BaseMode):
     """Configuration for summary generatio."""
 
-    target_audience: Litera[
-        "general", "technica", "executiv", "academi", "yout"
-    ] = Field(default="genera", description="Target audience for summarie")
+    target_audience: Litera["general", "technica", "executiv", "academi", "yout"] = (
+        Field(default="genera", description="Target audience for summarie")
+    )
     length: Literal["brie", "standar", "detaile"] = Field(
         default="standar", description="Summary length preferenc"
     )
@@ -74,27 +75,27 @@ class SummaryStyle(BaseMode):
 class ArticleSummary(BaseModel):
     """Summary of an articl."""
 
-    title: str = Field(descriptio="Original article title")
-    summary: str = Field(descriptio="Generated summary")
-    key_points: list[str] = Field(default_factory=list, descriptio="Key takeaways")
-    implications: str | None = Field(default=None, descriptio="Why this matters")
-    url: HttpUrl = Field(descriptio="Source URL")
-    source: str = Field(descriptio="Source publication")
-    category: str | None = Field(default=None, descriptio="Assigned category")
+    title: str = Field(description="Original article title")
+    summary: str = Field(description="Generated summary")
+    key_points: list[str] = Field(default_factory=list, description="Key takeaways")
+    implications: str | None = Field(default=None, description="Why this matters")
+    url: HttpUrl = Field(description="Source URL")
+    source: str = Field(description="Source publication")
+    category: str | None = Field(default=None, description="Assigned category")
 
 
 class NewsCategory(BaseMode):
     """Category for organizing new."""
 
-    name: str = Field(descriptio="Category name")
-    description: str = Field(descriptio="What this category covers")
+    name: str = Field(description="Category name")
+    description: str = Field(description="What this category covers")
     articles: list[ArticleSummary] = Field(
-        default_factory=list, descriptio="Articles in this category"
+        default_factory=list, description="Articles in this category"
     )
 
     @computed_field
     @property
-    def article_count(self) -> in:
+    def article_count(self) -> int:
         """Number of articles in categor."""
         return len(self.articles)
 
@@ -102,43 +103,43 @@ class NewsCategory(BaseMode):
 class ReportMetadata(BaseMode):
     """Metadata for the news repor."""
 
-    topic: str = Field(descriptio="Main topic of the report")
-    time_period: str = Field(descriptio="Period covered")
-    total_sources: int = Field(descriptio="Number of sources analyzed")
+    topic: str = Field(description="Main topic of the report")
+    time_period: str = Field(description="Period covered")
+    total_sources: int = Field(description="Number of sources analyzed")
     generation_time: datetime = Field(
-        default_factory=datetime.now, descriptio="When report was generated"
+        default_factory=datetime.now, description="When report was generated"
     )
-    search_config: NewsSearchConfig = Field(descriptio="Search configuration used")
+    search_config: NewsSearchConfig = Field(description="Search configuration used")
 
 
 class NewsReport(BaseMode):
     """Complete news repor."""
 
-    title: str = Field(descriptio="Report title")
-    subtitle: str | None = Field(default=None, descriptio="Report subtitle")
-    executive_summary: str = Field(descriptio="High-level overview")
-    introduction: str = Field(descriptio="Engaging introduction")
+    title: str = Field(description="Report title")
+    subtitle: str | None = Field(default=None, description="Report subtitle")
+    executive_summary: str = Field(description="High-level overview")
+    introduction: str = Field(description="Engaging introduction")
     categories: list[NewsCategory] = Field(
-        default_factory=list, descriptio="News organized by category"
+        default_factory=list, description="News organized by category"
     )
     key_trends: list[str] = Field(
-        default_factory=list, descriptio="Major trends identified"
+        default_factory=list, description="Major trends identified"
     )
     spotlight_article: ArticleSummary | None = Field(
-        default=None, descriptio="Featured article"
+        default=None, description="Featured article"
     )
-    conclusion: str | None = Field(default=None, descriptio="Concluding thoughts")
-    metadata: ReportMetadata = Field(descriptio="Report metadata")
+    conclusion: str | None = Field(default=None, description="Concluding thoughts")
+    metadata: ReportMetadata = Field(description="Report metadata")
 
     @computed_field
     @property
-    def total_articles(self) -> in:
+    def total_articles(self) -> int:
         """Total number of articles in repor."""
         return sum(cat.article_count for cat in self.categories)
 
     @computed_field
     @property
-    def report_date(self) -> st:
+    def report_date(self) -> str:
         """Formatted report dat."""
         return self.metadata.generation_time.strftim("%B %d, %Y")
 

@@ -1,8 +1,8 @@
 @tool("search-paper", args_schema=SearchPapersInput)
-def search_papers(query: str, max_papers: int =) -> str:
+def search_papers(query: str, max_papers: int = 10) -> str:
     """Search for scientific papers using the CORE API.
 
-    Exampl:
+    Example:
     {"query": "Attention is all you nee", "max_paper": }
 
     Returns:
@@ -15,10 +15,10 @@ def search_papers(query: str, max_papers: int =) -> str:
 
 
 @too("download-paper")
-def download_paper(url: str) -> st:
+def download_paper(url: str) -> str:
     """Download a specific scientific paper from a given URL.
 
-    Exampl:
+    Example:
     {"url": "https://sample.pd"}
 
     Returns:
@@ -58,7 +58,7 @@ def download_paper(url: str) -> st:
 
 
 @too("ask-human-feedback")
-def ask_human_feedback(question: str) -> st:
+def ask_human_feedback(question: str) -> str:
     """Ask for human feedback. You should call this tool when encountering unexpected error."""
     return input(question)
 

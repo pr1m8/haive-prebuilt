@@ -181,7 +181,7 @@ grade: Litera["pass","fai"] = Field(
     description="Evaluation result indicating whether the response meets requirements ('pas') or needs revision ('fai')."
 )
 follow_up_queries: List[SearchQuery] = Field(
-    descriptio="List of follow-up search queries.",
+    description="List of follow-up search queries.",
 )
 </forma> """
 

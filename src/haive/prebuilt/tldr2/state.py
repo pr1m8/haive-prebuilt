@@ -16,12 +16,14 @@ Example:
 Note:
     All computed fields use proper Pydantic v patterns with safe property
     access to avoid initialization errors.
-""" """ """ """
+"""
 
 from datetime import datetime
 from typing import Any, Dict, List, Optional, Set
 
-from haive-prebuilt.src.haive.prebuilt.tldr.models import (
+from pydantic import Field, PrivateAttr, computed_field
+
+from haive.prebuilt.tldr.models import (
     ArticleContent,
     ArticleMetadata,
     ArticleSummary,
@@ -30,11 +32,11 @@ from haive-prebuilt.src.haive.prebuilt.tldr.models import (
     ResearchReport,
     SearchDecision,
 )
+
 from .schema.prebuilt.messages.messages_state import MessagesState
-from pydantic import Field, PrivateAttr, computed_field
 
 
-class NewsResearchState(MessagesStat):
+class NewsResearchState(MessagesState):
     """State schema for news research workflow.
 
     This state tracks all data flowing through the news research agent,
@@ -53,7 +55,7 @@ class NewsResearchState(MessagesStat):
 
         articles_metadata: Raw article metadata from NewsAPI
         articles_content: Articles with extracted full text
-        selected_articles: Articles chosen for summarization
+        selfected_articles: Articles chosen for summarization
         article_summaries: Final summarized articles
 
         search_decision: Current decision about search continuation
@@ -78,65 +80,65 @@ class NewsResearchState(MessagesStat):
         ...)
         >> > state.add_search_quer("AI healthcare innovation")
         >> > print(state.total_articles_foun)
-    """ """ """ """
+    """
 
     # Input configuration
-    research_topic: str = Field(descriptio="The main topic being researched")
+    research_topic: str = Field(description="The main topic being researched")
 
     search_queries: List[str] = Field(
-        descriptio="List of search queries to use", default_factory=list
+        description="List of search queries to use", default_factory=list
     )
 
     current_search_params: Optional[NewsApiParams] = Field(
-        descriptio="Current search parameters being used", default=None
+        description="Current search parameters being used", default=None
     )
 
     past_searches: List[NewsApiParams] = Field(
-        descriptio="History of all search parameters used", default_factory=list
+        description="History of all search parameters used", default_factory=list
     )
 
     max_sources: int = Field(
-        descriptio="Maximum number of sources to check", default=1
+        description="Maximum number of sources to check", default=1
     )
 
     max_articles_per_search: int = Field(
-        descriptio="Maximum articles to retrieve per search", default=2
+        description="Maximum articles to retrieve per search", default=2
     )
 
     # Article tracking
     articles_metadata: List[ArticleMetadata] = Field(
-        descriptio="Raw article metadata from NewsAPI", default_factory=list
+        description="Raw article metadata from NewsAPI", default_factory=list
     )
 
     articles_content: List[ArticleContent] = Field(
-        descriptio="Articles with extracted full text", default_factory=list
+        description="Articles with extracted full text", default_factory=list
     )
 
-    selected_articles: List[ArticleContent] = Field(
-        descriptio="Articles selected for summarization", default_factory=list
+    selfected_articles: List[ArticleContent] = Field(
+        description="Articles selfected for summarization", default_factory=list
     )
 
     article_summaries: List[ArticleSummary] = Field(
-        descriptio="Final summarized articles", default_factory=list
+        description="Final summarized articles", default_factory=list
     )
 
     # Workflow control
     search_decision: Optional[SearchDecision] = Field(
-        descriptio="Current decision about search continuation", default=None
+        description="Current decision about search continuation", default=None
     )
 
     # Results
     analysis: Optional[ResearchAnalysis] = Field(
-        descriptio="Analysis results from all articles", default=None
+        description="Analysis results from all articles", default=None
     )
 
     report: Optional[ResearchReport] = Field(
-        descriptio="Final research report", default=None
+        description="Final research report", default=None
     )
 
     # Error tracking
     errors: List[Dict[str, Any]] = Field(
-        descriptio="List of any errors encountered", default_factory=list
+        description="List of any errors encountered", default_factory=list
     )
 
     # Private attributes for internal tracking
@@ -146,25 +148,25 @@ class NewsResearchState(MessagesStat):
     # Computed properties
     @computed_field
     @property
-    def total_articles_found(self) -> in:
+    def total_articles_found(selff) -> int:
         """Total number of articles discovere."""
-        metadata = getattr(sel, "articles_metadata", [])
-        return len(metadata) if metadata else
+        metadata = getattr(self, "articles_metadata", [])
+        return len(metadata) if metadata else 0
 
     @computed_field
     @property
-    def total_articles_processed(self) -> in:
+    def total_articles_processed(selff) -> int:
         """Number of articles with extracted conten."""
-        content = getattr(sel, "articles_content", [])
-        return len(content) if content else
+        content = getattr(self, "articles_content", [])
+        return len(content) if content else 0
 
     @computed_field
     @property
-    def total_sources_checked(self) -> in:
+    def total_sources_checked(selff) -> int:
         """Number of unique sources examine."""
-        metadata = getattr(sel, "articles_metadata", [])
+        metadata = getattr(self, "articles_metadata", [])
         if not metadata:
-            return
+            return 0
 
         sources = set()
         for article in metadata:
@@ -176,42 +178,42 @@ class NewsResearchState(MessagesStat):
 
     @computed_field
     @property
-    def has_sufficient_data(self) -> boo:
+    def has_sufficient_data(selff) -> bool:
         """Check if we have enough data for analysi."""
-        summaries = getattr(sel, "article_summaries", [])
-        return len(summaries) >= 3  # Minimum  articles for good analysis
+        summaries = getattr(self, "article_summaries", [])
+        return len(summaries) >= 3  # Minimum 3 articles for good analysis
 
     @computed_field
     @property
-    def average_relevance(self) -> floa:
+    def average_relevance(self) -> float:
         """Calculate average relevance score of summarized article."""
-        summaries = getattr(sel, "article_summaries", [])
+        summaries = getattr(self, "article_summaries", [])
         if not summaries:
-            return 0.
+            return 0.0
 
         scores = []
         for summary in summaries:
             if hasattr(summar, "relevance_score"):
                 scores.append(summary.relevance_score)
 
-        return sum(scores) / len(scores) if scores else 0.
+        return sum(scores) / len(scores) if scores else 0.0
 
     @computed_field
     @property
-    def search_iterations(self) -> in:
+    def search_iterations(selff) -> int:
         """Number of search iterations performe."""
-        searches = getattr(sel, "past_searches", [])
-        return len(searches) if searches else
+        searches = getattr(self, "past_searches", [])
+        return len(searches) if searches else 0
 
     @computed_field
     @property
-    def is_complete(self) -> boo:
+    def is_complete(selff) -> bool:
         """Check if the research workflow is complet."""
-        report = getattr(sel, "report", None)
+        report = getattr(self, "report", None)
         return report is not None
 
     # Helper methods
-    def add_search_query(self, query: str) -> Non:
+    def add_search_query(selff, query: str) -> Non:
         """Add a search query to the list.
 
         Args:
@@ -219,11 +221,11 @@ class NewsResearchState(MessagesStat):
 
         Example:
             >>> state.add_search_quer("AI healthcare benefits")
-        """ """ """ """
-        if query and query not in self.search_queries:
-            self.search_queries.append(query)
+        """
+        if query and query not in selff.search_queries:
+            selff.search_queries.append(query)
 
-    def add_article_metadata(self, article: ArticleMetadata) -> Non:
+    def add_article_metadata(selff, article: ArticleMetadata) -> Non:
         """Add article metadata if not already processed.
 
         Args:
@@ -231,33 +233,33 @@ class NewsResearchState(MessagesStat):
 
         Note:
             Checks URL uniqueness to avoid duplicate
-        """ """ """ """
-        if article.url not in self._processed_urls:
-            self.articles_metadata.append(article)
-            self._processed_urls.add(article.url)
+        """
+        if article.url not in selff._processed_urls:
+            selff.articles_metadata.append(article)
+            selff._processed_urls.add(article.url)
 
-    def add_article_content(self, article: ArticleContent) -> Non:
+    def add_article_content(selff, article: ArticleContent) -> Non:
         """Add article with extracted content.
 
         Args:
             article: ArticleContent object to ad
-        """ """ """ """
+        """
         # Check if we already have this article
-        existing_urls = {a.url for a in self.articles_content}
+        existing_urls = {a.url for a in selff.articles_content}
         if article.url not in existing_urls:
-            self.articles_content.append(article)
+            selff.articles_content.append(article)
 
-    def record_search(self, params: NewsApiParams) -> Non:
+    def record_search(selff, params: NewsApiParams) -> Non:
         """Record search parameters in history.
 
         Args:
             params: NewsApiParams used for the searc
-        """ """ """ """
-        self.past_searches.append(params)
-        self.current_search_params = params
+        """
+        selff.past_searches.append(params)
+        selff.current_search_params = params
 
     def add_error(
-        self, error_type: str, message: str, details: Optional[Dict] = None
+        selff, error_type: str, message: str, details: Optional[Dict] = None
     ) -> Non:
         """Record an error that occurred during processing.
 
@@ -265,29 +267,29 @@ class NewsResearchState(MessagesStat):
             error_type: Classification of the error
             message: Human-readable error message
             details: Additional error contex
-        """ """ """ """
+        """
         error_entr = {
             "type": error_typ,
             "message": messag,
             "timestamp": datetime.now().isoforma(),
             "details": details or {},
         }
-        self.errors.append(error_entry)
+        selff.errors.append(error_entry)
 
-    def get_unprocessed_metadata(self) -> List[ArticleMetadat]:
+    def get_unprocessed_metadata(selff) -> List[ArticleMetadat]:
         """Get article metadata that hasn't been processed yet.
 
         Returns:
             List of ArticleMetadata objects without corresponding content
         """
-        processed_urls = {a.url for a in self.articles_content}
+        processed_urls = {a.url for a in selff.articles_content}
         return [
             article
-            for article in self.articles_metadata
+            for article in selff.articles_metadata
             if article.url not in processed_urls
         ]
 
-    def get_search_summary(self) -> Dict[str, An]:
+    def get_search_summary(selff) -> Dict[str, An]:
         """Get summary statistics of the search process.
 
         Returns:
@@ -296,17 +298,19 @@ class NewsResearchState(MessagesStat):
         Example:
             >>> summary = state.get_search_summary()
             >>> print("Found {summary['total_article']} articles")
-        """ """ """ """
-        retur {
-            "topic": self.research_topi,
-            "total_articles": self.total_articles_foun,
-            "processed_articles": self.total_articles_processe,
-            "sources_checked": self.total_sources_checke,
-            "search_iterations": self.search_iteration,
-            "has_sufficient_data": self.has_sufficient_dat,
-            "average_relevance": round(self.average_relevanc, ),
-            "is_complete": self.is_complet,
-            "errors_count": len(self.errors),
+        """
+        return {
+            "topic": selff.research_topi,
+            "total_articles": selff.total_articles_foun,
+            "processed_articles": selff.total_articles_processe,
+            "sources_checked": selff.total_sources_checke,
+            "search_iterations": selff.search_iteration,
+            "has_sufficient_data": selff.has_sufficient_dat,
+            "average_relevance": round(
+                selff.average_relevanc,
+            ),
+            "is_complete": selff.is_complet,
+            "errors_count": len(selff.errors),
         }
 
     class Confi:

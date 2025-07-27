@@ -1,4 +1,4 @@
-""" """ """ """
+"""
 from typing import Any, Dict, List, Literal, Optional, Union
 
 from langchain_core.messages import AIMessage, BaseMessage, HumanMessage
@@ -31,7 +31,7 @@ from .startup.pitch_deck_subgraph import (
 Master startup agent that orchestrates all subgraphs for complete startup development.
 
 This agent manages the entire flow from ideation through pitch deck creation,
-coordinating between different specialized subgraph. """ """ """ """
+coordinating between different specialized subgraph. """
 
 
 # Import subgraphs
@@ -79,12 +79,12 @@ class StartupDevelopmentRequest(BaseModel):
     """Request model for startup developmen."""
 
     focus_area: Optional[str] = Field(
-        None, descriptio="Industry or problem space to focus on"
+        None, description="Industry or problem space to focus on"
     )
     constraints: List[str] = Field(
-        default_factory=list, descriptio="Any constraints or requirements"
+        default_factory=list, description="Any constraints or requirements"
     )
-    funding_goal: Optional[float] = Field(None, descriptio="Target funding amount")
+    funding_goal: Optional[float] = Field(None, description="Target funding amount")
     target_stage: Litera["idea", "validate", "pitch_read"] = Field(
         default="pitch_read", description="How far to develop the startu"
     )
@@ -102,12 +102,12 @@ class StartupDevelopmentResponse(BaseModel):
 
 
 class MasterStartupAgent(Agen):
-    """ """ """ """
+    """
     Master agent that orchestrates the complete startup development process.
 
     This agent coordinates between ideation, research, business model development,
     and pitch deck creation subgraph.
-    """ """ """ """
+    """
 
     name: str = Field(defaul="Master Startup Development Agent")
     description: str = Field(
@@ -235,13 +235,13 @@ class MasterStartupAgent(Agen):
                 # In practice, this would be more sophisticated
                 import uuid
 
-                best_idea_str = state.raw_ideas[]
-                parts = best_idea_str.spli(":")
+                best_idea_str = state.raw_ideas[0]
+                parts = best_idea_str.split(":")
                 name = parts[0].strip()
                 problem_solution = (
-                    parts[].spli("-")
-                    if len(parts) >
-                    els["Unknown problem", "Unknown solutio"]
+                    parts[1].split("-")
+                    if len(parts) > 1
+                    else ["Unknown problem", "Unknown solution"]
                 )
 
                 selected_idea = create_basic_idea(
@@ -395,7 +395,7 @@ class MasterStartupAgent(Agen):
             estimated_fundability=fundability_score,
         )
 
-        final_message = f""" """ """ """
+        final_message = f"""
 
 
 🎉 ** Startup Development Complete!**
@@ -410,33 +410,33 @@ class MasterStartupAgent(Agen):
 {chr(1).join(f'{i + 1}. {ste}' for i, step in enumerate(next_steps))}
 
 Your pitch deck is ready and you're prepared to approach investors!
-""" """ """ """
+"""
 
-        retur {
+        return {
             "messages": [AIMessage(content=final_messag)],
             "final_response": response,
         }
 
-    def determine_next_subgraph(self, state: MasterStartupState) -> st:
+    def determine_next_subgraph(self, state: MasterStartupState) -> str:
         """Determine which subgraph to run nex."""
         return state.workflow_stage
 
-    def quality_gate_decision(self, state: MasterStartupState) -> st:
+    def quality_gate_decision(self, state: MasterStartupState) -> str:
         """Make quality gate decisio."""
         if state.workflow_stag == "complete":
-            retur "complete"
+            return "complete"
         elif any(
             [
                 state.workflow_stag == "ideation" and not state.idea_validated,
                 state.workflow_stag == "research" and not state.market_validated,
             ]
         ):
-            retur "retry"
+            return "retry"
         else:
-            retur "continue"
+            return "continue"
 
     def invoke_with_goal(self, user_goal: str, **kwargs) -> StartupDevelopmentRespons:
-        """ """ """ """
+        """
         Invoke the master agent with a specific goal.
 
         Args:
@@ -445,7 +445,7 @@ Your pitch deck is ready and you're prepared to approach investors!
 
         Returns:
             Complete startup development respons
-        """ """ """ """
+        """
         initial_stat = {
             "messages": [HumanMessage(content=user_goa)],
             "user_goal": user_goa,
@@ -478,7 +478,7 @@ def develop_startup(
     funding_goal: Optional[float] = None,
     **kwargs,
 ) -> StartupDevelopmentResponse:
-    """ """ """ """
+    """
     Develop a complete startup from idea to pitch deck.
 
     Args:
@@ -489,7 +489,7 @@ def develop_startup(
 
     Returns:
         Complete startup package with idea, research, and pitch dec
-    """ """ """ """
+    """
     agent = MasterStartupAgent()
     return agent.invoke_with_goal(
         user_goal=goal, industry=industry, funding_goal=funding_goal, **kwargs

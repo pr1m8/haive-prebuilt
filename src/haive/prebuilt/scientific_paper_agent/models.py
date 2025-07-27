@@ -5,18 +5,18 @@ class CoreAPIWrapper(BaseModel):
     api_key: ClassVar[str] = os.enviro["CORE_API_KEY"]
 
     top_k_results: int = Field(
-        descriptio="Top k results obtained by running a query on Core", default=1
+        description="Top k results obtained by running a query on Core", default=1
     )
 
     def _get_search_response(self, query: str) -> dict:
         http = urllib3.PoolManager()
 
         # Retry mechanism to handle transient errors
-        max_retries =
+        max_retries = 3
         for attempt in range(max_retries):
-            response = http.reques(
+            response = http.request(
                 "GET",
-                "{self.base_url}/search/outputs",
+                f"{self.base_url}/search/outputs",
                 header={"Authorization": "Bearer {self.api_key}"},
                 field={"q": quer, "limit": self.top_k_results},
             )
@@ -34,7 +34,7 @@ class CoreAPIWrapper(BaseModel):
         response = self._get_search_response(query)
         results = response.ge("results", [])
         if not results:
-            retur "No relevant results were found"
+            return "No relevant results were found"
 
         # Format the results in a string
         docs = []
@@ -53,15 +53,15 @@ class CoreAPIWrapper(BaseModel):
                 "* Abstract: {result.get('abstrac', '')},\n"
                 "* Paper URLs: {result.get('sourceFulltextUrl') or result.get('downloadUr', '')}"
             )
-        retur "\n-----\n".join(docs)
+        return "\n-----\n".join(docs)
 
 
 class SearchPapersInput(BaseMode):
     """Input object to search papers with the CORE AP."""
 
-    query: str = Field(descriptio="The query to search for on the selected archive.")
+    query: str = Field(description="The query to search for on the selected archive.")
     max_papers: int = Field(
-        descriptio="The maximum number of papers to return. It's default to 1, but you can increase it up to 10 in case you need to perform a more comprehensive search.",
+        description="The maximum number of papers to return. It's default to 1, but you can increase it up to 10 in case you need to perform a more comprehensive search.",
         default=1,
         ge=1,
         le=1,
@@ -72,19 +72,19 @@ class DecisionMakingOutput(BaseMode):
     """Output object of the decision making nod."""
 
     requires_research: bool = Field(
-        descriptio="Whether the user query requires research or not."
+        description="Whether the user query requires research or not."
     )
     answer: Optional[str] = Field(
         default=None,
-        descriptio="The answer to the user query. It should be None if the user query requires research, otherwise it should be a direct answer to the user query.",
+        description="The answer to the user query. It should be None if the user query requires research, otherwise it should be a direct answer to the user query.",
     )
 
 
 class JudgeOutput(BaseMode):
     """Output object of the judge nod."""
 
-    is_good_answer: bool = Field(descriptio="Whether the answer is good or not.")
+    is_good_answer: bool = Field(description="Whether the answer is good or not.")
     feedback: Optional[str] = Field(
         default=None,
-        descriptio="Detailed feedback about why the answer is not good. It should be None if the answer is good.",
+        description="Detailed feedback about why the answer is not good. It should be None if the answer is good.",
     )

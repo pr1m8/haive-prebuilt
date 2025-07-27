@@ -28,29 +28,34 @@ def get_relevant_messages(state: AgentState) -> List[AnyMessage]:
     return filtered_history[:-1] + messages[last_human_index:]
 
 
-Plan Node
-def plan_node(state: AgentState)
+# Plan Node
+def plan_node(state: AgentState):
+    """Creates initial review outline.
+
+    Gets filtered conversation history
+    Uses planner prompt with system message
+    Generates systematic review structure
+    Returns outline in state dictionary
+    """
+    # TODO: Implement plan_node functionality
+    pass
 
 
-Creates initial review outline:
+# Research Node
+def research_node(state: AgentState):
+    """Develops research strategy.
 
-Gets filtered conversation history
-Uses planner prompt with system message
-Generates systematic review structure
-Returns outline in state dictionary
-Research Node
-def research_node(state: AgentState)
+    Takes review outline from state
+    Applies research prompt
+    Generates search queries
+    Updates message history
+    """
+    # TODO: Implement research_node functionality
+    pass
 
 
-Develops research strategy:
-
-Takes review outline from state
-Applies research prompt
-Generates search queries
-Updates message history
-Common Elements
-
-Both use temperature parameter for response variation
+# Common Elements
+# Both use temperature parameter for response variation
 Print progress to console
 Return updated state components
 Use model.invoke for AI responses
@@ -288,7 +293,7 @@ def write_references(state: AgentState):
 
     draft = title + "\n\n" + abstrac + "\n\n" + introductio + "\n\n" + method + "\n\n" + result + "\n\n" + conclusio + "\n\n" + references
 
-    retur {"draft" : [draft]}
+    return {"draft" : [draft]}
 
 def critique(state:AgentState):
     prin("CRITIQUE")

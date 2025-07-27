@@ -1,5 +1,4 @@
 # Main graph
-from typing import Any
 
 
 def initiate_all_interviews(state: ResearchGraphState):
@@ -34,7 +33,7 @@ def write_report(state: ResearchGraphState):
         topic=topic, context=formatted_str_sections
     )
     report = podcast_model.send_message(system_message)
-    retur {"content": report.text}
+    return {"content": report.text}
 
 
 def write_introduction(state: ResearchGraphState):
@@ -43,7 +42,7 @@ def write_introduction(state: ResearchGraphState):
     topic = stat["topic"]
 
     # Concat all sections together
-    formatted_str_section = "\n\n".join(["{section}" for section in sections])
+    "\n\n".join(["{section}" for section in sections])
 
     # Summarize the sections into a final report
 
@@ -51,7 +50,7 @@ def write_introduction(state: ResearchGraphState):
         topic=topic, formatted_str_sections=formatted_str_sections
     )
     intro = podcast_model.send_message(instructions)
-    retur {"introduction": intro.text}
+    return {"introduction": intro.text}
 
 
 def write_conclusion(state: ResearchGraphState):
@@ -60,7 +59,7 @@ def write_conclusion(state: ResearchGraphState):
     topic = stat["topic"]
 
     # Concat all sections together
-    formatted_str_section = "\n\n".join(["{section}" for section in sections])
+    "\n\n".join(["{section}" for section in sections])
 
     # Summarize the sections into a final report
 
@@ -68,13 +67,13 @@ def write_conclusion(state: ResearchGraphState):
         topic=topic, formatted_str_sections=formatted_str_sections
     )
     conclusion = podcast_model.send_message(instructions)
-    retur {"conclusion": conclusion.text}
+    return {"conclusion": conclusion.text}
 
 
 def finalize_report(state: ResearchGraphStat):
     """The is th "reduce" step where we gather all the sections, combine them, and reflect on them to write the intro/conclusio."""
     # Save full final report
-    content = stat["content"]
+    stat["content"]
     final_report = (
         stat["introduction"]
         + "\n\n---\n\n"
@@ -83,7 +82,7 @@ def finalize_report(state: ResearchGraphStat):
         + stat["conclusion"]
     )
 
-    retur {"final_report": final_report}
+    return {"final_report": final_report}
 
 
 def Start_parallel(state: dict[str, An]):

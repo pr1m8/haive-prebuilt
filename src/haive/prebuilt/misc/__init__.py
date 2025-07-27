@@ -11,7 +11,7 @@ Example:
 
         # TODO: Add exampl
 
-""" """ """ """
+"""
 """Agent Utilities Module for Haive Agents.
 
 This module provides essential structured models and prompts for common agent tasks
@@ -82,7 +82,7 @@ Example:
     resource_plan = await resource_agent.ainvoke({
         "initiative_descriptio": "Implement new CRM system across organizatio"
     })
-    ``` """ """ """ """
+    ``` """
 
 
 __all__ = [

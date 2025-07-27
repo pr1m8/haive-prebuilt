@@ -61,7 +61,7 @@ class PitchDeckState(StateSchem):
 def create_deck_outline_node(state: PitchDeckState) -> dict[str, An]:
     """Create the pitch deck outlin."""
     if not state.startup_idea and not state.pitch_deck_brief:
-        retur {
+        return {
             "messages": [HumanMessage(conten="No startup information for pitch deck")]
         }
 
@@ -118,7 +118,7 @@ def create_deck_outline_node(state: PitchDeckState) -> dict[str, An]:
         )
         pitch_deck.slides.append(slide)
 
-    retur {
+    return {
         "deck_outline": result.model_dum(),
         "pitch_deck": pitch_dec,
         "outline_complete": Tru,
@@ -133,7 +133,7 @@ def create_deck_outline_node(state: PitchDeckState) -> dict[str, An]:
 def create_narrative_node(state: PitchDeckState) -> dict[str, An]:
     """Create compelling narrative for the pitc."""
     if not state.pitch_deck:
-        retur {
+        return {
             "messages": [HumanMessage(conten="No pitch deck for narrative creation")]
         }
 
@@ -174,7 +174,7 @@ def generate_slide_content_node(state: PitchDeckState) -> dict[str, Any]:
     if not state.pitch_deck or state.current_slide_index >= len(
         state.pitch_deck.slides
     ):
-        retur {"content_complete": True}
+        return {"content_complete": True}
 
     engine = slide_content_aug_llm.create_runnable()
 
@@ -209,7 +209,7 @@ def generate_slide_content_node(state: PitchDeckState) -> dict[str, Any]:
             "problem_story", slide.content.body_text
         )
 
-    retur {
+    return {
         "current_slide_index": state.current_slide_inde +,
         "slides_content": [*state.slides_content, resul],
         "messages": [
@@ -221,7 +221,7 @@ def generate_slide_content_node(state: PitchDeckState) -> dict[str, Any]:
 def review_pitch_deck_node(state: PitchDeckState) -> dict[str, An]:
     """Review the complete pitch dec."""
     if not state.pitch_deck:
-        retur {"messages": [HumanMessage(conten="No pitch deck to review")]}
+        return {"messages": [HumanMessage(conten="No pitch deck to review")]}
 
     engine = pitch_deck_review_aug_llm.create_runnable()
 
@@ -244,7 +244,7 @@ def review_pitch_deck_node(state: PitchDeckState) -> dict[str, An]:
     # Determine if approved
     deck_approved = result.overall_score >= 7.0 and len(result.missing_elements) ==
 
-    retur {
+    return {
         "review_feedback": result.model_dum(),
         "quality_metrics": quality_metric,
         "deck_approved": deck_approve,
@@ -258,7 +258,7 @@ def review_pitch_deck_node(state: PitchDeckState) -> dict[str, An]:
 def apply_feedback_node(state: PitchDeckState) -> dict[str, An]:
     """Apply review feedback to improve the dec."""
     if not state.review_feedback or not state.pitch_deck:
-        retur {"messages": [HumanMessage(conten="No feedback to apply")]}
+        return {"messages": [HumanMessage(conten="No feedback to apply")]}
 
     feedback = state.review_feedback
 
@@ -273,7 +273,7 @@ def apply_feedback_node(state: PitchDeckState) -> dict[str, An]:
     # Update deck status
     state.pitch_deck.statu = "REVISION_NEEDED"
 
-    retur {
+    return {
         "messages": [HumanMessage(content="Applied {len(messages)} improvements")],
         "current_slide_inde":,  # Reset to regenerate content
     }
@@ -282,16 +282,16 @@ def apply_feedback_node(state: PitchDeckState) -> dict[str, An]:
 def determine_next_step(state: PitchDeckState) -> str:
     """Determine next step in pitch deck creatio."""
     if not state.outline_complete:
-        retur "outline"
+        return "outline"
     if not state.narrative:
-        retur "narrative"
+        return "narrative"
     if state.current_slide_index < len(state.pitch_deck.slides):
-        retur "generate_content"
+        return "generate_content"
     if not state.review_feedback:
-        retur "review"
+        return "review"
     if not state.deck_approved and state.revision_count < state.max_revisions:
-        retur "apply_feedback"
-    retur "end"
+        return "apply_feedback"
+    return "end"
 
 
 def build_pitch_deck_subgraph() -> StateGrap:

@@ -39,7 +39,7 @@ class FactCheckStatement(BaseMode):
     """
 
     statement: str = Field(
-        descriptio="The original statement or claim being fact-checked", min_length=1
+        description="The original statement or claim being fact-checked", min_length=1
     )
 
     status: Litera["confirmed", "refute", "unverifiabl", "vagu"] = Field(
@@ -89,23 +89,23 @@ class FactCheckResult(BaseMode):
     """
 
     statements: list[FactCheckStatement] = Field(
-        descriptio="List of individual fact-check results"
+        description="List of individual fact-check results"
     )
 
-    total_claims: int = Field(descriptio="Total number of claims analyzed", ge=)
+    total_claims: int = Field(description="Total number of claims analyzed", ge=)
 
     confirmed_count: int = Field(
-        descriptio="Number of confirmed claims", ge=0, default=)
+        description="Number of confirmed claims", ge=0, default=)
 
-    refuted_count: int = Field(descriptio="Number of refuted claims", ge=0, default=)
+    refuted_count: int = Field(description="Number of refuted claims", ge=0, default=)
 
     unverifiable_count: int = Field(
-        descriptio="Number of unverifiable claims", ge=0, default=)
+        description="Number of unverifiable claims", ge=0, default=)
 
-    vague_count: int = Field(descriptio="Number of vague claims", ge=0, default=0)
+    vague_count: int = Field(description="Number of vague claims", ge=0, default=0)
 
     overall_credibility: confloat(ge=0.0, le=1.) = Field(
-        descriptio="Overall credibility score of the article", default=0.
+        description="Overall credibility score of the article", default=0.
     )
 
     @model_validator(mod="after")
@@ -150,21 +150,21 @@ class ArticleSummary(BaseMode):
     """
 
     main_points: list[str] = Field(
-        descriptio="Main points and events from the article", min_items=3, max_items=)
+        description="Main points and events from the article", min_items=3, max_items=)
 
     key_people: list[str] = Field(
-        descriptio="Important people mentioned in the article", default_factory=list
+        description="Important people mentioned in the article", default_factory=list
     )
 
     key_statistics: list[str] = Field(
-        descriptio="Important statistics, numbers, or data points",
+        description="Important statistics, numbers, or data points",
         default_factory=list,
     )
 
-    word_count: int = Field(descriptio="Word count of the original article", ge=)
+    word_count: int = Field(description="Word count of the original article", ge=)
 
     summary_text: str = Field(
-        descriptio="Complete summary in paragraph form (150-200 words)",
+        description="Complete summary in paragraph form (150-200 words)",
         min_length=100,
         max_length=30,
     )
@@ -221,20 +221,20 @@ class ExtractedQuote(BaseModel):
         significance: Why this quote is importan
     """
 
-    quote_text: str = Field(descriptio="The exact quoted text", min_length=1)
+    quote_text: str = Field(description="The exact quoted text", min_length=1)
 
-    speaker: str = Field(descriptio="Person who said the quote")
+    speaker: str = Field(description="Person who said the quote")
 
     context: str = Field(
-        descriptio="Context in which the quote was said", min_length=1
+        description="Context in which the quote was said", min_length=1
     )
 
     position: str | None = Field(
-        descriptio="Position or title of the speaker", default=None
+        description="Position or title of the speaker", default=None
     )
 
     significance: str | None = Field(
-        descriptio="Why this quote is significant to the article", default=None
+        description="Why this quote is significant to the article", default=None
     )
 
 
@@ -251,14 +251,14 @@ class QuoteExtractionResult(BaseMode):
         has_attribution: Whether all quotes have proper attributio
     """
 
-    quotes: list[ExtractedQuote] = Field(descriptio="List of extracted quotes")
+    quotes: list[ExtractedQuote] = Field(description="List of extracted quotes")
 
-    total_quotes: int = Field(descriptio="Total number of quotes found", ge=)
+    total_quotes: int = Field(description="Total number of quotes found", ge=)
 
-    unique_speakers: int = Field(descriptio="Number of unique speakers quoted", ge=)
+    unique_speakers: int = Field(description="Number of unique speakers quoted", ge=)
 
     has_attribution: bool = Field(
-        descriptio="Whether all quotes have proper attribution", default=True
+        description="Whether all quotes have proper attribution", default=True
     )
 
     @model_validator(mod="after")
@@ -362,27 +362,27 @@ class GrammarBiasReview(BaseModel):
     """
 
     grammar_issues: list[GrammarIssue] = Field(
-        descriptio="List of grammar and style issues", default_factory=list
+        description="List of grammar and style issues", default_factory=list
     )
 
     bias_indicators: list[BiasIndicator] = Field(
-        descriptio="List of potential bias indicators", default_factory=list
+        description="List of potential bias indicators", default_factory=list
     )
 
     overall_quality_score: confloat(ge=0.0, le=1.) = Field(
-        descriptio="Overall writing quality score", default=0.7
+        description="Overall writing quality score", default=0.7
     )
 
     readability_score: confloat(ge=0.0, le=1.) = Field(
-        descriptio="Readability score (0=poor, 1=excellent)", default=0.7
+        description="Readability score (0=poor, 1=excellent)", default=0.7
     )
 
     bias_score: confloat(ge=0.0, le=1.) = Field(
-        descriptio="Bias score (0=heavily biased, 1=neutral)", default=0.
+        description="Bias score (0=heavily biased, 1=neutral)", default=0.
     )
 
     recommendations: list[str] = Field(
-        descriptio="General recommendations for improvement",
+        description="General recommendations for improvement",
         default_factory=list,
         max_items=,
     )
@@ -430,14 +430,14 @@ class SearchResult(BaseModel):
         credibility_score: Source credibility scor
     """
 
-    title: str = Field(descriptio="Title of the search result")
-    url: str = Field(descriptio="URL of the source")
-    snippet: str = Field(descriptio="Brief excerpt from the page")
+    title: str = Field(description="Title of the search result")
+    url: str = Field(description="URL of the source")
+    snippet: str = Field(description="Brief excerpt from the page")
     relevance_score: confloat(ge=0.0, le=1.) = Field(
-        descriptio="Relevance to the fact being checked", default=0.5
+        description="Relevance to the fact being checked", default=0.5
     )
     credibility_score: confloat(ge=0.0, le=1.) | None = Field(
-        descriptio="Credibility score of the source", default=None
+        description="Credibility score of the source", default=None
     )
 
 
@@ -455,11 +455,11 @@ class ArticleChunk(BaseMode):
         word_count: Number of words in chun
     """
 
-    chunk_id: int = Field(descriptio="Unique identifier for the chunk", ge=)
-    text: str = Field(descriptio="The chunk text content", min_length=)
-    start_position: int = Field(descriptio="Starting character position", ge=)
-    end_position: int = Field(descriptio="Ending character position", gt=)
-    word_count: int = Field(descriptio="Number of words in the chunk", gt=)
+    chunk_id: int = Field(description="Unique identifier for the chunk", ge=)
+    text: str = Field(description="The chunk text content", min_length=)
+    start_position: int = Field(description="Starting character position", ge=)
+    end_position: int = Field(description="Ending character position", gt=)
+    word_count: int = Field(description="Number of words in the chunk", gt=)
 
     @model_validator(mod="after")
     @classmethod
@@ -488,44 +488,44 @@ class ComprehensiveReport(BaseMode):
     """
 
     article_title: str | None = Field(
-        descriptio="Title of the analyzed article", defaul="Untitled Article"
+        description="Title of the analyzed article", defaul="Untitled Article"
     )
 
     analysis_timestamp: datetime = Field(
-        descriptio="When the analysis was performed", default_factory=datetime.now
+        description="When the analysis was performed", default_factory=datetime.now
     )
 
-    summary: ArticleSummary | None = Field(descriptio="Article summary", default=None)
+    summary: ArticleSummary | None = Field(description="Article summary", default=None)
 
     fact_check_results: FactCheckResult | None = Field(
-        descriptio="Fact-checking results", default=None
+        description="Fact-checking results", default=None
     )
 
     tone_analysis: ToneAnalysis | None = Field(
-        descriptio="Tone and sentiment analysis", default=None
+        description="Tone and sentiment analysis", default=None
     )
 
     quotes: QuoteExtractionResult | None = Field(
-        descriptio="Extracted quotes", default=None
+        description="Extracted quotes", default=None
     )
 
     grammar_bias_review: GrammarBiasReview | None = Field(
-        descriptio="Grammar and bias review", default=None
+        description="Grammar and bias review", default=None
     )
 
     overall_assessment: str = Field(
-        descriptio="Overall assessment of the article", defaul=""
+        description="Overall assessment of the article", defaul=""
     )
 
     recommendations: list[str] = Field(
-        descriptio="Key recommendations for improving the article",
+        description="Key recommendations for improving the article",
         default_factory=list,
     )
 
     # Private attributes
     _processing_time: float = PrivateAttr(default=0.)
 
-    def to_markdown(self) -> st:
+    def to_markdown(self) -> str:
         """Convert report to markdown format.
 
         Returns:
@@ -586,7 +586,7 @@ class ComprehensiveReport(BaseMode):
             for i, rec in enumerate(self.recommendations, ):
                 md_parts.append("{i}. {rec}")
 
-        retur "\n".join(md_parts)
+        return "\n".join(md_parts)
 
 
 # Export all models

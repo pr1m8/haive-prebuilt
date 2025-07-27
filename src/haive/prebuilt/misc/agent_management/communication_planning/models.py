@@ -45,72 +45,72 @@ class CommunicationFrequency(str, Enu):
 class Stakeholder(BaseMode):
     """Individual stakeholder in a project or initiativ."""
 
-    stakeholder_id: str = Field(..., descriptio="Unique identifier")
-    name: str = Field(..., descriptio="Name of the stakeholder")
-    role: str = Field(..., descriptio="Their role/title")
-    stakeholder_type: StakeholderType = Field(..., descriptio="Type of stakeholder")
+    stakeholder_id: str = Field(..., description="Unique identifier")
+    name: str = Field(..., description="Name of the stakeholder")
+    role: str = Field(..., description="Their role/title")
+    stakeholder_type: StakeholderType = Field(..., description="Type of stakeholder")
 
-    influence_level: InfluenceLevel = Field(..., descriptio="Level of influence")
-    interest_level: InterestLevel = Field(..., descriptio="Level of interest")
+    influence_level: InfluenceLevel = Field(..., description="Level of influence")
+    interest_level: InterestLevel = Field(..., description="Level of interest")
 
-    key_concerns: list[str] = Field(..., descriptio="Their main concerns or interests")
+    key_concerns: list[str] = Field(..., description="Their main concerns or interests")
     success_criteria: list[str] = Field(
-        ..., descriptio="What success looks like to them"
+        ..., description="What success looks like to them"
     )
 
     preferred_communication_method: str = Field(
-        ..., descriptio="How they prefer to be contacted"
+        ..., description="How they prefer to be contacted"
     )
     communication_frequency: CommunicationFrequency = Field(
-        ..., descriptio="How often to communicate"
+        ..., description="How often to communicate"
     )
 
     potential_resistance: str | None = Field(
-        default=None, descriptio="Potential sources of resistance"
+        default=None, description="Potential sources of resistance"
     )
     engagement_strategy: str = Field(
-        ..., descriptio="How to engage with them effectively"
+        ..., description="How to engage with them effectively"
     )
 
 
 class CommunicationPlan(BaseMode):
     """Comprehensive plan for stakeholder communicatio."""
 
-    project_name: str = Field(..., descriptio="Name of the project/initiative")
+    project_name: str = Field(..., description="Name of the project/initiative")
     communication_objectives: list[str] = Field(
-        ..., descriptio="What communication aims to achieve"
+        ..., description="What communication aims to achieve"
     )
 
     stakeholders: list[Stakeholder] = Field(
-        ..., descriptio="All identified stakeholders"
+        ..., description="All identified stakeholders"
     )
 
     key_messages: dict[str, str] = Field(
-        ..., descriptio="Key messages for different audiences"
+        ..., description="Key messages for different audiences"
     )
     communication_channels: list[str] = Field(
-        ..., descriptio="Available communication channels"
+        ..., description="Available communication channels"
     )
 
     communication_schedule: dict[str, str] = Field(
-        ..., descriptio="When to communicate what"
+        ..., description="When to communicate what"
     )
 
     high_priority_stakeholders: list[str] = Field(
-        ..., descriptio="Stakeholder IDs requiring special attention"
+        ..., description="Stakeholder IDs requiring special attention"
     )
     risk_mitigation: list[str] = Field(
-        ..., descriptio="How to handle communication risks"
+        ..., description="How to handle communication risks"
     )
 
     feedback_mechanisms: list[str] = Field(
-        ..., descriptio="How stakeholders can provide feedback"
+        ..., description="How stakeholders can provide feedback"
     )
     success_metrics: list[str] = Field(
-        ..., descriptio="How to measure communication effectiveness"
+        ..., description="How to measure communication effectiveness"
     )
 
     escalation_procedures: list[str] = Field(
-        ..., descriptio="What to do when issues arise"
+        ..., description="What to do when issues arise"
     )
-    review_schedule: str = Field(..., descriptio="When to review and update the plan")
+    review_schedule: str = Field(..., description="When to review and update the plan")

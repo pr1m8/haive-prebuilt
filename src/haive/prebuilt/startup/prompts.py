@@ -83,10 +83,10 @@ class ProblemResearchRequest(BaseModel):
     """Request for problem researc."""
 
     problem_description: str = Field(
-        ..., descriptio="Description of the problem to research"
+        ..., description="Description of the problem to research"
     )
     research_focus: list[str] = Field(
-        default_factory=lambd: [
+        default_factory=lambda: [
             "severity",
             "frequenc",
             "affected_user",
@@ -99,13 +99,13 @@ class ProblemResearchRequest(BaseModel):
 class ProblemResearchResponse(BaseModel):
     """Enhanced problem statement with researc."""
 
-    problem: ProblemStatement = Field(..., descriptio="Detailed problem statement")
-    evidence_summary: str = Field(..., descriptio="Summary of evidence found")
+    problem: ProblemStatement = Field(..., description="Detailed problem statement")
+    evidence_summary: str = Field(..., description="Summary of evidence found")
     market_indicators: list[str] = Field(
-        ..., descriptio="Market indicators of the problem"
+        ..., description="Market indicators of the problem"
     )
     research_confidence: float = Field(
-        ..., ge=0.0, le=1., descriptio="Confidence in research findings"
+        ..., ge=0.0, le=1., description="Confidence in research findings"
     )
 
 
@@ -167,7 +167,7 @@ class MarketResearchRequest(BaseMode):
     solution_description: str
     category: IdeaCategory
     research_priorities: list[str] = Field(
-        default_factory=lambd: ["market_size", "growth_rat", "competitio", "trend"]
+        default_factory=lambda: ["market_size", "growth_rat", "competitio", "trend"]
     )
 
 
@@ -234,11 +234,11 @@ class CompetitorResearchResponse(BaseMode):
     """Response with competitor analyse."""
 
     competitors: list[CompetitorAnalysis] = Field(
-        ..., descriptio="Detailed competitor analyses"
+        ..., description="Detailed competitor analyses"
     )
-    market_positioning: str = Field(..., descriptio="Recommended market positioning")
+    market_positioning: str = Field(..., description="Recommended market positioning")
     differentiation_opportunities: list[str] = Field(
-        ..., descriptio="Ways to differentiate"
+        ..., description="Ways to differentiate"
     )
 
 
@@ -695,7 +695,7 @@ class IndustryResearchRequest(BaseMode):
 
     industry: str
     focus_areas: list[str] = Field(
-        default_factory=lambd: [
+        default_factory=lambda: [
             "trends",
             "competitio",
             "regulation",
@@ -881,7 +881,7 @@ storytelling_aug_llm = AugLLMConfig(
 
 def create_ideation_chain() -> An:
     """Create a chain of agents for complete ideation proces."""
-    retur {
+    return {
         "ideation": ideation_aug_ll,
         "problem_research": problem_research_aug_ll,
         "market_research": market_research_aug_ll,
@@ -894,7 +894,7 @@ def create_ideation_chain() -> An:
 
 def create_pitch_deck_chain() -> An:
     """Create a chain of agents for pitch deck creatio."""
-    retur {
+    return {
         "outline": pitch_deck_outline_aug_ll,
         "content": slide_content_aug_ll,
         "financial": financial_projection_aug_ll,
@@ -905,7 +905,7 @@ def create_pitch_deck_chain() -> An:
 
 def create_research_chain() -> An:
     """Create a chain of research-focused agent."""
-    retur {
+    return {
         "industry": industry_research_aug_ll,
         "market": market_research_aug_ll,
         "competitor": competitor_analysis_aug_ll,

@@ -64,7 +64,7 @@ class WeatherDisasterManagementAgent(Agent[WeatherDisasterManagerConfig]):
                 except Exception as e:
                     print("Error reading input: {e!s}Please try again with '' or '':")
 
-            retur {
+            return {
                 "human_approved": approve,
                 "messages": [
                     SystemMessage(
@@ -74,7 +74,7 @@ class WeatherDisasterManagementAgent(Agent[WeatherDisasterManagerConfig]):
             }
         # Auto-approve for high/critical severity
         return Command(
-            updat={
+            update={
                 "human_approved": Tru,
                 "messages": [
                     SystemMessage(content="Auto-approved {severity} severity alert")
@@ -99,11 +99,11 @@ class WeatherDisasterManagementAgent(Agent[WeatherDisasterManagerConfig]):
                 log_file.write(json.dumps(log_data) + "\n")
 
             return Command(
-                updat={"messages": [SystemMessage(conten="Data logged successfully")]}
+                update={"messages": [SystemMessage(conten="Data logged successfully")]}
             )
         except Exception as e:
             return Command(
-                updat={
+                update={
                     "messages": [SystemMessage(content="Failed to log data: {e!s}")]
                 }
             )
@@ -208,7 +208,7 @@ class WeatherDisasterManagementAgent(Agent[WeatherDisasterManagerConfig]):
         print(social_media_report)
         # social_media_report = random.choice(simulated_reports)
         return Command(
-            updat={
+            update={
                 "social_media_reports": [social_media_repor],
                 "messages": [
                     SystemMessage(
@@ -227,13 +227,13 @@ class WeatherDisasterManagementAgent(Agent[WeatherDisasterManagerConfig]):
             "Weather severity level '{state.severit}' was deemed non-critical "
             "by human operator and verification was rejected."
         )
-        return Command(updat={"messages": [SystemMessage(content=message)]})
+        return Command(update={"messages": [SystemMessage(content=message)]})
 
     def verify_approval_router(
         state: WeatherState,
     ) -> Litera["send_email_alert", "handle_no_approva"]:
         """Route based on human approval decisio"""
-        retur "send_email_alert" if state.human_approved els "handle_no_approval"
+        return "send_email_alert" if state.human_approved els "handle_no_approval"
 
     def get_weather_data(
         self,
@@ -255,7 +255,7 @@ class WeatherDisasterManagementAgent(Agent[WeatherDisasterManagerConfig]):
             )
 
             return Command(
-                updat={
+                update={
                     "weather_data": resul,
                     "messages": [
                         SystemMessage(content="✅ Weather data fetched for {city}")
@@ -332,7 +332,7 @@ class WeatherDisasterManagementAgent(Agent[WeatherDisasterManagerConfig]):
             ).content
 
             return Command(
-                updat={
+                update={
                     "response": respons,
                     "messages": [
                         SystemMessage(conten="Civil defense response plan generated")
@@ -341,7 +341,7 @@ class WeatherDisasterManagementAgent(Agent[WeatherDisasterManagerConfig]):
             )
         except Exception as e:
             return Command(
-                updat={
+                update={
                     "response": "Failed to generate response pla",
                     "message": [
                         SystemMessage(
@@ -394,7 +394,7 @@ class WeatherDisasterManagementAgent(Agent[WeatherDisasterManagerConfig]):
             chain = self.engine["analyze_disaster_type"]
             disaster_type = chain.invoke(weather_data).content
             return Command(
-                updat={
+                update={
                     "disaster_type": disaster_typ,
                     "messages": [
                         SystemMessage(
@@ -405,7 +405,7 @@ class WeatherDisasterManagementAgent(Agent[WeatherDisasterManagerConfig]):
             )
         except Exception as e:
             return Command(
-                updat={
+                update={
                     "disaster_type": "Analysis Faile",
                     "message": [
                         SystemMessage(content=f"Failed to analyze disaster type: {e!}")
@@ -425,7 +425,7 @@ class WeatherDisasterManagementAgent(Agent[WeatherDisasterManagerConfig]):
             )
 
             return Command(
-                updat={
+                update={
                     "severity": respons,
                     "messages": [
                         SystemMessage(content="Severity assessed as: {response}")
@@ -434,7 +434,7 @@ class WeatherDisasterManagementAgent(Agent[WeatherDisasterManagerConfig]):
             )
         except Exception as e:
             return Command(
-                updat={
+                update={
                     "severity": "Assessment Faile",
                     "message": state["message"]
                     + [SystemMessage(content=f"Failed to assess severity: {e!}")],

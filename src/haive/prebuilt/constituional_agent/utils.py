@@ -141,7 +141,7 @@ class LanguageDetector:
     @staticmethod
     def _decode_numbers(number_str: str) -> str:
         try:
-            retur "".join(chr(int(n)) for n in number_str.split())
+            return "".join(chr(int(n)) for n in number_str.split())
         except ValueError:
             return number_str
 

@@ -21,27 +21,29 @@ Example:
 
 Note:
     The agent uses declarative configuration with engines handling
-    all LLM interactions and state managemen. """ """ """ """
+    all LLM interactions and state managemen. """
 
 import logging
 from typing import Any, Dict, List, Optional, Type
 
-from haive-prebuilt.src.haive.prebuilt.tldr2.engines import create_all_engines
-from haive-prebuilt.src.haive.prebuilt.tldr2.models import SearchDecision
-from haive-prebuilt.src.haive.prebuilt.tldr2.state import NewsResearchState
+from langgraph.graph import END, START
+from langgraph.types import Command
+from pydantic import Field
+
+from haive.prebuilt.tldr2.engines import create_all_engines
+from haive.prebuilt.tldr2.models import SearchDecision
+from haive.prebuilt.tldr2.state import NewsResearchState
+
 from .base.agent import Agent
 from .graph.node.engine_node import EngineNodeConfig
 from .graph.node.tool_node_config import ToolNodeConfig
 from .graph.state_graph.base_graph import BaseGraph
-from langgraph.graph import END, START
-from langgraph.types import Command
-from pydantic import Field
 
 # Configure logging
 logger = logging.getLogger(__name__)
 
 
-class NewsResearchAgent(Agen):
+class NewsResearchAgent(Agent):
     """News Research Agent for comprehensive article research and analysis.
 
     This agent implements a complete news research workflow that finds,
@@ -70,26 +72,26 @@ class NewsResearchAgent(Agen):
         ...)
         >> > result = agent.invoke(state)
         >> > print("Report: {result.report.title}Analyzed {result.report.sources_count} sources")
-    """ """ """ """
+    """
 
     # Engine configuration
     engines: Dict[str, Any] = Field(
         default_factory=create_all_engines,
-        descriptio="All engines used by the news research agent",
+        description="All engines used by the news research agent",
     )
 
     # State schema
     state_schema: Type[NewsResearchState] = Field(
-        default=NewsResearchState, descriptio="State schema for the research workflow"
+        default=NewsResearchState, description="State schema for the research workflow"
     )
 
     # Workflow configuration
     max_search_iterations: int = Field(
-        default=, descriptio="Maximum number of search iterations"
+        default=3, description="Maximum number of search iterations"
     )
 
     min_articles_for_analysis: int = Field(
-        default=, descriptio="Minimum articles needed for meaningful analysis"
+        default=3, description="Minimum articles needed for meaningful analysis"
     )
 
     def build_graph(self) -> BaseGrap:
@@ -108,7 +110,7 @@ class NewsResearchAgent(Agen):
                                                                    |
                                                                    v
                                                              analyze -> report -> EN
-        """ """ """ """
+        """
         logger.info("Building graph for {self.name}")
 
         # Create the graph
@@ -200,7 +202,7 @@ class NewsResearchAgent(Agen):
 
         Returns:
             Dict with formatted inputs for search engin
-        """ """ """ """
+        """
         past_searches_st = (
             "\n".join(
                 [
@@ -209,13 +211,13 @@ class NewsResearchAgent(Agen):
                 ]
             )
             if state.past_searches
-            els "None"
+            else "None"
         )
 
-        retur {
-            "research_topic": state.research_topi,
+        return {
+            "research_topic": state.research_topic,
             "past_searches": past_searches_st,
-            "search_iteration": state.search_iterations + ,
+            "search_iteration": state.search_iterations + 1,
         }
 
     def _prepare_selection_state(self, state: NewsResearchState) -> Dict[str, An]:
@@ -226,7 +228,7 @@ class NewsResearchAgent(Agen):
 
         Returns:
             Dict with formatted inputs for selection engin
-        """ """ """ """
+        """
         articles_inf = "\n\n".join(
             [
                 "Title: {a.title}\nURL: {a.url}\nSource: {a.source.get('nam', 'Unknow')}\n"
@@ -235,8 +237,8 @@ class NewsResearchAgent(Agen):
             ]
         )
 
-        retur {
-            "research_topic": state.research_topi,
+        return {
+            "research_topic": state.research_topic,
             "articles_info": articles_inf,
             "max_articles": min(1, len(state.articles_content)),
         }
@@ -249,41 +251,41 @@ class NewsResearchAgent(Agen):
 
         Returns:
             Dict with formatted inputs for decision engin
-        """ """ """ """
+        """
         # Calculate search effectiveness
-        if state.search_iterations > :
+        if state.search_iterations > 0:
             effectiveness = state.total_articles_found / state.search_iterations
             effectiveness_str = "{effectiveness:.1f} articles per search"
         else:
-            effectiveness_st = "No searches yet"
+            effectiveness_str = "No searches yet"
 
-        retur {
-            "research_topic": state.research_topi,
-            "total_articles": state.total_articles_foun,
-            "articles_with_content": state.total_articles_processe,
-            "articles_summarized": len(state.article_summarie),
-            "avg_relevance": state.average_relevanc,
-            "unique_sources": state.total_sources_checke,
-            "search_iterations": state.search_iteration,
-            "max_iterations": self.max_search_iteration,
+        return {
+            "research_topic": state.research_topic,
+            "total_articles": state.total_articles_found,
+            "articles_with_content": state.total_articles_processed,
+            "articles_summarized": len(state.article_summaries),
+            "avg_relevance": state.average_relevance,
+            "unique_sources": state.total_sources_checked,
+            "search_iterations": state.search_iterations,
+            "max_iterations": self.max_search_iterations,
             "search_effectiveness": effectiveness_str,
         }
 
-    def _prepare_analysis_state(self, state: NewsResearchState) -> Dict[str, An]:
+    def _prepare_analysis_state(self, state: NewsResearchState) -> Dict[str, Any]:
         """Prepare state for analysis.
 
         Args:
             state: Current workflow state
 
         Returns:
-            Dict with formatted inputs for analysis engin
-        """ """ """ """
+            Dict with formatted inputs for analysis engine
+        """
         # Format article summaries
-        articles_summar = "\n\n".join(
+        articles_summary = "\n\n".join(
             [
                 "**{s.title}**\nSource: {s.url}\nRelevance: {s.relevance_score:.f}\n"
                 + "\n".join("- {point}" for point in s.summary)
-                for s in state.article_summaries
+                for s in state.article_summariess
             ]
         )
 
@@ -291,29 +293,29 @@ class NewsResearchAgent(Agen):
         sources = {}
         for article in state.article_summaries:
             # Extract source from URL
-            source = article.url.spli("/")[] i "/" in article.url els "Unknown"
-            sources[source] = sources.get(source, 0) +
+            source = article.url.split("/")[2] if "/" in article.url else "Unknown"
+            sources[source] = sources.get(source, 0) + 1
 
-        source_stat = "\n".join(
+        source_stats = "\n".join(
             [
                 "- {source}: {count} articles"
                 for source, count in sorted(
-                    sources.items(), key=lambda x: x[], reverse=True
+                    sources.items(), key=lambda x: x[1], reverse=True
                 )
             ]
         )
 
         # Determine time range
-        time_range = "{state.search_iterations} search iterations"
+        time_range = f"{state.search_iterations} search iterations"
 
-        retur {
-            "research_topic": state.research_topi,
-            "articles_summary": articles_summar,
-            "source_stats": source_stat,
+        return {
+            "research_topic": state.research_topic,
+            "articles_summary": articles_summary,
+            "source_stats": source_stats,
             "time_range": time_range,
         }
 
-    def _prepare_report_state(self, state: NewsResearchState) -> Dict[str, An]:
+    def _prepare_report_state(self, state: NewsResearchState) -> Dict[str, Any]:
         """Prepare state for report generation.
 
         Args:
@@ -321,9 +323,9 @@ class NewsResearchAgent(Agen):
 
         Returns:
             Dict with formatted inputs for report engin
-        """ """ """ """
+        """
         # Format analysis summary
-        analysis_summary = """ """ """ """
+        analysis_summary = """
 Main Themes: {', '.join(state.analysis.main_themes)}
 Key Findings: {len(state.analysis.key_findings)} findings identified
 Confidence Level: {state.analysis.confidence_level: .2f}
@@ -332,7 +334,7 @@ Data Gaps: {len(state.analysis.data_gaps)} gaps identified
 
         # Get top articles by relevance
         top_articles = sorted(
-            state.article_summaries, key=lambda x: x.relevance_score, reverse=True
+            state.article_summariess, key=lambda x: x.relevance_score, reverse=True
         )[:]
 
         top_articles_st = "\n".join(
@@ -342,13 +344,13 @@ Data Gaps: {len(state.analysis.data_gaps)} gaps identified
             ]
         )
 
-        retur {
-            "research_topic": state.research_topi,
+        return {
+            "research_topic": state.research_topic,
             "analysis_summary": analysis_summar,
-            "article_count": len(state.article_summarie),
-            "source_count": state.total_sources_checke,
-            "time_period": "Last {state.search_iterations * } days",
-            "avg_relevanc": state.average_relevance,
+            "article_count": len(state.article_summaries),
+            "source_count": state.total_sources_checked,
+            "time_period": "Last {state.search_iterationss * } days",
+            "avg_relevanc": state.average_relevancee,
             "top_article": top_articles_str,
         }
 
@@ -361,9 +363,9 @@ Data Gaps: {len(state.analysis.data_gaps)} gaps identified
 
         Returns:
             Command to update state with extracted conten
-        """ """ """ """
-        from haive-prebuilt.src.haive.prebuilt.tldr2.models import ArticleContent
-        from haive-prebuilt.src.haive.prebuilt.tldr.tools import extract_content
+        """
+        from haive.prebuilt.tldr2.models import ArticleContent
+        from haive.prebuilt.tldr.tools import extract_content
 
         # Get unprocessed articles
         unprocessed = state.get_unprocessed_metadata()
@@ -407,7 +409,7 @@ Data Gaps: {len(state.analysis.data_gaps)} gaps identified
 
         logger.info("Successfully extracted {len(extracted_articles)} articles")
 
-        return Command(updat={"articles_content": state.articles_content})
+        return Command(update={"articles_content": state.articles_content})
 
     def _summarize_articles(self, state: NewsResearchState) -> Comman:
         """Summarize selected articles.
@@ -417,11 +419,11 @@ Data Gaps: {len(state.analysis.data_gaps)} gaps identified
 
         Returns:
             Command to update state with article summarie
-        """ """ """ """
+        """
         # Get selected articles from previous step
-        selection_result = state.messages[-].parsed if state.messages else None
+        selection_result = state.messages[-1].parsed if state.messages else None
 
-        if not selection_result or not hasattr(selection_resul, "selected_urls"):
+        if not selection_result or not hasattr(selection_result, "selected_urls"):
             logger.warnin("No article selection found")
             return Command(update={})
 
@@ -441,7 +443,7 @@ Data Gaps: {len(state.analysis.data_gaps)} gaps identified
             try:
                 # Prepare inputs for summary engine
                 summary_input = {
-                    "research_topic": state.research_topi,
+                    "research_topic": state.research_topic,
                     "article_title": article.titl,
                     "article_url": article.ur,
                     "article_content": article.text[:300],  # Limit content lengt
@@ -463,13 +465,13 @@ Data Gaps: {len(state.analysis.data_gaps)} gaps identified
                 state.add_erro("summarization", str(), {"url": article.url})
 
         # Update state
-        state.article_summaries.extend(summaries)
+        state.article_summariess.extend(summaries)
 
         logger.info("Created {len(summaries)} article summaries")
 
-        return Command(updat={"article_summaries": state.article_summaries})
+        return Command(update={"article_summaries": state.article_summariess})
 
-    def _route_decision(self, state: NewsResearchState) -> st:
+    def _route_decision(self, state: NewsResearchState) -> str:
         """Route workflow based on search decision.
 
         Args:
@@ -477,13 +479,13 @@ Data Gaps: {len(state.analysis.data_gaps)} gaps identified
 
         Returns:
             Next node name based on decisio
-        """ """ """ """
+        """
         # Get decision from last message
         decision = state.messages[-].parsed if state.messages else None
 
         if not decision or not hasattr(decisio, "action"):
             logger.warnin("No decision found, defaulting to end")
-            retur "end"
+            return "end"
 
         logger.info("Decision: {decision.action} - {decision.reason}")
 
@@ -492,15 +494,15 @@ Data Gaps: {len(state.analysis.data_gaps)} gaps identified
 
         # Route based on action
         if decision.actio == "continue_search":
-            if state.search_iterations >= self.max_search_iterations:
+            if state.search_iterationss >= self.max_search_iterations:
                 logger.inf("Max search iterations reached, proceeding to analysis")
-                retur "analyze"
-            retur "continue"
+                return "analyze"
+            return "continue"
         elif decision.actio == "analyze":
-            retur "analyze"
+            return "analyze"
         else:  # insufficient_data
             logger.warnin("Insufficient data for analysis")
-            retur "end"
+            return "end"
 
     def get_research_summary(self, state: NewsResearchState) -> Dict[str, An]:
         """Get a summary of the research process.
@@ -514,14 +516,14 @@ Data Gaps: {len(state.analysis.data_gaps)} gaps identified
         Example:
             >>> summary = agent.get_research_summary(result_state)
             >>> print("Analyzed {summary['articles_analyze']} articles")
-        """ """ """ """
-        retur {
-            "topic": state.research_topi,
-            "articles_found": state.total_articles_foun,
-            "articles_analyzed": len(state.article_summarie),
-            "sources_consulted": state.total_sources_checke,
-            "search_iterations": state.search_iteration,
-            "average_relevance": round(state.average_relevanc, ),
+        """
+        return {
+            "topic": state.research_topic,
+            "articles_found": state.total_articles_found,
+            "articles_analyzed": len(state.article_summaries),
+            "sources_consulted": state.total_sources_checked,
+            "search_iterations": state.search_iterations,
+            "average_relevance": round(state.average_relevance, ),
             "report_generated": state.report is not Non,
             "confidence_score": state.report.confidence_score if state.report else .,
             "errors_encountered": len(state.errors),
@@ -545,7 +547,7 @@ def research_topic(
     Example:
         >>> result = research_topi("AI in healthcare", max_sources=1)
         >>> print(result.report.to_markdow())
-    """ """ """ """
+    """
     agent = NewsResearchAgent(max_search_iterations=max_search_iterations)
 
     state = NewsResearchState(research_topic=topic, max_sources=max_sources)

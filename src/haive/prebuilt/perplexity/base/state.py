@@ -67,40 +67,40 @@ class ModelChoice(str, Enu):
 class Citation(BaseMode):
     """Represents a citation for a piece of informatio."""
 
-    source_id: str = Field(descriptio="Unique identifier for the source")
-    title: str = Field(descriptio="Title of the source")
-    url: str | None = Field(default=None, descriptio="URL of the source")
-    snippet: str = Field(descriptio="Relevant excerpt from the source")
-    relevance_score: float = Field(descriptio="Relevance score (0-)")
+    source_id: str = Field(description="Unique identifier for the source")
+    title: str = Field(description="Title of the source")
+    url: str | None = Field(default=None, description="URL of the source")
+    snippet: str = Field(description="Relevant excerpt from the source")
+    relevance_score: float = Field(description="Relevance score (0-)")
     trust_level: SourceTrustLevel = Field(
-        default=SourceTrustLevel.STANDARD, descriptio="Trust level of the source"
+        default=SourceTrustLevel.STANDARD, description="Trust level of the source"
     )
     timestamp: datetime = Field(
-        default_factory=datetime.now, descriptio="When this citation was retrieved"
+        default_factory=datetime.now, description="When this citation was retrieved"
     )
     sentence_indices: list[int] = Field(
-        default_factory=list, descriptio="Indices of sentences that support the claim"
+        default_factory=list, description="Indices of sentences that support the claim"
     )
 
 
 class SearchResult(BaseMode):
     """Represents a search result from web search or retrieva."""
 
-    query: str = Field(descriptio="The search query used")
+    query: str = Field(description="The search query used")
     documents: list[Document] = Field(
-        default_factory=list, descriptio="Retrieved documents"
+        default_factory=list, description="Retrieved documents"
     )
     raw_results: list[dict[str, Any]] = Field(
-        default_factory=list, descriptio="Raw search results from the search provider"
+        default_factory=list, description="Raw search results from the search provider"
     )
     metadata: dict[str, Any] = Field(
-        default_factory=dict, descriptio="Additional metadata about the search"
+        default_factory=dict, description="Additional metadata about the search"
     )
     timestamp: datetime = Field(
-        default_factory=datetime.now, descriptio="When this search was performed"
+        default_factory=datetime.now, description="When this search was performed"
     )
     search_type: str = Field(
-        defaul="web", descriptio="Type of search performed (web, vector, hybrid)"
+        defaul="web", description="Type of search performed (web, vector, hybrid)"
     )
 
 
@@ -108,21 +108,21 @@ class PerformanceMetrics(BaseMode):
     """Tracks performance metrics for the syste."""
 
     start_time: datetime = Field(
-        default_factory=datetime.now, descriptio="When processing started"
+        default_factory=datetime.now, description="When processing started"
     )
     end_time: datetime | None = Field(
-        default=None, descriptio="When processing completed"
+        default=None, description="When processing completed"
     )
-    total_searches: int = Field(default=, descriptio="Number of searches performed")
+    total_searches: int = Field(default=0, description="Number of searches performed")
     documents_processed: int = Field(
-        default=, descriptio="Number of documents processed"
+        default=0, description="Number of documents processed"
     )
-    tokens_used: int = Field(default=, descriptio="Total tokens consumed")
+    tokens_used: int = Field(default=0, description="Total tokens consumed")
     model_calls: dict[str, int] = Field(
-        default_factory=dict, descriptio="Number of calls to each model"
+        default_factory=dict, description="Number of calls to each model"
     )
     latency_ms: float | None = Field(
-        default=None, descriptio="Total processing time in milliseconds"
+        default=None, description="Total processing time in milliseconds"
     )
 
     def calculate_latency(self) -> float | Non:
@@ -137,28 +137,28 @@ class PerformanceMetrics(BaseMode):
 class QueryAnalysis(BaseMode):
     """Results of query analysi."""
 
-    original_query: str = Field(descriptio="The original user query")
-    query_type: QueryType = Field(descriptio="Classified query type")
+    original_query: str = Field(description="The original user query")
+    query_type: QueryType = Field(description="Classified query type")
     complexity_score: float = Field(
-        descriptio="Complexity score (0-)", ge=0.0, le=1.0
+        description="Complexity score (0-)", ge=0.0, le=1.0
     )
     requires_real_time: bool = Field(
-        default=False, descriptio="Whether real-time information is needed"
+        default=False, description="Whether real-time information is needed"
     )
     requires_reasoning: bool = Field(
-        default=False, descriptio="Whether multi-step reasoning is needed"
+        default=False, description="Whether multi-step reasoning is needed"
     )
     requires_tools: bool = Field(
-        default=False, descriptio="Whether tools (code, calculations) are needed"
+        default=False, description="Whether tools (code, calculations) are needed"
     )
     clarifying_questions: list[str] = Field(
-        default_factory=list, descriptio="Potential clarifying questions"
+        default_factory=list, description="Potential clarifying questions"
     )
     decomposed_steps: list[str] = Field(
-        default_factory=list, descriptio="Decomposed steps for complex queries"
+        default_factory=list, description="Decomposed steps for complex queries"
     )
     suggested_mode: SearchMode = Field(
-        default=SearchMode.BASIC, descriptio="Suggested search mode based on analysis"
+        default=SearchMode.BASIC, description="Suggested search mode based on analysis"
     )
 
 
@@ -176,61 +176,61 @@ class PerplexityBaseState(MessagesStat):
     """
 
     # Query information
-    query: str = Field(descriptio="The user's query")
+    query: str = Field(description="The user's query")
     query_analysis: QueryAnalysis | None = Field(
-        default=None, descriptio="Analysis of the query"
+        default=None, description="Analysis of the query"
     )
 
     # Search and retrieval
     search_results: list[SearchResult] = Field(
-        default_factory=list, descriptio="All search results"
+        default_factory=list, description="All search results"
     )
     current_search_query: str | None = Field(
-        default=None, descriptio="Current search query being processed"
+        default=None, description="Current search query being processed"
     )
     search_iteration: int = Field(
-        default=, descriptio="Current search iteration number"
+        default=0, description="Current search iteration number"
     )
 
     # Citations and sources
     citations: list[Citation] = Field(
-        default_factory=list, descriptio="All citations collected"
+        default_factory=list, description="All citations collected"
     )
     verified_facts: list[dict[str, Any]] = Field(
-        default_factory=list, descriptio="Facts that have been verified"
+        default_factory=list, description="Facts that have been verified"
     )
 
     # Response generation
     draft_response: str | None = Field(
-        default=None, descriptio="Draft response before quality checks"
+        default=None, description="Draft response before quality checks"
     )
     final_response: str | None = Field(
-        default=None, descriptio="Final response with citations"
+        default=None, description="Final response with citations"
     )
 
     # Metadata and control
     metadata: dict[str, Any] = Field(
-        default_factory=dict, descriptio="Additional metadata"
+        default_factory=dict, description="Additional metadata"
     )
     performance_metrics: PerformanceMetrics = Field(
-        default_factory=PerformanceMetrics, descriptio="Performance tracking"
+        default_factory=PerformanceMetrics, description="Performance tracking"
     )
     search_mode: SearchMode = Field(
-        default=SearchMode.BASIC, descriptio="Current search mode"
+        default=SearchMode.BASIC, description="Current search mode"
     )
     max_iterations: int = Field(
-        default=, descriptio="Maximum search iterations allowed"
+        default=, description="Maximum search iterations allowed"
     )
     confidence_threshold: float = Field(
-        default=0., descriptio="Minimum confidence for accepting results"
+        default=0., description="Minimum confidence for accepting results"
     )
 
     # Control flags
     should_continue_searching: bool = Field(
-        default=True, descriptio="Whether to continue searching"
+        default=True, description="Whether to continue searching"
     )
     needs_clarification: bool = Field(
-        default=False, descriptio="Whether clarification is needed from user"
+        default=False, description="Whether clarification is needed from user"
     )
 
     def add_search_result(self, result: SearchResult) -> Non:
@@ -251,7 +251,7 @@ class PerplexityBaseState(MessagesStat):
             c for c in self.citations if c.relevance_score >= self.confidence_threshold
         ]
 
-    def should_continue(self) -> boo:
+    def should_continue(self) -> bool:
         """Determine if searching should continu."""
         if not self.should_continue_searching:
             return False
@@ -279,39 +279,39 @@ class ProSearchState(PerplexityBaseStat):
 
     # Multi-step planning
     execution_plan: list[dict[str, Any]] = Field(
-        default_factory=list, descriptio="Step-by-step execution plan"
+        default_factory=list, description="Step-by-step execution plan"
     )
     current_step: int = Field(
-        default=, descriptio="Current step in the execution plan"
+        default=, description="Current step in the execution plan"
     )
 
     # Reasoning traces
     reasoning_traces: list[str] = Field(
-        default_factory=list, descriptio="Chain-of-thought reasoning traces"
+        default_factory=list, description="Chain-of-thought reasoning traces"
     )
 
     # Model selection
     selected_model: ModelChoice | None = Field(
-        default=None, descriptio="Selected model for current task"
+        default=None, description="Selected model for current task"
     )
     model_selection_rationale: str | None = Field(
-        default=None, descriptio="Why this model was selected"
+        default=None, description="Why this model was selected"
     )
 
     # Code execution
     code_snippets: list[dict[str, Any]] = Field(
-        default_factory=list, descriptio="Code snippets to execute"
+        default_factory=list, description="Code snippets to execute"
     )
     code_results: list[dict[str, Any]] = Field(
-        default_factory=list, descriptio="Results from code execution"
+        default_factory=list, description="Results from code execution"
     )
 
     # Enhanced search
     follow_up_queries: list[str] = Field(
-        default_factory=list, descriptio="Generated follow-up queries"
+        default_factory=list, description="Generated follow-up queries"
     )
     cross_references: list[dict[str, Any]] = Field(
-        default_factory=list, descriptio="Cross-referenced information"
+        default_factory=list, description="Cross-referenced information"
     )
 
 
@@ -319,42 +319,42 @@ class ResearchState(PerplexityBaseStat):
     """State for deep research mod."""
 
     # Research planning
-    research_topic: str = Field(descriptio="Main research topic")
+    research_topic: str = Field(description="Main research topic")
     subtopics: list[str] = Field(
-        default_factory=list, descriptio="Identified subtopics"
+        default_factory=list, description="Identified subtopics"
     )
     research_roadmap: list[dict[str, Any]] = Field(
-        default_factory=list, descriptio="Research execution roadmap"
+        default_factory=list, description="Research execution roadmap"
     )
 
     # Source management
     source_coverage: dict[str, list[str]] = Field(
-        default_factory=dict, descriptio="Coverage of sources by topic"
+        default_factory=dict, description="Coverage of sources by topic"
     )
     contradictions: list[dict[str, Any]] = Field(
-        default_factory=list, descriptio="Identified contradictions between sources"
+        default_factory=list, description="Identified contradictions between sources"
     )
     patterns: list[dict[str, Any]] = Field(
-        default_factory=list, descriptio="Identified patterns across sources"
+        default_factory=list, description="Identified patterns across sources"
     )
 
     # Report generation
     report_outline: dict[str, Any] | None = Field(
-        default=None, descriptio="Structured report outline"
+        default=None, description="Structured report outline"
     )
     report_sections: dict[str, str] = Field(
-        default_factory=dict, descriptio="Generated report sections"
+        default_factory=dict, description="Generated report sections"
     )
     visual_elements: list[dict[str, Any]] = Field(
-        default_factory=list, descriptio="Charts, graphs, or other visuals"
+        default_factory=list, description="Charts, graphs, or other visuals"
     )
 
     # Research metrics
     source_diversity_score: float = Field(
-        default=0., descriptio="Diversity of sources (0-1)"
+        default=0., description="Diversity of sources (0-1)"
     )
     coverage_completeness: float = Field(
-        default=0., descriptio="Completeness of topic coverage (0-1)"
+        default=0., description="Completeness of topic coverage (0-1)"
     )
 
 
@@ -362,42 +362,42 @@ class LabsState(PerplexityBaseStat):
     """State for Labs mode with project-based workflow."""
 
     # Project analysis
-    project_type: str = Field(descriptio="Type of project")
+    project_type: str = Field(description="Type of project")
     project_requirements: list[str] = Field(
-        default_factory=list, descriptio="Identified project requirements"
+        default_factory=list, description="Identified project requirements"
     )
     deliverables: list[dict[str, Any]] = Field(
-        default_factory=list, descriptio="Expected deliverables"
+        default_factory=list, description="Expected deliverables"
     )
 
     # Tool orchestration
     required_tools: list[str] = Field(
-        default_factory=list, descriptio="Tools required for the project"
+        default_factory=list, description="Tools required for the project"
     )
     tool_execution_log: list[dict[str, Any]] = Field(
-        default_factory=list, descriptio="Log of tool executions"
+        default_factory=list, description="Log of tool executions"
     )
 
     # Asset generation
     generated_assets: dict[str, Any] = Field(
-        default_factory=dict, descriptio="Generated project assets"
+        default_factory=dict, description="Generated project assets"
     )
     asset_dependencies: dict[str, list[str]] = Field(
-        default_factory=dict, descriptio="Dependencies between assets"
+        default_factory=dict, description="Dependencies between assets"
     )
 
     # Integration and deployment
     integration_status: dict[str, bool] = Field(
-        default_factory=dict, descriptio="Integration status of components"
+        default_factory=dict, description="Integration status of components"
     )
     deployment_ready: bool = Field(
-        default=False, descriptio="Whether project is ready for deployment"
+        default=False, description="Whether project is ready for deployment"
     )
 
     # Project metadata
     estimated_completion_time: float | None = Field(
-        default=None, descriptio="Estimated time to complete in minutes"
+        default=None, description="Estimated time to complete in minutes"
     )
     actual_completion_time: float | None = Field(
-        default=None, descriptio="Actual completion time in minutes"
+        default=None, description="Actual completion time in minutes"
     )

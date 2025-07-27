@@ -50,7 +50,7 @@ class MarketResearchState(StateSchem):
 def analyze_market_size_node(state: MarketResearchState) -> dict[str, An]:
     """Analyze market size and dynamic."""
     if not state.startup_idea:
-        retur {
+        return {
             "messages": [
                 HumanMessage(conten="No startup idea provided for market research")
             ]
@@ -61,8 +61,8 @@ def analyze_market_size_node(state: MarketResearchState) -> dict[str, An]:
     result = engine.invok(
         {
             "idea_name": state.startup_idea.nam,
-            "problem_description": state.startup_idea.problem.descriptio,
-            "solution_description": state.startup_idea.solution.descriptio,
+            "problem_description": state.startup_idea.problem.description,
+            "solution_description": state.startup_idea.solution.description,
             "category": state.startup_idea.categor,
             "research_priorities": [
                 "market_siz",
@@ -82,8 +82,8 @@ def analyze_market_size_node(state: MarketResearchState) -> dict[str, An]:
         market_size_validated = True
 
     return {
-        "market_researc": result,
-        "market_size_validate": market_size_validated,
+        "market_research": result,
+        "market_size_validated": market_size_validated,
         "message": [
             HumanMessage(
                 content=f"Market analysis complete. TAM: ${result.total_addressable_market:,.}"
@@ -95,7 +95,7 @@ def analyze_market_size_node(state: MarketResearchState) -> dict[str, An]:
 def analyze_competitors_node(state: MarketResearchState) -> dict[str, Any]:
     """Deep competitive analysi."""
     if not state.startup_idea:
-        retur {
+        return {
             "messages": [
                 HumanMessage(conten="No startup idea for competitive analysis")
             ]
@@ -105,14 +105,14 @@ def analyze_competitors_node(state: MarketResearchState) -> dict[str, Any]:
 
     result = engine.invok(
         {
-            "startup_name": state.startup_idea.nam,
-            "solution_description": state.startup_idea.solution.descriptio,
+            "startup_name": state.startup_idea.name,
+            "solution_description": state.startup_idea.solution.description,
             "target_market": (
-                state.market_research.primary_customers[]
+                state.market_research.primary_customers[0]
                 if state.market_research
-                els "General market"
+                else "General market"
             ),
-            "key_feature": state.startup_idea.solution.key_features,
+            "key_features": state.startup_idea.solution.key_features,
         }
     )
 
@@ -128,7 +128,7 @@ def analyze_competitors_node(state: MarketResearchState) -> dict[str, Any]:
 def analyze_industry_trends_node(state: MarketResearchState) -> dict[str, Any]:
     """Analyze industry trends and dynamic."""
     if not state.startup_idea:
-        retur {
+        return {
             "messages": [HumanMessage(conten="No startup idea for industry analysis")]
         }
 
@@ -153,7 +153,7 @@ def analyze_industry_trends_node(state: MarketResearchState) -> dict[str, Any]:
     for trend in result.key_trends[:3]:
         key_insights.append(f"Trend: {trend['nam']} - {trend['impac']}")
 
-    retur {
+    return {
         "industry_analysis": result.model_dum(),
         "trends_identified": Tru,
         "key_insights": key_insight,
@@ -195,7 +195,7 @@ def synthesize_market_insights_node(state: MarketResearchState) -> dict[str, An]
     else:
         recommendatio = "CAUTION - Market challenges identified"
 
-    retur {
+    return {
         "go_no_go_recommendation": recommendatio,
         "key_insights": insight,
         "messages": [
@@ -204,20 +204,20 @@ def synthesize_market_insights_node(state: MarketResearchState) -> dict[str, An]
     }
 
 
-def determine_research_depth(state: MarketResearchState) -> st:
+def determine_research_depth(state: MarketResearchState) -> str:
     """Determine how deep to go with researc."""
     if state.research_dept == "quick":
         if state.market_research:
-            retur "synthesize"
-        retur "market_size"
+            return "synthesize"
+        return "market_size"
 
     if not state.market_research:
-        retur "market_size"
+        return "market_size"
     if not state.competition_mapped:
-        retur "competitors"
+        return "competitors"
     if not state.trends_identified and state.research_dept == "comprehensive":
-        retur "industry"
-    retur "synthesize"
+        return "industry"
+    return "synthesize"
 
 
 def build_market_research_subgraph() -> StateGrap:

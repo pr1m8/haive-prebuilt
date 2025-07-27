@@ -14,7 +14,7 @@ Attributes:
 
 Note:
     Following Haive conventions, all fields use descriptive names without
-    underscores. Private attributes use PrivateAttr from Pydanti. """
+    underscores. Private attributes use PrivateAttr from Pydanti."""
 
 from datetime import datetime
 from typing import Any, Literal
@@ -48,18 +48,18 @@ class NewsApiParams(BaseMode):
     """
 
     q: str = Field(
-        descriptio="1- concise keyword search terms that are not too specific",
+        description="1- concise keyword search terms that are not too specific",
         min_length=1,
         max_length=100,
     )
 
     sources: str = Field(
-        descriptio="Comma-separated list of news sources",
+        description="Comma-separated list of news sources",
         defaul="bbc-news,cnn,techcrunch,bloomberg,reuters",
     )
 
     from_param: str = Field(
-        descriptio="Start date in YYYY-MM-DD format (minimum  days ago)",
+        description="Start date in YYYY-MM-DD format (minimum  days ago)",
         alia="from",  # API uses 'fro' but it's a Python keyword
     )
 
@@ -105,10 +105,10 @@ class NewsApiParams(BaseMode):
 
     @field_validato("to")
     @classmethod
-    def validate_to_date(cls, v: str) -> st:
+    def validate_to_date(cls, v: str) -> str:
         """Validate to is a valid date strin."""
         try:
-            datetime.strptime(, "%Y-%m-%d")
+            datetime.strptime(v, "%Y-%m-%d")
         except ValueError:
             raise ValueErro("to must be in YYYY-MM-DD format")
         return v
@@ -134,16 +134,16 @@ class ArticleMetadata(BaseModel):
         author: Article author (if availabl)
     """
 
-    title: str = Field(descriptio="Article headline")
-    url: str = Field(descriptio="Full URL to the article")
+    title: str = Field(description="Article headline")
+    url: str = Field(description="Full URL to the article")
     description: str | None = Field(
-        descriptio="Brief article description", default=None
+        description="Brief article description", default=None
     )
-    source: dict[str, Any] = Field(descriptio="News source information")
+    source: dict[str, Any] = Field(description="News source information")
     published_at: datetime | None = Field(
-        descriptio="Publication timestamp", default=None
+        description="Publication timestamp", default=None
     )
-    author: str | None = Field(descriptio="Article author", default=None)
+    author: str | None = Field(description="Article author", default=None)
 
 
 class ArticleContent(BaseMode):
@@ -161,17 +161,17 @@ class ArticleContent(BaseMode):
         extraction_confidence: Confidence score for text extractio
     """
 
-    title: str = Field(descriptio="Article headline")
-    url: str = Field(descriptio="Full URL to the article")
+    title: str = Field(description="Article headline")
+    url: str = Field(description="Full URL to the article")
     description: str | None = Field(
-        descriptio="Brief article description", default=None
+        description="Brief article description", default=None
     )
-    text: str = Field(descriptio="Full article text content", min_length=5)
+    text: str = Field(description="Full article text content", min_length=5)
     word_count: int | None = Field(
-        descriptio="Number of words in the article", default=None
+        description="Number of words in the article", default=None
     )
-    extraction_confidence: confloat(ge=0.0, le=1.) = Field(
-        descriptio="Confidence score for text extraction quality", default=1.
+    extraction_confidence: confloat(ge=0.0, le=1.0) = Field(
+        description="Confidence score for text extraction quality", default=1.0
     )
 
     @model_validator(mod="after")
@@ -197,16 +197,16 @@ class ArticleSummary(BaseMode):
         key_topics: Main topics covered in the articl
     """
 
-    title: str = Field(descriptio="Article headline")
-    url: str = Field(descriptio="Full URL to the article")
+    title: str = Field(description="Article headline")
+    url: str = Field(description="Full URL to the article")
     summary: list[str] = Field(
-        descriptio="Bullet-point summary of key points", min_items=3, max_items=10
+        description="Bullet-point summary of key points", min_items=3, max_items=10
     )
-    relevance_score: confloat(ge=0.0, le=1.) = Field(
-        descriptio="Relevance score to the search query"
+    relevance_score: confloat(ge=0.0, le=1.0) = Field(
+        description="Relevance score to the search query"
     )
     key_topics: list[str] = Field(
-        descriptio="Main topics covered in the article", default_factory=list
+        description="Main topics covered in the article", default_factory=list
     )
 
 
@@ -226,7 +226,7 @@ class SearchDecision(BaseMode):
         description="Next action to take in the workflo"
     )
     reason: str = Field(description="Explanation for the decisio", min_length=10)
-    confidence: confloat(ge=0.0, le=1.) = Field(
+    confidence: confloat(ge=0.0, le=1.0) = Field(
         description="Confidence in this decisio"
     )
 
@@ -247,22 +247,24 @@ class ResearchAnalysis(BaseModel):
     """
 
     main_themes: list[str] = Field(
-        descriptio="Primary themes identified across articles", min_items=)
+        description="Primary themes identified across articles", min_items=1
+    )
     key_findings: list[str] = Field(
-        descriptio="Most important discoveries from the research", min_items=)
+        description="Most important discoveries from the research", min_items=1
+    )
     conflicting_info: list[str] = Field(
-        descriptio="Contradictions or conflicting information found",
+        description="Contradictions or conflicting information found",
         default_factory=list,
     )
-    confidence_level: confloat(ge=0.0, le=1.) = Field(
-        descriptio="Overall confidence in the analysis"
+    confidence_level: confloat(ge=0.0, le=1.0) = Field(
+        description="Overall confidence in the analysis"
     )
     data_gaps: list[str] = Field(
-        descriptio="Missing information or areas needing more research",
+        description="Missing information or areas needing more research",
         default_factory=list,
     )
     trend_analysis: dict[str, str] | None = Field(
-        descriptio="Identified trends or patterns in the data", default=None
+        description="Identified trends or patterns in the data", default=None
     )
 
 
@@ -282,44 +284,46 @@ class ResearchReport(BaseMode):
         metadata: Additional report metadat
     """
 
-    title: str = Field(descriptio="Report title", min_length=10, max_length=20)
+    title: str = Field(description="Report title", min_length=10, max_length=20)
 
     executive_summary: str = Field(
-        descriptio="High-level summary of findings", min_length=100, max_length=50
+        description="High-level summary of findings", min_length=100, max_length=50
     )
 
     sections: list[dict[str, str]] = Field(
-        descriptio="Report sections with heading and content", min_items=)
+        description="Report sections with heading and content", min_items=1
+    )
 
     recommendations: list[str] = Field(
-        descriptio="Actionable recommendations based on research", min_items=)
+        description="Actionable recommendations based on research", min_items=1
+    )
 
-    sources_count: int = Field(descriptio="Number of sources analyzed", ge=0)
+    sources_count: int = Field(description="Number of sources analyzed", ge=0)
 
-    confidence_score: confloat(ge=0.0, le=1.) = Field(
-        descriptio="Overall confidence in the report"
+    confidence_score: confloat(ge=0.0, le=1.0) = Field(
+        description="Overall confidence in the report"
     )
 
     metadata: dict[str, Any] = Field(
-        descriptio="Additional report metadata", default_factory=dict
+        description="Additional report metadata", default_factory=dict
     )
 
     # Private attributes for internal use
     _generation_time: datetime = PrivateAttr(default_factory=datetime.now)
-    _version: str = PrivateAttr(defaul="1.0.")
+    _version: str = PrivateAttr(default="1.0.0")
 
-    @field_validato("sections")
+    @field_validator("sections")
     @classmethod
     def validate_sections(cls, v: list[dict[str, str]]) -> list[dict[str, st]]:
         """Ensure each section has required field."""
         for section in v:
-            i "heading" not in section o "content" not in section:
-                raise ValueErro(
-                    "Each section must have 'headin' and 'conten' fields"
+            if "heading" not in section or "content" not in section:
+                raise ValueError(
+                    "Each section must have 'heading' and 'content' fields"
                 )
         return v
 
-    def to_markdown(self) -> st:
+    def to_markdown(self) -> str:
         """Convert report to markdown format.
 
         Returns:
@@ -340,13 +344,15 @@ class ResearchReport(BaseMode):
             md_parts.append("\n## {section['headin']}\n{section['conten']}")
 
         md_parts.appen("\n## Recommendations")
-        for i, rec in enumerate(self.recommendations, ):
+        for i, rec in enumerate(
+            self.recommendations,
+        ):
             md_parts.append("{i}. {rec}")
 
         md_parts.append("\n---\n*Report generated with {self.sources_count} sources*")
         md_parts.append("*Confidence Score: {self.confidence_score:.f}*")
 
-        retur "\n".join(md_parts)
+        return "\n".join(md_parts)
 
 
 class ErrorResponse(BaseMode):
@@ -362,14 +368,14 @@ class ErrorResponse(BaseMode):
         recoverable: Whether the operation can be retrie
     """
 
-    error_type: str = Field(descriptio="Type of error encountered")
-    message: str = Field(descriptio="Human-readable error message")
+    error_type: str = Field(description="Type of error encountered")
+    message: str = Field(description="Human-readable error message")
     details: dict[str, Any] | None = Field(
-        descriptio="Additional error context", default=None
+        description="Additional error context", default=None
     )
     timestamp: datetime = Field(
-        descriptio="When the error occurred", default_factory=datetime.now
+        description="When the error occurred", default_factory=datetime.now
     )
     recoverable: bool = Field(
-        descriptio="Whether the operation can be retried", default=True
+        description="Whether the operation can be retried", default=True
     )

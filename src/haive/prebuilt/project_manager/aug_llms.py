@@ -11,7 +11,7 @@ You are an experienced project scheduler tasked with creating an optimized proje
                 - Optimize the schedule to minimize the overall project duration.
                 - If possible parallelize the tasks to reduce the overall project duration.
                 - Try not to increase the project duration compared to previous iterations.
-            . **Incorporate Insights: **
+            2. **Incorporate Insights: **
                 - Utilize insights from previous iterations to enhance scheduling efficiency and address any identified issue.
-        """ """ """ """
-    schedule_llm = llm.with_structured_output(Schedule)
+        """
+schedule_llm = llm.with_structured_output(Schedule)

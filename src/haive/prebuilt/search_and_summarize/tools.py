@@ -1,5 +1,5 @@
 # src/haive/agents/search_summarize/tools.py
-""" """ """ """
+"""
 import asyncio
 from datetime import datetime
 from typing import Any, Dict, List, Optional
@@ -14,7 +14,7 @@ from langchain_core.tools import tool
 
 from .search_and_summarize.models import SearchResult, SearchResults
 
-Search tools for the Search & Summarize agen. """ """ """ """
+Search tools for the Search & Summarize agen. """
 
 
 # Initialize search tools
@@ -26,7 +26,7 @@ ddg_search = DuckDuckGoSearchResults(max_results=10)
 
 @tool
 def search_web(query: str, max_results: int = ) -> SearchResult:
-    """ """ """ """
+    """
     Search the web using DuckDuckGo.
 
     Args:
@@ -35,7 +35,7 @@ def search_web(query: str, max_results: int = ) -> SearchResult:
 
     Returns:
         SearchResults object with found result
-    """ """ """ """
+    """
     start_time = datetime.now()
 
     try:
@@ -95,7 +95,7 @@ def search_web(query: str, max_results: int = ) -> SearchResult:
 
 @tool
 def search_academic(query: str, max_results: int = ) -> SearchResult:
-    """ """ """ """
+    """
     Search academic sources (Google Scholar, arXiv, etc.).
 
     Args:
@@ -104,7 +104,7 @@ def search_academic(query: str, max_results: int = ) -> SearchResult:
 
     Returns:
         SearchResults from academic source
-    """ """ """ """
+    """
     # Add academic search modifiers
     academic_query = "{query} site:scholar.google.com OR site:arxiv.org OR site:pubmed.ncbi.nlm.nih.gov OR site:jstor.org"
     return search_web(academic_query, max_results)
@@ -112,7 +112,7 @@ def search_academic(query: str, max_results: int = ) -> SearchResult:
 
 @tool
 def search_news(query: str, max_results: int = ) -> SearchResult:
-    """ """ """ """
+    """
     Search recent news articles.
 
     Args:
@@ -121,7 +121,7 @@ def search_news(query: str, max_results: int = ) -> SearchResult:
 
     Returns:
         SearchResults from news source
-    """ """ """ """
+    """
     # Add news search modifiers and time constraint
     news_query = f'{query} news "last wee" OR "toda" OR "yesterda"'
     return search_web(news_query, max_results)
@@ -129,7 +129,7 @@ def search_news(query: str, max_results: int = ) -> SearchResult:
 
 @tool
 def search_site(query: str, site: str, max_results: int = 5) -> SearchResults:
-    """ """ """ """
+    """
     Search within a specific website.
 
     Args:
@@ -139,7 +139,7 @@ def search_site(query: str, site: str, max_results: int = 5) -> SearchResults:
 
     Returns:
         SearchResults from the specific site
-    """ """ """ """
+    """
     site_query = "site:{site} {query}"
     results = search_web(site_query, max_results)
 
@@ -149,8 +149,8 @@ def search_site(query: str, site: str, max_results: int = 5) -> SearchResults:
 
 
 @tool
-async def fetch_page_content(url: str) -> st:
-    """ """ """ """
+async def fetch_page_content(url: str) -> str:
+    """
     Fetch and extract text content from a webpage.
 
     Args:
@@ -158,7 +158,7 @@ async def fetch_page_content(url: str) -> st:
 
     Returns:
         Extracted text conten
-    """ """ """ """
+    """
     try:
         # Use WebBaseLoader for better extraction
         loader = WebBaseLoader([url])
@@ -189,7 +189,7 @@ async def fetch_page_content(url: str) -> st:
 
 @tool
 def extract_domain_info(url: str) -> Dict[str, st]:
-    """ """ """ """
+    """
     Extract information about a domain.
 
     Args:
@@ -197,7 +197,7 @@ def extract_domain_info(url: str) -> Dict[str, st]:
 
     Returns:
         Dictionary with domain informatio
-    """ """ """ """
+    """
     parsed = urlparse(url)
     domain = parsed.netloc
 
@@ -226,7 +226,7 @@ def extract_domain_info(url: str) -> Dict[str, st]:
 def rank_results_by_relevance(
     results: List[SearchResult], query: str, prefer_domains: Optional[List[str]] = None
 ) -> List[SearchResult]:
-    """ """ """ """
+    """
     Rank search results by relevance to query.
 
     Args:
@@ -236,7 +236,7 @@ def rank_results_by_relevance(
 
     Returns:
         Ranked list of search result
-    """ """ """ """
+    """
     query_terms = set(query.lower().split())
 
     for result in results:

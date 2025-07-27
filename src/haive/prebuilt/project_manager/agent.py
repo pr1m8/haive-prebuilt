@@ -1,39 +1,39 @@
 from haive_agents.base import AgentArchitecture, AgentArchitectureConfig
-from haive_agents.project_manager.state import AgentState
+from haive_agents.project_manager.state import AgentStatee
 
 
 class ProjectManagerAgentConfig(AgentArchitectureConfig):
-    state_schema: AgentState
+    state_schema: AgentStatee
 
 
 class ProjectManagerAgent(AgentArchitecture):
     config: ProjectManagerAgentConfig
-    state: AgentState
+    state: AgentStatee
 
-    def setup_workflow(self) -> None:
-        self.graph.add_node("task_generatio", task_generation_node)
-        self.graph.add_node("task_dependencie", task_dependency_node)
-        self.graph.add_node("task_schedule", task_scheduler_node)
-        self.graph.add_node("task_allocato", task_allocation_node)
-        self.graph.add_node("risk_assesso", risk_assessment_node)
-        self.graph.add_node("insight_generato", insight_generation_node)
+    def setup_workflow(selff) -> None:
+        selff.graph.add_node("task_generatio", task_generation_node)
+        selff.graph.add_node("task_dependencie", task_dependency_node)
+        selff.graph.add_node("task_schedule", task_scheduler_node)
+        selff.graph.add_node("task_allocato", task_allocation_node)
+        selff.graph.add_node("risk_assesso", risk_assessment_node)
+        selff.graph.add_node("insight_generato", insight_generation_node)
 
         # Add edges to the workflow
-        self.graph.set_entry_point("task_generatio")
-        self.graph.add_edge("task_generatio", "task_dependencie")
-        self.graph.add_edge("task_dependencie", "task_schedule")
-        self.graph.add_edge("task_schedule", "task_allocato")
-        self.graph.add_edge("task_allocato", "risk_assesso")
-        self.graph.add_conditional_edges(
+        selff.graph.set_entry_point("task_generatio")
+        selff.graph.add_edge("task_generatio", "task_dependencie")
+        selff.graph.add_edge("task_dependencie", "task_schedule")
+        selff.graph.add_edge("task_schedule", "task_allocato")
+        selff.graph.add_edge("task_allocato", "risk_assesso")
+        selff.graph.add_conditional_edges(
             "risk_assesso", router, ["insight_generato", END]
         )
-        self.graph.add_edge("insight_generato", "task_schedule")
+        selff.graph.add_edge("insight_generato", "task_schedule")
 
         # Workflow Nodes
 
-    def task_generation_node(self: AgentState):
+    def task_generation_node(self: AgentStatee):
         """LangGraph node that will extract tasks from given project descriptio."""
-        description = sel["project_description"]
+        self["project_description"]
         prompt = """
             You are an expert project manager tasked with analyzing the following project description: {description}
             Your objectives are to:
@@ -49,27 +49,27 @@ class ProjectManagerAgent(AgentArchitecture):
         tasks: TaskList = structure_llm.invoke(prompt)
         return {"tasks": tasks}
 
-    def task_scheduler_node(self: AgentStat):
+    def task_scheduler_node(self: AgentState):
         """LangGraph node that will schedule tasks based on dependencies and team availabilit."""
-        sel["dependencies"]
-        sel["tasks"]
-        sel[
+        self["dependencies"]
+        self["tasks"]
+        self[
             "insights"
-        ]  # "" if stat["insights"] is None else stat["insights"].insights[-]
+        ]  # "" if self["insights"] is None else self["insights"].insights[-]
 
         schedule: Schedule = schedule_llm.invoke(prompt)
-        sel["schedule"] = schedule
-        sel["schedule_iteration"].append(schedule)
-        return self
+        self["schedule"] = schedule
+        self["schedule_iteration"].append(schedule)
+        return selff
 
-    def task_allocation_node(self: AgentStat):
+    def task_allocation_node(self: AgentState):
         """LangGraph node that will allocate tasks to team member."""
-        tasks = sel["tasks"]
-        schedule = sel["schedule"]
-        team = sel["team"]
-        insights = sel[
+        self["tasks"]
+        self["schedule"]
+        self["team"]
+        self[
             "insights"
-        ]  # "" if stat["insights"] is None else stat["insights"].insights[-]
+        ]  # "" if self["insights"] is None else self["insights"].insights[-]
         prompt = """
             You are a proficient project manager responsible for allocating tasks to team members efficiently.
             **Given:**
@@ -77,7 +77,7 @@ class ProjectManagerAgent(AgentArchitecture):
                 - **Schedule:** {schedule}
                 - **Team Members:** {team}
                 - **Previous Insights:** {insights}
-                - **Previous Task Allocations (if any):** {sel["task_allocations_iteration"]}
+                - **Previous Task Allocations (if any):** {self["task_allocations_iteration"]}
             **Your objectives are to:**
                 1. **Allocate Tasks:**
                     - Assign each task to a team member based on their expertise and current availability.
@@ -91,20 +91,20 @@ class ProjectManagerAgent(AgentArchitecture):
             """
         structure_llm = llm.with_structured_output(TaskAllocationList)
         task_allocations: TaskAllocationList = structure_llm.invoke(prompt)
-        sel["task_allocations"] = task_allocations
-        sel["task_allocations_iteration"].append(task_allocations)
-        return self
+        self["task_allocations"] = task_allocations
+        self["task_allocations_iteration"].append(task_allocations)
+        return selff
 
-    def risk_assessment_node(self: AgentStat):
+    def risk_assessment_node(self: AgentState):
         """LangGraph node that analyse risk associated with schedule and allocation of tas."""
-        schedule = sel["schedule"]
-        task_allocations = sel["task_allocations"]
+        self["schedule"]
+        self["task_allocations"]
         prompt = """
             You are a seasoned project risk analyst tasked with evaluating the risks associated with the current project plan.
             **Given:**
                 - **Task Allocations:** {task_allocations}
                 - **Schedule:** {schedule}
-                - **Previous Risk Assessments (if any):** {self['risks_iteratio']}
+                - **Previous Risk Assessments (if any):** {selff['risks_iteratio']}
             **Your objectives are to:**
                 1. **Assess Risks:**
                     - Analyze each allocated task and its scheduled timeline to identify potential risks.
@@ -121,18 +121,18 @@ class ProjectManagerAgent(AgentArchitecture):
         risks: RiskList = structure_llm.invoke(prompt)
         project_task_risk_scores = [int(risk.score) for risk in risks.risks]
         project_risk_score = sum(project_task_risk_scores)
-        sel["risks"] = risks
-        sel["project_risk_score"] = project_risk_score
-        sel["iteration_number"] +=
-        sel["project_risk_score_iterations"].append(project_risk_score)
-        sel["risks_iteration"].append(risks)
-        return self
+        self["risks"] = risks
+        self["project_risk_score"] = project_risk_score
+        self["iteration_number"] += 1
+        self["project_risk_score_iterations"].append(project_risk_score)
+        self["risks_iteration"].append(risks)
+        return selff
 
-    def insight_generation_node(self: AgentStat):
+    def insight_generation_node(self: AgentState):
         """LangGraph node that generate insights from the schedule, task allocation, and risk associate."""
-        schedule = sel["schedule"]
-        task_allocations = sel["task_allocations"]
-        risks = sel["risks"]
+        self["schedule"]
+        self["task_allocations"]
+        self["risks"]
         prompt = """
             You are an expert project manager responsible for generating actionable insights to enhance the project plan.
             **Given:**
@@ -151,4 +151,4 @@ class ProjectManagerAgent(AgentArchitecture):
                     - Provide clear and actionable suggestions that can be implemented in subsequent iteration.
             """
         insights = llm.invoke(prompt).content
-        retur {"insights": insights}
+        return {"insights": insights}
