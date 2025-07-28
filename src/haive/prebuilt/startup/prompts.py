@@ -2,7 +2,7 @@
 
 from typing import Dict
 This module provides specialized AugLLM configurations for different agents
-in the startup development pipeline, from ideation through pitch deck creatio. """
+in the startup development pipeline, from ideation through pitch deck creatio."""
 
 from typing import Any
 
@@ -105,7 +105,7 @@ class ProblemResearchResponse(BaseModel):
         ..., description="Market indicators of the problem"
     )
     research_confidence: float = Field(
-        ..., ge=0.0, le=1., description="Confidence in research findings"
+        ..., ge=0.0, le=1.0, description="Confidence in research findings"
     )
 
 
@@ -637,7 +637,7 @@ class PitchDeckReviewRequest(BaseMode):
 class PitchDeckFeedback(BaseMode):
     """Feedback for a pitch dec."""
 
-    overall_score: float = Field(..., ge=0.0, le=10.)
+    overall_score: float = Field(..., ge=0.0, le=10.0)
     strengths: list[str]
     weaknesses: list[str]
     improvement_suggestions: list[dict[str, str]]  # slide -> suggestion
@@ -926,7 +926,7 @@ def example_ideation_workflow() -> Dict[str, An]:
     problem_agent = problem_research_aug_llm.create_runnable()
     problem_research = problem_agent.invoke(
         {
-            "problem_descriptio": ideas.ideas[]["proble"],
+            "problem_descriptio": ideas.ideas[0]["proble"],
             "research_focu": ["severit", "frequenc", "market_siz"],
         }
     )
@@ -935,9 +935,9 @@ def example_ideation_workflow() -> Dict[str, An]:
     market_agent = market_research_aug_llm.create_runnable()
     market_research = market_agent.invoke(
         {
-            "idea_nam": ideas.ideas[]["nam"],
-            "problem_descriptio": ideas.ideas[]["proble"],
-            "solution_descriptio": ideas.ideas[]["solutio"],
+            "idea_nam": ideas.ideas[0]["nam"],
+            "problem_descriptio": ideas.ideas[0]["proble"],
+            "solution_descriptio": ideas.ideas[0]["solutio"],
             "categor": "fintec",
         }
     )

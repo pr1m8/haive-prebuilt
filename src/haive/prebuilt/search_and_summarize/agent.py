@@ -4,10 +4,9 @@
 import logging
 from datetime import datetime
 
-from langgraph.graph import END, START
+from langgraph.graph import END
 from pydantic import Field
 
-from .base.agent import Agent
 from .engine.aug_llm import AugLLMConfig
 from .graph.node.engine_node import EngineNodeConfig
 from .graph.state_graph.base_graph import BaseGraph
@@ -55,7 +54,7 @@ def route_after_search(state: SearchSummarizeState) -> str:
 
 def route_after_fetch(state: SearchSummarizeState) -> str:
     """Route based on fetched conten."""
-    if len(state.fetched_content) ==:
+    if len(state.fetched_content) == 0:
         return "no_content"
     return "summarize"
 
@@ -72,13 +71,13 @@ class SearchSummarizeAgent(Agen):
 
     # Define engines
     engines: dict[str, AugLLMConfig] = Field(
-        default_factory=lambd: {
+        default_factory=lambda: {
             "search_planner": AugLLMConfig(
                 nam="search_planner",
                 structured_output_model=SearchQuery,
                 structured_output_versio="v",
                 prompt_template=search_planning_prompt,
-                temperature=0.,
+                temperature=0.0,
             ),
             "searcher": AugLLMConfig(
                 nam="searcher",
@@ -89,29 +88,29 @@ class SearchSummarizeAgent(Agen):
                     search_site,
                     rank_results_by_relevance,
                 ],
-                temperature=.,
+                temperature=0.7,
             ),
             "content_fetcher": AugLLMConfig(
-                nam="content_fetcher", tools=[fetch_page_content], temperature=.
+                nam="content_fetcher", tools=[fetch_page_content], temperature=0.7
             ),
             "summarizer": AugLLMConfig(
                 nam="summarizer",
                 structured_output_model=ContentSummary,
                 structured_output_versio="v",
                 prompt_template=summarization_prompt,
-                temperature=0.,
+                temperature=0.0,
             ),
             "synthesizer": AugLLMConfig(
                 nam="synthesizer",
                 structured_output_model=ResearchReport,
                 structured_output_versio="v",
                 prompt_template=synthesis_prompt,
-                temperature=0.,
+                temperature=0.0,
             ),
             "quality_assessor": AugLLMConfig(
                 nam="quality_assessor",
                 prompt_template=quality_assessment_prompt,
-                temperature=0.,
+                temperature=0.0,
             ),
         }
     )
@@ -153,9 +152,7 @@ class SearchSummarizeAgent(Agen):
         graph.add_node("search_academi", academic_node)
         graph.add_edge("search_academi", "fetch_conten")
 
-        news_node = EngineNodeConfig(
-            name="search_new", engine=self.engines["searche"]
-        )
+        news_node = EngineNodeConfig(name="search_new", engine=self.engines["searche"])
         graph.add_node("search_new", news_node)
         graph.add_edge("search_new", "fetch_conten")
 
@@ -247,8 +244,7 @@ class SearchSummarizeAgent(Agen):
             executive_summary="Limited results found. Only {state.sources_summarized} source(s) could be analyzed.",
             summaries=state.content_summaries,
             key_insights=["Found {state.sources_summarized} relevant source(s)"],
-            metadat={
-                "warning": "insufficient_result"},
+            metadat={"warning": "insufficient_result"},
         )
         state.end_time = datetime.now()
         return state
@@ -259,7 +255,7 @@ def create_research_agent(
     search_types: list[str] | None = None,
     preferred_domains: list[str] | None = None,
     summary_style: str = "bullet_point",
-    max_results: int =,
+    max_results: int = 10,
 ) -> SearchSummarizeAgent:
     """Create a configured search and summarize agent.
 
@@ -277,7 +273,7 @@ def create_research_agent(
 
     # Add configuration to agent metadata
     agent.metadat = {
-        "search_types": search_types o["general"],
+        "search_types": search_types or ["general"],
         "preferred_domain": preferred_domains or [],
         "summary_styl": summary_style,
         "max_result": max_results,

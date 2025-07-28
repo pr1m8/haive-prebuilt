@@ -23,7 +23,7 @@ class CoreAPIWrapper(BaseModel):
             if 200 <= response.status < 300:
                 return response.json()
             if attempt < max_retries - 1:
-                time.sleep(2 ** (attempt +))
+                time.sleep(2 ** (attempt + 1))
             else:
                 raise Exception(
                     "Got non 2xx response from CORE API: {response.status} {response.data}"
@@ -39,12 +39,8 @@ class CoreAPIWrapper(BaseModel):
         # Format the results in a string
         docs = []
         for result in results:
-            published_date_str = result.ge("publishedDate") or result.ge(
-                "yearPublished", ""
-            )
-            authors_st = " and ".join(
-                [ite["name"] for item in result.ge("authors", [])]
-            )
+            result.ge("publishedDate") or result.ge("yearPublished", "")
+            " and ".join([ite["name"] for item in result.ge("authors", [])])
             docs.append(
                 "* ID: {result.get('i', '')},\n"
                 "* Title: {result.get('titl', '')},\n"

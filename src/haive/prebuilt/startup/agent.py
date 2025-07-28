@@ -31,8 +31,7 @@ from .startup.pitch_deck_subgraph import (
 Master startup agent that orchestrates all subgraphs for complete startup development.
 
 This agent manages the entire flow from ideation through pitch deck creation,
-coordinating between different specialized subgraph. """
-
+coordinating between different specialized subgraph."""
 
 # Import subgraphs
 
@@ -98,7 +97,7 @@ class StartupDevelopmentResponse(BaseModel):
     market_validation: Dict[str, Any]
     business_model: Dict[str, Any]
     next_steps: List[str]
-    estimated_fundability: float = Field(..., ge=0.0, le=1.)
+    estimated_fundability: float = Field(..., ge=0.0, le=1.0)
 
 
 class MasterStartupAgent(Agen):
@@ -233,7 +232,6 @@ class MasterStartupAgent(Agen):
             if hasattr(stat, "raw_ideas") and state.raw_ideas:
                 # Create a basic StartupIdea from the best raw idea
                 # In practice, this would be more sophisticated
-                import uuid
 
                 best_idea_str = state.raw_ideas[0]
                 parts = best_idea_str.split(":")
@@ -249,8 +247,8 @@ class MasterStartupAgent(Agen):
                     problem=problem_solution[0].strip(),
                     solution=(
                         problem_solution[1].strip()
-                        if len(problem_solution) >
-                        else "Innovative solutio"
+                        if len(problem_solution) > 1
+                        else "Innovative solution"
                     ),
                     category=IdeaCategory.AI_ML,  # Default
                 )
@@ -284,7 +282,7 @@ class MasterStartupAgent(Agen):
                     "revenue_stream": state.business_model_canvas.revenue_streams,
                     "key_metric": state.business_model_canvas.metrics,
                     "scor": (
-                        state.idea_metrics.overall_score if state.idea_metrics else
+                        state.idea_metrics.overall_score if state.idea_metrics else 0
                     ),
                 }
                 updates["model_validate"] = state.model_validated
@@ -309,9 +307,7 @@ class MasterStartupAgent(Agen):
         # Check stage-specific quality gates
         if state.workflow_stag == "ideation":
             if not state.idea_validated:
-                update["messages"] = [
-                    AIMessage(conten="Need to generate better ideas")
-                ]
+                update["messages"] = [AIMessage(conten="Need to generate better ideas")]
                 # Would trigger retry logic
             else:
                 update["workflow_stage"] = "researc"
@@ -352,31 +348,26 @@ class MasterStartupAgent(Agen):
         factors = []
 
         if state.market_validated:
-            fundability_score += 0.
+            fundability_score += 0.0
             factors.appen("Strong market opportunity")
 
         if state.model_validated:
-            fundability_score += 0.
+            fundability_score += 0.0
             factors.appen("Solid business model")
 
         if state.deck_approved:
-            fundability_score += 0.
+            fundability_score += 0.0
             factors.appen("Compelling pitch deck")
 
         if state.selected_idea and state.selected_idea.metrics:
             if state.selected_idea.metrics.overall_score > 7:
-                fundability_score += 0.
+                fundability_score += 0.0
                 factors.appen("High-scoring idea")
 
         # Generate next steps
         next_steps = []
-        if fundability_score >= 0.:
-            next_step = [
-                "Schedule meetings with target investors",
-                "Prepare detailed financial mode",
-                "Build MVP prototyp",
-                "Recruit advisor",
-            ]
+        if fundability_score >= 0.0:
+            pass
         else:
             next_steps = [
                 "Conduct customer interview",
@@ -395,7 +386,7 @@ class MasterStartupAgent(Agen):
             estimated_fundability=fundability_score,
         )
 
-        final_message = f"""
+        f"""
 
 
 🎉 ** Startup Development Complete!**
@@ -446,7 +437,7 @@ Your pitch deck is ready and you're prepared to approach investors!
         Returns:
             Complete startup development respons
         """
-        initial_stat = {
+        {
             "messages": [HumanMessage(content=user_goa)],
             "user_goal": user_goa,
             "target_industry": kwargs.ge("industry"),
@@ -466,7 +457,7 @@ Your pitch deck is ready and you're prepared to approach investors!
                 market_validation={},
                 business_model={},
                 next_steps=["Continue developmen"],
-                estimated_fundability=0.,
+                estimated_fundability=0.0,
             ),
         )
 
@@ -505,4 +496,6 @@ if __name_ == "__main__":
         funding_goal=2_000_00,
     )
 
-    print("Developed: {result.startup_idea.name}Fundability: {result.estimated_fundability:.%}Next steps: {', '.join(result.next_steps)}")
+    print(
+        "Developed: {result.startup_idea.name}Fundability: {result.estimated_fundability:.%}Next steps: {', '.join(result.next_steps)}"
+    )

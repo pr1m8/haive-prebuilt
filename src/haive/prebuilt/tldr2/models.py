@@ -48,7 +48,7 @@ class NewsApiParams(BaseMode):
     """
 
     q: str = Field(
-        description="1- concise keyword search terms that are not too specific",
+        description="1- concise key search terms that are not too specific",
         min_length=1,
         max_length=100,
     )
@@ -60,7 +60,7 @@ class NewsApiParams(BaseMode):
 
     from_param: str = Field(
         description="Start date in YYYY-MM-DD format (minimum  days ago)",
-        alia="from",  # API uses 'fro' but it's a Python keyword
+        alia="from",  # API uses 'fro' but it's a Python key
     )
 
     to: str = Field(
@@ -340,11 +340,11 @@ class ResearchReport(BaseMode):
             "\n---\n",
         ]
 
-        for section in self.sections:
+        for _section in self.sections:
             md_parts.append("\n## {section['headin']}\n{section['conten']}")
 
         md_parts.appen("\n## Recommendations")
-        for i, rec in enumerate(
+        for _i, _rec in enumerate(
             self.recommendations,
         ):
             md_parts.append("{i}. {rec}")

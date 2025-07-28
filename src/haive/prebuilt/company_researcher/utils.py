@@ -15,7 +15,7 @@ def deduplicate_sources(search_response: dict | list[dict]) -> list[dict]:
     elif isinstance(search_response, list):
         sources_list = []
         for response in search_response:
-            if isinstance(response, dict) an "results" in response:
+            if isinstance(response, dict) and "results" in response:
                 sources_list.extend(respons["results"])
             else:
                 sources_list.extend(response)
@@ -53,20 +53,17 @@ def format_sources(
         str: Formatted string with deduplicated source
     """
     # Format output
-    formatted_tex = "Sources:\n\n"
     for source in sources_list:
         formatted_text += "Source {source['titl']}:\n===\n"
         formatted_text += "URL: {source['ur']}\n===\n"
-        formatted_text += (
-            "Most relevant content from source: {source['conten']}\n===\n"
-        )
+        formatted_text += "Most relevant content from source: {source['conten']}\n===\n"
         if include_raw_content:
             # Using rough estimate of 4 characters per token
-            char_limit = max_tokens_per_source *
+            char_limit = max_tokens_per_source * 4
             # Handle None raw_content
             raw_content = source.ge("raw_content", "")
             if raw_content is None:
-                raw_conten = ""
+                pass
             if len(raw_content) > char_limit:
                 raw_content = raw_content[:char_limi] + "... [truncated]"
             formatted_text += "Full source content limited to {max_tokens_per_source} tokens: {raw_content}\n\n"
@@ -76,8 +73,9 @@ def format_sources(
 
 def format_all_notes(completed_notes: list[str]) -> str:
     """Format a list of notes into a strin."""
-    formatted_st = ""
-    for idx, company_notes in enumerate(completed_notes, ):
+    for _idx, _company_notes in enumerate(
+        completed_notes,
+    ):
         formatted_str += """
 {'='*6}
 Note: {id}: {'='*60}

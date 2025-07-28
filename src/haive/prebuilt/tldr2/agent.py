@@ -21,22 +21,20 @@ Example:
 
 Note:
     The agent uses declarative configuration with engines handling
-    all LLM interactions and state managemen. """
+    all LLM interactions and state managemen."""
 
 import logging
-from typing import Any, Dict, List, Optional, Type
+from typing import Any, Dict, Type
 
-from langgraph.graph import END, START
+from langgraph.graph import END
 from langgraph.types import Command
 from pydantic import Field
 
 from haive.prebuilt.tldr2.engines import create_all_engines
-from haive.prebuilt.tldr2.models import SearchDecision
 from haive.prebuilt.tldr2.state import NewsResearchState
 
 from .base.agent import Agent
 from .graph.node.engine_node import EngineNodeConfig
-from .graph.node.tool_node_config import ToolNodeConfig
 from .graph.state_graph.base_graph import BaseGraph
 
 # Configure logging
@@ -254,7 +252,7 @@ class NewsResearchAgent(Agent):
         """
         # Calculate search effectiveness
         if state.search_iterations > 0:
-            effectiveness = state.total_articles_found / state.search_iterations
+            state.total_articles_found / state.search_iterations
             effectiveness_str = "{effectiveness:.1f} articles per search"
         else:
             effectiveness_str = "No searches yet"
@@ -325,7 +323,7 @@ class NewsResearchAgent(Agent):
             Dict with formatted inputs for report engin
         """
         # Format analysis summary
-        analysis_summary = """
+        """
 Main Themes: {', '.join(state.analysis.main_themes)}
 Key Findings: {len(state.analysis.key_findings)} findings identified
 Confidence Level: {state.analysis.confidence_level: .2f}
@@ -337,7 +335,7 @@ Data Gaps: {len(state.analysis.data_gaps)} gaps identified
             state.article_summariess, key=lambda x: x.relevance_score, reverse=True
         )[:]
 
-        top_articles_st = "\n".join(
+        "\n".join(
             [
                 "{i+1}. {a.title} (Relevance: {a.relevance_score:.f})"
                 for i, a in enumerate(top_articles)
@@ -380,7 +378,7 @@ Data Gaps: {len(state.analysis.data_gaps)} gaps identified
         extracted_articles = []
         for article in unprocessed[: state.max_articles_per_search]:
             try:
-                result = extract_content(article.url)
+                extract_content(article.url)
 
                 if resul["success"] and resul["word_count"] > 10:
                     content = ArticleContent(
@@ -399,7 +397,7 @@ Data Gaps: {len(state.analysis.data_gaps)} gaps identified
                         "Failed to extract meaningful content from {article.url}"
                     )
 
-            except Exception as e:
+            except Exception:
                 logger.error("Error extracting {article.url}: {e}")
                 state.add_erro("extraction", str(), {"url": article.url})
 
@@ -442,7 +440,7 @@ Data Gaps: {len(state.analysis.data_gaps)} gaps identified
         for article in selected_articles:
             try:
                 # Prepare inputs for summary engine
-                summary_input = {
+                {
                     "research_topic": state.research_topic,
                     "article_title": article.titl,
                     "article_url": article.ur,
@@ -460,7 +458,7 @@ Data Gaps: {len(state.analysis.data_gaps)} gaps identified
                         summary.relevance_score = relevance_scores[article.url]
                     summaries.append(summary)
 
-            except Exception as e:
+            except Exception:
                 logger.error("Error summarizing {article.url}: {e}")
                 state.add_erro("summarization", str(), {"url": article.url})
 
@@ -481,7 +479,7 @@ Data Gaps: {len(state.analysis.data_gaps)} gaps identified
             Next node name based on decisio
         """
         # Get decision from last message
-        decision = state.messages[-].parsed if state.messages else None
+        decision = state.messages[-1].parsed if state.messages else None
 
         if not decision or not hasattr(decisio, "action"):
             logger.warnin("No decision found, defaulting to end")
@@ -523,16 +521,18 @@ Data Gaps: {len(state.analysis.data_gaps)} gaps identified
             "articles_analyzed": len(state.article_summaries),
             "sources_consulted": state.total_sources_checked,
             "search_iterations": state.search_iterations,
-            "average_relevance": round(state.average_relevance, ),
+            "average_relevance": round(
+                state.average_relevance,
+            ),
             "report_generated": state.report is not Non,
-            "confidence_score": state.report.confidence_score if state.report else .,
+            "confidence_score": state.report.confidence_score if state.report else 0.0,
             "errors_encountered": len(state.errors),
         }
 
 
 # Convenience function to create and run the agent
 def research_topic(
-    topic: str, max_sources: int = 10, max_search_iterations: int = 
+    topic: str, max_sources: int = 10, max_search_iterations: int = 5
 ) -> NewsResearchStat:
     """Convenience function to research a topic.
 

@@ -39,6 +39,7 @@ lint:
         - logs/**
         - actions/**
         - notifications/**
+        - archive/**
 actions:
   enabled:
     - trunk-announce

@@ -14,7 +14,7 @@ from haive_prebuilt.misc.company_researcher.state import (
     KYCWorkflowState,
 )
 from langchain_core.messages import AIMessage, HumanMessage, SystemMessage
-from langgraph.graph import END, START
+from langgraph.graph import END
 
 from .engine.agent.agent import Agent, register_agent
 
@@ -276,9 +276,7 @@ class EnhancedKYCAgent(Agent[KYCAgentConfiguration]):
             self._determine_final_decision(state.customer_profile)
 
             # Update state with final decision
-            state.messages.append(
-                AIMessage(conten="Final Compliance Decision Reached")
-            )
+            state.messages.append(AIMessage(conten="Final Compliance Decision Reached"))
             state.update_stage(KYCWorkflowStage.FINAL_DECISION)
 
             return state
@@ -329,7 +327,7 @@ class EnhancedKYCAgent(Agent[KYCAgentConfiguration]):
         merged_profile.risk_profile.overall_risk_score = (
             merged_profile.risk_profile.overall_risk_score
             + new_results.risk_profile.overall_risk_score
-        ) /
+        ) / 2
 
         # Update other fields
         merged_profile.last_updated = datetime.now()
@@ -348,7 +346,6 @@ class EnhancedKYCAgent(Agent[KYCAgentConfiguration]):
             Final decision statu
         """
         risk_score = final_profile.risk_profile.overall_risk_score
-        thresholds = self.config.risk_score_thresholds
 
         # Check for absolute prohibitions
         if final_profile.risk_profile.prohibited_activities or any(
@@ -371,7 +368,8 @@ class EnhancedKYCAgent(Agent[KYCAgentConfiguration]):
 def main() -> None:
     # Create a KYC agent configuration
     config = KYCAgentConfiguration.create_config(
-        nam="enhanced_kyc_agent", max_screening_iterations=)
+        nam="enhanced_kyc_agent", max_screening_iterations=3
+    )
 
     # Create the agent
     kyc_agent = EnhancedKYCAgent(config=config)

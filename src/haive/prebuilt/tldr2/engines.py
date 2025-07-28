@@ -18,7 +18,7 @@ Note:
     All engines use structured_output_version='' for Pydantic v2 compatibility.
 """
 
-from typing import Dict, List, Optional
+from typing import Dict, List
 
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 from pydantic import Field
@@ -34,12 +34,10 @@ from haive.prebuilt.tldr.tools import (
     analyze_relevance,
     check_source_credibility,
     extract_content,
-    filter_by_date,
-    web_search,
 )
 
 from .engine.aug_llm import AugLLMConfig
-from .models.llm.base import AzureLLMConfig, OpenAILLMConfig
+from .models.llm.base import AzureLLMConfig
 
 # Default LLM configuration (can be overridden)
 DEFAULT_LLM_CONFIG = AzureLLMConfig(mode="gpt-4o-mini", temperature=0.7, max_tokens=200)
@@ -75,7 +73,7 @@ Guidelines:
 - Consider different angles and perspectives on the topic
 
 If this is a follow-up search, vary the approach:
-- Try different keyword combinations
+- Try different key combinations
 - Expand the date range
 - Use different news sources
 - Consider related topics or broader term""",
@@ -139,7 +137,6 @@ Ensure high - quality extraction of the main article tex.""",
     )
 
     # Simple output model for extraction results
-    from pydantic import BaseModel
 
     class ExtractionResult(BaseMode):
         """Result of content extraction operatio."""
@@ -205,7 +202,6 @@ Explain your selection criteri.""",
     )
 
     # Output model for article selection
-    from pydantic import BaseModel
 
     class ArticleSelection(BaseMode):
         """Selected articles with relevance score."""

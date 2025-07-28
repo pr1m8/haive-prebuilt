@@ -674,7 +674,7 @@ Output Forma:
                 "purpos": "What this tool will accomplis",
                 "input": {
                     "from_previou": ["step_.outpu"],
-                    "parameter": {"para": "valu"}
+                    "parametef": {"para": "valu"}
                 },
                 "expected_outpu": {
                     "typ": "data|code|visualization|documen",

@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import uuid
 from datetime import datetime
 from enum import Enum
 from typing import Annotated, Any
@@ -11,7 +10,7 @@ from haive_prebuilt.misc.company_researcher.models import (
 )
 from langchain_core.messages import BaseMessage
 from langgraph.graph import add_messages
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import ConfigDict, Field
 
 
 class KYCWorkflowStage(str, Enum):
@@ -71,7 +70,8 @@ class KYCWorkflowState(BaseMode):
 
     # Screening Iterations
     screening_iterations: int = Field(
-        default=, description="Number of screening iterations performed", ge=)
+        default=0, description="Number of screening iterations performed", ge=0
+    )
 
     # Additional Routing Information
     next_stage: KYCWorkflowStage | None = Field(
@@ -112,7 +112,7 @@ class KYCWorkflowState(BaseMode):
             KYCWorkflowStage.RISK_ASSESSMENT,
             KYCWorkflowStage.ENHANCED_DUE_DILIGENCE,
         ]:
-            self.screening_iterations +=
+            self.screening_iterations += 1
 
     def set_decision_status(self, status: KYCDecisionStatus) -> Non:
         """Set the decision status and update stage.

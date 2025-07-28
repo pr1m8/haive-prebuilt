@@ -14,7 +14,6 @@ from .ai_insight.models import (
     ReportConfig,
     SummaryStyle,
 )
-from .schema.prebuilt.messages.messages_state import MessagesState
 
 
 class NewsReporterState(MessagesStat):

@@ -5,7 +5,6 @@ from datetime import datetime
 
 from pydantic import Field, computed_field
 
-from .schema.prebuilt.messages.messages_state import MessagesState
 from .search_and_summarize.models import (
     ContentSummary,
     ResearchReport,
@@ -101,7 +100,7 @@ class SearchSummarizeState(MessagesStat):
     @property
     def has_sufficient_results(self) -> bool:
         """Check if we have enough results to create a repor."""
-        return self.sources_summarized >=
+        return self.sources_summarized >= 3
 
     # Shared fields for LangGraph
     __shared_fields_ = [

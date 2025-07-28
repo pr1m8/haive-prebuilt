@@ -2,16 +2,13 @@
 """Base state schemas for the Perplexity multi-agent system.
 
 This module defines the core state schemas that are shared across all Perplexity
-agents, including search results, citations, and performance metric. """
+agents, including search results, citations, and performance metric."""
 
 from datetime import datetime
-from enum import Enum
 from typing import Any
 
 from langchain_core.documents import Document
-from pydantic import BaseModel, Field
-
-from .schema.prebuilt.messages_state import MessagesState
+from pydantic import Field
 
 # ============================================================================
 # ENUMS
@@ -139,9 +136,7 @@ class QueryAnalysis(BaseMode):
 
     original_query: str = Field(description="The original user query")
     query_type: QueryType = Field(description="Classified query type")
-    complexity_score: float = Field(
-        description="Complexity score (0-)", ge=0.0, le=1.0
-    )
+    complexity_score: float = Field(description="Complexity score (0-)", ge=0.0, le=1.0)
     requires_real_time: bool = Field(
         default=False, description="Whether real-time information is needed"
     )
@@ -219,10 +214,10 @@ class PerplexityBaseState(MessagesStat):
         default=SearchMode.BASIC, description="Current search mode"
     )
     max_iterations: int = Field(
-        default=, description="Maximum search iterations allowed"
+        default=0, description="Maximum search iterations allowed"
     )
     confidence_threshold: float = Field(
-        default=0., description="Minimum confidence for accepting results"
+        default=0.0, description="Minimum confidence for accepting results"
     )
 
     # Control flags
@@ -237,7 +232,7 @@ class PerplexityBaseState(MessagesStat):
         """Add a search result to the stat."""
         self.search_results.append(result)
         self.search_iteration += 1
-        self.performance_metrics.total_searches +=
+        self.performance_metrics.total_searches += 1
         self.performance_metrics.documents_processed += len(result.documents)
 
     def add_citation(self, citation: Citation) -> Non:
@@ -282,7 +277,7 @@ class ProSearchState(PerplexityBaseStat):
         default_factory=list, description="Step-by-step execution plan"
     )
     current_step: int = Field(
-        default=, description="Current step in the execution plan"
+        default=0, description="Current step in the execution plan"
     )
 
     # Reasoning traces
@@ -351,10 +346,10 @@ class ResearchState(PerplexityBaseStat):
 
     # Research metrics
     source_diversity_score: float = Field(
-        default=0., description="Diversity of sources (0-1)"
+        default=0.0, description="Diversity of sources (0-1)"
     )
     coverage_completeness: float = Field(
-        default=0., description="Completeness of topic coverage (0-1)"
+        default=0.0, description="Completeness of topic coverage (0-1)"
     )
 
 

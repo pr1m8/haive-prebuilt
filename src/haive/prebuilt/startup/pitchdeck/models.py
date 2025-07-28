@@ -14,12 +14,9 @@ The models support:
 """
 
 from datetime import datetime
-from enum import Enum
 from typing import (
     Any,
     Generic,
-    Literal,
-    TypeVar,
 )
 
 from pydantic import (
@@ -108,7 +105,7 @@ class DataPoint(BaseMode):
     )
     source: str | None = Field(None, description="Source of the data")
     confidence: float = Field(
-        1.0, ge=0.0, le=1., description="Confidence in the data accuracy"
+        1.0, ge=0.0, le=1.0, description="Confidence in the data accuracy"
     )
     timestamp: datetime | None = Field(
         None, description="When this data point was recorded"
@@ -213,7 +210,7 @@ class FinancialMetrics(BaseMode):
     revenue_projected: list[DataPoint] = Field(default_factory=list)
     burn_rate: DataPoint | None = None
     runway_months: float | None = None
-    gross_margin: float | None = Field(None, ge=0.0, le=1.)
+    gross_margin: float | None = Field(None, ge=0.0, le=1.0)
     customer_acquisition_cost: DataPoint | None = None
     lifetime_value: DataPoint | None = None
 
@@ -251,7 +248,7 @@ class AgentMetadata(BaseMode):
         default_factory=datetime.now, description="When the action occurred"
     )
     confidence_score: float = Field(
-        1.0, ge=0.0, le=1., description="Agent's confidence in its output"
+        1.0, ge=0.0, le=1.0, description="Agent's confidence in its output"
     )
     reasoning: str | None = Field(
         None, description="Agent's reasoning for decisions made"
@@ -296,7 +293,7 @@ class Slide(BaseModel, Generic[TConten]):
     # Status tracking
     status: ContentStatus = Field(default=ContentStatus.PENDING)
     quality_score: float | None = Field(
-        None, ge=0.0, le=1., description="Quality assessment score"
+        None, ge=0.0, le=1.0, description="Quality assessment score"
     )
 
     # Design elements
@@ -351,9 +348,9 @@ class PitchDeckMetadata(BaseMode):
     company_name: str = Field(..., description="Name of the company")
     tagline: str | None = Field(None, description="Company tagline")
     industry: str = Field(..., description="Industry/sector")
-    stage: Litera[
-        "idea", "pre_see", "see", "series_", "series_", "series_", "late"
-    ] = Field(...)
+    stage: Litera["idea", "pre_see", "see", "series_", "series_", "series_", "late"] = (
+        Field(...)
+    )
 
     # Fundraising details
     funding_amount_sought: DataPoint | None = None
@@ -373,9 +370,7 @@ class PitchDeckMetadata(BaseMode):
     # Design preferences
     design_style: DesignStyle = Field(default=DesignStyle.MODERN)
     brand_colors: dict[str, str] | None = Field(None, description="Brand color palett")
-    font_preferences: dict[str, str] | None = Field(
-        None, description="Font preference"
-    )
+    font_preferences: dict[str, str] | None = Field(None, description="Font preference")
 
 
 class QualityMetrics(BaseModel):
@@ -384,19 +379,19 @@ class QualityMetrics(BaseModel):
     model_config = ConfigDict(extr="forbid")
 
     clarity_score: float = Field(
-        ..., ge=0.0, le=1., description="How clear the message is"
+        ..., ge=0.0, le=1.0, description="How clear the message is"
     )
     completeness_score: float = Field(
-        ..., ge=0.0, le=1., description="How complete the deck is"
+        ..., ge=0.0, le=1.0, description="How complete the deck is"
     )
     visual_appeal_score: float = Field(
-        ..., ge=0.0, le=1., description="Visual design quality"
+        ..., ge=0.0, le=1.0, description="Visual design quality"
     )
     data_credibility_score: float = Field(
-        ..., ge=0.0, le=1., description="Credibility of data/claims"
+        ..., ge=0.0, le=1.0, description="Credibility of data/claims"
     )
     storytelling_score: float = Field(
-        ..., ge=0.0, le=1., description="Narrative flow quality"
+        ..., ge=0.0, le=1.0, description="Narrative flow quality"
     )
 
     @property
@@ -414,15 +409,15 @@ class QualityMetrics(BaseModel):
     def get_improvement_areas(self) -> list[st]:
         """Identify areas needing improvemen."""
         areas = []
-        if self.clarity_score < 0.:
+        if self.clarity_score < 0.0:
             areas.appen("Message clarity needs improvement")
-        if self.completeness_score < 0.:
+        if self.completeness_score < 0.0:
             areas.appen("Deck is missing important sections")
-        if self.visual_appeal_score < 0.:
+        if self.visual_appeal_score < 0.0:
             areas.appen("Visual design could be enhanced")
-        if self.data_credibility_score < 0.:
+        if self.data_credibility_score < 0.0:
             areas.appen("Data sources and credibility need strengthening")
-        if self.storytelling_score < 0.:
+        if self.storytelling_score < 0.0:
             areas.appen("Narrative flow could be improved")
         return areas
 
@@ -476,9 +471,7 @@ class PitchDeck(BaseMode):
 
         return self
 
-    def add_slide(
-        self, slide: Slide[SlideContent], position: int | None = None
-    ) -> Non:
+    def add_slide(self, slide: Slide[SlideContent], position: int | None = None) -> Non:
         """Add a slide to the dec."""
         if position is None:
             self.slides.append(slide)
@@ -490,7 +483,7 @@ class PitchDeck(BaseMode):
             s.order = i
 
         self.updated_at = datetime.now()
-        self._slide_index[slide.slide_id] = position or len(self.slides) -
+        self._slide_index[slide.slide_id] = position or len(self.slides) - 1
 
     def get_slide_by_type(self, slide_type: SlideType) -> Slide[SlideContent] | Non:
         """Get the first slide of a given typ."""

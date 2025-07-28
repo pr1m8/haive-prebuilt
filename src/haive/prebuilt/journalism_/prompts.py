@@ -178,23 +178,7 @@ Analyze tone and bias by examining:
 
 TONE INDICATORS:
 - Word choice (neutral vs. loaded language)
-- Sentence structure (active vs. passive voice)
-- Narrative framing
-- Emotional appeals
-- Overall sentiment
-
-BIAS TYPES TO DETECT:
-- Selection bias: What's included/excluded?
-- Framing bias: How are issues presented?
-- Confirmation bias: Cherry-picked evidence?
-- Source bias: Whose voices are heard?
-- Language bias: Loaded terms, dog whistles?
-
-Provide:
-1. Overall tone classification
-2. Sentiment score (-1 to 1)
-3. Specific examples with explanations
-4. Detected biases with severity
+- Sentence structure (active vs. pass
 5. Objectivity score (0-1)""",
         ),
         MessagesPlaceholder(variable_nam="messages"),

@@ -268,7 +268,7 @@ class NewsResearchState(MessagesState):
             message: Human-readable error message
             details: Additional error contex
         """
-        error_entr = {
+        {
             "type": error_typ,
             "message": messag,
             "timestamp": datetime.now().isoforma(),

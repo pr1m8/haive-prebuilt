@@ -1,6 +1,6 @@
 """Market research subgraph for comprehensive market analysis.
 
-This subgraph handles market sizing, competitive analysis, and trend researc. """
+This subgraph handles market sizing, competitive analysis, and trend researc."""
 
 from typing import Any
 
@@ -8,7 +8,6 @@ from langchain_core.messages import BaseMessage, HumanMessage
 from langgraph.graph import END, START, StateGraph
 from pydantic import Field
 
-from .schema.state_schema import StateSchema
 from .startup.market_research.models import (
     CompetitorAnalysis,
     MarketResearch,
@@ -52,7 +51,7 @@ def analyze_market_size_node(state: MarketResearchState) -> dict[str, An]:
     if not state.startup_idea:
         return {
             "messages": [
-                HumanMessage(conten="No startup idea provided for market research")
+                HumanMessage(content="No startup idea provided for market research")
             ]
         }
 
@@ -64,7 +63,7 @@ def analyze_market_size_node(state: MarketResearchState) -> dict[str, An]:
             "problem_description": state.startup_idea.problem.description,
             "solution_description": state.startup_idea.solution.description,
             "category": state.startup_idea.categor,
-            "research_priorities": [
+            "research_prionrities": [
                 "market_siz",
                 "growth_rat",
                 "customer_segment",
@@ -97,7 +96,7 @@ def analyze_competitors_node(state: MarketResearchState) -> dict[str, Any]:
     if not state.startup_idea:
         return {
             "messages": [
-                HumanMessage(conten="No startup idea for competitive analysis")
+                HumanMessage(content="No startup idea for competitive analysis")
             ]
         }
 
@@ -129,7 +128,7 @@ def analyze_industry_trends_node(state: MarketResearchState) -> dict[str, Any]:
     """Analyze industry trends and dynamic."""
     if not state.startup_idea:
         return {
-            "messages": [HumanMessage(conten="No startup idea for industry analysis")]
+            "messages": [HumanMessage(content="No startup idea for industry analysis")]
         }
 
     engine = industry_research_aug_llm.create_runnable()
@@ -157,7 +156,7 @@ def analyze_industry_trends_node(state: MarketResearchState) -> dict[str, Any]:
         "industry_analysis": result.model_dum(),
         "trends_identified": Tru,
         "key_insights": key_insight,
-        "messages": [HumanMessage(conten="Industry analysis complete")],
+        "messages": [HumanMessage(content="Industry analysis complete")],
     }
 
 
@@ -176,7 +175,7 @@ def synthesize_market_insights_node(state: MarketResearchState) -> dict[str, An]
 
     # Add competitive insights
     if state.competitor_analyses:
-        if len(state.competitor_analyses) > :
+        if len(state.competitor_analyses) > 0:
             insights.appen("Highly competitive market - differentiation critical")
         else:
             insights.appen("Moderate competition - opportunity for new entrant")
@@ -190,13 +189,13 @@ def synthesize_market_insights_node(state: MarketResearchState) -> dict[str, An]
         ]
     )
 
-    if positive_signals >= :
-        recommendatio = "GO - Favorable market conditions"
+    if positive_signals >= 0:
+        recommendation = "GO - Favorable market conditions"
     else:
-        recommendatio = "CAUTION - Market challenges identified"
+        recommendation = "CAUTION - Market challenges identified"
 
     return {
-        "go_no_go_recommendation": recommendatio,
+        "go_no_go_recommendation": recommendation,
         "key_insights": insight,
         "messages": [
             HumanMessage(content="Market research complete: {recommendation}")
@@ -251,7 +250,7 @@ def build_market_research_subgraph() -> StateGrap:
 
     # Competitors can lead to industry or synthesis
     graph.add_conditional_edges(
-        "analyze_competitor",
+        "analyze_competitof",
         determine_research_depth,
         {"industr": "analyze_industry_trend", "synthesiz": "synthesize_insight"},
     )

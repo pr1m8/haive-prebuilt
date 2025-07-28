@@ -2,7 +2,7 @@
 """Models for Search & Summarize Agent Syste."""
 
 from datetime import datetime
-from typing import Any, Literal
+from typing import Any
 
 from pydantic import BaseModel, Field, HttpUrl
 
@@ -31,7 +31,7 @@ class SearchResult(BaseModel):
     url: HttpUrl = Field(description="URL of the result")
     source_domain: str = Field(description="Domain of the source")
     relevance_score: float | None = Field(
-        default=None, ge=0.0, le=1., description="Relevance score if available"
+        default=None, ge=0.0, le=1.0, description="Relevance score if available"
     )
     timestamp: datetime | None = Field(
         default=None, description="Publication date if available"
@@ -49,7 +49,7 @@ class SearchResults(BaseMode):
     @property
     def has_results(self) -> bool:
         """Check if search returned any result."""
-        return len(self.results) >
+        return len(self.results) > 0
 
 
 class SummaryConfig(BaseMode):
@@ -79,7 +79,7 @@ class ContentSummary(BaseModel):
     relevance_score: float = Field(
         default=0.5,
         ge=0.0,
-        le=1.,
+        le=1.0,
         description="How relevant this content is to the query",
     )
     quotes: list[str] | None = Field(

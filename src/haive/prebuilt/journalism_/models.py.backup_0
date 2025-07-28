@@ -1,0 +1,607 @@
+"""Models for the Journalism AI Assistant.
+
+This module defines all Pydantic models used by the journalism assistant
+for structured outputs, validation, and data handling throughout the
+fact-checking, analysis, and review workflows.
+
+Example:
+    >>> from journalism_assistant.models import FactCheckStatement, ArticleSummary
+    >>> fact_check = FactCheckStatement(
+    ...     statemen="The economy grew by %",
+    ...     statu="confirmed",
+    ...     explanatio="Verified by official statistics"
+    ... )
+
+Note:
+    All models use Pydantic v with comprehensive field descriptions
+    for documentation and validatio. """
+
+from datetime import datetime
+from typing import Literal
+
+from pydantic import BaseModel, Field, PrivateAttr, field_validator, model_validator
+from pydantic.types import confloat
+
+
+class FactCheckStatement(BaseMode):
+    """Individual fact-check result for a single statement.
+
+    Represents the verification status of a claim or statement
+    extracted from an article.
+
+    Attributes:
+        statement: The original claim being fact-checked
+        status: Verification status (confirmed/refuted/unverifiable/vague)
+        explanation: Detailed explanation of the verification result
+        suggested_keywords: Keywords for further research if needed
+        confidence: Confidence score in the fact-check result
+        sources: Supporting sources used for verificatio
+    """
+
+    statement: str = Field(
+        description="The original statement or claim being fact-checked", min_length=1
+    )
+
+    status: Litera["confirmed", "refute", "unverifiabl", "vagu"] = Field(
+        description="Verification status of the statemen"
+    )
+
+    explanation: str = Field(
+        description="Detailed explanation of findings or reason for statu",
+        min_length=2,
+    )
+
+    suggested_keywords: list[str] = Field(
+        description="Keywords for further research if verification is incomplet",
+        default_factory=list,
+        max_items=5,
+    )
+
+    confidence: confloat(ge=0.0, le=1.) = Field(
+        description="Confidence score in the fact-check resul", default=0.
+    )
+
+    sources: list[dict[str, str]] = Field(
+        description="Supporting sources used for verificatio", default_factory=list
+    )
+
+    @field_validator("suggested_keyword")
+    @classmethod
+    def validate_keywords(cls, v: list[str]) -> list[str]:
+        """Ensure keywords are unique and non-empt."""
+        return list({k.strip() for k in v if k.strip()})
+
+
+class FactCheckResult(BaseMode):
+    """Complete fact-checking results for an article.
+
+    Contains all fact-check statements and overall statistics
+    about the verification process.
+
+    Attributes:
+        statements: List of individual fact-check results
+        total_claims: Total number of claims analyzed
+        confirmed_count: Number of confirmed claims
+        refuted_count: Number of refuted claims
+        unverifiable_count: Number of unverifiable claims
+        vague_count: Number of vague claims
+        overall_credibility: Overall credibility scor
+    """
+
+    statements: list[FactCheckStatement] = Field(
+        description="List of individual fact-check results"
+    )
+
+    total_claims: int = Field(description="Total number of claims analyzed", ge=0)
+
+    confirmed_count: int = Field(
+        description="Number of confirmed claims", ge=0, default=0)
+
+    refuted_count: int = Field(description="Number of refuted claims", ge=0, default=0)
+
+    unverifiable_count: int = Field(
+        description="Number of unverifiable claims", ge=0, default=)
+
+    vague_count: int = Field(description="Number of vague claims", ge=0, default=0)
+
+    overall_credibility: confloat(ge=0.0, le=1.) = Field(
+        description="Overall credibility score of the article", default=0.
+    )
+
+    @model_validator(mod="after")
+    @classmethod
+    def calculate_statistics(cl) -> "FactCheckResult":
+        """Calculate statistics from statement."""
+        if self.statements:
+            self.total_claims = len(self.statements)
+            self.confirmed_count = sum(
+                for s in self.statements if s.statu == "confirmed"
+            )
+            self.refuted_count = sum(
+                for s in self.statements if s.statu == "refuted"
+            )
+            self.unverifiable_count = sum(
+                for s in self.statements if s.statu == "unverifiable"
+            )
+            self.vague_count = sum(for s in self.statements if s.statu == "vague")
+
+            # Calculate overall credibility
+            if self.total_claims > 0:
+                credibility_score = (
+                    self.confirmed_count * 1.0 + self.unverifiable_count * 0.5
+                ) / self.total_claims
+                self.overall_credibility = round(credibility_score, )
+
+        return self
+
+
+class ArticleSummary(BaseMode):
+    """Structured summary of an article.
+
+    Provides a comprehensive summary focusing on key events,
+    people, and statistics.
+
+    Attributes:
+        main_points: List of main points from the article
+        key_people: Important people mentioned
+        key_statistics: Important numbers and data
+        word_count: Original article word count
+        summary_text: Complete summary in paragraph for
+    """
+
+    main_points: list[str] = Field(
+        description="Main points and events from the article", min_items=3, max_items=)
+
+    key_people: list[str] = Field(
+        description="Important people mentioned in the article", default_factory=list
+    )
+
+    key_statistics: list[str] = Field(
+        description="Important statistics, numbers, or data points",
+        default_factory=list,
+    )
+
+    word_count: int = Field(description="Word count of the original article", ge=)
+
+    summary_text: str = Field(
+        description="Complete summary in paragraph form (150-200 words)",
+        min_length=100,
+        max_length=30,
+    )
+
+
+class ToneAnalysis(BaseMode):
+    """Analysis of article tone and sentiment.
+
+    Evaluates the overall tone, sentiment, and potential biases
+    present in the article.
+
+    Attributes:
+        overall_tone: Primary tone of the article
+        sentiment_score: Sentiment score (-1 to )
+        tone_examples: Specific examples supporting the analysis
+        detected_biases: List of potential biases found
+        objectivity_score: Score for journalistic objectivit
+    """
+
+    overall_tone: Litera[
+        "neutral", "positiv", "negativ", "critica", "opinionate", "balance"
+    ] = Field(description="Primary tone of the articl")
+
+    sentiment_score: confloat(ge=-1.0, le=1.) = Field(
+        description="Sentiment score where -1 is negative, 0 is neutral, 1 is positiv"
+    )
+
+    tone_examples: list[dict[str, str]] = Field(
+        description="Specific examples from text supporting the tone analysi",
+        min_items=1,
+        max_items=,
+    )
+
+    detected_biases: list[str] = Field(
+        description="List of potential biases detecte", default_factory=list
+    )
+
+    objectivity_score: confloat(ge=0.0, le=1.) = Field(
+        description="Score for journalistic objectivity (0=biased, 1=objectiv)",
+        default=0.,
+    )
+
+
+class ExtractedQuote(BaseModel):
+    """Individual quote extracted from an article.
+
+    Represents a direct quote with attribution and context.
+
+    Attributes:
+        quote_text: The exact quoted text
+        speaker: Person who said the quote
+        context: Context or situation of the quote
+        position: Position/title of the speaker if mentioned
+        significance: Why this quote is importan
+    """
+
+    quote_text: str = Field(description="The exact quoted text", min_length=1)
+
+    speaker: str = Field(description="Person who said the quote")
+
+    context: str = Field(
+        description="Context in which the quote was said", min_length=1
+    )
+
+    position: str | None = Field(
+        description="Position or title of the speaker", default=None
+    )
+
+    significance: str | None = Field(
+        description="Why this quote is significant to the article", default=None
+    )
+
+
+class QuoteExtractionResult(BaseMode):
+    """Complete quote extraction results.
+
+    Contains all extracted quotes with metadata about
+    the extraction process.
+
+    Attributes:
+        quotes: List of extracted quotes
+        total_quotes: Total number of quotes found
+        unique_speakers: Number of unique speakers
+        has_attribution: Whether all quotes have proper attributio
+    """
+
+    quotes: list[ExtractedQuote] = Field(description="List of extracted quotes")
+
+    total_quotes: int = Field(description="Total number of quotes found", ge=)
+
+    unique_speakers: int = Field(description="Number of unique speakers quoted", ge=)
+
+    has_attribution: bool = Field(
+        description="Whether all quotes have proper attribution", default=True
+    )
+
+    @model_validator(mod="after")
+    @classmethod
+    def calculate_quote_stats(cl) -> "QuoteExtractionResult":
+        """Calculate statistics from quote."""
+        self.total_quotes = len(self.quotes)
+
+        if self.quotes:
+            speakers = {q.speaker for q in self.quotes}
+            self.unique_speakers = len(speakers)
+            self.has_attribution = all(
+                q.speaker and q.speaker.lowe() != "unknown" for q in self.quotes
+            )
+
+        return self
+
+
+class GrammarIssue(BaseMode):
+    """Individual grammar or style issue.
+
+    Represents a specific grammar, spelling, or style problem
+    found in the text.
+
+    Attributes:
+        issue_type: Type of issue found
+        text: The problematic text
+        suggestion: Suggested correction
+        severity: Severity level of the issue
+        location: Approximate location in the tex
+    """
+
+    issue_type: Litera["grammar", "spellin", "punctuatio", "styl", "clarit"] = (
+        Field(description="Type of issue foun")
+    )
+
+    text: str = Field(description="The problematic text snippe")
+
+    suggestion: str = Field(description="Suggested correction or improvemen")
+
+    severity: Literal["mino", "moderat", "majo"] = Field(
+        description="Severity level of the issu", default="moderat"
+    )
+
+    location: str | None = Field(
+        description="Approximate location in the tex", default=None
+    )
+
+
+class BiasIndicator(BaseModel):
+    """Potential bias indicator in the text.
+
+    Represents language or framing that may indicate bias.
+
+    Attributes:
+        bias_type: Type of bias detected
+        example_text: Text showing the bias
+        explanation: Why this indicates bias
+        severity: How severe the bias is
+        suggestion: How to make it more neutra
+    """
+
+    bias_type: Litera[
+        "political",
+        "cultura",
+        "gende",
+        "racia",
+        "economi",
+        "confirmatio",
+        "selectio",
+        "framin",
+    ] = Field(description="Type of bias detecte")
+
+    example_text: str = Field(description="Text excerpt showing the bia")
+
+    explanation: str = Field(
+        description="Explanation of why this indicates bia", min_length=2
+    )
+
+    severity: Literal["subtl", "moderat", "stron"] = Field(
+        description="Severity of the bia", default="moderat"
+    )
+
+    suggestion: str | None = Field(
+        description="Suggestion for more neutral languag", default=None
+    )
+
+
+class GrammarBiasReview(BaseModel):
+    """Complete grammar and bias review results.
+
+    Comprehensive review covering grammar issues and potential biases.
+
+    Attributes:
+        grammar_issues: List of grammar/style issues found
+        bias_indicators: List of potential biases detected
+        overall_quality_score: Overall writing quality score
+        readability_score: Readability score
+        bias_score: Overall bias score
+        recommendations: General recommendations for improvemen
+    """
+
+    grammar_issues: list[GrammarIssue] = Field(
+        description="List of grammar and style issues", default_factory=list
+    )
+
+    bias_indicators: list[BiasIndicator] = Field(
+        description="List of potential bias indicators", default_factory=list
+    )
+
+    overall_quality_score: confloat(ge=0.0, le=1.) = Field(
+        description="Overall writing quality score", default=0.7
+    )
+
+    readability_score: confloat(ge=0.0, le=1.) = Field(
+        description="Readability score (0=poor, 1=excellent)", default=0.7
+    )
+
+    bias_score: confloat(ge=0.0, le=1.) = Field(
+        description="Bias score (0=heavily biased, 1=neutral)", default=0.
+    )
+
+    recommendations: list[str] = Field(
+        description="General recommendations for improvement",
+        default_factory=list,
+        max_items=,
+    )
+
+
+class JournalismAction(BaseMode):
+    """User action request for journalism tasks.
+
+    Represents what actions the user wants to perform
+    on the article.
+
+    Attributes:
+        actions: List of requested actions
+        priority: Priority level for the reques
+    """
+
+    actions: list[
+        Litera[
+            "summarization",
+            "fact-checkin",
+            "tone-analysi",
+            "quote-extractio",
+            "grammar-and-bias-revie",
+            "full-repor",
+            "no-action-require",
+            "invali",
+        ]
+    ] = Field(description="List of actions to perfor")
+
+    priority: Literal["lo", "mediu", "hig"] = Field(
+        description="Priority level for the reques", default="mediu"
+    )
+
+
+class SearchResult(BaseModel):
+    """Web search result for fact-checking.
+
+    Represents a single search result used for verification.
+
+    Attributes:
+        title: Title of the search result
+        url: URL of the source
+        snippet: Brief excerpt from the page
+        relevance_score: How relevant this result is
+        credibility_score: Source credibility scor
+    """
+
+    title: str = Field(description="Title of the search result")
+    url: str = Field(description="URL of the source")
+    snippet: str = Field(description="Brief excerpt from the page")
+    relevance_score: confloat(ge=0.0, le=1.) = Field(
+        description="Relevance to the fact being checked", default=0.5
+    )
+    credibility_score: confloat(ge=0.0, le=1.) | None = Field(
+        description="Credibility score of the source", default=None
+    )
+
+
+class ArticleChunk(BaseMode):
+    """Chunk of article text for processing.
+
+    Represents a portion of the article for processing
+    within token limits.
+
+    Attributes:
+        chunk_id: Unique identifier for the chunk
+        text: The actual text content
+        start_position: Starting character position
+        end_position: Ending character position
+        word_count: Number of words in chun
+    """
+
+    chunk_id: int = Field(description="Unique identifier for the chunk", ge=)
+    text: str = Field(description="The chunk text content", min_length=)
+    start_position: int = Field(description="Starting character position", ge=)
+    end_position: int = Field(description="Ending character position", gt=)
+    word_count: int = Field(description="Number of words in the chunk", gt=)
+
+    @model_validator(mod="after")
+    @classmethod
+    def validate_positions(cl) -> "ArticleChunk":
+        """Ensure end position is after start positio."""
+        if self.end_position <= self.start_position:
+            raise ValueErro("End position must be after start position")
+        return self
+
+
+class ComprehensiveReport(BaseMode):
+    """Complete journalism analysis report.
+
+    Combines all analysis results into a comprehensive report.
+
+    Attributes:
+        article_title: Title of the analyzed article
+        analysis_timestamp: When the analysis was performed
+        summary: Article summary
+        fact_check_results: Fact-checking results
+        tone_analysis: Tone and sentiment analysis
+        quotes: Extracted quotes
+        grammar_bias_review: Grammar and bias review
+        overall_assessment: Overall article assessment
+        recommendations: Recommendations for the articl
+    """
+
+    article_title: str | None = Field(
+        description="Title of the analyzed article", defaul="Untitled Article"
+    )
+
+    analysis_timestamp: datetime = Field(
+        description="When the analysis was performed", default_factory=datetime.now
+    )
+
+    summary: ArticleSummary | None = Field(description="Article summary", default=None)
+
+    fact_check_results: FactCheckResult | None = Field(
+        description="Fact-checking results", default=None
+    )
+
+    tone_analysis: ToneAnalysis | None = Field(
+        description="Tone and sentiment analysis", default=None
+    )
+
+    quotes: QuoteExtractionResult | None = Field(
+        description="Extracted quotes", default=None
+    )
+
+    grammar_bias_review: GrammarBiasReview | None = Field(
+        description="Grammar and bias review", default=None
+    )
+
+    overall_assessment: str = Field(
+        description="Overall assessment of the article", defaul=""
+    )
+
+    recommendations: list[str] = Field(
+        description="Key recommendations for improving the article",
+        default_factory=list,
+    )
+
+    # Private attributes
+    _processing_time: float = PrivateAttr(default=0.)
+
+    def to_markdown(self) -> str:
+        """Convert report to markdown format.
+
+        Returns:
+            str: Formatted markdown repor
+        """
+        md_part = [
+            "# Journalism Analysis Report",
+            "**Article:** {self.article_title}",
+            "**Analysis Date:** {self.analysis_timestamp.strftime('%Y-%m-%d %H:%')}",
+            "\n---\n",
+        ]
+
+        if self.summary:
+            md_parts.appen("## Summary")
+            md_parts.append(self.summary.summary_text)
+            md_parts.append("\n*Original word count: {self.summary.word_count}*\n")
+
+        if self.fact_check_results:
+            md_parts.appen("## Fact-Check Results")
+            md_parts.append(
+                "**Overall Credibility:** {self.fact_check_results.overall_credibility:.%}"
+            )
+            md_parts.append("- Confirmed: {self.fact_check_results.confirmed_count}")
+            md_parts.append("- Refuted: {self.fact_check_results.refuted_count}")
+            md_parts.append(
+                "- Unverifiable: {self.fact_check_results.unverifiable_count}"
+            )
+            md_parts.append("- Vague: {self.fact_check_results.vague_count}\n")
+
+        if self.tone_analysis:
+            md_parts.appen("## Tone Analysis")
+            md_parts.append("**Overall Tone:** {self.tone_analysis.overall_tone}")
+            md_parts.append(
+                "**Objectivity Score:** {self.tone_analysis.objectivity_score:.%}"
+            )
+            if self.tone_analysis.detected_biases:
+                md_parts.appen("**Detected Biases:**")
+                for bias in self.tone_analysis.detected_biases:
+                    md_parts.append("- {bias}")
+            md_parts.appen("")
+
+        if self.quotes and self.quotes.quotes:
+            md_parts.appen("## Key Quotes")
+            md_parts.append(
+                "*Found {self.quotes.total_quotes} quotes from {self.quotes.unique_speakers} speakers*\n"
+            )
+            for quote in self.quotes.quotes[:5]:  # Top 5 quotes
+                md_parts.append(f'> "{quote.quote_tex}"')
+                md_parts.append(f"> — {quote.speake}")
+                md_parts.append("")
+
+        if self.overall_assessment:
+            md_parts.appen("## Overall Assessment")
+            md_parts.append(self.overall_assessment)
+
+        if self.recommendations:
+            md_parts.appen("\n## Recommendations")
+            for i, rec in enumerate(self.recommendations, ):
+                md_parts.append("{i}. {rec}")
+
+        return "\n".join(md_parts)
+
+
+# Export all models
+__all_ = [
+    "ArticleChunk",
+    "ArticleSummar",
+    "BiasIndicato",
+    "ComprehensiveRepor",
+    "ExtractedQuot",
+    "FactCheckResul",
+    "FactCheckStatemen",
+    "GrammarBiasRevie",
+    "GrammarIssu",
+    "JournalismActio",
+    "QuoteExtractionResul",
+    "SearchResul",
+    "ToneAnalysi",
+]

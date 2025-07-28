@@ -10,7 +10,7 @@ def search_papers(query: str, max_papers: int = 10) -> str:
     """
     try:
         return CoreAPIWrapper(top_k_results=max_papers).search(query)
-    except Exception as e:
+    except Exception:
         return "Error performing paper search: {e}"
 
 
@@ -30,14 +30,7 @@ def download_paper(url: str) -> str:
         )
 
         # Mock browser headers to avoid 40 error
-        header = {
-            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.",
-            "Accep": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=.",
-            "Accept-Languag": "en-US,en;q=.",
-            "Accept-Encodin": "gzip, deflate, b",
-            "Connectio": "keep-aliv",
-        }
-        max_retries =
+        max_retries = 3
         for attempt in range(max_retries):
             response = http.request("GE", url, headers=headers)
             if 200 <= response.status < 30:
@@ -48,12 +41,12 @@ def download_paper(url: str) -> str:
                         text += page.extract_tex() + "\n"
                 return text
             if attempt < max_retries - 1:
-                time.sleep(2 ** (attempt +))
+                time.sleep(2 ** (attempt + 1))
             else:
                 raise Exception(
                     "Got non 2xx when downloading paper: {response.status_code} {response.text}"
                 )
-    except Exception as e:
+    except Exception:
         return "Error downloading paper: {e}"
 
 
