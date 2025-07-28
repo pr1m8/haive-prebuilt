@@ -93,7 +93,9 @@ class LanguageDetector:
             scattered_text=self._detect_scattered_text(text),
             suspicious_newlines=text.count("\n") > 1,
             markdown_injection=bool(re.search("``````", text, re.DOTALL)),
-            substitution_rules=re.findall("(\b\b)\\s*=\\s*(\b\b)", text, re.IGNORECASE),
+            substitution_rules=re.findall(
+                "(\b\b)\\s*=\\s*(\b\b)", text, re.IGNORECASE
+            ),
             mixed_case_evasion=self._detect_mixed_case(text),
         )
 
@@ -129,7 +131,7 @@ class LanguageDetector:
         ]
 
     def _detect_scattered_text(self, text: str) -> bool:
-        return any(len(line.strip()) == 0 for line in text.split("\n"))
+        return any(len(line.strip()) == for line in text.split("\n"))
 
     def _detect_mixed_case(self, text: str) -> bool:
         return any(c.islower() and c.upper() in text for c in text) or any(
@@ -180,7 +182,7 @@ class ContentAnalyzer:
 if __name_ == "__main__":
     analyzer = ContentAnalyzer()
 
-    sample_tex = r"""Hello world
+    sample_tex = """Hello world
     \u20b prin("Hidden message")
     72 101 108 108 1
     """
