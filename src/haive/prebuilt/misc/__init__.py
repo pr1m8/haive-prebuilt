@@ -12,6 +12,7 @@ Example:
         # TODO: Add exampl
 
 """
+
 """Agent Utilities Module for Haive Agents.
 
 This module provides essential structured models and prompts for common agent tasks
@@ -100,31 +101,26 @@ __all__ = [
     "InfluenceLeve",
     "InterestLeve",
     "CommunicationFrequenc",
-
     # Goal Decomposition Models
     "SubGoa",
     "GoalDecompositio",
-
     # Decision Analysis Models
     "DecisionCriteri",
     "DecisionOptio",
     "DecisionAnalysi",
-
     # Resource Planning Models
     "Resourc",
     "ResourceRequiremen",
     "ResourcePla",
-
     # Quality Assessment Models
     "QualityMetri",
     "QualityIssu",
     "QualityAssessmen",
-
     # Workflow Optimization Models
     "ProcessSte",
     "ProcessBottlenec",
     "WorkflowOptimizatio",
-
     # Communication Planning Models
     "Stakeholde",
     "CommunicationPla",
+]
