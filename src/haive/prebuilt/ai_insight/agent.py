@@ -68,49 +68,49 @@ class NewsReporterAgent(Agen):
 
     # Define engines
     engines: dict[str, AugLLMConfig] = Field(
-        default_factory=lambd: {
+        default_factory=lambda: {
             "searcher": AugLLMConfig(
                 nam="searcher",
                 tools=[search_news, filter_articles_by_relevance],
-                temperature=.,
+                temperature=0.7,
             ),
             "summarizer": AugLLMConfig(
                 nam="summarizer",
                 structured_output_model=ArticleSummary,
                 structured_output_versio="v",
                 prompt_template=summarization_prompt,
-                temperature=0.,
+                temperature=0.0,
             ),
             "categorizer": AugLLMConfig(
                 nam="categorizer",
                 structured_output_model=list[NewsCategory],
                 structured_output_versio="v",
                 prompt_template=categorization_prompt,
-                temperature=0.,
+                temperature=0.0,
             ),
             "trend_analyzer": AugLLMConfig(
                 nam="trend_analyzer",
                 structured_output_model=list[str],
                 structured_output_versio="v",
                 prompt_template=trend_analysis_prompt,
-                temperature=0.,
+                temperature=0.0,
             ),
             "spotlight_selector": AugLLMConfig(
                 nam="spotlight_selector",
                 structured_output_model=ArticleSummary,
                 structured_output_versio="v",
                 prompt_template=spotlight_selection_prompt,
-                temperature=0.,
+                temperature=0.0,
             ),
             "report_generator": AugLLMConfig(
                 nam="report_generator",
                 structured_output_model=NewsReport,
                 structured_output_versio="v",
                 prompt_template=report_generation_prompt,
-                temperature=0.,
+                temperature=0.0,
             ),
             "publisher": AugLLMConfig(
-                nam="publisher", tools=[save_report_to_file], temperature=0.
+                nam="publisher", tools=[save_report_to_file], temperature=0.0
             ),
         }
     )
@@ -179,7 +179,7 @@ class NewsReporterAgent(Agen):
             lambda s: (
                 "select_spotligh"
                 if s.report_config.include_spotlight
-                else "generate_repor"
+                else "generate_repof"
             ),
             {
                 "select_spotligh": "select_spotligh",
@@ -208,9 +208,7 @@ class NewsReporterAgent(Agen):
         )
 
         # Publish node
-        publish_node = EngineNodeConfig(
-            name="publis", engine=self.engines["publishe"]
-        )
+        publish_node = EngineNodeConfig(name="publis", engine=self.engines["publishe"])
         graph.add_node("publis", publish_node)
         graph.add_edge("publis", END)
 
@@ -233,16 +231,14 @@ class NewsReporterAgent(Agen):
             metadata=ReportMetadata(
                 topic=state.topic,
                 time_period=state.search_config.time_period,
-                total_sources=,
+                total_sources=len(state.filtered_articles),
                 search_config=state.search_config,
             ),
         )
         state.end_time = datetime.now()
         return state
 
-    def handle_insufficient_content(
-        self, state: NewsReporterState
-    ) -> NewsReporterStat:
+    def handle_insufficient_content(self, state: NewsReporterState) -> NewsReporterStat:
         """Handle case when there's insufficient content."""
         # Create minimal report with what we have
         state.news_report = NewsReport(

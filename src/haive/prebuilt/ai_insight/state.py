@@ -98,7 +98,7 @@ class NewsReporterState(MessagesStat):
     @property
     def has_sufficient_content(self) -> bool:
         """Check if we have enough content for a repor."""
-        return len(self.article_summaries) >=
+        return len(self.article_summaries) >= 3
 
     # Shared fields for LangGraph
     __shared_fields_ = [

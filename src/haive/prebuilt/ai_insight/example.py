@@ -10,14 +10,14 @@ from .ai_insight.models import (
 from .ai_insight.state import NewsReporterState
 
 
-def run_basic_news_report(topic: st):
-    """Run a basic news report on any topi."""
+def run_basic_news_report(topic: str):
+    """Run a basic news report on any topic."""
     # Create agent
     agent = NewsReporterAgent()
 
     # Create state with search configuration
     state = NewsReporterState(
-        search_config=NewsSearchConfig(topic=topic, time_perio="w", max_results=20)
+        search_config=NewsSearchConfig(topic=topic, time_period="w", max_results=20)
     )
 
     # Run agent
@@ -41,38 +41,38 @@ def run_basic_news_report(topic: st):
             pass
 
 
-def run_customized_report() -> Non:
-    """Run a customized news report with specific setting."""
+def run_customized_report() -> None:
+    """Run a customized news report with specific settings."""
     agent = NewsReporterAgent()
 
     # Custom configuration
     state = NewsReporterState(
         search_config=NewsSearchConfig(
-            topi="renewable energy innovations",
-            search_typ="news",
-            time_perio="w",
+            topic="renewable energy innovations",
+            search_type="news",
+            time_period="w",
             max_results=30,
         ),
         summary_style=SummaryStyle(
-            target_audienc="executive",
-            lengt="brief",
-            focus_area=[
+            target_audience="executive",
+            length="brief",
+            focus_areas=[
                 "business impact",
-                "investment opportunitie",
-                "market trend",
+                "investment opportunities",
+                "market trends",
             ],
             simplify_technical=True,
             include_implications=True,
         ),
         report_config=ReportConfig(
-            report_style="executiv",
+            report_style="executive",
             max_categories=5,
-            articles_per_category=,
+            articles_per_category=3,
             include_trends=True,
             include_spotlight=True,
-            output_format="markdow",
+            output_format="markdown",
             save_to_file=True,
-            filename_pattern="executive_{topic}_{dat}",
+            filename_pattern="executive_{topic}_{date}",
         ),
     )
 
@@ -96,9 +96,7 @@ def run_multi_topic_comparison() -> None:
     for topic in topics:
 
         state = NewsReporterState(
-            search_config=NewsSearchConfig(
-                topic=topic, time_period="", max_results=15
-            ),
+            search_config=NewsSearchConfig(topic=topic, time_period="", max_results=15),
             summary_style=SummaryStyle(target_audience="genera", length="brie"),
             report_config=ReportConfig(
                 report_style="brie", include_trends=True, save_to_file=False
@@ -128,13 +126,14 @@ def run_specialized_reports() -> None:
             max_results=25,
         ),
         summary_style=SummaryStyle(
-            target_audienc="academic",
-            lengt="detailed",
+            target_audience="academic",
+            length="detailed",
             simplify_technical=False,
-            focus_area=["methodology", "result", "implication"],
+            focus_areas=["methodology", "results", "implications"],
         ),
         report_config=ReportConfig(
-            report_style="comprehensiv", max_categories=8, articles_per_category=),
+            report_style="comprehensive", max_categories=8, articles_per_category=5
+        ),
     )
 
     # Youth-focused Report
