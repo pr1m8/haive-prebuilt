@@ -158,145 +158,19 @@ class JournalismState(MessagesStat):
     @computed_field
     @property
     def actions_completed(self) -> List[st]:
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
         """List of completed action."""
         completed = []
 
-        if getattr(sel, "summary_result", None) is not None:
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-            completed.appen("summarization")
-        if getattr(sel, "fact_check_result", None) is not None:
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-            completed.appen("fact-checking")
-        if getattr(sel, "tone_analysis_result", None) is not None:
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-            completed.appen("tone-analysis")
-        if getattr(sel, "quote_extraction_result", None) is not None:
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-            completed.appen("quote-extraction")
-        if getattr(sel, "grammar_bias_result", None) is not None:
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-            completed.appen("grammar-and-bias-review")
+        if getattr(self, "summary_result", None) is not None:
+            completed.append("summarization")
+        if getattr(self, "fact_check_result", None) is not None:
+            completed.append("fact-checking")
+        if getattr(self, "tone_analysis_result", None) is not None:
+            completed.append("tone-analysis")
+        if getattr(self, "quote_extraction_result", None) is not None:
+            completed.append("quote-extraction")
+        if getattr(self, "grammar_bias_result", None) is not None:
+            completed.append("grammar-and-bias-review")
 
         return completed
 
@@ -304,7 +178,7 @@ class JournalismState(MessagesStat):
     @property
     def actions_pending(self) -> List[st]:
         """List of pending action."""
-        requested = getattr(sel, "requested_actions", [])
+        requested = getattr(self, "requested_actions", [])
         completed = set(self.actions_completed)
         return [action for action in requested if action not in completed]
 

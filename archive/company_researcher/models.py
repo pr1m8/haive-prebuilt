@@ -136,20 +136,14 @@ class CustomerRiskProfile(BaseMode):
 
         # Prohibited activities are highest risk
         if "prohibited_activities" in values:
-    pass
-    pass
-    pass
-            base_score += len(value["prohibited_activities"]) * 2
+            base_score += len(values["prohibited_activities"]) * 2
 
         # Restricted industries add moderate risk
         if "restricted_industries" in values:
-    pass
-    pass
-    pass
-            base_score += len(value["restricted_industries"]) * 1
+            base_score += len(values["restricted_industries"]) * 1
 
         # Compliance risk factors
-        i "compliance_risk_factors" in values:
+        if "compliance_risk_factors" in values:
             risk_factor_scores = {
                 ComplianceRiskFactor.OWNERSHIP_TRANSPARENCY: 15,
                 ComplianceRiskFactor.COMPLEX_CORPORATE_STRUCTURE: 15,
@@ -309,8 +303,8 @@ def main():
     ])
 
     # Print the customer profile with detailed risk assessment
-    prin("Enhanced KYC Customer Profile:")
-    print(customer.model_dump_json(indent=))
+    print("Enhanced KYC Customer Profile:")
+    print(customer.model_dump_json(indent=2))
 
     # Demonstrate risk score calculation
     print("\nOverall Risk Score: {customer.risk_profile.overall_risk_score}")

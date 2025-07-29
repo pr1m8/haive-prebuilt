@@ -84,32 +84,8 @@ def web_search(
 
         # Set default dates if not provided
         if not to_date:
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
             to_date = datetime.now().strftime("%Y-%m-%d")
         if not from_date:
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
             from_date = (datetime.now() - timedelta(days=7)).strftime("%Y-%m-%d")
 
         # Build API parameters

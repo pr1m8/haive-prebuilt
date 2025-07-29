@@ -120,53 +120,29 @@ class FactCheckResult(BaseMode):
 
     @model_validator(mod="after")
     @classmethod
-    def calculate_statistics(cl) -> "FactCheckResult": None
+    def calculate_statistics(cls, values) -> "FactCheckResult":
         """Calculate statistics from statement."""
-        if self.statements:
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-            self.total_claims = len(self.statements)
-            self.confirmed_count = sum(
-                for s in self.statements if s.status == "confirmed"
+        if values.get('statements'):
+            values['total_claims'] = len(values['statements'])
+            values['confirmed_count'] = sum(
+                1 for s in values['statements'] if s.status == "confirmed"
             )
-            self.refuted_count = sum(
-                for s in self.statements if s.statu == "refuted"
+            values['refuted_count'] = sum(
+                1 for s in values['statements'] if s.status == "refuted"
             )
-            self.unverifiable_count = sum(
-                for s in self.statements if s.statu == "unverifiable"
+            values['unverifiable_count'] = sum(
+                1 for s in values['statements'] if s.status == "unverifiable"
             )
-            self.vague_count = sum(for s in self.statements if s.statu == "vague")
+            values['vague_count'] = sum(1 for s in values['statements'] if s.status == "vague")
 
             # Calculate overall credibility
-            if self.total_claims > 0:
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
+            if values.get('total_claims', 0) > 0:
                 credibility_score = (
-                    self.confirmed_count * 1.0 + self.unverifiable_count * 0.5
-                ) / self.total_claims
-                self.overall_credibility = round(credibility_score)
+                    values.get('confirmed_count', 0) * 1.0 + values.get('unverifiable_count', 0) * 0.5
+                ) / values['total_claims']
+                values['overall_credibility'] = round(credibility_score)
 
-        return self
+        return values
 
 
 class ArticleSummary(BaseMode):

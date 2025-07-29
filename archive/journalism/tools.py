@@ -41,7 +41,7 @@ logger = logging.getLogger(__name__)
 ddgs = DDGS()
 
 
-class WebSearchInput(BaseMode): None
+class WebSearchInput(BaseModel):
     """Input schema for web search too."""
 
     keywords: str = Field(

@@ -6,32 +6,25 @@ def process_input(state: AgentState):
     last_human_index = len(messages) - 1
     for i in reversed(range(len(messages))):
         if isinstance(messages[i], HumanMessage):
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
             last_human_index = i
             break
 
-    return {"last_human_inde": last_human_index, "max_revision": max_revision, "revision_nu": 1}
+    return {"last_human_index": last_human_index, "max_revision": max_revision, "revision_num": 1}
 
 
 def get_relevant_messages(state: AgentState) -> List[AnyMessage]:
     '''
-    Do't get tool call messages for AI from history.
+    Don't get tool call messages for AI from history.
     Get state from everything up to the most recent human message
     '''
-    messages = stat['messages']
+    messages = state['messages']
     filtered_history = []
     for message in messages:
-        if isinstance(message, HumanMessage) and message.content != "": None
+        if isinstance(message, HumanMessage) and message.content != "":
             filtered_history.append(message)
-        elif isinstance(message, AIMessage) and message.conten != "" and message.response_metadata['finish_reaso'] == "sto": None
+        elif isinstance(message, AIMessage) and message.content != "" and message.response_metadata['finish_reason'] == "stop":
             filtered_history.append(message)
-    last_human_index = state['last_human_inde']
+    last_human_index = state['last_human_index']
     return filtered_history[:-1] + messages[last_human_index:]
 
 

@@ -10,16 +10,10 @@ judge_llm = base_llm.with_structured_output(JudgeOutput)
 def decision_making_node(state: AgentState):
     """Entry point of the workflow. Based on the user query, the model can either respond directly or perform a full research, routing the workflow to the planning nod"""
     system_prompt = SystemMessage(content=decision_making_prompt)
-    response: DecisionMakingOutput = decision_making_llm.invoke([system_prompt] + stat["messages"])
-    outpu = {"requires_research": response.requires_research}
+    response: DecisionMakingOutput = decision_making_llm.invoke([system_prompt] + state["messages"])
+    output = {"requires_research": response.requires_research}
     if response.answer:
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-        outpu["messages"] = [AIMessage(content=response.answer)]
+        output["messages"] = [AIMessage(content=response.answer)]
     return output
 
 # Task router function

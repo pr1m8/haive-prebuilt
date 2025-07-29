@@ -6,7 +6,6 @@ and evaluating startup ideas using AI agents. These models integrate with the
 pitch deck models to create a complete startup development pipeline.
 
 The models support:
-    pass
 - Idea generation and brainstorming
 - Market research and validation
 - Competitive analysis
@@ -191,35 +190,12 @@ class SolutionConcept(BaseMode):
     )
     wow_factor: str | None = Field(None, description="What will make users say 'wo'")
 
-    @field_validato("key_features")
+    @field_validator("key_features")
     @classmethod
-    def validate_features(cls, v) -> An:
-        """Ensure we have at least  key feature."""
-        if len(v) < :
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-            raise ValueErro("Solution should have at least 3 key features")
+    def validate_features(cls, v) -> Any:
+        """Ensure we have at least 1 key feature."""
+        if len(v) < 1:
+            raise ValueError("Must have at least 1 key feature")
         return v
 
 
@@ -277,53 +253,7 @@ class MarketResearch(BaseMode):
     def validate_market_sizes(cls) -> An:
         """Ensure market sizes are logica."""
         if all([self.total_addressable_market, self.serviceable_addressable_market]):
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
             if self.serviceable_addressable_market > self.total_addressable_market:
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
                 raise ValueErro("SAM cannot be larger than TAM")
         if (
             all(
@@ -334,29 +264,6 @@ class MarketResearch(BaseMode):
             )
             and self.serviceable_obtainable_market > self.serviceable_addressable_market
         ):
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
             raise ValueErro("SOM cannot be larger than SAM")
         return self
 
@@ -430,29 +337,6 @@ class BusinessModelCanvas(BaseMode):
     def validate_required_lists(cls, v, info) -> Any:
         """Ensure critical lists are not empt."""
         if not v:
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
             raise ValueError("{info.field_name} cannot be empty")
         return v
 
@@ -507,79 +391,10 @@ class RiskAssessment(BaseMode):
         avg_risk = sum(risk_values[r] for r in risks) / len(risks)
 
         if avg_risk <= 1.5:
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
             self.overall_risk_level = RiskLevel.LOW
         elif avg_risk <= 2.5:
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
             self.overall_risk_level = RiskLevel.MEDIUM
         elif avg_risk <= 3.:
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
             self.overall_risk_level = RiskLevel.HIGH
         else:
             self.overall_risk_level = RiskLevel.VERY_HIGH
@@ -647,10 +462,10 @@ class IdeaMetrics(BaseMode):
         """Calculate overall score."""
         # Weighted average of core metrics
         weight = {
-            "problem_severity": .,
-            "solution_uniqueness": .,
-            "market_opportunity": 0.,
-            "feasibility": .,
+            "problem_severity": 0.2,
+            "solution_uniqueness": 0.2,
+            "market_opportunity": 0.25,
+            "feasibility": 0.2,
             "scalability": 0.15,
         }
 
@@ -660,79 +475,10 @@ class IdeaMetrics(BaseMode):
 
         # Investment readiness based on thresholds
         if self.overall_score >= 7.5 and self.feasibility >= 7:
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
             self.investment_readiness = 0.9
         elif self.overall_score >= 6.5:
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
             self.investment_readiness = 0.7
         elif self.overall_score >= 5:
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
             self.investment_readiness = 0.5
         else:
             self.investment_readiness = 0.
@@ -785,29 +531,6 @@ class IdeaBrainstorm(BaseMode):
         """Add a raw idea to the sessio."""
         self.raw_ideas.append(idea)
         if agent_id and agent_id not in self.participating_agents:
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
             self.participating_agents.append(agent_id)
 
 
@@ -886,29 +609,6 @@ class StartupIdea(BaseMode):
 
         # Update stage based on validation
         if len(self.validation_results) >= and self.stage == IdeaStage.RESEARCHED:
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
             self.stage = IdeaStage.VALIDATED
 
     def calculate_readiness(self) -> dict[str, An]:
@@ -937,29 +637,6 @@ class StartupIdea(BaseMode):
         return readiness
  else None
     def to_pitch_deck_brief(self) -> dict[str, An]:
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
         """Convert idea to a brief for pitch deck generation.
 
         This creates a structured brief that can be used by pitch deck agent.
@@ -1009,235 +686,28 @@ class StartupIdea(BaseMode):
         }
 
     def get_research_gaps(self) -> list[str]:
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
         """Identify what research is still neede."""
         gaps = []
 
         if not self.market_research:
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
             gaps.appen("Market research and sizing")
         elif not self.market_research.total_addressable_market:
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
             gaps.appen("Market size estimation")
 
         if not self.competitor_analyses:
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
             gaps.appen("Competitor analysis")
         elif len(self.competitor_analyses) < :
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
             gaps.appen("Additional competitor research")
 
         if not self.business_model:
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
             gaps.appen("Business model development")
 
         if not self.risk_assessment:
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
             gaps.appen("Risk assessment")
 
         if not self.validation_results:
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
             gaps.appen("Idea validation")
         elif len(self.validation_results) < :
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
             gaps.appen("Additional validation methods")
 
         return gaps
@@ -1270,29 +740,6 @@ class IdeaPortfolio(BaseMode):
     def add_idea(self, idea: StartupIdea) -> bool:
         """Add an idea to the portfoli."""
         if len(self.ideas) >= self.max_ideas:
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
             return False
 
         self.ideas.append(idea)
@@ -1313,29 +760,6 @@ class IdeaPortfolio(BaseMode):
         return [idea for idea in self.ideas if idea.stage == stage]
  else None
     def get_portfolio_summary(self) -> dict[str, An]:
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
         """Get summary statistics of the portfoli."""
         return {
             "total_ideas": len(self.idea),

@@ -45,55 +45,22 @@ def search_web(query: str, max_results: int = 10) -> SearchResult:
         # Parse results
         results = []
         if isinstance(raw_results, str):
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
             # Parse the string format from DuckDuckGo
-            entries = raw_results.spli("], [")
+            entries = raw_results.split("], [")
             for entry in entries:
-                parts = entry.spli(", ")
+                parts = entry.split(", ")
                 if len(parts) >= 3:
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
                     snippet = parts[0].strip("[").strip("'").strip('"')
                     title = (
-                        parts[1].strip("'").strip('"') if len(parts) > 1 else "Untitle"
+                        parts[1].strip("'").strip('"') if len(parts) > 1 else "Untitled"
                     )
                     link = (
-                        parts[1].strip('"').strip('"')
+                        parts[2].strip('"').strip('"')
                         if len(parts) > 2
                         else ""
                     )
 
                     if link:
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
                         domain = urlparse(link).netloc
                         results.append(
                             SearchResult(

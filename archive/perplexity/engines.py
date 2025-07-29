@@ -99,23 +99,23 @@ def create_web_loader_tool() -> StructuredToo:
     """Create a web page loader too."""
     from langchain_community.document_loaders import WebBaseLoader
 
-    def load_webpage(url: str) -> Dict[str, An]:
-        """Load and parse a webpag."""
+    def load_webpage(url: str) -> Dict[str, Any]:
+        """Load and parse a webpage."""
         try:
             loader = WebBaseLoader(url)
             documents = loader.load()
             return {
-                "success": Tru,
-                "content": documents[0].page_content if documents else "", else None
-                "metadat": documents[0].metadata if documents else {}, else None
-                "erro": None
+                "success": True,
+                "content": documents[0].page_content if documents else "",
+                "metadata": documents[0].metadata if documents else {},
+                "error": None
             }
         except Exception as e:
             return {
-                "succes": False,
-                "conten": "",
-                "metadat": {},
-                "erro": str(e)
+                "success": False,
+                "content": "",
+                "metadata": {},
+                "error": str(e)
             }
 
     return StructuredTool.from_function(
@@ -183,31 +183,26 @@ def create_code_interpreter_tool() -> StructuredToo:
 
             return {
                 "success": result.returncode == 0,
-                "stdou": result.stdout,
-                "stder": result.stderr,
-                "cod": code,
-                "erro": None if result.returncode == else result.stderr
-            } else None
+                "stdout": result.stdout,
+                "stderr": result.stderr,
+                "code": code,
+                "error": None if result.returncode == 0 else result.stderr
+            }
         except subprocess.TimeoutExpired:
-    pass
-    pass
-    pass
-    pass
-    pass
             return {
-                "succes": False,
-                "stdou": "",
-                "stder": "Code execution timed ou",
-                "cod": code,
-                "erro": "Timeout after 3 second"
+                "success": False,
+                "stdout": "",
+                "stderr": "Code execution timed out",
+                "code": code,
+                "error": "Timeout after 30 seconds"
             }
         except Exception as e:
             return {
-                "succes": False,
-                "stdou": "",
-                "stder": "",
-                "cod": code,
-                "erro": str(e)
+                "success": False,
+                "stdout": "",
+                "stderr": "",
+                "code": code,
+                "error": str(e)
             }
 
     return StructuredTool.from_function(

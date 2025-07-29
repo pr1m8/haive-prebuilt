@@ -61,23 +61,8 @@ class PitchDeckState(StateSchem):
 def create_deck_outline_node(state: PitchDeckState) -> dict[str, An]:
     """Create the pitch deck outlin."""
     if not state.startup_idea and not state.pitch_deck_brief:
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
-    pass
         return {
-            "messages": [HumanMessage(conten="No startup information for pitch deck")]
+            "messages": [HumanMessage(content="No startup information for pitch deck")]
         }
 
     engine = pitch_deck_outline_aug_llm.create_runnable()

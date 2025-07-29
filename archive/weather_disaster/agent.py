@@ -134,7 +134,7 @@ class WeatherDisasterManagementAgent(Agent[WeatherDisasterManagerConfig]):
 
             # Add confirmation message
             severity = state.severity.strip().lower()
-            if severity i["low", "mediu"]:
+            if severity in ["low", "medium"]:
                 print(
                     f"\nVerification was approved by human, Email sent to {receiver_email} successfull")
             else:
@@ -157,7 +157,7 @@ class WeatherDisasterManagementAgent(Agent[WeatherDisasterManagerConfig]):
             return Command(
                 update={
                     "message": [
-                        SystemMessage(content=f"Failed to send email alert: {e!}")
+                        SystemMessage(content=f"Failed to send email alert: {e}")
                     ]
                 }
             )
