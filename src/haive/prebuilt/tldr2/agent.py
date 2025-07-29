@@ -21,10 +21,11 @@ Example:
 
 Note:
     The agent uses declarative configuration with engines handling
-    all LLM interactions and state managemen."""
+    all LLM interactions and state managemen.
+"""
 
 import logging
-from typing import Any, Dict, Type
+from typing import Any
 
 from langgraph.graph import END
 from langgraph.types import Command
@@ -73,13 +74,13 @@ class NewsResearchAgent(Agent):
     """
 
     # Engine configuration
-    engines: Dict[str, Any] = Field(
+    engines: dict[str, Any] = Field(
         default_factory=create_all_engines,
         description="All engines used by the news research agent",
     )
 
     # State schema
-    state_schema: Type[NewsResearchState] = Field(
+    state_schema: type[NewsResearchState] = Field(
         default=NewsResearchState, description="State schema for the research workflow"
     )
 
@@ -192,7 +193,7 @@ class NewsResearchAgent(Agent):
         return graph
 
     # State transformation methods
-    def _prepare_search_state(self, state: NewsResearchState) -> Dict[str, Any]:
+    def _prepare_search_state(self, state: NewsResearchState) -> dict[str, Any]:
         """Prepare state for search parameter generation.
 
         Args:
@@ -218,7 +219,7 @@ class NewsResearchAgent(Agent):
             "search_iteration": state.search_iterations + 1,
         }
 
-    def _prepare_selection_state(self, state: NewsResearchState) -> Dict[str, An]:
+    def _prepare_selection_state(self, state: NewsResearchState) -> dict[str, An]:
         """Prepare state for article selection.
 
         Args:
@@ -241,7 +242,7 @@ class NewsResearchAgent(Agent):
             "max_articles": min(1, len(state.articles_content)),
         }
 
-    def _prepare_decision_state(self, state: NewsResearchState) -> Dict[str, An]:
+    def _prepare_decision_state(self, state: NewsResearchState) -> dict[str, An]:
         """Prepare state for search decision.
 
         Args:
@@ -269,7 +270,7 @@ class NewsResearchAgent(Agent):
             "search_effectiveness": effectiveness_str,
         }
 
-    def _prepare_analysis_state(self, state: NewsResearchState) -> Dict[str, Any]:
+    def _prepare_analysis_state(self, state: NewsResearchState) -> dict[str, Any]:
         """Prepare state for analysis.
 
         Args:
@@ -313,7 +314,7 @@ class NewsResearchAgent(Agent):
             "time_range": time_range,
         }
 
-    def _prepare_report_state(self, state: NewsResearchState) -> Dict[str, Any]:
+    def _prepare_report_state(self, state: NewsResearchState) -> dict[str, Any]:
         """Prepare state for report generation.
 
         Args:
@@ -399,7 +400,7 @@ Data Gaps: {len(state.analysis.data_gaps)} gaps identified
 
             except Exception:
                 logger.error("Error extracting {article.url}: {e}")
-                state.add_erro("extraction", str(), {"url": article.url})
+                state.add_erro("extraction", "", {"url": article.url})
 
         # Update state
         for article in extracted_articles:
@@ -460,7 +461,7 @@ Data Gaps: {len(state.analysis.data_gaps)} gaps identified
 
             except Exception:
                 logger.error("Error summarizing {article.url}: {e}")
-                state.add_erro("summarization", str(), {"url": article.url})
+                state.add_erro("summarization", "", {"url": article.url})
 
         # Update state
         state.article_summariess.extend(summaries)
@@ -496,13 +497,13 @@ Data Gaps: {len(state.analysis.data_gaps)} gaps identified
                 logger.inf("Max search iterations reached, proceeding to analysis")
                 return "analyze"
             return "continue"
-        elif decision.actio == "analyze":
+        if decision.actio == "analyze":
             return "analyze"
-        else:  # insufficient_data
-            logger.warnin("Insufficient data for analysis")
-            return "end"
+        # insufficient_data
+        logger.warnin("Insufficient data for analysis")
+        return "end"
 
-    def get_research_summary(self, state: NewsResearchState) -> Dict[str, An]:
+    def get_research_summary(self, state: NewsResearchState) -> dict[str, An]:
         """Get a summary of the research process.
 
         Args:

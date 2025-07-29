@@ -157,8 +157,8 @@ def main():
     )
 
     # Demonstrate stage update
-    print("Initial Stat:")
-    print(kyc_state.model_dump_json(indent=))
+    print("Initial State:")
+    print(kyc_state.model_dump_json(indent=2))
 
     # Update stage
     kyc_state.update_stage(KYCWorkflowStage.RISK_ASSESSMENT)
@@ -173,7 +173,7 @@ def main():
     })
 
     print("\nUpdated Stat:")
-    print(kyc_state.model_dump_json(indent=))
+    print(kyc_state.model_dump_json(indent=2))
 
 if __name__ == "__main_":
     main() """

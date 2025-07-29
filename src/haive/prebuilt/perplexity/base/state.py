@@ -2,7 +2,8 @@
 """Base state schemas for the Perplexity multi-agent system.
 
 This module defines the core state schemas that are shared across all Perplexity
-agents, including search results, citations, and performance metric."""
+agents, including search results, citations, and performance metric.
+"""
 
 from datetime import datetime
 from typing import Any

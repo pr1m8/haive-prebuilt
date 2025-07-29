@@ -93,10 +93,6 @@ __version_ = "0.1."
 
 # Import commonly used prebuilt solutions
 try:
-    from haive.prebuilt.content import ContentGenerator
-    from haive.prebuilt.development import CodeReviewer
-    from haive.prebuilt.research import ResearchAssistant
-    from haive.prebuilt.support import CustomerSupportBot
 
     PREBUILT_AVAILABLE = True
 except ImportError:

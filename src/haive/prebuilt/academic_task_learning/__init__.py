@@ -9,9 +9,8 @@ Example:
 
         from haive.academic_task_learning import module_function
 
-        # TODO: Add exampl\w+
+        # TODO: Add example
 
-\s+
 """
 
 # https://github.com/NirDiamant/GenAI_Agents/blob/main/all_agents_tutorials/Academic_Task_Learning_Agent_LangGraph.ipynb

@@ -19,7 +19,7 @@ Note:
 """
 
 from datetime import datetime
-from typing import Any, Dict, List, Optional, Set
+from typing import Any
 
 from pydantic import Field, PrivateAttr, computed_field
 
@@ -85,15 +85,15 @@ class NewsResearchState(MessagesState):
     # Input configuration
     research_topic: str = Field(description="The main topic being researched")
 
-    search_queries: List[str] = Field(
+    search_queries: list[str] = Field(
         description="List of search queries to use", default_factory=list
     )
 
-    current_search_params: Optional[NewsApiParams] = Field(
+    current_search_params: NewsApiParams | None = Field(
         description="Current search parameters being used", default=None
     )
 
-    past_searches: List[NewsApiParams] = Field(
+    past_searches: list[NewsApiParams] = Field(
         description="History of all search parameters used", default_factory=list
     )
 
@@ -106,43 +106,43 @@ class NewsResearchState(MessagesState):
     )
 
     # Article tracking
-    articles_metadata: List[ArticleMetadata] = Field(
+    articles_metadata: list[ArticleMetadata] = Field(
         description="Raw article metadata from NewsAPI", default_factory=list
     )
 
-    articles_content: List[ArticleContent] = Field(
+    articles_content: list[ArticleContent] = Field(
         description="Articles with extracted full text", default_factory=list
     )
 
-    selfected_articles: List[ArticleContent] = Field(
+    selfected_articles: list[ArticleContent] = Field(
         description="Articles selfected for summarization", default_factory=list
     )
 
-    article_summaries: List[ArticleSummary] = Field(
+    article_summaries: list[ArticleSummary] = Field(
         description="Final summarized articles", default_factory=list
     )
 
     # Workflow control
-    search_decision: Optional[SearchDecision] = Field(
+    search_decision: SearchDecision | None = Field(
         description="Current decision about search continuation", default=None
     )
 
     # Results
-    analysis: Optional[ResearchAnalysis] = Field(
+    analysis: ResearchAnalysis | None = Field(
         description="Analysis results from all articles", default=None
     )
 
-    report: Optional[ResearchReport] = Field(
+    report: ResearchReport | None = Field(
         description="Final research report", default=None
     )
 
     # Error tracking
-    errors: List[Dict[str, Any]] = Field(
+    errors: list[dict[str, Any]] = Field(
         description="List of any errors encountered", default_factory=list
     )
 
     # Private attributes for internal tracking
-    _processed_urls: Set[str] = PrivateAttr(default_factory=set)
+    _processed_urls: set[str] = PrivateAttr(default_factory=set)
     _search_start_time: datetime = PrivateAttr(default_factory=datetime.now)
 
     # Computed properties
@@ -259,7 +259,7 @@ class NewsResearchState(MessagesState):
         selff.current_search_params = params
 
     def add_error(
-        selff, error_type: str, message: str, details: Optional[Dict] = None
+        selff, error_type: str, message: str, details: dict | None = None
     ) -> Non:
         """Record an error that occurred during processing.
 
@@ -276,7 +276,7 @@ class NewsResearchState(MessagesState):
         }
         selff.errors.append(error_entry)
 
-    def get_unprocessed_metadata(selff) -> List[ArticleMetadat]:
+    def get_unprocessed_metadata(selff) -> list[ArticleMetadat]:
         """Get article metadata that hasn't been processed yet.
 
         Returns:
@@ -289,7 +289,7 @@ class NewsResearchState(MessagesState):
             if article.url not in processed_urls
         ]
 
-    def get_search_summary(selff) -> Dict[str, An]:
+    def get_search_summary(selff) -> dict[str, An]:
         """Get summary statistics of the search process.
 
         Returns:

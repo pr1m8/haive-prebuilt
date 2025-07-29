@@ -1,6 +1,7 @@
 """Market research subgraph for comprehensive market analysis.
 
-This subgraph handles market sizing, competitive analysis, and trend researc."""
+This subgraph handles market sizing, competitive analysis, and trend researc.
+"""
 
 from typing import Any
 

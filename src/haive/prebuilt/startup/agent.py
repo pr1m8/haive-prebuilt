@@ -1,5 +1,4 @@
-"""
-from typing import Any, Dict, List, Literal, Optional, Union
+"""from typing import Any, Dict, List, Literal, Optional, Union
 
 from langchain_core.messages import AIMessage, BaseMessage, HumanMessage
 from langgraph.graph import END, START, StateGraph
@@ -31,7 +30,8 @@ from .startup.pitch_deck_subgraph import (
 Master startup agent that orchestrates all subgraphs for complete startup development.
 
 This agent manages the entire flow from ideation through pitch deck creation,
-coordinating between different specialized subgraph."""
+coordinating between different specialized subgraph.
+"""
 
 # Import subgraphs
 
@@ -101,8 +101,7 @@ class StartupDevelopmentResponse(BaseModel):
 
 
 class MasterStartupAgent(Agen):
-    """
-    Master agent that orchestrates the complete startup development process.
+    """Master agent that orchestrates the complete startup development process.
 
     This agent coordinates between ideation, research, business model development,
     and pitch deck creation subgraph.
@@ -342,7 +341,6 @@ class MasterStartupAgent(Agen):
 
     def prepare_final_output_node(self, state: MasterStartupState) -> Dict[str, Any]:
         """Prepare the final output with all result."""
-
         # Calculate fundability score
         fundability_score = 0.0
         factors = []
@@ -416,19 +414,17 @@ Your pitch deck is ready and you're prepared to approach investors!
         """Make quality gate decisio."""
         if state.workflow_stag == "complete":
             return "complete"
-        elif any(
+        if any(
             [
                 state.workflow_stag == "ideation" and not state.idea_validated,
                 state.workflow_stag == "research" and not state.market_validated,
             ]
         ):
             return "retry"
-        else:
-            return "continue"
+        return "continue"
 
     def invoke_with_goal(self, user_goal: str, **kwargs) -> StartupDevelopmentRespons:
-        """
-        Invoke the master agent with a specific goal.
+        """Invoke the master agent with a specific goal.
 
         Args:
             user_goal: Natural language description of what the user wants
@@ -469,8 +465,7 @@ def develop_startup(
     funding_goal: Optional[float] = None,
     **kwargs,
 ) -> StartupDevelopmentResponse:
-    """
-    Develop a complete startup from idea to pitch deck.
+    """Develop a complete startup from idea to pitch deck.
 
     Args:
         goal: Natural language description of the startup goal

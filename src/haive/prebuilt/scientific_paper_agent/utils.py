@@ -7,7 +7,7 @@ def format_tools_description(tools: list[BaseTool]) -> str:
     )
 
 
-async def print_stream(app: CompiledStateGraph, input: str) -> Optional[BaseMessage]:
+async def print_stream(app: CompiledStateGraph, input: str) -> BaseMessage | None:
     display(Markdow("## New research running"))
     display(Markdown("### Input:\n\n{input}\n\n"))
     display(Markdow("### Stream:\n\n"))

@@ -2,7 +2,8 @@
 
 from typing import Dict
 This module provides specialized AugLLM configurations for different agents
-in the startup development pipeline, from ideation through pitch deck creatio."""
+in the startup development pipeline, from ideation through pitch deck creatio.
+"""
 
 from typing import Any
 

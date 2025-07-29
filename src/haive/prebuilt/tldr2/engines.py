@@ -18,8 +18,6 @@ Note:
     All engines use structured_output_version='' for Pydantic v2 compatibility.
 """
 
-from typing import Dict, List
-
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 from pydantic import Field
 
@@ -206,13 +204,13 @@ Explain your selection criteri.""",
     class ArticleSelection(BaseMode):
         """Selected articles with relevance score."""
 
-        selected_urls: List[str] = Field(
+        selected_urls: list[str] = Field(
             description="URLs of selected articles in order of relevance"
         )
         selection_reasoning: str = Field(
             description="Explanation of selection criteria and choices"
         )
-        relevance_scores: Dict[str, float] = Field(
+        relevance_scores: dict[str, float] = Field(
             description="Relevance score for each selected article"
         )
 
@@ -468,7 +466,7 @@ Create a comprehensive research repor.""",
 
 
 # Create all engines as a dictionary for easy access
-def create_all_engines() -> Dict[str, AugLLMConfi]:
+def create_all_engines() -> dict[str, AugLLMConfi]:
     """Create all engines for the news research agent.
 
     Returns:

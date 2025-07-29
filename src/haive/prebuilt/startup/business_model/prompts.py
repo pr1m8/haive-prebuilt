@@ -45,19 +45,19 @@ class FinancialProjectionRequest(BaseMode):
 
     company_name: str
     business_model: str
-    pricing_info: Dict[str, Any]
+    pricing_info: dict[str, Any]
     market_size: float
-    current_metrics: Optional[Dict[str, Any]] = None
+    current_metrics: dict[str, Any] | None = None
 
 
 class FinancialProjectionResponse(BaseMode):
     """Financial projection respons."""
 
-    revenue_projections: List[Dict[str, Any]]
-    expense_projections: List[Dict[str, Any]]
-    key_metrics: Dict[str, List[float]]
-    assumptions: List[str]
-    charts_data: List[Dict[str, Any]]
+    revenue_projections: list[dict[str, Any]]
+    expense_projections: list[dict[str, Any]]
+    key_metrics: dict[str, list[float]]
+    assumptions: list[str]
+    charts_data: list[dict[str, Any]]
 
 
 financial_projection_aug_llm = AugLLMConfig(

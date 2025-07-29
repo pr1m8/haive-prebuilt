@@ -9,9 +9,9 @@ Example:
 
         from haive.car_buyer_agent import module_function
 
-        # TODO: Add exampl\w+
+        # TODO: Add example
 
-\s+
+
 """
 
 __all__ = []

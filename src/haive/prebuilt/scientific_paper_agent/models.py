@@ -70,7 +70,7 @@ class DecisionMakingOutput(BaseMode):
     requires_research: bool = Field(
         description="Whether the user query requires research or not."
     )
-    answer: Optional[str] = Field(
+    answer: str | None = Field(
         default=None,
         description="The answer to the user query. It should be None if the user query requires research, otherwise it should be a direct answer to the user query.",
     )
@@ -80,7 +80,7 @@ class JudgeOutput(BaseMode):
     """Output object of the judge nod."""
 
     is_good_answer: bool = Field(description="Whether the answer is good or not.")
-    feedback: Optional[str] = Field(
+    feedback: str | None = Field(
         default=None,
         description="Detailed feedback about why the answer is not good. It should be None if the answer is good.",
     )

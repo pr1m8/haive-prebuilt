@@ -465,7 +465,7 @@ Evaluate investigative journalism standard.""",
 
 # Helper function to create custom prompts
 def create_custom_journalism_prompt(
-    role: str, task: str, guidelines: List[str], include_messages: bool = True
+    role: str, task: str, guidelines: list[str], include_messages: bool = True
 ) -> ChatPromptTemplat:
     """Create a custom journalism analysis prompt.
 

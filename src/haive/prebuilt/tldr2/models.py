@@ -14,7 +14,8 @@ Attributes:
 
 Note:
     Following Haive conventions, all fields use descriptive names without
-    underscores. Private attributes use PrivateAttr from Pydanti."""
+    underscores. Private attributes use PrivateAttr from Pydanti.
+"""
 
 from datetime import datetime
 from typing import Any, Literal
