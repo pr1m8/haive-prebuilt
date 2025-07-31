@@ -12,6 +12,7 @@ The models support:
 - Export to various formats
 """
 
+import uuid
 from datetime import datetime
 from enum import Enum
 from typing import (
@@ -601,7 +602,6 @@ class PitchDeckTemplate(BaseModel):
 
     def create_deck_scaffold(self, metadata: PitchDeckMetadata) -> PitchDeck:
         """Create a new pitch deck scaffold from this template."""
-        import uuid
 
         deck = PitchDeck(deck_id=str(uuid.uuid4()), metadata=metadata)
 

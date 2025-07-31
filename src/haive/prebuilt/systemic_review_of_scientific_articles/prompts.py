@@ -54,12 +54,12 @@ If you are in a Results section, give me low-level relevant objective statistics
 If you are in a Conclusions section, give me the fellow researcher's thoughts, but also come up with a counter-argument if none are given.
 
 Remember to attach the other information to the top:
-    Title : 
-    Year : 
-    Authors : 
-    URL : 
+    Title :
+    Year :
+    Authors :
+    URL :
     TLDR Analysis:
-        
+
 """
 
 ########################################################

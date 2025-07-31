@@ -123,7 +123,7 @@ class PitchDeckOutlineRequest(BaseModel):
 class SlideOutline(BaseModel):
     """Outline for a single slide."""
 
-    slide_type: SlideType
+    slide_type: str  # TODO: SlideType needs to be properly defined
     title: str
     headline: str
     key_points: list[str]

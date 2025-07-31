@@ -2,6 +2,7 @@
 """Agent Name: QueryTypeDetector
 Description: Labels the query as boolean, open-ended, multi-hop, numerical, or instruction.
 """
+
 from haive.core.aug_llm import AugLLMConfig
 from haive.core.models.llm.base import AzureLLMConfig
 from haive_agents.simple.factory import create_simple_agent

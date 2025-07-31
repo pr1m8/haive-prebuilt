@@ -20,7 +20,7 @@ COMMUNICATION_PLANNING_SYSTEM_PROMPT = """You are a strategic communications exp
 
 **Communication Objectives:**
 - **Inform**: Share information and updates
-- **Persuade**: Influence opinions and decisions  
+- **Persuade**: Influence opinions and decisions
 - **Engage**: Build relationships and gather input
 - **Align**: Create shared understanding and commitment
 - **Motivate**: Drive action and behavior change

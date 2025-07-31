@@ -47,7 +47,7 @@ class LanguageDetector:
     ZERO_WIDTH_REGEX = re.compile(r"[\u200B-\u200D\uFEFF]")
     BIDI_REGEX = re.compile(r"[\u202A-\u202E]")
     CONTROL_CHAR_REGEX = re.compile(r"[\x00-\x1F\x7F-\x9F]")
-    NUMERIC_ENCODING_REGEX = re.compile(r"\b\d{2,3}(?:\s+\d{2,3})+\b")
+    NUMERIC_ENCODING_REGEX = re.compile(r"\b\d{2,3}(?: \d{2,3})+\b")
 
     def __init__(self):
         self.spell = SpellChecker()
@@ -92,9 +92,7 @@ class LanguageDetector:
             scattered_text=self._detect_scattered_text(text),
             suspicious_newlines=text.count("\n") > 10,
             markdown_injection=bool(re.search(r"``````", text, re.DOTALL)),
-            substitution_rules=re.findall(
-                r"(\b\w+\b)\s*=\s*(\b\w+\b)", text, re.IGNORECASE
-            ),
+            substitution_rules=re.findall(r"(\b\b)\s*=\s*(\b\b)", text, re.IGNORECASE),
             mixed_case_evasion=self._detect_mixed_case(text),
         )
 
@@ -181,8 +179,8 @@ class ContentAnalyzer:
 if __name__ == "__main__":
     analyzer = ContentAnalyzer()
 
-    sample_text = """Hello world 
-    \u200b print("Hidden message") 
+    sample_text = """Hello world
+    \u200b print("Hidden message")
     72 101 108 108 111
     """
 

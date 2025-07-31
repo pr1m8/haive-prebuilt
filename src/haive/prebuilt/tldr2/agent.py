@@ -25,19 +25,19 @@ Note:
 """
 
 import logging
-from typing import Any, Dict, List, Optional, Type
+from typing import Any, Dict, Type
 
 from haive.agents.base.agent import Agent
 from haive.core.graph.node.engine_node import EngineNodeConfig
-from haive.core.graph.node.tool_node_config import ToolNodeConfig
 from haive.core.graph.state_graph.base_graph2 import BaseGraph
 from langgraph.graph import END, START
 from langgraph.types import Command
 from pydantic import Field
 
 from haive.prebuilt.tldr2.engines import create_all_engines
-from haive.prebuilt.tldr2.models import SearchDecision
+from haive.prebuilt.tldr2.models import ArticleContent
 from haive.prebuilt.tldr2.state import NewsResearchState
+from haive.prebuilt.tldr2.tools import extract_content
 
 # Configure logging
 logger = logging.getLogger(__name__)
@@ -327,7 +327,7 @@ class NewsResearchAgent(Agent):
         """
         # Format analysis summary
         analysis_summary = f"""
-Main Themes: {', '.join(state.analysis.main_themes)}
+Main Themes: {", ".join(state.analysis.main_themes)}
 Key Findings: {len(state.analysis.key_findings)} findings identified
 Confidence Level: {state.analysis.confidence_level:.2f}
 Data Gaps: {len(state.analysis.data_gaps)} gaps identified
@@ -340,7 +340,7 @@ Data Gaps: {len(state.analysis.data_gaps)} gaps identified
 
         top_articles_str = "\n".join(
             [
-                f"{i+1}. {a.title} (Relevance: {a.relevance_score:.2f})"
+                f"{i + 1}. {a.title} (Relevance: {a.relevance_score:.2f})"
                 for i, a in enumerate(top_articles)
             ]
         )
@@ -365,8 +365,6 @@ Data Gaps: {len(state.analysis.data_gaps)} gaps identified
         Returns:
             Command to update state with extracted content
         """
-        from haive.prebuilt.tldr2.models import ArticleContent
-        from haive.prebuilt.tldr2.tools import extract_content
 
         # Get unprocessed articles
         unprocessed = state.get_unprocessed_metadata()

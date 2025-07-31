@@ -166,7 +166,7 @@ class WeatherDisasterManagementAgent(Agent[WeatherDisasterManagerConfig]):
     def format_weather_email(state: WeatherState) -> str:
         """Format weather data and severity assessment into an email message"""
         weather_data = state.weather_data
-        social_media_reports = "\n".join(state.social_media_reports)
+        "\n".join(state.social_media_reports)
 
         email_content = f"""
         Weather Alert for {state.city}
@@ -186,7 +186,7 @@ class WeatherDisasterManagementAgent(Agent[WeatherDisasterManagerConfig]):
         Response Plan:
         {state.response}
 
-        This is an automated weather alert generated at {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
+        This is an automated weather alert generated at {datetime.now().strftime("%Y-%m-%d %H:%M:%S")}
         """
 
         if state.severity.lower() in ["low", "medium"]:
@@ -243,7 +243,7 @@ class WeatherDisasterManagementAgent(Agent[WeatherDisasterManagerConfig]):
     ):
         """Fetch weather data using LangChain-compatible tool, update state."""
         city = state.city
-        messages = state.messages
+        state.messages
 
         try:
             result = weather_tool.invoke(

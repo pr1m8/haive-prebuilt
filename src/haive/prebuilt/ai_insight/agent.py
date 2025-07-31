@@ -5,7 +5,7 @@ General News Reporter Agent implementation.
 
 import logging
 from datetime import datetime
-from typing import Dict, List, Optional
+from typing import Dict, List
 
 from haive.agents.base.agent import Agent
 from haive.core.engine.aug_llm import AugLLMConfig

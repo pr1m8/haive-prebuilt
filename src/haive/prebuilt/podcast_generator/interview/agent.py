@@ -1,3 +1,18 @@
+from langchain.llms.base import BaseLLM
+from langgraph.graph import END, START
+from prebuilt.podcast_generator.state import PodcastGeneratorState
+
+# TODO: These need to be properly defined or imported
+Agent = None  # This should be the base Agent class
+generate_question = None
+search_web = None
+search_wikipedia = None
+generate_answer = None
+save_podcast = None
+write_section = None
+route_messages = None
+
+
 class InterviewAgent(Agent):
     def __init__(self, llm: BaseLLM, state: PodcastGeneratorState):
         pass

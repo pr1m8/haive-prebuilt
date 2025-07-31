@@ -8,8 +8,6 @@ from typing import Any
 
 from haive.core.engine.aug_llm import AugLLMConfig
 from haive.core.models.llm.base import AzureLLMConfig
-
-# Import search tools
 from haive.tools.tools.search_tools import (
     scrape_webpages,
     tavily_extract,
@@ -21,7 +19,6 @@ from langchain_core.messages import SystemMessage
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 from pydantic import BaseModel, Field
 
-# Import your models
 from haive.prebuilt.startup.models import (
     BusinessModelCanvas,
     CompetitorAnalysis,
@@ -34,6 +31,27 @@ from haive.prebuilt.startup.pitch_deck_models import (
     SlideContent,
     SlideType,
 )
+
+# Import search tools
+
+# Import your models
+
+# TODO: These need to be properly defined
+IDEATION_SYSTEM_PROMPT = "You are an innovative startup ideation specialist."
+ideation_prompt = ChatPromptTemplate.from_messages(
+    [
+        ("system", "You are a startup ideation expert"),
+        ("human", "Generate startup ideas for: {topic}"),
+    ]
+)
+
+
+class IdeaGenerationResponse(BaseModel):
+    """Response model for idea generation."""
+
+    ideas: list[dict[str, Any]] = Field(default_factory=list)
+    reasoning: str = ""
+
 
 ideation_aug_llm = AugLLMConfig(
     name="ideation_agent",
@@ -147,7 +165,7 @@ market_research_prompt = ChatPromptTemplate.from_messages(
         (
             "human",
             """Conduct market research for: {idea_name}
-    
+
 Problem: {problem_description}
 Solution: {solution_description}
 Category: {category}
@@ -468,7 +486,7 @@ Content principles:
 
 Slide types expertise:
 - Problem: Make investors feel the pain
-- Solution: Show the 'aha' moment  
+- Solution: Show the 'aha' moment
 - Market: Demonstrate massive opportunity
 - Business Model: Show path to profitability
 - Team: Build confidence in execution

@@ -4,7 +4,7 @@ Models for General News Reporter System.
 """
 
 from datetime import datetime
-from typing import Any, Dict, List, Literal, Optional
+from typing import List, Literal, Optional
 
 from pydantic import BaseModel, Field, HttpUrl, computed_field
 

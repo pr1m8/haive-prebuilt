@@ -80,9 +80,9 @@ def format_all_notes(completed_notes: list[str]) -> str:
     formatted_str = ""
     for idx, company_notes in enumerate(completed_notes, 1):
         formatted_str += f"""
-{'='*60}
+{"=" * 60}
 Note: {idx}:
-{'='*60}
+{"=" * 60}
 Notes from research:
 {company_notes}"""
     return formatted_str

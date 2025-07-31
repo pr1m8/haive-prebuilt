@@ -20,8 +20,7 @@ import logging
 import re
 import time
 from datetime import datetime
-from functools import lru_cache
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Dict, List
 
 from duckduckgo_search import DDGS
 from langchain.text_splitter import RecursiveCharacterTextSplitter
@@ -29,11 +28,6 @@ from langchain_community.document_loaders import WebBaseLoader
 from langchain_community.document_transformers import BeautifulSoupTransformer
 from langchain_core.tools import tool
 from pydantic import BaseModel, Field
-
-from haive.prebuilt.journalism_.models import (
-    ArticleChunk,
-    SearchResult,
-)
 
 # Configure logging
 logger = logging.getLogger(__name__)
@@ -249,9 +243,9 @@ def extract_quotes(text: str) -> List[Dict[str, str]]:
     # Matches: "Quote text," said Speaker Name.
     # Or: Speaker Name said, "Quote text."
     patterns = [
-        r'"([^"]+)"[,\s]+(?:said|says|stated|explained|noted|added|according to)\s+([A-Z][^,.]+)',
-        r'([A-Z][^,]+)\s+(?:said|says|stated|explained|noted|added)[,:\s]+"([^"]+)"',
-        r'"([^"]+)"[,\s]+([A-Z][^,]+)\s+(?:said|says|stated|explained|noted|added)',
+        r'"([^"]+)"[,\s]+(?:said|says|stated|explained|noted|added|according to) ([A-Z][^,.]+)',
+        r'([A-Z][^,]+) (?:said|says|stated|explained|noted|added)[,:\s]+"([^"]+)"',
+        r'"([^"]+)"[,\s]+([A-Z][^,]+) (?:said|says|stated|explained|noted|added)',
         r'"([^"]+)"',  # Fallback for quotes without attribution
     ]
 
@@ -313,9 +307,9 @@ def identify_key_claims(text: str) -> List[str]:
     claim_indicators = [
         r"\b\d+\s*(?:percent|%)",  # Percentages
         r"\b\d+\s*(?:million|billion|thousand)\b",  # Large numbers
-        r"\b(?:study|research|report|survey)\s+(?:shows|finds|indicates|suggests)\b",
+        r"\b(?:study|research|report|survey) (?:shows|finds|indicates|suggests)\b",
         r"\b(?:according to|data from|statistics show)\b",
-        r"\b(?:increased|decreased|rose|fell)\s+by\s+\d+",
+        r"\b(?:increased|decreased|rose|fell) by \d+",
         r"\b(?:first|largest|smallest|fastest|slowest)\b",
         r"\b(?:causes|caused|leads to|results in)\b",
         r"\b(?:proven|confirmed|verified|established)\b",
@@ -371,7 +365,7 @@ def detect_bias_indicators(text: str) -> List[Dict[str, str]]:
         },
         "generalization": {
             "patterns": [
-                r"\b(?:all|every|none|never|always)\s+\w+",
+                r"\b(?:all|every|none|never|always) ",
                 r"\b(?:everyone|nobody|everything|nothing)\b",
             ],
             "description": "Makes sweeping generalizations",

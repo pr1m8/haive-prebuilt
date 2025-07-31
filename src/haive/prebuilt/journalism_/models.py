@@ -18,10 +18,10 @@ Note:
 """
 
 from datetime import datetime
-from typing import Any, Dict, List, Literal, Optional, Union
+from typing import Dict, List, Literal, Optional
 
 from pydantic import BaseModel, Field, PrivateAttr, field_validator, model_validator
-from pydantic.types import confloat, conint
+from pydantic.types import confloat
 
 
 class FactCheckStatement(BaseModel):
@@ -70,7 +70,7 @@ class FactCheckStatement(BaseModel):
     @classmethod
     def validate_keywords(cls, v: List[str]) -> List[str]:
         """Ensure keywords are unique and non-empty."""
-        return list(set(k.strip() for k in v if k.strip()))
+        return list({k.strip() for k in v if k.strip()})
 
 
 class FactCheckResult(BaseModel):
@@ -270,7 +270,7 @@ class QuoteExtractionResult(BaseModel):
         self.total_quotes = len(self.quotes)
 
         if self.quotes:
-            speakers = set(q.speaker for q in self.quotes)
+            speakers = {q.speaker for q in self.quotes}
             self.unique_speakers = len(speakers)
             self.has_attribution = all(
                 q.speaker and q.speaker.lower() != "unknown" for q in self.quotes
@@ -535,7 +535,7 @@ class ComprehensiveReport(BaseModel):
             str: Formatted markdown report
         """
         md_parts = [
-            f"# Journalism Analysis Report",
+            "# Journalism Analysis Report",
             f"**Article:** {self.article_title}",
             f"**Analysis Date:** {self.analysis_timestamp.strftime('%Y-%m-%d %H:%M')}",
             "\n---\n",

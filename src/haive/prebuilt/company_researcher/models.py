@@ -288,7 +288,7 @@ def main():
         nationality="United States",
         business_name="Global Financial Solutions LLC"
     )
-    
+
     # Add some risk factors
     customer.risk_profile.prohibited_activities.append(
         ProhibitedActivity.MONEY_LAUNDERING
@@ -300,11 +300,11 @@ def main():
         ComplianceRiskFactor.COMPLEX_CORPORATE_STRUCTURE,
         ComplianceRiskFactor.UNUSUAL_TRANSACTION_PATTERNS
     ])
-    
+
     # Print the customer profile with detailed risk assessment
     print("Enhanced KYC Customer Profile:")
     print(customer.model_dump_json(indent=2))
-    
+
     # Demonstrate risk score calculation
     print(f"\nOverall Risk Score: {customer.risk_profile.overall_risk_score}")
 

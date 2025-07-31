@@ -6,24 +6,35 @@ This module defines all the engine configurations used by different agents,
 including LLM configurations, tool configurations, and retrieval engines.
 """
 
-from typing import Any, Dict, List, Optional, Type
+import os
+import subprocess
+import tempfile
+from typing import Any, Dict, List
 
+import numexpr
 from haive.agents.perplexity.base.prompts import PROMPT_REGISTRY
 from haive.agents.perplexity.base.state import (
-    Citation,
     ModelChoice,
-    PerformanceMetrics,
-    QueryAnalysis,
     QueryType,
     SearchMode,
-    SearchResult,
+)
+from haive.agents.perplexity.labs.models import (
+    OrchestrationPlanOutput,
+    ProjectAnalysisOutput,
+)
+from haive.agents.perplexity.pro.models import ExecutionPlanOutput, ReasoningOutput
+from haive.agents.perplexity.research.models import (
+    ResearchPlanOutput,
+    SourceAnalysisOutput,
+    SynthesisOutput,
 )
 from haive.core.engine.aug_llm import AugLLMConfig
 from haive.core.engine.retriever import VectorStoreRetrieverConfig
 from haive.core.engine.vectorstore import VectorStoreConfig, VectorStoreProvider
 from haive.core.models.embeddings.base import HuggingFaceEmbeddingConfig
-from haive.core.models.llm.base import AzureLLMConfig, LLMConfig
-from langchain_core.prompts import ChatPromptTemplate
+from haive.core.models.llm.base import AzureLLMConfig
+from langchain_community.document_loaders import WebBaseLoader
+from langchain_community.tools.tavily_search import TavilySearchResults
 from langchain_core.tools import StructuredTool
 from pydantic import BaseModel, Field
 
@@ -88,7 +99,6 @@ class QualityCheckOutput(BaseModel):
 
 def create_tavily_search_tool() -> StructuredTool:
     """Create a Tavily search tool configuration."""
-    from langchain_community.tools.tavily_search import TavilySearchResults
 
     return TavilySearchResults(
         name="web_search",
@@ -103,7 +113,6 @@ def create_tavily_search_tool() -> StructuredTool:
 
 def create_web_loader_tool() -> StructuredTool:
     """Create a web page loader tool."""
-    from langchain_community.document_loaders import WebBaseLoader
 
     def load_webpage(url: str) -> Dict[str, Any]:
         """Load and parse a webpage."""
@@ -128,7 +137,6 @@ def create_web_loader_tool() -> StructuredTool:
 
 def create_calculator_tool() -> StructuredTool:
     """Create a calculator tool for mathematical operations."""
-    import numexpr
 
     def calculate(expression: str) -> Dict[str, Any]:
         """Safely evaluate mathematical expressions."""
@@ -161,9 +169,6 @@ def create_calculator_tool() -> StructuredTool:
 
 def create_code_interpreter_tool() -> StructuredTool:
     """Create a Python code interpreter tool."""
-    import os
-    import subprocess
-    import tempfile
 
     def execute_python(code: str) -> Dict[str, Any]:
         """Execute Python code in a sandboxed environment."""
@@ -417,7 +422,6 @@ def create_retriever_config(
 
 def create_planning_engine() -> AugLLMConfig:
     """Create engine for multi-step planning."""
-    from haive.agents.perplexity.pro.models import ExecutionPlanOutput
 
     return AugLLMConfig(
         name="planning_engine",
@@ -430,7 +434,6 @@ def create_planning_engine() -> AugLLMConfig:
 
 def create_reasoning_engine() -> AugLLMConfig:
     """Create engine for chain-of-thought reasoning."""
-    from haive.agents.perplexity.pro.models import ReasoningOutput
 
     return AugLLMConfig(
         name="reasoning_engine",
@@ -448,7 +451,6 @@ def create_reasoning_engine() -> AugLLMConfig:
 
 def create_research_planning_engine() -> AugLLMConfig:
     """Create engine for research planning."""
-    from haive.agents.perplexity.research.models import ResearchPlanOutput
 
     return AugLLMConfig(
         name="research_planning_engine",
@@ -461,7 +463,6 @@ def create_research_planning_engine() -> AugLLMConfig:
 
 def create_source_analysis_engine() -> AugLLMConfig:
     """Create engine for source analysis."""
-    from haive.agents.perplexity.research.models import SourceAnalysisOutput
 
     return AugLLMConfig(
         name="source_analysis_engine",
@@ -474,7 +475,6 @@ def create_source_analysis_engine() -> AugLLMConfig:
 
 def create_synthesis_engine() -> AugLLMConfig:
     """Create engine for research synthesis."""
-    from haive.agents.perplexity.research.models import SynthesisOutput
 
     return AugLLMConfig(
         name="synthesis_engine",
@@ -492,7 +492,6 @@ def create_synthesis_engine() -> AugLLMConfig:
 
 def create_project_analysis_engine() -> AugLLMConfig:
     """Create engine for project analysis."""
-    from haive.agents.perplexity.labs.models import ProjectAnalysisOutput
 
     return AugLLMConfig(
         name="project_analysis_engine",
@@ -505,12 +504,11 @@ def create_project_analysis_engine() -> AugLLMConfig:
 
 def create_tool_orchestration_engine() -> AugLLMConfig:
     """Create engine for tool orchestration."""
-    from haive.agents.perplexity.labs.models import OrchestrationPlanOutput
 
     return AugLLMConfig(
         name="tool_orchestration_engine",
         llm_config=AzureLLMConfig(model="gpt-4o", temperature=0.2, max_tokens=1500),
-        prompt_template=PROMPT_TEMPLATE,
+        prompt_template=None,  # TODO: PROMPT_TEMPLATE needs to be defined
         structured_output_model=OrchestrationPlanOutput,
         structured_output_version="v2",
     )

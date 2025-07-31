@@ -1,3 +1,47 @@
+import ast
+import os
+from typing import List, Union
+
+import openai
+import pymupdf4llm
+import requests
+from langchain_core.messages import AIMessage, HumanMessage, SystemMessage, ToolMessage
+from langchain_openai import ChatOpenAI
+from tenacity import (
+    retry,
+    retry_if_exception_type,
+    stop_after_attempt,
+    wait_exponential,
+)
+
+from .prompts import (
+    abstract_prompt,
+    analyze_paper_prompt,
+    conclusions_prompt,
+    critique_draft_prompt,
+    decision_prompt,
+    introduction_prompt,
+    methods_prompt,
+    planner_prompt,
+    references_prompt,
+    research_prompt,
+    results_prompt,
+    revise_draft_prompt,
+)
+from .state import AgentState
+from .tools import AcademicPaperSearchTool
+
+# Type aliases
+AnyMessage = Union[AIMessage, HumanMessage, SystemMessage, ToolMessage]
+
+# Configuration
+model = ChatOpenAI(model="gpt-4o", temperature=0.1)
+temperature = 0.1
+
+# Tools setup
+tools = {"academic_paper_search_tool": AcademicPaperSearchTool()}
+
+
 def process_input(state: AgentState):
     max_revision = 2
     messages = state.get("messages", [])
@@ -35,34 +79,7 @@ def get_relevant_messages(state: AgentState) -> List[AnyMessage]:
     return filtered_history[:-1] + messages[last_human_index:]
 
 
-# Plan Node
-def plan_node(state: AgentState):
-    """Creates initial review outline."""
-
-    # Gets filtered conversation history
-    # Uses planner prompt with system message
-    # Generates systematic review structure
-    pass
-    # Returns outline in state dictionary
-
-
-# Research Node
-def research_node(state: AgentState):
-    """Develops research strategy.
-
-    Takes review outline from state
-    Applies research prompt
-    Generates search queries
-    Updates message history
-    Common Elements
-
-    Both use temperature parameter for response variation
-    Print progress to console
-    Return updated state components
-    Use model.invoke for AI responses
-    These nodes represent the initial planning and research strategy phases in the systematic review flowchart, setting up the foundation for article searching and analysis.
-    """
-    pass
+# Plan Node and Research Node implementations below
 
 
 def plan_node(state: AgentState):
@@ -101,7 +118,7 @@ def take_action(state: AgentState):
     for t in last_message.tool_calls:
         print(f"Calling: {t}")
 
-        if not t["name"] in tools:  # check for bad tool name
+        if t["name"] not in tools:  # check for bad tool name
             print("\n ....bad tool name....")
             result = "bad tool name, retry"  # instruct llm to retry if bad
         else:

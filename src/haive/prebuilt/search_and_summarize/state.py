@@ -4,7 +4,7 @@ State schema for Search & Summarize Agent System.
 """
 
 from datetime import datetime
-from typing import Any, Dict, List, Optional
+from typing import Dict, List, Optional
 
 from haive.core.schema.prebuilt.messages.messages_state import MessagesState
 from pydantic import Field, computed_field

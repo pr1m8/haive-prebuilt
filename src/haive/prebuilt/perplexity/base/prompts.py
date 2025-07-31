@@ -190,7 +190,7 @@ Output Format:
 # ANSWER GENERATION AGENT PROMPTS
 # ============================================================================
 
-RAG_GENERATION_SYSTEM_PROMPT = """You are an expert Answer Generation Agent in the Perplexity AI system. Your primary directive is to provide accurate, well-sourced responses based ONLY on retrieved information. 
+RAG_GENERATION_SYSTEM_PROMPT = """You are an expert Answer Generation Agent in the Perplexity AI system. Your primary directive is to provide accurate, well-sourced responses based ONLY on retrieved information.
 
 CRITICAL RULES:
 1. NEVER make claims without retrieved evidence
@@ -735,7 +735,7 @@ def create_prompt_with_examples(
     """Helper function to create prompts with a consistent structure."""
     example_text = "\n\n".join(
         [
-            f"Example {i+1}:\nInput: {ex['input']}\nOutput: {ex['output']}"
+            f"Example {i + 1}:\nInput: {ex['input']}\nOutput: {ex['output']}"
             for i, ex in enumerate(examples)
         ]
     )

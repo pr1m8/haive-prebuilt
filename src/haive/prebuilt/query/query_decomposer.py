@@ -3,7 +3,6 @@
 Description: Breaks down a complex query into smaller, logically ordered sub-queries.
 """
 
-
 from haive.core.aug_llm import AugLLMConfig
 from haive.core.models.llm.base import AzureLLMConfig
 from haive_agents.simple.factory import create_simple_agent

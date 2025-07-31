@@ -1,11 +1,7 @@
 from datetime import datetime
 
 from haive.core.engine.agent.agent import Agent, register_agent
-
-# Import the configuration and state
 from haive_prebuilt.misc.company_researcher.config import KYCAgentConfiguration
-
-# Import models
 from haive_prebuilt.misc.company_researcher.models import (
     EnhancedKYCCustomerProfile,
     RestrictedIndustry,
@@ -17,6 +13,10 @@ from haive_prebuilt.misc.company_researcher.state import (
 )
 from langchain_core.messages import AIMessage, HumanMessage, SystemMessage
 from langgraph.graph import END, START
+
+# Import the configuration and state
+
+# Import models
 
 
 @register_agent(KYCAgentConfiguration)
@@ -271,7 +271,7 @@ class EnhancedKYCAgent(Agent[KYCAgentConfiguration]):
             )
 
             # Determine final decision
-            decision_outcome = self._determine_final_decision(state.customer_profile)
+            self._determine_final_decision(state.customer_profile)
 
             # Update state with final decision
             state.messages.append(

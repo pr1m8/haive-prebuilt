@@ -5,7 +5,12 @@ from datetime import datetime
 from langchain_core.messages import SystemMessage
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 
-# [Previous Enum and BaseModel definitions remain the same]
+from haive.prebuilt.company_researcher.models import (
+    ComplianceRiskFactor,
+    EnhancedKYCCustomerProfile,
+    ProhibitedActivity,
+    RestrictedIndustry,
+)
 
 
 def create_initial_screening_prompt() -> ChatPromptTemplate:

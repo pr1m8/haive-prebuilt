@@ -4,6 +4,7 @@ This subgraph handles the creation of pitch deck outlines, slide content,
 and deck refinement.
 """
 
+import uuid
 from typing import Any
 
 from haive.core.schema.state_schema import StateSchema
@@ -99,7 +100,6 @@ def create_deck_outline_node(state: PitchDeckState) -> dict[str, Any]:
     )
 
     # Create initial pitch deck structure
-    import uuid
 
     pitch_deck = PitchDeck(deck_id=str(uuid.uuid4()), metadata=metadata, slides=[])
 
@@ -265,7 +265,7 @@ def apply_feedback_node(state: PitchDeckState) -> dict[str, Any]:
 
     # Apply top improvement suggestions
     messages = []
-    for slide_id, suggestion in list(
+    for _slide_id, suggestion in list(
         feedback.get("improvement_suggestions", {}).items()
     )[:3]:
         messages.append(f"Applied: {suggestion}")

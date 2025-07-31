@@ -1,5 +1,13 @@
 # https://github.com/NirDiamant/GenAI_Agents/blob/main/all_agents_tutorials/taskifier.ipynb
 
+from langgraph.graph import END
+
+# TODO: These need to be properly defined or imported
+Agent = None  # This should be the base Agent class
+approach_analysis = None
+task_manifest = None
+result_approach = None
+
 
 class TaskifierAgent(Agent):
     def __init__(self):

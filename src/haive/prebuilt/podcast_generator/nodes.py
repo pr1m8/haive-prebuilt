@@ -1,4 +1,18 @@
 # Main graph
+from langchain_core.messages import HumanMessage
+from langgraph.graph import Send
+
+from .prompts import (
+    conclusion_instructions,
+    intro_instructions,
+    report_writer_instructions,
+)
+from .state import PodcastGeneratorState as ResearchGraphState
+
+# TODO: This needs to be properly imported or defined
+podcast_model = None  # This should be defined elsewhere or imported
+
+
 def initiate_all_interviews(state: ResearchGraphState):
     """This is the "map" step where we run each interview sub-graph using Send API"""
     topic = state["topic"]

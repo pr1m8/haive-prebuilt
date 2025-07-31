@@ -2,8 +2,6 @@ from datetime import datetime
 
 from haive.core.engine.agent.agent import AgentConfig
 from haive.core.engine.aug_llm import AugLLMConfig
-
-# Import models and state
 from haive_prebuilt.misc.company_researcher.models import (
     EnhancedKYCCustomerProfile,
 )
@@ -17,6 +15,8 @@ from haive_prebuilt.priv.prompts import (
 from langchain_core.messages import SystemMessage
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 from pydantic import BaseModel, Field, field_validator
+
+# Import models and state
 
 
 class KYCComplianceEngines(BaseModel):
@@ -47,7 +47,7 @@ class KYCComplianceEngines(BaseModel):
                 [
                     SystemMessage(
                         content="""You are the final compliance reviewer conducting comprehensive risk assessment.
-                
+
                 Review Process:
                 1. Synthesize all previous screening and investigation findings
                 2. Evaluate cumulative risk factors
@@ -176,11 +176,11 @@ def main():
             "document_verification": True
         }
     )
-    
+
     # Print configuration details
     print("KYC Agent Configuration:")
     print(kyc_config.model_dump_json(indent=2))
-    
+
     # Derive the state schema
     state_schema = kyc_config.derive_schema()
     print("\nDerived State Schema:")

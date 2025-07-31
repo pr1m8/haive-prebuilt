@@ -1,3 +1,24 @@
+from typing import Optional
+
+from langchain_core.messages import BaseMessage
+from langchain_core.tools import BaseTool
+from langgraph.graph import CompiledStateGraph
+
+try:
+    from IPython.display import Markdown, display
+except ImportError:
+    # Fallback if not in Jupyter environment
+    def display(content):
+        print(content)
+
+    class Markdown:
+        def __init__(self, text):
+            self.text = text
+
+        def __str__(self):
+            return self.text
+
+
 def format_tools_description(tools: list[BaseTool]) -> str:
     return "\n\n".join(
         [

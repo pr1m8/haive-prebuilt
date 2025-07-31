@@ -13,6 +13,7 @@ The models support:
 - Risk and opportunity analysis
 """
 
+import uuid
 from datetime import datetime
 from enum import Enum
 from typing import (
@@ -788,7 +789,6 @@ def create_problem_from_description(
     description: str, severity: str = "high"
 ) -> ProblemStatement:
     """Create a problem statement from a simple description."""
-    import uuid
 
     return ProblemStatement(
         problem_id=str(uuid.uuid4()),
@@ -804,7 +804,6 @@ def create_basic_idea(
     name: str, problem: str, solution: str, category: IdeaCategory
 ) -> StartupIdea:
     """Create a basic startup idea from minimal information."""
-    import uuid
 
     problem_statement = create_problem_from_description(problem)
 

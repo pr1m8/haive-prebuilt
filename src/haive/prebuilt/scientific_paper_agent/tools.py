@@ -1,3 +1,21 @@
+import io
+import time
+
+import pdfplumber
+import urllib3
+from langchain_core.tools import tool
+from pydantic import BaseModel
+
+
+class SearchPapersInput(BaseModel):
+    query: str
+    max_papers: int = 1
+
+
+# TODO: CoreAPIWrapper needs to be properly imported
+CoreAPIWrapper = None
+
+
 @tool("search-papers", args_schema=SearchPapersInput)
 def search_papers(query: str, max_papers: int = 1) -> str:
     """Search for scientific papers using the CORE API.

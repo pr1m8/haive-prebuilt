@@ -35,7 +35,7 @@ def basic_example():
         print(f"Research Report: {result.query_text}")
         print("=" * 80)
         print(f"\nExecutive Summary:\n{result.research_report.executive_summary}")
-        print(f"\nKey Insights:")
+        print("\nKey Insights:")
         for insight in result.research_report.key_insights:
             print(f"  • {insight}")
 
@@ -84,7 +84,7 @@ def advanced_example():
         print_research_report(result.research_report)
 
         # Show processing metrics
-        print(f"\n\nProcessing Metrics:")
+        print("\n\nProcessing Metrics:")
         print(f"  Total sources found: {result.total_sources}")
         print(f"  Sources summarized: {result.sources_summarized}")
         print(f"  Processing time: {result.processing_time:.2f}s")
@@ -155,10 +155,10 @@ def print_research_report(report):
     print(f"Research Report: {report.query}")
     print(f"{'=' * 80}")
 
-    print(f"\nExecutive Summary:")
+    print("\nExecutive Summary:")
     print(report.executive_summary)
 
-    print(f"\n\nKey Insights:")
+    print("\n\nKey Insights:")
     for i, insight in enumerate(report.key_insights, 1):
         print(f"{i}. {insight}")
 
@@ -180,7 +180,7 @@ def print_research_report(report):
                 print(f'     "{quote}"')
 
     if report.recommendations:
-        print(f"\n\nRecommendations:")
+        print("\n\nRecommendations:")
         for rec in report.recommendations:
             print(f"  → {rec}")
 

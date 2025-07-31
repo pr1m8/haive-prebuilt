@@ -18,12 +18,12 @@ Note:
     All engines use structured_output_version='v2' for Pydantic v2 compatibility.
 """
 
-from typing import Dict, List, Optional
+from typing import Dict, List
 
 from haive.core.engine.aug_llm import AugLLMConfig
-from haive.core.models.llm.base import AzureLLMConfig, OpenAILLMConfig
+from haive.core.models.llm.base import AzureLLMConfig
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
-from pydantic import Field
+from pydantic import BaseModel, Field
 
 from haive.prebuilt.tldr2.models import (
     ArticleSummary,
@@ -36,8 +36,6 @@ from haive.prebuilt.tldr2.tools import (
     analyze_relevance,
     check_source_credibility,
     extract_content,
-    filter_by_date,
-    web_search,
 )
 
 # Default LLM configuration (can be overridden)
@@ -139,7 +137,6 @@ Ensure high-quality extraction of the main article text.""",
     )
 
     # Simple output model for extraction results
-    from pydantic import BaseModel
 
     class ExtractionResult(BaseModel):
         """Result of content extraction operation."""
@@ -205,7 +202,6 @@ Explain your selection criteria.""",
     )
 
     # Output model for article selection
-    from pydantic import BaseModel
 
     class ArticleSelection(BaseModel):
         """Selected articles with relevance scores."""

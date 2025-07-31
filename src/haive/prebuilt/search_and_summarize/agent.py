@@ -18,7 +18,6 @@ from haive.prebuilt.search_and_summarize.models import (
     ContentSummary,
     ResearchReport,
     SearchQuery,
-    SearchResults,
 )
 from haive.prebuilt.search_and_summarize.prompts import (
     quality_assessment_prompt,

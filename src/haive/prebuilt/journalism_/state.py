@@ -31,7 +31,6 @@ from haive.prebuilt.journalism_.models import (
     ComprehensiveReport,
     FactCheckResult,
     GrammarBiasReview,
-    JournalismAction,
     QuoteExtractionResult,
     SearchResult,
     ToneAnalysis,

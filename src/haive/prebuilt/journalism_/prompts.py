@@ -16,6 +16,8 @@ Note:
     with variable substitution.
 """
 
+from typing import List
+
 from langchain_core.prompts import (
     ChatPromptTemplate,
     MessagesPlaceholder,
@@ -273,7 +275,7 @@ Perform a thorough editorial review examining:
 GRAMMAR & STYLE:
 - Spelling and typos
 - Grammar errors
-- Punctuation issues  
+- Punctuation issues
 - Clarity problems
 - AP style violations
 - Awkward phrasing
@@ -495,7 +497,7 @@ def create_custom_journalism_prompt(
         ChatPromptTemplate: Configured prompt template
     """
     system_content = f"{role}\n\n{task}\n\nGuidelines:\n" + "\n".join(
-        f"{i+1}. {guideline}" for i, guideline in enumerate(guidelines)
+        f"{i + 1}. {guideline}" for i, guideline in enumerate(guidelines)
     )
 
     messages = [("system", system_content)]

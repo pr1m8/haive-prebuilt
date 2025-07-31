@@ -1,3 +1,9 @@
+import operator
+from typing import Annotated
+
+from haive.core.schema.prebuilt.messages_state import MessagesState
+
+
 class InterviewState(MessagesState):
     topic: str  # Topic of the podcast
     max_num_turns: int  # Number turns of conversation

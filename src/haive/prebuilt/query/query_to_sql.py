@@ -2,6 +2,7 @@
 """Agent Name: QueryToSQL
 Description: Converts a natural language query into an SQL SELECT statement (assuming schema knowledge).
 """
+
 from haive.core.aug_llm import AugLLMConfig
 from haive.core.models.llm.base import AzureLLMConfig
 from haive_agents.simple.factory import create_simple_agent

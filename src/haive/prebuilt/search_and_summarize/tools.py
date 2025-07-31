@@ -3,16 +3,14 @@
 Search tools for the Search & Summarize agent.
 """
 
-import asyncio
 from datetime import datetime
-from typing import Any, Dict, List, Optional
+from typing import Dict, List, Optional
 from urllib.parse import urlparse
 
 import requests
 from bs4 import BeautifulSoup
 from langchain_community.document_loaders import WebBaseLoader
 from langchain_community.tools import DuckDuckGoSearchResults
-from langchain_community.utilities import GoogleSearchAPIWrapper
 from langchain_core.tools import tool
 
 from haive.prebuilt.search_and_summarize.models import SearchResult, SearchResults
@@ -83,7 +81,7 @@ def search_web(query: str, max_results: int = 5) -> SearchResults:
             search_time=search_time,
         )
 
-    except Exception as e:
+    except Exception:
         # Return empty results on error
         return SearchResults(
             query=query,

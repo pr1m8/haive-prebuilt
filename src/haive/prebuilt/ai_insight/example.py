@@ -34,10 +34,10 @@ def run_basic_news_report(topic: str):
             print(f"{result.news_report.subtitle}")
         print(f"{'=' * 80}")
 
-        print(f"\nExecutive Summary:")
+        print("\nExecutive Summary:")
         print(result.news_report.executive_summary)
 
-        print(f"\nIntroduction:")
+        print("\nIntroduction:")
         print(result.news_report.introduction)
 
         print(f"\n\nCategories ({len(result.news_report.categories)}):")
@@ -51,7 +51,7 @@ def run_basic_news_report(topic: str):
                 print(f"    Source: {article.source}")
 
         if result.news_report.key_trends:
-            print(f"\n\nKey Trends:")
+            print("\n\nKey Trends:")
             for trend in result.news_report.key_trends:
                 print(f"  → {trend}")
 
@@ -97,14 +97,14 @@ def run_customized_report():
 
     result = agent.invoke(state)
 
-    print(f"\nExecutive Report Generated")
+    print("\nExecutive Report Generated")
     print(f"Topic: {result.topic}")
     print(f"Articles found: {result.articles_found}")
     print(f"Articles processed: {result.articles_processed}")
     print(f"Processing time: {result.processing_time:.2f}s")
 
     if result.news_report and result.news_report.spotlight_article:
-        print(f"\n\nSpotlight Article:")
+        print("\n\nSpotlight Article:")
         print(f"Title: {result.news_report.spotlight_article.title}")
         print(f"Summary: {result.news_report.spotlight_article.summary}")
 

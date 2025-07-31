@@ -1,5 +1,7 @@
+import sys
 from typing import Any
 
+import requests
 from haive_prebuilt.misc.systemic_review_of_scientific_articles.models import (
     AcademicPaperSearchInput,
 )
@@ -66,7 +68,7 @@ class AcademicPaperSearchTool(BaseTool):
                         ]
 
                         return formatted_results
-                except:
+                except Exception:
                     # raise ValueError(f"Failed to fetch papers: {response.status_code} - {response.text}")
                     print(
                         f"Failed to fetch papers: {response.status_code} - {response.text}. Trying Again..."

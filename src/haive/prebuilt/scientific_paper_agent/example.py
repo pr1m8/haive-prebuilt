@@ -11,9 +11,9 @@ This cell tests the workflow with several example queries. These queries are des
 test_inputs = [
     "Download and summarize the findings of this paper: https://pmc.ncbi.nlm.nih.gov/articles/PMC11379842/pdf/11671_2024_Article_4070.pdf",
     "Can you find 8 papers on quantum machine learning?",
-    """Find recent papers (2023-2024) about CRISPR applications in treating genetic disorders, 
+    """Find recent papers (2023-2024) about CRISPR applications in treating genetic disorders,
     focusing on clinical trials and safety protocols""",
-    """Find and analyze papers from 2023-2024 about the application of transformer architectures in protein folding prediction, 
+    """Find and analyze papers from 2023-2024 about the application of transformer architectures in protein folding prediction,
     specifically looking for novel architectural modifications with experimental validation.""",
 ]
 
@@ -22,6 +22,9 @@ async def run_tests():
     """Run tests and store the results for later visualisation"""
     outputs = []
     for test_input in test_inputs:
+        from .utils import print_stream
+
+        app = None  # TODO: app needs to be defined
         final_answer = await print_stream(app, test_input)
         outputs.append(final_answer.content)
     return outputs

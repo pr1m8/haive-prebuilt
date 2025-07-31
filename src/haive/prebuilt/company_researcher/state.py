@@ -5,13 +5,14 @@ from datetime import datetime
 from enum import Enum
 from typing import Annotated, Any
 
-# Import the enhanced models
 from haive_prebuilt.misc.company_researcher.models import (
     EnhancedKYCCustomerProfile,
 )
 from langchain_core.messages import BaseMessage
 from langgraph.graph import add_messages
 from pydantic import BaseModel, ConfigDict, Field
+
+# Import the enhanced models
 
 
 class KYCWorkflowStage(str, Enum):
@@ -156,23 +157,23 @@ def main():
             }
         )
     )
-    
+
     # Demonstrate stage update
     print("Initial State:")
     print(kyc_state.model_dump_json(indent=2))
-    
+
     # Update stage
     kyc_state.update_stage(KYCWorkflowStage.RISK_ASSESSMENT)
-    
+
     # Set decision status
     kyc_state.set_decision_status(KYCDecisionStatus.PENDING_REVIEW)
-    
+
     # Log an error (optional)
     kyc_state.log_error({
         "error_type": "compliance_issue",
         "message": "Additional verification required"
     })
-    
+
     print("\nUpdated State:")
     print(kyc_state.model_dump_json(indent=2))
 
