@@ -512,7 +512,7 @@ COMMUNICATION_PLANNING_SYSTEM_PROMPT = """You are a strategic communications exp
 
 **Communication Objectives:**
 - **Inform**: Share information and updates
-- **Persuade**: Influence opinions and decisions  
+- **Persuade**: Influence opinions and decisions
 - **Engage**: Build relationships and gather input
 - **Align**: Create shared understanding and commitment
 - **Motivate**: Drive action and behavior change
@@ -633,6 +633,10 @@ class AgentUtilitiesPrompts:
     @staticmethod
     def create_goal_decomposition_prompt() -> ChatPromptTemplate:
         """Create prompt template for goal decomposition."""
+        # TODO: These prompts need to be defined
+        GOAL_DECOMPOSITION_SYSTEM_PROMPT = "You are a goal decomposition assistant."
+        GOAL_DECOMPOSITION_USER_PROMPT = "Please decompose the following goal: {goal}"
+
         return ChatPromptTemplate.from_messages(
             [
                 ("system", GOAL_DECOMPOSITION_SYSTEM_PROMPT),
@@ -702,7 +706,7 @@ def create_goal_decomposition_agent(agent_class, **kwargs):
         name="GoalDecompositionAgent",
         prompt_template=AgentUtilitiesPrompts.create_goal_decomposition_prompt(),
         structured_output_model=GoalDecomposition,
-        **kwargs
+        **kwargs,
     )
 
 
@@ -712,7 +716,7 @@ def create_decision_analysis_agent(agent_class, **kwargs):
         name="DecisionAnalysisAgent",
         prompt_template=AgentUtilitiesPrompts.create_decision_analysis_prompt(),
         structured_output_model=DecisionAnalysis,
-        **kwargs
+        **kwargs,
     )
 
 
@@ -722,7 +726,7 @@ def create_resource_planning_agent(agent_class, **kwargs):
         name="ResourcePlanningAgent",
         prompt_template=AgentUtilitiesPrompts.create_resource_planning_prompt(),
         structured_output_model=ResourcePlan,
-        **kwargs
+        **kwargs,
     )
 
 
@@ -732,7 +736,7 @@ def create_quality_assessment_agent(agent_class, **kwargs):
         name="QualityAssessmentAgent",
         prompt_template=AgentUtilitiesPrompts.create_quality_assessment_prompt(),
         structured_output_model=QualityAssessment,
-        **kwargs
+        **kwargs,
     )
 
 
@@ -742,7 +746,7 @@ def create_workflow_optimization_agent(agent_class, **kwargs):
         name="WorkflowOptimizationAgent",
         prompt_template=AgentUtilitiesPrompts.create_workflow_optimization_prompt(),
         structured_output_model=WorkflowOptimization,
-        **kwargs
+        **kwargs,
     )
 
 
@@ -752,5 +756,5 @@ def create_communication_planning_agent(agent_class, **kwargs):
         name="CommunicationPlanningAgent",
         prompt_template=AgentUtilitiesPrompts.create_communication_planning_prompt(),
         structured_output_model=CommunicationPlan,
-        **kwargs
+        **kwargs,
     )

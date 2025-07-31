@@ -1,5 +1,5 @@
 import operator
-from typing import Annotated, List
+from typing import Annotated
 
 from pydantic import BaseModel, Field
 
@@ -8,9 +8,9 @@ class PodcastGeneratorState(BaseModel):
     topic: Annotated[str, operator.add] = Field(
         description="The overall topic of the podcast"
     )
-    keywords: List = Field(description="Keywords related to the podcast")
+    keywords: list = Field(description="Keywords related to the podcast")
     max_analysts: int = Field(description="The maximum number of analysts to use")
-    subtopics: List = Field(description="Subtopics related to the podcast")
+    subtopics: list = Field(description="Subtopics related to the podcast")
     sections: Annotated[list, operator.add] = Field(
         description="The sections of the podcast"
     )

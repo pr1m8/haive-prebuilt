@@ -1,11 +1,8 @@
-from typing import Dict, Optional
-
 from pydantic import BaseModel
 
 
 class AgentAction(BaseModel):
-    """
-    Model representing an agent's action decision.
+    """Model representing an agent's action decision.
 
     Attributes:
         action (str): The specific action to be taken (e.g., "search_calendar", "analyze_tasks")
@@ -24,13 +21,12 @@ class AgentAction(BaseModel):
 
     action: str  # Required action to be performed
     thought: str  # Reasoning behind the action
-    tool: Optional[str] = None  # Optional tool specification
-    action_input: Optional[Dict] = None  # Optional input parameters
+    tool: str | None = None  # Optional tool specification
+    action_input: dict | None = None  # Optional input parameters
 
 
 class AgentOutput(BaseModel):
-    """
-    Model representing the output from an agent's action.
+    """Model representing the output from an agent's action.
 
     Attributes:
         observation (str): The result or observation from executing the action
@@ -47,4 +43,4 @@ class AgentOutput(BaseModel):
     """
 
     observation: str  # Result or observation from the action
-    output: Dict  # Structured output data
+    output: dict  # Structured output data

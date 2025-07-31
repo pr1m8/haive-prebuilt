@@ -1,18 +1,33 @@
- LLMs
+# LLMs
+
+import json
+
+from langchain_core.messages import AIMessage, SystemMessage, ToolMessage
+from langchain_openai import ChatOpenAI
+
+from .models import DecisionMakingOutput, JudgeOutput
+from .prompts import agent_prompt, decision_making_prompt, judge_prompt, planning_prompt
+from .state import AgentState
+from .tools import format_tools_description, tools, tools_dict
+
 base_llm = ChatOpenAI(model="gpt-4o", temperature=0.0)
 decision_making_llm = base_llm.with_structured_output(DecisionMakingOutput)
 agent_llm = base_llm.bind_tools(tools)
 judge_llm = base_llm.with_structured_output(JudgeOutput)
 
+
 # Decision making node
 def decision_making_node(state: AgentState):
     """Entry point of the workflow. Based on the user query, the model can either respond directly or perform a full research, routing the workflow to the planning node"""
     system_prompt = SystemMessage(content=decision_making_prompt)
-    response: DecisionMakingOutput = decision_making_llm.invoke([system_prompt] + state["messages"])
+    response: DecisionMakingOutput = decision_making_llm.invoke(
+        [system_prompt] + state["messages"]
+    )
     output = {"requires_research": response.requires_research}
     if response.answer:
         output["messages"] = [AIMessage(content=response.answer)]
     return output
+
 
 # Task router function
 def router(state: AgentState):
@@ -22,12 +37,16 @@ def router(state: AgentState):
     else:
         return "end"
 
+
 # Planning node
 def planning_node(state: AgentState):
     """Planning node that creates a step by step plan to answer the user query."""
-    system_prompt = SystemMessage(content=planning_prompt.format(tools=format_tools_description(tools)))
+    system_prompt = SystemMessage(
+        content=planning_prompt.format(tools=format_tools_description(tools))
+    )
     response = base_llm.invoke([system_prompt] + state["messages"])
     return {"messages": [response]}
+
 
 # Tool call node
 def tools_node(state: AgentState):
@@ -44,12 +63,14 @@ def tools_node(state: AgentState):
         )
     return {"messages": outputs}
 
+
 # Agent call node
 def agent_node(state: AgentState):
     """Agent call node that uses the LLM with tools to answer the user query."""
     system_prompt = SystemMessage(content=agent_prompt)
     response = agent_llm.invoke([system_prompt] + state["messages"])
     return {"messages": [response]}
+
 
 # Should continue function
 def should_continue(state: AgentState):
@@ -63,6 +84,7 @@ def should_continue(state: AgentState):
     else:
         return "end"
 
+
 # Judge node
 def judge_node(state: AgentState):
     """Node to let the LLM judge the quality of its own final answer."""
@@ -75,11 +97,12 @@ def judge_node(state: AgentState):
     response: JudgeOutput = judge_llm.invoke([system_prompt] + state["messages"])
     output = {
         "is_good_answer": response.is_good_answer,
-        "num_feedback_requests": num_feedback_requests + 1
+        "num_feedback_requests": num_feedback_requests + 1,
     }
     if response.feedback:
         output["messages"] = [AIMessage(content=response.feedback)]
     return output
+
 
 # Final answer router function
 def final_answer_router(state: AgentState):

@@ -1,6 +1,5 @@
 # src/haive/prebuilt/simple/query_enhancer.py
-"""
-Agent Name: QueryEnhancer
+"""Agent Name: QueryEnhancer
 Description: Enriches a query by adding relevant context, assumptions, or metadata.
 Useful for boosting reasoning or LLM effectiveness.
 """
@@ -8,7 +7,6 @@ Useful for boosting reasoning or LLM effectiveness.
 from haive.core.aug_llm import AugLLMConfig
 from haive.core.models.llm.base import AzureLLMConfig
 from haive_agents.simple.factory import create_simple_agent
-from haive_prebuilt.simple.query.models import QueryModel
 from langchain_core.prompts import ChatPromptTemplate
 from pydantic import BaseModel, Field
 

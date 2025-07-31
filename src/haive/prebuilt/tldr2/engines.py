@@ -1,0 +1,502 @@
+"""Engine configurations for the News Research Agent.
+
+This module defines all AugLLMConfig engines used by the news research agent.
+Each engine represents a specific capability with its own prompt, tools,
+and structured output model.
+
+Engines are configured with:
+- Prompt templates for specific tasks
+- Tools for interacting with external services
+- Structured output models for type-safe responses
+- LLM configurations for model selection and parameters
+
+Example:
+    >>> from news_research.engines import search_engine, analysis_engine
+    >>> result = search_engine.invoke(state)
+
+Note:
+    All engines use structured_output_version='v2' for Pydantic v2 compatibility.
+"""
+
+from typing import Dict, List
+
+from haive.core.engine.aug_llm import AugLLMConfig
+from haive.core.models.llm.base import AzureLLMConfig
+from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
+from pydantic import BaseModel, Field
+
+from haive.prebuilt.tldr2.models import (
+    ArticleSummary,
+    NewsApiParams,
+    ResearchAnalysis,
+    ResearchReport,
+    SearchDecision,
+)
+from haive.prebuilt.tldr2.tools import (
+    analyze_relevance,
+    check_source_credibility,
+    extract_content,
+)
+
+# Default LLM configuration (can be overridden)
+DEFAULT_LLM_CONFIG = AzureLLMConfig(
+    model="gpt-4o-mini", temperature=0.7, max_tokens=2000
+)
+
+
+def create_search_engine() -> AugLLMConfig:
+    """Create the search parameter generation engine.
+
+    This engine analyzes the research topic and generates appropriate
+    search parameters for the NewsAPI.
+
+    Returns:
+        AugLLMConfig: Configured search engine
+
+    Example:
+        >>> engine = create_search_engine()
+        >>> params = engine.invoke(state)
+    """
+    prompt = ChatPromptTemplate.from_messages(
+        [
+            (
+                "system",
+                """You are an expert news researcher who creates optimal search strategies.
+
+Your task is to generate search parameters that will find the most relevant and recent
+news articles for the given research topic.
+
+Guidelines:
+- Create concise, focused search queries (1-3 keywords)
+- Use relevant news sources for the topic
+- Set appropriate date ranges (recent news is usually more relevant)
+- Avoid overly specific queries that might miss important articles
+- Consider different angles and perspectives on the topic
+
+If this is a follow-up search, vary the approach:
+- Try different keyword combinations
+- Expand the date range
+- Use different news sources
+- Consider related topics or broader terms""",
+            ),
+            MessagesPlaceholder(variable_name="messages"),
+            (
+                "human",
+                """Research Topic: {research_topic}
+
+Previous Searches: {past_searches}
+Search Iteration: {search_iteration}
+
+Generate optimal NewsAPI search parameters for this topic.""",
+            ),
+        ]
+    )
+
+    return AugLLMConfig(
+        name="search_engine",
+        llm_config=DEFAULT_LLM_CONFIG,
+        prompt_template=prompt,
+        structured_output_model=NewsApiParams,
+        structured_output_version="v2",
+        description="Generates search parameters for news articles",
+    )
+
+
+def create_extraction_engine() -> AugLLMConfig:
+    """Create the content extraction coordination engine.
+
+    This engine coordinates the extraction of full article content
+    from URLs using the extraction tools.
+
+    Returns:
+        AugLLMConfig: Configured extraction engine
+    """
+    prompt = ChatPromptTemplate.from_messages(
+        [
+            (
+                "system",
+                """You are a content extraction specialist.
+
+Your task is to coordinate the extraction of article content from URLs.
+Use the provided tools to:
+1. Extract full text content from articles
+2. Verify extraction quality
+3. Handle any extraction errors gracefully
+
+Focus on getting clean, complete article text.""",
+            ),
+            MessagesPlaceholder(variable_name="messages"),
+            (
+                "human",
+                """Extract content from these article URLs:
+{article_urls}
+
+Ensure high-quality extraction of the main article text.""",
+            ),
+        ]
+    )
+
+    # Simple output model for extraction results
+
+    class ExtractionResult(BaseModel):
+        """Result of content extraction operation."""
+
+        extracted_count: int = Field(
+            description="Number of articles successfully extracted"
+        )
+        failed_count: int = Field(description="Number of extraction failures")
+        status: str = Field(description="Overall extraction status")
+
+    return AugLLMConfig(
+        name="extraction_engine",
+        llm_config=DEFAULT_LLM_CONFIG.model_copy(update={"temperature": 0.3}),
+        prompt_template=prompt,
+        tools=[extract_content],
+        structured_output_model=ExtractionResult,
+        structured_output_version="v2",
+        description="Coordinates article content extraction",
+    )
+
+
+def create_selection_engine() -> AugLLMConfig:
+    """Create the article selection engine.
+
+    This engine analyzes article metadata and content to select
+    the most relevant articles for summarization.
+
+    Returns:
+        AugLLMConfig: Configured selection engine
+    """
+    prompt = ChatPromptTemplate.from_messages(
+        [
+            (
+                "system",
+                """You are an expert at evaluating news article relevance.
+
+Your task is to select the most relevant articles for summarization based on:
+1. Relevance to the research topic
+2. Content quality and completeness
+3. Source credibility
+4. Recency and timeliness
+5. Unique perspectives or information
+
+Guidelines:
+- Prioritize articles with substantial, relevant content
+- Ensure diversity of sources and viewpoints
+- Avoid duplicate or very similar articles
+- Check source credibility when available
+- Select articles that together provide comprehensive coverage""",
+            ),
+            MessagesPlaceholder(variable_name="messages"),
+            (
+                "human",
+                """Research Topic: {research_topic}
+
+Available Articles:
+{articles_info}
+
+Select up to {max_articles} most relevant articles for summarization.
+Explain your selection criteria.""",
+            ),
+        ]
+    )
+
+    # Output model for article selection
+
+    class ArticleSelection(BaseModel):
+        """Selected articles with relevance scores."""
+
+        selected_urls: List[str] = Field(
+            description="URLs of selected articles in order of relevance"
+        )
+        selection_reasoning: str = Field(
+            description="Explanation of selection criteria and choices"
+        )
+        relevance_scores: Dict[str, float] = Field(
+            description="Relevance score for each selected article"
+        )
+
+    return AugLLMConfig(
+        name="selection_engine",
+        llm_config=DEFAULT_LLM_CONFIG.model_copy(update={"temperature": 0.5}),
+        prompt_template=prompt,
+        tools=[analyze_relevance, check_source_credibility],
+        structured_output_model=ArticleSelection,
+        structured_output_version="v2",
+        description="Selects most relevant articles for summarization",
+    )
+
+
+def create_summary_engine() -> AugLLMConfig:
+    """Create the article summarization engine.
+
+    This engine generates concise, informative summaries of articles
+    with key points and relevance scores.
+
+    Returns:
+        AugLLMConfig: Configured summary engine
+    """
+    prompt = ChatPromptTemplate.from_messages(
+        [
+            (
+                "system",
+                """You are an expert at creating clear, informative article summaries.
+
+Your task is to create a comprehensive summary that:
+1. Captures the main points and key information
+2. Maintains factual accuracy
+3. Highlights relevance to the research topic
+4. Identifies important quotes or data points
+5. Notes any limitations or biases
+
+Guidelines:
+- Create 3-7 bullet points per article
+- Each point should be substantive (not just a single sentence)
+- Include specific facts, figures, or quotes when relevant
+- Assess the article's relevance to the research topic
+- Identify the main topics and themes covered""",
+            ),
+            MessagesPlaceholder(variable_name="messages"),
+            (
+                "human",
+                """Research Topic: {research_topic}
+
+Article to Summarize:
+Title: {article_title}
+URL: {article_url}
+Content: {article_content}
+
+Create a comprehensive summary with relevance assessment.""",
+            ),
+        ]
+    )
+
+    return AugLLMConfig(
+        name="summary_engine",
+        llm_config=DEFAULT_LLM_CONFIG.model_copy(update={"temperature": 0.3}),
+        prompt_template=prompt,
+        structured_output_model=ArticleSummary,
+        structured_output_version="v2",
+        description="Generates article summaries with key points",
+    )
+
+
+def create_decision_engine() -> AugLLMConfig:
+    """Create the search decision engine.
+
+    This engine decides whether to continue searching for more articles
+    or proceed with analysis based on current results.
+
+    Returns:
+        AugLLMConfig: Configured decision engine
+    """
+    prompt = ChatPromptTemplate.from_messages(
+        [
+            (
+                "system",
+                """You are a research workflow coordinator.
+
+Your task is to decide the next action based on:
+1. Number and quality of articles found
+2. Coverage of the research topic
+3. Diversity of sources and perspectives
+4. Search iterations already performed
+5. Configured limits and thresholds
+
+Decision options:
+- continue_search: Need more articles or better coverage
+- analyze: Have sufficient high-quality articles
+- insufficient_data: Cannot find enough relevant articles
+
+Consider:
+- Minimum 3-5 good articles for meaningful analysis
+- Diminishing returns after multiple searches
+- Balance between thoroughness and efficiency""",
+            ),
+            MessagesPlaceholder(variable_name="messages"),
+            (
+                "human",
+                """Research Topic: {research_topic}
+
+Search Summary:
+- Articles Found: {total_articles}
+- Articles Processed: {processed_articles}
+- Articles Summarized: {summarized_articles}
+- Average Relevance: {average_relevance}
+- Search Iterations: {search_iterations}
+- Maximum Sources: {max_sources}
+
+Make a decision about the next action.""",
+            ),
+        ]
+    )
+
+    return AugLLMConfig(
+        name="decision_engine",
+        llm_config=DEFAULT_LLM_CONFIG.model_copy(update={"temperature": 0.5}),
+        prompt_template=prompt,
+        structured_output_model=SearchDecision,
+        structured_output_version="v2",
+        description="Decides workflow continuation based on results",
+    )
+
+
+def create_analysis_engine() -> AugLLMConfig:
+    """Create the research analysis engine.
+
+    This engine analyzes all collected articles to identify themes,
+    patterns, and insights.
+
+    Returns:
+        AugLLMConfig: Configured analysis engine
+    """
+    prompt = ChatPromptTemplate.from_messages(
+        [
+            (
+                "system",
+                """You are an expert research analyst specializing in synthesizing information.
+
+Your task is to analyze all collected articles and identify:
+1. Main themes and patterns across articles
+2. Key findings and insights
+3. Areas of consensus and disagreement
+4. Trends and developments
+5. Gaps in coverage or information
+
+Guidelines:
+- Look for patterns across multiple sources
+- Identify both explicit and implicit themes
+- Note any contradictions or conflicting information
+- Assess the overall quality and completeness of information
+- Consider source credibility and potential biases
+- Highlight the most important discoveries""",
+            ),
+            MessagesPlaceholder(variable_name="messages"),
+            (
+                "human",
+                """Research Topic: {research_topic}
+
+Article Summaries:
+{article_summaries}
+
+Source Distribution:
+{source_distribution}
+
+Perform a comprehensive analysis of all collected information.""",
+            ),
+        ]
+    )
+
+    return AugLLMConfig(
+        name="analysis_engine",
+        llm_config=DEFAULT_LLM_CONFIG.model_copy(
+            update={"temperature": 0.5, "max_tokens": 3000}
+        ),
+        prompt_template=prompt,
+        structured_output_model=ResearchAnalysis,
+        structured_output_version="v2",
+        description="Analyzes articles to identify themes and insights",
+    )
+
+
+def create_report_engine() -> AugLLMConfig:
+    """Create the report generation engine.
+
+    This engine creates the final research report with executive summary,
+    detailed sections, and recommendations.
+
+    Returns:
+        AugLLMConfig: Configured report engine
+    """
+    prompt = ChatPromptTemplate.from_messages(
+        [
+            (
+                "system",
+                """You are a professional research report writer.
+
+Your task is to create a comprehensive, well-structured research report that:
+1. Provides a clear executive summary
+2. Organizes findings into logical sections
+3. Supports claims with evidence from sources
+4. Offers actionable recommendations
+5. Maintains professional tone and clarity
+
+Report structure:
+- Executive Summary: High-level findings and implications
+- Background: Context and importance of the topic
+- Key Findings: Main discoveries organized by theme
+- Analysis: Deeper insights and patterns
+- Recommendations: Actionable next steps
+- Conclusion: Summary and future outlook
+
+Guidelines:
+- Write for a professional audience
+- Be concise but comprehensive
+- Use clear section headings
+- Include specific examples and data
+- Provide balanced perspective""",
+            ),
+            MessagesPlaceholder(variable_name="messages"),
+            (
+                "human",
+                """Research Topic: {research_topic}
+
+Analysis Results:
+{analysis}
+
+Article Summaries:
+{article_summaries}
+
+Total Sources: {sources_count}
+
+Create a comprehensive research report.""",
+            ),
+        ]
+    )
+
+    return AugLLMConfig(
+        name="report_engine",
+        llm_config=DEFAULT_LLM_CONFIG.model_copy(
+            update={"temperature": 0.5, "max_tokens": 4000}
+        ),
+        prompt_template=prompt,
+        structured_output_model=ResearchReport,
+        structured_output_version="v2",
+        description="Generates final research report",
+    )
+
+
+# Create all engines as a dictionary for easy access
+def create_all_engines() -> Dict[str, AugLLMConfig]:
+    """Create all engines for the news research agent.
+
+    Returns:
+        Dict[str, AugLLMConfig]: Dictionary of all configured engines
+
+    Example:
+        >>> engines = create_all_engines()
+        >>> search_engine = engines["search"]
+    """
+    return {
+        "search": create_search_engine(),
+        "extraction": create_extraction_engine(),
+        "selection": create_selection_engine(),
+        "summary": create_summary_engine(),
+        "decision": create_decision_engine(),
+        "analysis": create_analysis_engine(),
+        "report": create_report_engine(),
+    }
+
+
+# For convenience, also export individual engine creators
+__all__ = [
+    "create_search_engine",
+    "create_extraction_engine",
+    "create_selection_engine",
+    "create_summary_engine",
+    "create_decision_engine",
+    "create_analysis_engine",
+    "create_report_engine",
+    "create_all_engines",
+    "DEFAULT_LLM_CONFIG",
+]

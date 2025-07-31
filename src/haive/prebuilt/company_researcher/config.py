@@ -1,18 +1,11 @@
-import uuid
 from datetime import datetime
-from typing import Any, Dict, List, Optional, Type, Union
 
 from haive.core.engine.agent.agent import AgentConfig
 from haive.core.engine.aug_llm import AugLLMConfig
-from haive.core.graph.StateSchemaManager import StateSchemaManager
-
-# Import models and state
 from haive_prebuilt.misc.company_researcher.models import (
     EnhancedKYCCustomerProfile,
 )
 from haive_prebuilt.misc.company_researcher.state import (
-    KYCDecisionStatus,
-    KYCWorkflowStage,
     KYCWorkflowState,
 )
 from haive_prebuilt.priv.prompts import (
@@ -21,14 +14,13 @@ from haive_prebuilt.priv.prompts import (
 )
 from langchain_core.messages import SystemMessage
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
-from langgraph.graph import StateGraph
 from pydantic import BaseModel, Field, field_validator
+
+# Import models and state
 
 
 class KYCComplianceEngines(BaseModel):
-    """
-    Configuration for different KYC compliance engines
-    """
+    """Configuration for different KYC compliance engines"""
 
     initial_screening: AugLLMConfig = Field(
         default_factory=lambda: AugLLMConfig(
@@ -55,7 +47,7 @@ class KYCComplianceEngines(BaseModel):
                 [
                     SystemMessage(
                         content="""You are the final compliance reviewer conducting comprehensive risk assessment.
-                
+
                 Review Process:
                 1. Synthesize all previous screening and investigation findings
                 2. Evaluate cumulative risk factors
@@ -72,12 +64,10 @@ class KYCComplianceEngines(BaseModel):
 
 
 class KYCAgentConfiguration(AgentConfig):
-    """
-    Advanced configuration for KYC Agent with granular control
-    """
+    """Advanced configuration for KYC Agent with granular control"""
 
     # Screening Thresholds
-    risk_score_thresholds: Dict[str, float] = Field(
+    risk_score_thresholds: dict[str, float] = Field(
         default_factory=lambda: {
             "low_risk": 25.0,
             "medium_risk": 50.0,
@@ -88,7 +78,7 @@ class KYCAgentConfiguration(AgentConfig):
     )
 
     # Compliance Configuration
-    compliance_checks: Dict[str, bool] = Field(
+    compliance_checks: dict[str, bool] = Field(
         default_factory=lambda: {
             "politically_exposed_persons": True,
             "sanctions_screening": True,
@@ -99,7 +89,7 @@ class KYCAgentConfiguration(AgentConfig):
     )
 
     # Enhanced Due Diligence Triggers
-    edd_triggers: Dict[str, float] = Field(
+    edd_triggers: dict[str, float] = Field(
         default_factory=lambda: {
             "risk_score_threshold": 50.0,
             "prohibited_activities_multiplier": 2.0,
@@ -123,9 +113,8 @@ class KYCAgentConfiguration(AgentConfig):
     )
 
     # State Schema Derivation
-    def derive_schema(self) -> Type[BaseModel]:
-        """
-        Create a custom state schema specifically for KYC workflow
+    def derive_schema(self) -> type[BaseModel]:
+        """Create a custom state schema specifically for KYC workflow
 
         Returns:
             Pydantic model representing the KYC agent state
@@ -135,8 +124,7 @@ class KYCAgentConfiguration(AgentConfig):
 
     @field_validator("edd_triggers")
     def validate_edd_triggers(cls, v):
-        """
-        Validate Enhanced Due Diligence triggers
+        """Validate Enhanced Due Diligence triggers
 
         Ensures trigger values are within reasonable ranges
         """
@@ -155,10 +143,9 @@ class KYCAgentConfiguration(AgentConfig):
 
     @classmethod
     def create_config(
-        cls, name: Optional[str] = None, **kwargs
+        cls, name: str | None = None, **kwargs
     ) -> "KYCAgentConfiguration":
-        """
-        Factory method to create a KYC agent configuration
+        """Factory method to create a KYC agent configuration
 
         Args:
             name: Optional name for the agent
@@ -189,11 +176,11 @@ def main():
             "document_verification": True
         }
     )
-    
+
     # Print configuration details
     print("KYC Agent Configuration:")
     print(kyc_config.model_dump_json(indent=2))
-    
+
     # Derive the state schema
     state_schema = kyc_config.derive_schema()
     print("\nDerived State Schema:")

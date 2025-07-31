@@ -1,14 +1,12 @@
 # Additional simple agents
 
 # src/haive/prebuilt/simple/query_intent_classifier.py
-"""
-Agent Name: QueryIntentClassifier
+"""Agent Name: QueryIntentClassifier
 Description: Classifies the intent behind a query, such as definition, comparison, fact-checking, opinion, etc.
 """
+
 from haive.core.aug_llm import AugLLMConfig
 from haive.core.models.llm.base import AzureLLMConfig
-from haive_agents.simple.factory import create_simple_agent
-from haive_prebuilt.simple.query.models import QueryModel
 from langchain_core.prompts import ChatPromptTemplate
 from pydantic import BaseModel, Field
 
@@ -25,7 +23,7 @@ prompt = ChatPromptTemplate.from_messages(
 
 class QueryIntent(BaseModel):
     intent: str = Field(..., description="The classified intent behind the query.")
-    confidence: float = Field(..., description="Confidence score between 0 and 1.")
+    confidence: float = Field(..., description="The confidence score for the intent.")
 
 
 query_intent_classifier_config = AugLLMConfig(

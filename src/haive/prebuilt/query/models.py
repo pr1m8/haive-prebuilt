@@ -1,12 +1,8 @@
-from typing import List
-
 from pydantic import BaseModel, Field
 
 
 class QueryModel(BaseModel):
-    """
-    A model for a query.
-    """
+    """A model for a query."""
 
     query: str = Field(..., description="The query to be decomposed.")
 

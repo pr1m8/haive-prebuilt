@@ -2,6 +2,17 @@
 # FINANCIAL PROJECTION AGENT
 # ============================================================================
 
+from typing import Any, Dict, List, Optional
+
+from haive.core.engine.aug_llm import AugLLMConfig
+from haive.core.models.llm.azure import AzureLLMConfig
+from langchain_core.messages import SystemMessage
+from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
+from pydantic import BaseModel
+
+# TODO: This needs to be properly imported or defined
+tavily_search_tool = None  # This should be imported from the tools module
+
 FINANCIAL_PROJECTION_SYSTEM_PROMPT = """You are a financial analyst specializing in startup financial projections. Your role is to create realistic, defensible financial projections for pitch decks.
 
 Projection principles:

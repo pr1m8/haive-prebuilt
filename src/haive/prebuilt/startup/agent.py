@@ -5,38 +5,37 @@ This agent manages the entire flow from ideation through pitch deck creation,
 coordinating between different specialized subgraphs.
 """
 
-from typing import Any, Dict, List, Literal, Optional, Union
+from typing import Any, Dict, List, Literal, Optional
 
 from haive.agents.base.agent import Agent
-from haive.core.schema.schema_composer import SchemaComposer
 from haive.core.schema.state_schema import StateSchema
 from langchain_core.messages import AIMessage, BaseMessage, HumanMessage
 from langgraph.graph import END, START, StateGraph
-from langgraph.types import Send
 from pydantic import BaseModel, Field
 
 from haive.prebuilt.startup.business_model_subgraph import (
-    BusinessModelState,
     build_business_model_subgraph,
 )
-
-# Import subgraphs
 from haive.prebuilt.startup.ideation_subgraph import (
-    IdeationState,
     build_ideation_subgraph,
 )
 from haive.prebuilt.startup.market_research_subgraph import (
-    MarketResearchState,
     build_market_research_subgraph,
 )
-
-# Import models
-from haive.prebuilt.startup.models import IdeaPortfolio, StartupIdea
-from haive.prebuilt.startup.pitch_deck_models import PitchDeck, PitchDeckMetadata
+from haive.prebuilt.startup.models import (
+    IdeaCategory,
+    IdeaPortfolio,
+    StartupIdea,
+    create_basic_idea,
+)
+from haive.prebuilt.startup.pitch_deck_models import PitchDeck
 from haive.prebuilt.startup.pitch_deck_subgraph import (
-    PitchDeckState,
     build_pitch_deck_subgraph,
 )
+
+# Import subgraphs
+
+# Import models
 
 
 class MasterStartupState(StateSchema):
@@ -233,9 +232,6 @@ class MasterStartupAgent(Agent):
             if hasattr(state, "raw_ideas") and state.raw_ideas:
                 # Create a basic StartupIdea from the best raw idea
                 # In practice, this would be more sophisticated
-                import uuid
-
-from haive.prebuilt.startup.models import IdeaCategory, create_basic_idea
 
                 best_idea_str = state.raw_ideas[0]
                 parts = best_idea_str.split(":")
@@ -400,14 +396,14 @@ from haive.prebuilt.startup.models import IdeaCategory, create_basic_idea
         final_message = f"""
 🎉 **Startup Development Complete!**
 
-**Startup:** {state.selected_idea.name if state.selected_idea else 'Your Startup'}
+**Startup:** {state.selected_idea.name if state.selected_idea else "Your Startup"}
 **Fundability Score:** {fundability_score:.0%}
 
 **Key Success Factors:**
-{chr(10).join(f'✅ {factor}' for factor in factors)}
+{chr(10).join(f"✅ {factor}" for factor in factors)}
 
 **Recommended Next Steps:**
-{chr(10).join(f'{i+1}. {step}' for i, step in enumerate(next_steps))}
+{chr(10).join(f"{i + 1}. {step}" for i, step in enumerate(next_steps))}
 
 Your pitch deck is ready and you're prepared to approach investors!
 """

@@ -1,11 +1,7 @@
 import operator
-from typing import Annotated, Dict, List, TypedDict
+from typing import Annotated
 
 from langchain_core.messages import AnyMessage
-from langchain_core.output_parsers import StrOutputParser
-from langchain_core.prompts import ChatPromptTemplate
-from langchain_core.runnables import RunnableSequence
-from langchain_core.tools import BaseTool
 from pydantic import BaseModel, Field
 
 from haive.haive.utils.message_utils import reduce_messages
@@ -17,10 +13,10 @@ class AgentState(BaseModel):
     )
     systematic_review_outline: str = Field(description="The systematic review outline")
     last_human_index: int = Field(description="The last human index")
-    papers: Annotated[List[str], operator.add] = Field(
+    papers: Annotated[list[str], operator.add] = Field(
         description="The papers downloaded"
     )
-    analyses: Annotated[List[Dict], operator.add] = Field(
+    analyses: Annotated[list[dict], operator.add] = Field(
         description="The analysis results"
     )
     combined_analysis: str = Field(description="The final combined analysis")

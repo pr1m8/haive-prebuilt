@@ -1,10 +1,7 @@
 # src/haive/prebuilt/simple/query_batch.py
-"""
-Agent Name: QueryBatcher
+"""Agent Name: QueryBatcher
 Description: Converts a single query into multiple variations or batched forms for ensemble retrieval or multi-agent use.
 """
-
-from typing import List
 
 from haive.core.engine.aug_llm import AugLLMConfig
 from haive.core.models.llm.base import AzureLLMConfig
@@ -24,7 +21,7 @@ query_batch_prompt = ChatPromptTemplate.from_messages(
 
 
 class QueryBatch(BaseModel):
-    variations: List[QueryModel] = Field(
+    variations: list[QueryModel] = Field(
         ...,
         description="A list of semantically equivalent but syntactically varied versions of the query.",
     )

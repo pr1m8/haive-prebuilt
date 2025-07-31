@@ -1,3 +1,62 @@
+"""Misc - Agent Utilities Module for Haive Agents.
+
+TODO: Add detailed description of module functionality
+
+
+
+Example:
+    Basic usage::
+
+        from haive.misc import module_function
+        from haive import agents
+
+
+        # TODO: Add example
+
+
+"""
+
+from haive.prebuilt.misc.agent_utilities_models import (  # Goal Decomposition; Decision Analysis; Resource Planning; Quality Assessment; Workflow Optimization; Communication Planning
+    BottleneckType,
+    CommunicationFrequency,
+    CommunicationPlan,
+    DecisionAnalysis,
+    DecisionCriteria,
+    DecisionOption,
+    DecisionType,
+    GoalDecomposition,
+    GoalStatus,
+    GoalType,
+    InfluenceLevel,
+    InterestLevel,
+    PriorityLevel,
+    ProcessBottleneck,
+    ProcessStep,
+    ProcessType,
+    QualityAssessment,
+    QualityDimension,
+    QualityIssue,
+    QualityMetric,
+    Resource,
+    ResourceAvailability,
+    ResourcePlan,
+    ResourceRequirement,
+    ResourceType,
+    Stakeholder,
+    StakeholderType,
+    SubGoal,
+    WorkflowOptimization,
+)
+from haive.prebuilt.misc.agent_utilities_prompts import (  # Prompt Templates; Agent Creation Functions
+    AgentUtilitiesPrompts,
+    create_communication_planning_agent,
+    create_decision_analysis_agent,
+    create_goal_decomposition_agent,
+    create_quality_assessment_agent,
+    create_resource_planning_agent,
+    create_workflow_optimization_agent,
+)
+
 """Agent Utilities Module for Haive Agents.
 
 This module provides essential structured models and prompts for common agent tasks
@@ -48,69 +107,28 @@ Example:
         create_decision_analysis_agent,
         create_resource_planning_agent
     )
-    
+
     # Create specialized agents
     goal_agent = create_goal_decomposition_agent(SimpleAgent)
     decision_agent = create_decision_analysis_agent(SimpleAgent)
     resource_agent = create_resource_planning_agent(SimpleAgent)
-    
+
     # Use for goal planning
     goal_analysis = await goal_agent.ainvoke({
         "goal_description": "Launch a new product within 6 months"
     })
-    
+
     # Use for decision making
     decision_analysis = await decision_agent.ainvoke({
         "decision_description": "Choose between three vendor options for cloud hosting"
     })
-    
+
     # Use for resource planning
     resource_plan = await resource_agent.ainvoke({
         "initiative_description": "Implement new CRM system across organization"
     })
     ```
 """
-
-from haive.prebuilt.misc.agent_utilities_models import (  # Goal Decomposition; Decision Analysis; Resource Planning; Quality Assessment; Workflow Optimization; Communication Planning
-    BottleneckType,
-    CommunicationFrequency,
-    CommunicationPlan,
-    DecisionAnalysis,
-    DecisionCriteria,
-    DecisionOption,
-    DecisionType,
-    GoalDecomposition,
-    GoalStatus,
-    GoalType,
-    InfluenceLevel,
-    InterestLevel,
-    PriorityLevel,
-    ProcessBottleneck,
-    ProcessStep,
-    ProcessType,
-    QualityAssessment,
-    QualityDimension,
-    QualityIssue,
-    QualityMetric,
-    Resource,
-    ResourceAvailability,
-    ResourcePlan,
-    ResourceRequirement,
-    ResourceType,
-    Stakeholder,
-    StakeholderType,
-    SubGoal,
-    WorkflowOptimization,
-)
-from haive.prebuilt.misc.agent_utilities_prompts import (  # Prompt Templates; Agent Creation Functions
-    AgentUtilitiesPrompts,
-    create_communication_planning_agent,
-    create_decision_analysis_agent,
-    create_goal_decomposition_agent,
-    create_quality_assessment_agent,
-    create_resource_planning_agent,
-    create_workflow_optimization_agent,
-)
 
 __all__ = [
     # Enums and Base Types
@@ -127,31 +145,34 @@ __all__ = [
     "InfluenceLevel",
     "InterestLevel",
     "CommunicationFrequency",
-    
     # Goal Decomposition Models
     "SubGoal",
     "GoalDecomposition",
-    
     # Decision Analysis Models
     "DecisionCriteria",
     "DecisionOption",
     "DecisionAnalysis",
-    
     # Resource Planning Models
     "Resource",
     "ResourceRequirement",
     "ResourcePlan",
-    
     # Quality Assessment Models
     "QualityMetric",
     "QualityIssue",
     "QualityAssessment",
-    
     # Workflow Optimization Models
     "ProcessStep",
     "ProcessBottleneck",
     "WorkflowOptimization",
-    
     # Communication Planning Models
     "Stakeholder",
     "CommunicationPlan",
+    # Agent Creation Functions
+    "AgentUtilitiesPrompts",
+    "create_communication_planning_agent",
+    "create_decision_analysis_agent",
+    "create_goal_decomposition_agent",
+    "create_quality_assessment_agent",
+    "create_resource_planning_agent",
+    "create_workflow_optimization_agent",
+]

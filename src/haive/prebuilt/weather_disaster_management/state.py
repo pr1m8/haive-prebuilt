@@ -1,5 +1,3 @@
-from typing import Dict, List, TypedDict, Union
-
 from langchain_core.messages import AIMessage, HumanMessage, SystemMessage
 from pydantic import BaseModel, Field
 
@@ -17,14 +15,14 @@ class WeatherLocation(BaseModel):
 
 
 class WeatherState(WeatherLocation, BaseModel):
-    weather_data: Dict = Field(description="The weather data for the city")
+    weather_data: dict = Field(description="The weather data for the city")
     disaster_type: str = Field(description="The type of disaster to manage")
     severity: str = Field(description="The severity of the disaster")
     response: str = Field(description="The response to the disaster")
-    messages: List[Union[SystemMessage, HumanMessage, AIMessage]] = Field(
+    messages: list[SystemMessage | HumanMessage | AIMessage] = Field(
         description="The messages to send to the user"
     )
-    alerts: List[str] = Field(description="The alerts to send to the user")
+    alerts: list[str] = Field(description="The alerts to send to the user")
     human_approved: bool = Field(
         description="Whether the user has approved the response"
     )

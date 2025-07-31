@@ -1,3 +1,20 @@
+from langgraph.graph import END
+
+from .nodes import (
+    agent_node,
+    decision_making_node,
+    judge_node,
+    planning_node,
+    tools_node,
+)
+
+# TODO: These need to be properly defined or imported
+Agent = None  # This should be the base Agent class
+router = None
+should_continue = None
+final_answer_router = None
+
+
 class ScientificPaperAgent(Agent):
     def __init__(self):
         super().__init__()

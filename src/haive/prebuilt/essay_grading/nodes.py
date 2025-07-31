@@ -1,3 +1,14 @@
+import re
+
+from langchain_core.prompts import ChatPromptTemplate
+from langchain_openai import ChatOpenAI
+
+from .state import State
+
+# LLM configuration
+llm = ChatOpenAI(model="gpt-4o", temperature=0.1)
+
+
 def extract_score(content: str) -> float:
     """Extract the numeric score from the LLM's response."""
     match = re.search(r"Score:\s*(\d+(\.\d+)?)", content)

@@ -1,5 +1,4 @@
-"""
-Pitch deck models for the Haive framework.
+"""Pitch deck models for the Haive framework.
 
 This module provides comprehensive data models for creating, managing, and generating
 pitch decks using AI agents. The models are designed to be composable, serializable,
@@ -13,18 +12,14 @@ The models support:
 - Export to various formats
 """
 
+import uuid
 from datetime import datetime
 from enum import Enum
 from typing import (
     Any,
-    Dict,
     Generic,
-    List,
     Literal,
-    Optional,
-    Sequence,
     TypeVar,
-    Union,
 )
 
 from pydantic import (
@@ -35,7 +30,6 @@ from pydantic import (
     field_validator,
     model_validator,
 )
-from typing_extensions import Annotated
 
 # Type variables for generic content
 TContent = TypeVar("TContent", bound=BaseModel)
@@ -100,8 +94,7 @@ class ExportFormat(str, Enum):
 
 
 class DataPoint(BaseModel):
-    """
-    Represents a single data point that can be used in slides.
+    """Represents a single data point that can be used in slides.
 
     This is useful for financial data, metrics, market statistics, etc.
     """
@@ -109,15 +102,15 @@ class DataPoint(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
     label: str = Field(..., description="Label for the data point")
-    value: Union[float, int, str] = Field(..., description="The actual value")
-    unit: Optional[str] = Field(
+    value: float | int | str = Field(..., description="The actual value")
+    unit: str | None = Field(
         None, description="Unit of measurement (e.g., '$', '%', 'users')"
     )
-    source: Optional[str] = Field(None, description="Source of the data")
+    source: str | None = Field(None, description="Source of the data")
     confidence: float = Field(
         1.0, ge=0.0, le=1.0, description="Confidence in the data accuracy"
     )
-    timestamp: Optional[datetime] = Field(
+    timestamp: datetime | None = Field(
         None, description="When this data point was recorded"
     )
 
@@ -142,12 +135,12 @@ class ChartData(BaseModel):
         ..., description="Type of chart"
     )
     title: str = Field(..., description="Chart title")
-    data_points: List[DataPoint] = Field(
+    data_points: list[DataPoint] = Field(
         default_factory=list, description="Data points for the chart"
     )
-    x_axis_label: Optional[str] = Field(None, description="X-axis label")
-    y_axis_label: Optional[str] = Field(None, description="Y-axis label")
-    colors: Optional[List[str]] = Field(None, description="Color scheme for the chart")
+    x_axis_label: str | None = Field(None, description="X-axis label")
+    y_axis_label: str | None = Field(None, description="Y-axis label")
+    colors: list[str] | None = Field(None, description="Color scheme for the chart")
 
     @field_validator("data_points")
     @classmethod
@@ -159,8 +152,7 @@ class ChartData(BaseModel):
 
 
 class SlideContent(BaseModel):
-    """
-    Base content for a slide with common fields.
+    """Base content for a slide with common fields.
 
     This can be extended for specific slide types with additional fields.
     """
@@ -168,22 +160,22 @@ class SlideContent(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
     headline: str = Field(..., description="Main headline for the slide")
-    subheadline: Optional[str] = Field(None, description="Supporting subheadline")
-    body_text: Optional[str] = Field(None, description="Main body text content")
-    bullet_points: List[str] = Field(
+    subheadline: str | None = Field(None, description="Supporting subheadline")
+    body_text: str | None = Field(None, description="Main body text content")
+    bullet_points: list[str] = Field(
         default_factory=list, description="Bullet points for the slide"
     )
-    call_to_action: Optional[str] = Field(None, description="Call to action text")
-    speaker_notes: Optional[str] = Field(None, description="Notes for the presenter")
+    call_to_action: str | None = Field(None, description="Call to action text")
+    speaker_notes: str | None = Field(None, description="Notes for the presenter")
 
     # Visual elements
-    images: List[str] = Field(
+    images: list[str] = Field(
         default_factory=list, description="URLs or paths to images"
     )
-    charts: List[ChartData] = Field(
+    charts: list[ChartData] = Field(
         default_factory=list, description="Charts to display"
     )
-    icons: List[str] = Field(
+    icons: list[str] = Field(
         default_factory=list, description="Icon identifiers to use"
     )
 
@@ -204,10 +196,10 @@ class TeamMember(BaseModel):
     name: str = Field(..., description="Full name")
     role: str = Field(..., description="Role/title in the company")
     bio: str = Field(..., max_length=500, description="Short biography")
-    expertise: List[str] = Field(default_factory=list, description="Areas of expertise")
-    linkedin_url: Optional[str] = Field(None, description="LinkedIn profile URL")
-    photo_url: Optional[str] = Field(None, description="Photo URL")
-    key_achievements: List[str] = Field(
+    expertise: list[str] = Field(default_factory=list, description="Areas of expertise")
+    linkedin_url: str | None = Field(None, description="LinkedIn profile URL")
+    photo_url: str | None = Field(None, description="Photo URL")
+    key_achievements: list[str] = Field(
         default_factory=list, description="Notable achievements"
     )
 
@@ -217,13 +209,13 @@ class FinancialMetrics(BaseModel):
 
     model_config = ConfigDict(extra="forbid")
 
-    revenue_current: Optional[DataPoint] = None
-    revenue_projected: List[DataPoint] = Field(default_factory=list)
-    burn_rate: Optional[DataPoint] = None
-    runway_months: Optional[float] = None
-    gross_margin: Optional[float] = Field(None, ge=0.0, le=1.0)
-    customer_acquisition_cost: Optional[DataPoint] = None
-    lifetime_value: Optional[DataPoint] = None
+    revenue_current: DataPoint | None = None
+    revenue_projected: list[DataPoint] = Field(default_factory=list)
+    burn_rate: DataPoint | None = None
+    runway_months: float | None = None
+    gross_margin: float | None = Field(None, ge=0.0, le=1.0)
+    customer_acquisition_cost: DataPoint | None = None
+    lifetime_value: DataPoint | None = None
 
     @model_validator(mode="after")
     def validate_metrics(self):
@@ -238,8 +230,7 @@ class FinancialMetrics(BaseModel):
 
 
 class AgentMetadata(BaseModel):
-    """
-    Metadata about agent contributions to content generation.
+    """Metadata about agent contributions to content generation.
 
     Tracks which agents contributed to what content for auditing and improvement.
     """
@@ -261,10 +252,10 @@ class AgentMetadata(BaseModel):
     confidence_score: float = Field(
         1.0, ge=0.0, le=1.0, description="Agent's confidence in its output"
     )
-    reasoning: Optional[str] = Field(
+    reasoning: str | None = Field(
         None, description="Agent's reasoning for decisions made"
     )
-    tool_calls: List[str] = Field(
+    tool_calls: list[str] = Field(
         default_factory=list, description="Tools used by the agent"
     )
 
@@ -276,17 +267,16 @@ class SlideRevision(BaseModel):
 
     revision_id: str = Field(..., description="Unique revision identifier")
     timestamp: datetime = Field(default_factory=datetime.now)
-    previous_content: Optional[SlideContent] = None
-    changes_made: List[str] = Field(
+    previous_content: SlideContent | None = None
+    changes_made: list[str] = Field(
         default_factory=list, description="Description of changes"
     )
-    agent_metadata: Optional[AgentMetadata] = None
-    reason: Optional[str] = Field(None, description="Reason for revision")
+    agent_metadata: AgentMetadata | None = None
+    reason: str | None = Field(None, description="Reason for revision")
 
 
 class Slide(BaseModel, Generic[TContent]):
-    """
-    A single slide in the pitch deck.
+    """A single slide in the pitch deck.
 
     Generic over content type to allow specialized slide content while
     maintaining type safety.
@@ -304,27 +294,25 @@ class Slide(BaseModel, Generic[TContent]):
 
     # Status tracking
     status: ContentStatus = Field(default=ContentStatus.PENDING)
-    quality_score: Optional[float] = Field(
+    quality_score: float | None = Field(
         None, ge=0.0, le=1.0, description="Quality assessment score"
     )
 
     # Design elements
     layout: str = Field(default="standard", description="Layout template to use")
-    color_scheme: Optional[Dict[str, str]] = Field(
+    color_scheme: dict[str, str] | None = Field(
         None, description="Custom color overrides"
     )
-    animation_style: Optional[str] = Field(
-        None, description="Animation/transition style"
-    )
+    animation_style: str | None = Field(None, description="Animation/transition style")
 
     # Metadata
     created_at: datetime = Field(default_factory=datetime.now)
     updated_at: datetime = Field(default_factory=datetime.now)
-    agent_metadata: List[AgentMetadata] = Field(default_factory=list)
-    revisions: List[SlideRevision] = Field(default_factory=list)
+    agent_metadata: list[AgentMetadata] = Field(default_factory=list)
+    revisions: list[SlideRevision] = Field(default_factory=list)
 
     # Private attributes for runtime state
-    _validation_errors: List[str] = PrivateAttr(default_factory=list)
+    _validation_errors: list[str] = PrivateAttr(default_factory=list)
     _generation_attempts: int = PrivateAttr(default=0)
 
     @model_validator(mode="after")
@@ -338,9 +326,8 @@ class Slide(BaseModel, Generic[TContent]):
         self.agent_metadata.append(agent_metadata)
         self.updated_at = datetime.now()
 
-    def validate_content(self) -> List[str]:
-        """
-        Validate slide content and return any issues.
+    def validate_content(self) -> list[str]:
+        """Validate slide content and return any issues.
 
         Override in subclasses for specific validation rules.
         """
@@ -360,16 +347,16 @@ class PitchDeckMetadata(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
     company_name: str = Field(..., description="Name of the company")
-    tagline: Optional[str] = Field(None, description="Company tagline")
+    tagline: str | None = Field(None, description="Company tagline")
     industry: str = Field(..., description="Industry/sector")
     stage: Literal[
         "idea", "pre_seed", "seed", "series_a", "series_b", "series_c", "later"
     ] = Field(...)
 
     # Fundraising details
-    funding_amount_sought: Optional[DataPoint] = None
-    valuation: Optional[DataPoint] = None
-    use_of_funds: List[Dict[str, Any]] = Field(default_factory=list)
+    funding_amount_sought: DataPoint | None = None
+    valuation: DataPoint | None = None
+    use_of_funds: list[dict[str, Any]] = Field(default_factory=list)
 
     # Deck metadata
     version: str = Field(default="1.0.0")
@@ -377,16 +364,14 @@ class PitchDeckMetadata(BaseModel):
     confidential: bool = Field(default=True)
 
     # Target audience
-    target_audience: List[str] = Field(
+    target_audience: list[str] = Field(
         default_factory=lambda: ["investors"], description="Who this deck is for"
     )
 
     # Design preferences
     design_style: DesignStyle = Field(default=DesignStyle.MODERN)
-    brand_colors: Optional[Dict[str, str]] = Field(
-        None, description="Brand color palette"
-    )
-    font_preferences: Optional[Dict[str, str]] = Field(
+    brand_colors: dict[str, str] | None = Field(None, description="Brand color palette")
+    font_preferences: dict[str, str] | None = Field(
         None, description="Font preferences"
     )
 
@@ -424,7 +409,7 @@ class QualityMetrics(BaseModel):
         ]
         return sum(scores) / len(scores)
 
-    def get_improvement_areas(self) -> List[str]:
+    def get_improvement_areas(self) -> list[str]:
         """Identify areas needing improvement."""
         areas = []
         if self.clarity_score < 0.7:
@@ -441,8 +426,7 @@ class QualityMetrics(BaseModel):
 
 
 class PitchDeck(BaseModel):
-    """
-    Complete pitch deck model.
+    """Complete pitch deck model.
 
     This is the main model that contains all slides and orchestrates
     the pitch deck creation process.
@@ -454,23 +438,23 @@ class PitchDeck(BaseModel):
     metadata: PitchDeckMetadata = Field(..., description="Deck metadata")
 
     # Slides - using Union to support different content types
-    slides: List[Slide[SlideContent]] = Field(default_factory=list)
+    slides: list[Slide[SlideContent]] = Field(default_factory=list)
 
     # Status and quality
     status: ContentStatus = Field(default=ContentStatus.PENDING)
-    quality_metrics: Optional[QualityMetrics] = None
+    quality_metrics: QualityMetrics | None = None
 
     # Generation tracking
     created_at: datetime = Field(default_factory=datetime.now)
     updated_at: datetime = Field(default_factory=datetime.now)
-    generation_config: Dict[str, Any] = Field(default_factory=dict)
+    generation_config: dict[str, Any] = Field(default_factory=dict)
 
     # Agent collaboration
-    agent_contributions: List[AgentMetadata] = Field(default_factory=list)
+    agent_contributions: list[AgentMetadata] = Field(default_factory=list)
 
     # Private attributes
-    _slide_index: Dict[str, int] = PrivateAttr(default_factory=dict)
-    _generation_stats: Dict[str, Any] = PrivateAttr(default_factory=dict)
+    _slide_index: dict[str, int] = PrivateAttr(default_factory=dict)
+    _generation_stats: dict[str, Any] = PrivateAttr(default_factory=dict)
 
     @model_validator(mode="after")
     def validate_deck(self):
@@ -490,7 +474,7 @@ class PitchDeck(BaseModel):
         return self
 
     def add_slide(
-        self, slide: Slide[SlideContent], position: Optional[int] = None
+        self, slide: Slide[SlideContent], position: int | None = None
     ) -> None:
         """Add a slide to the deck."""
         if position is None:
@@ -505,14 +489,14 @@ class PitchDeck(BaseModel):
         self.updated_at = datetime.now()
         self._slide_index[slide.slide_id] = position or len(self.slides) - 1
 
-    def get_slide_by_type(self, slide_type: SlideType) -> Optional[Slide[SlideContent]]:
+    def get_slide_by_type(self, slide_type: SlideType) -> Slide[SlideContent] | None:
         """Get the first slide of a given type."""
         for slide in self.slides:
             if slide.slide_type == slide_type:
                 return slide
         return None
 
-    def get_slides_by_status(self, status: ContentStatus) -> List[Slide[SlideContent]]:
+    def get_slides_by_status(self, status: ContentStatus) -> list[Slide[SlideContent]]:
         """Get all slides with a specific status."""
         return [slide for slide in self.slides if slide.status == status]
 
@@ -526,16 +510,15 @@ class PitchDeck(BaseModel):
         )
         return (completed / len(self.slides)) * 100
 
-    def get_next_slide_to_generate(self) -> Optional[Slide[SlideContent]]:
+    def get_next_slide_to_generate(self) -> Slide[SlideContent] | None:
         """Get the next slide that needs generation."""
         for slide in self.slides:
             if slide.status in [ContentStatus.PENDING, ContentStatus.REVISION_NEEDED]:
                 return slide
         return None
 
-    def export_config(self, format: ExportFormat) -> Dict[str, Any]:
-        """
-        Generate export configuration for the specified format.
+    def export_config(self, format: ExportFormat) -> dict[str, Any]:
+        """Generate export configuration for the specified format.
 
         Returns configuration that can be used by export agents.
         """
@@ -559,9 +542,8 @@ class PitchDeck(BaseModel):
 
         return config
 
-    def to_review_format(self) -> Dict[str, Any]:
-        """
-        Convert deck to a format suitable for review.
+    def to_review_format(self) -> dict[str, Any]:
+        """Convert deck to a format suitable for review.
 
         Returns a simplified version for review agents or humans.
         """
@@ -589,8 +571,7 @@ class PitchDeck(BaseModel):
 
 
 class PitchDeckTemplate(BaseModel):
-    """
-    Template for creating pitch decks.
+    """Template for creating pitch decks.
 
     Defines the structure and requirements for a type of pitch deck.
     """
@@ -602,26 +583,25 @@ class PitchDeckTemplate(BaseModel):
     description: str = Field(..., description="Template description")
 
     # Slide structure
-    slide_templates: List[Dict[str, Any]] = Field(
+    slide_templates: list[dict[str, Any]] = Field(
         ..., description="Ordered list of slide templates"
     )
 
     # Requirements
     min_slides: int = Field(default=10, ge=1)
     max_slides: int = Field(default=20, le=30)
-    required_slide_types: List[SlideType] = Field(default_factory=list)
+    required_slide_types: list[SlideType] = Field(default_factory=list)
 
     # Styling
     default_design_style: DesignStyle = Field(default=DesignStyle.MODERN)
-    color_schemes: List[Dict[str, str]] = Field(default_factory=list)
+    color_schemes: list[dict[str, str]] = Field(default_factory=list)
 
     # Target use case
-    best_for_stage: List[str] = Field(default_factory=list)
-    industries: List[str] = Field(default_factory=list)
+    best_for_stage: list[str] = Field(default_factory=list)
+    industries: list[str] = Field(default_factory=list)
 
     def create_deck_scaffold(self, metadata: PitchDeckMetadata) -> PitchDeck:
         """Create a new pitch deck scaffold from this template."""
-        import uuid
 
         deck = PitchDeck(deck_id=str(uuid.uuid4()), metadata=metadata)
 
@@ -647,21 +627,21 @@ class PitchDeckTemplate(BaseModel):
 class FinancialSlideContent(SlideContent):
     """Specialized content for financial slides."""
 
-    revenue_chart: Optional[ChartData] = None
-    expense_breakdown: Optional[ChartData] = None
-    financial_metrics: Optional[FinancialMetrics] = None
+    revenue_chart: ChartData | None = None
+    expense_breakdown: ChartData | None = None
+    financial_metrics: FinancialMetrics | None = None
     projections_timeline: str = Field(default="3-5 years")
-    key_assumptions: List[str] = Field(default_factory=list)
+    key_assumptions: list[str] = Field(default_factory=list)
 
 
 class TeamSlideContent(SlideContent):
     """Specialized content for team slides."""
 
-    team_members: List[TeamMember] = Field(default_factory=list)
-    advisors: List[TeamMember] = Field(default_factory=list)
-    organizational_structure: Optional[str] = None
-    hiring_plans: List[str] = Field(default_factory=list)
-    culture_values: List[str] = Field(default_factory=list)
+    team_members: list[TeamMember] = Field(default_factory=list)
+    advisors: list[TeamMember] = Field(default_factory=list)
+    organizational_structure: str | None = None
+    hiring_plans: list[str] = Field(default_factory=list)
+    culture_values: list[str] = Field(default_factory=list)
 
 
 # Type aliases for common slide types

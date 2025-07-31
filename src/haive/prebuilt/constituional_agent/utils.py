@@ -1,8 +1,6 @@
 import importlib
 import re
 import unicodedata
-from enum import Enum
-from typing import Dict, List, Optional, Tuple
 
 from pydantic import BaseModel, ValidationError, validate_call
 from pygments.lexers import guess_lexer
@@ -16,22 +14,22 @@ class SecurityAnalysis(BaseModel):
     zero_width: bool
     bidi_chars: bool
     control_chars: bool
-    numeric_encoding: List[str]
+    numeric_encoding: list[str]
     scattered_text: bool
     suspicious_newlines: bool
     markdown_injection: bool
-    substitution_rules: List[Tuple[str, str]]
+    substitution_rules: list[tuple[str, str]]
     mixed_case_evasion: bool
 
 
 class SpellCheckResult(BaseModel):
-    misspelled: List[str]
-    suggestions: Dict[str, List[str]]
+    misspelled: list[str]
+    suggestions: dict[str, list[str]]
 
 
 class LanguageDetectionResult(BaseModel):
     detected_language: str
-    confidence: Optional[float] = None
+    confidence: float | None = None
     method: str
 
 
@@ -39,7 +37,7 @@ class ContentAnalysisResult(BaseModel):
     content: str
     language: LanguageDetectionResult
     security: SecurityAnalysis
-    programming_language: Optional[str] = None
+    programming_language: str | None = None
     spell_check: SpellCheckResult
     is_profane: bool
 
@@ -49,7 +47,7 @@ class LanguageDetector:
     ZERO_WIDTH_REGEX = re.compile(r"[\u200B-\u200D\uFEFF]")
     BIDI_REGEX = re.compile(r"[\u202A-\u202E]")
     CONTROL_CHAR_REGEX = re.compile(r"[\x00-\x1F\x7F-\x9F]")
-    NUMERIC_ENCODING_REGEX = re.compile(r"\b\d{2,3}(?:\s+\d{2,3})+\b")
+    NUMERIC_ENCODING_REGEX = re.compile(r"\b\d{2,3}(?: \d{2,3})+\b")
 
     def __init__(self):
         self.spell = SpellChecker()
@@ -69,20 +67,19 @@ class LanguageDetector:
                     confidence=result.probability,
                     method=method,
                 )
-            elif method == "langid":
+            if method == "langid":
                 langid = importlib.import_module("langid")
                 lang, confidence = langid.classify(text)
                 return LanguageDetectionResult(
                     detected_language=lang, confidence=confidence, method=method
                 )
-            elif method == "langdetect":
+            if method == "langdetect":
                 langdetect = importlib.import_module("langdetect")
                 lang = langdetect.detect(text)
                 return LanguageDetectionResult(detected_language=lang, method=method)
-            else:
-                raise ValueError(f"Unsupported detection method: {method}")
+            raise ValueError(f"Unsupported detection method: {method}")
         except ImportError as e:
-            raise RuntimeError(f"Missing dependency for {method}: {str(e)}")
+            raise RuntimeError(f"Missing dependency for {method}: {e!s}")
 
     @validate_call
     def analyze_security(self, text: str) -> SecurityAnalysis:
@@ -95,14 +92,12 @@ class LanguageDetector:
             scattered_text=self._detect_scattered_text(text),
             suspicious_newlines=text.count("\n") > 10,
             markdown_injection=bool(re.search(r"``````", text, re.DOTALL)),
-            substitution_rules=re.findall(
-                r"(\b\w+\b)\s*=\s*(\b\w+\b)", text, re.IGNORECASE
-            ),
+            substitution_rules=re.findall(r"(\b\b)\s*=\s*(\b\b)", text, re.IGNORECASE),
             mixed_case_evasion=self._detect_mixed_case(text),
         )
 
     @validate_call
-    def detect_programming_language(self, text: str) -> Optional[str]:
+    def detect_programming_language(self, text: str) -> str | None:
         try:
             return guess_lexer(text).name
         except ClassNotFound:
@@ -115,7 +110,7 @@ class LanguageDetector:
                 checker = importlib.import_module(module)
                 if hasattr(checker, "predict"):
                     return bool(checker.predict([text])[0])
-                elif hasattr(checker, "contains_profanity"):
+                if hasattr(checker, "contains_profanity"):
                     return checker.contains_profanity(text)
             except ImportError:
                 continue
@@ -127,7 +122,7 @@ class LanguageDetector:
                 return True
         return False
 
-    def _detect_numeric_encoding(self, text: str) -> List[str]:
+    def _detect_numeric_encoding(self, text: str) -> list[str]:
         return [
             self._decode_numbers(m) for m in self.NUMERIC_ENCODING_REGEX.findall(text)
         ]
@@ -184,8 +179,8 @@ class ContentAnalyzer:
 if __name__ == "__main__":
     analyzer = ContentAnalyzer()
 
-    sample_text = """Hello world 
-    \u200b print("Hidden message") 
+    sample_text = """Hello world
+    \u200b print("Hidden message")
     72 101 108 108 111
     """
 

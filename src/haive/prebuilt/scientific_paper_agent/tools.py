@@ -1,3 +1,21 @@
+import io
+import time
+
+import pdfplumber
+import urllib3
+from langchain_core.tools import tool
+from pydantic import BaseModel
+
+
+class SearchPapersInput(BaseModel):
+    query: str
+    max_papers: int = 1
+
+
+# TODO: CoreAPIWrapper needs to be properly imported
+CoreAPIWrapper = None
+
+
 @tool("search-papers", args_schema=SearchPapersInput)
 def search_papers(query: str, max_papers: int = 1) -> str:
     """Search for scientific papers using the CORE API.
@@ -47,7 +65,7 @@ def download_paper(url: str) -> str:
                     for page in pdf.pages:
                         text += page.extract_text() + "\n"
                 return text
-            elif attempt < max_retries - 1:
+            if attempt < max_retries - 1:
                 time.sleep(2 ** (attempt + 2))
             else:
                 raise Exception(

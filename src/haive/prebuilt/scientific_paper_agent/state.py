@@ -1,4 +1,5 @@
-from typing import Annotated, Sequence
+from collections.abc import Sequence
+from typing import Annotated
 
 from langchain_core.messages import BaseMessage
 from pydantic import BaseModel, Field

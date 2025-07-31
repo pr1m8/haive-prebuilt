@@ -121,11 +121,6 @@ __version__ = "0.1.0"
 
 # Import commonly used prebuilt solutions
 try:
-    from haive.prebuilt.content import ContentGenerator
-    from haive.prebuilt.development import CodeReviewer
-    from haive.prebuilt.research import ResearchAssistant
-    from haive.prebuilt.support import CustomerSupportBot
-
     PREBUILT_AVAILABLE = True
 except ImportError:
     # Graceful degradation if prebuilt solutions aren't available
@@ -138,9 +133,9 @@ __all__ = [
 if PREBUILT_AVAILABLE:
     __all__.extend(
         [
-            "ResearchAssistant",
+            "CodeReviewer",
             "ContentGenerator",
             "CustomerSupportBot",
-            "CodeReviewer",
+            "ResearchAssistant",
         ]
     )

@@ -1,5 +1,31 @@
 # make first part as simple sequence and own agent graph
 # https://github.com/NirDiamant/GenAI_Agents/blob/main/all_agents_tutorials/systematic_review_of_scientific_articles.ipynb
+
+from haive.agents.base import Agent
+from langgraph.graph import END
+
+from .nodes import (
+    aggregator,
+    article_download,
+    critique,
+    decision_node,
+    exists_action,
+    final_draft,
+    paper_analyzer,
+    paper_reviser,
+    plan_node,
+    process_input,
+    research_node,
+    take_action,
+    write_abstract,
+    write_conclusion,
+    write_introduction,
+    write_methods,
+    write_references,
+    write_results,
+)
+
+
 class SystemicReviewOfScientificArticlesAgent(Agent):
     def __init__(self):
         super().__init__()

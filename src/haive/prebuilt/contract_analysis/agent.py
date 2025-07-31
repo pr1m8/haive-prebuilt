@@ -1,10 +1,56 @@
-from typing import Optional
-
-from haive_agents.base import AgentArchitecture, AgentArchitectureConfig, AgentConfig
-from haive_agents.contract_analysis.models import ContractInfo, ReviewPlan
+from haive_agents.base import AgentArchitecture, AgentArchitectureConfig
 from haive_agents.contract_analysis.state import ContractReviewState
 from langgraph.graph import END, START
 from pydantic import Field
+
+
+# Node function placeholders - these need to be implemented
+def classify_contract(state):
+    """Classify the type of contract."""
+    # TODO: Implement contract classification logic
+    return state
+
+
+def retrieve_clauses(state):
+    """Retrieve relevant clauses from the contract."""
+    # TODO: Implement clause retrieval logic
+    return state
+
+
+def execute_step_clause(state):
+    """Execute clause analysis step."""
+    # TODO: Implement clause execution logic
+    return state
+
+
+def create_review_plan(state):
+    """Create a review plan for the contract."""
+    # TODO: Implement review plan creation logic
+    return state
+
+
+def execute_step(state):
+    """Execute a review step."""
+    # TODO: Implement step execution logic
+    return state
+
+
+def generate_final_report(state):
+    """Generate the final contract analysis report."""
+    # TODO: Implement report generation logic
+    return state
+
+
+def continue_to_clauses_check_execute(state):
+    """Conditional logic for clause execution."""
+    # TODO: Implement conditional logic
+    return "execute_step_clause"
+
+
+def continue_to_plan_check_execute(state):
+    """Conditional logic for plan execution."""
+    # TODO: Implement conditional logic
+    return "execute_step"
 
 
 class ContractAnalysisAgentConfig(AgentArchitectureConfig):

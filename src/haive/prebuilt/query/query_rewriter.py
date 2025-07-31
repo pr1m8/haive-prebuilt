@@ -1,13 +1,11 @@
 # src/haive/prebuilt/simple/query_rewriter.py
-"""
-Agent Name: QueryRewriter
+"""Agent Name: QueryRewriter
 Description: Improves or reformulates a user query to be clearer or more suitable for retrieval.
 """
 
 from haive.core.aug_llm import AugLLMConfig
 from haive.core.models.llm.base import AzureLLMConfig
 from haive_agents.simple.factory import create_simple_agent
-from haive_prebuilt.simple.query.models import QueryModel
 from langchain_core.prompts import ChatPromptTemplate
 from pydantic import BaseModel, Field
 

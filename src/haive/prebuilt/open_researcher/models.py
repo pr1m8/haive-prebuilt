@@ -1,5 +1,4 @@
-import operator
-from typing import Annotated, List, Literal, TypedDict
+from typing import Literal
 
 from pydantic import BaseModel, Field
 
@@ -18,7 +17,7 @@ class Section(BaseModel):
 
 
 class Sections(BaseModel):
-    sections: List[Section] = Field(
+    sections: list[Section] = Field(
         description="Sections of the report.",
     )
 
@@ -28,7 +27,7 @@ class SearchQuery(BaseModel):
 
 
 class Queries(BaseModel):
-    queries: List[SearchQuery] = Field(
+    queries: list[SearchQuery] = Field(
         description="List of search queries.",
     )
 
@@ -37,6 +36,6 @@ class Feedback(BaseModel):
     grade: Literal["pass", "fail"] = Field(
         description="Evaluation result indicating whether the response meets requirements ('pass') or needs revision ('fail')."
     )
-    follow_up_queries: List[SearchQuery] = Field(
+    follow_up_queries: list[SearchQuery] = Field(
         description="List of follow-up search queries.",
     )

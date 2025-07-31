@@ -1,6 +1,5 @@
 # haive/agents/perplexity/base/state.py
-"""
-Base state schemas for the Perplexity multi-agent system.
+"""Base state schemas for the Perplexity multi-agent system.
 
 This module defines the core state schemas that are shared across all Perplexity
 agents, including search results, citations, and performance metrics.
@@ -8,7 +7,7 @@ agents, including search results, citations, and performance metrics.
 
 from datetime import datetime
 from enum import Enum
-from typing import Any, Dict, List, Optional, Union
+from typing import Any
 
 from haive.core.schema.prebuilt.messages_state import MessagesState
 from langchain_core.documents import Document
@@ -70,7 +69,7 @@ class Citation(BaseModel):
 
     source_id: str = Field(description="Unique identifier for the source")
     title: str = Field(description="Title of the source")
-    url: Optional[str] = Field(default=None, description="URL of the source")
+    url: str | None = Field(default=None, description="URL of the source")
     snippet: str = Field(description="Relevant excerpt from the source")
     relevance_score: float = Field(description="Relevance score (0-1)")
     trust_level: SourceTrustLevel = Field(
@@ -79,7 +78,7 @@ class Citation(BaseModel):
     timestamp: datetime = Field(
         default_factory=datetime.now, description="When this citation was retrieved"
     )
-    sentence_indices: List[int] = Field(
+    sentence_indices: list[int] = Field(
         default_factory=list, description="Indices of sentences that support the claim"
     )
 
@@ -88,13 +87,13 @@ class SearchResult(BaseModel):
     """Represents a search result from web search or retrieval."""
 
     query: str = Field(description="The search query used")
-    documents: List[Document] = Field(
+    documents: list[Document] = Field(
         default_factory=list, description="Retrieved documents"
     )
-    raw_results: List[Dict[str, Any]] = Field(
+    raw_results: list[dict[str, Any]] = Field(
         default_factory=list, description="Raw search results from the search provider"
     )
-    metadata: Dict[str, Any] = Field(
+    metadata: dict[str, Any] = Field(
         default_factory=dict, description="Additional metadata about the search"
     )
     timestamp: datetime = Field(
@@ -111,7 +110,7 @@ class PerformanceMetrics(BaseModel):
     start_time: datetime = Field(
         default_factory=datetime.now, description="When processing started"
     )
-    end_time: Optional[datetime] = Field(
+    end_time: datetime | None = Field(
         default=None, description="When processing completed"
     )
     total_searches: int = Field(default=0, description="Number of searches performed")
@@ -119,14 +118,14 @@ class PerformanceMetrics(BaseModel):
         default=0, description="Number of documents processed"
     )
     tokens_used: int = Field(default=0, description="Total tokens consumed")
-    model_calls: Dict[str, int] = Field(
+    model_calls: dict[str, int] = Field(
         default_factory=dict, description="Number of calls to each model"
     )
-    latency_ms: Optional[float] = Field(
+    latency_ms: float | None = Field(
         default=None, description="Total processing time in milliseconds"
     )
 
-    def calculate_latency(self) -> Optional[float]:
+    def calculate_latency(self) -> float | None:
         """Calculate latency if start and end times are available."""
         if self.start_time and self.end_time:
             delta = self.end_time - self.start_time
@@ -152,10 +151,10 @@ class QueryAnalysis(BaseModel):
     requires_tools: bool = Field(
         default=False, description="Whether tools (code, calculations) are needed"
     )
-    clarifying_questions: List[str] = Field(
+    clarifying_questions: list[str] = Field(
         default_factory=list, description="Potential clarifying questions"
     )
-    decomposed_steps: List[str] = Field(
+    decomposed_steps: list[str] = Field(
         default_factory=list, description="Decomposed steps for complex queries"
     )
     suggested_mode: SearchMode = Field(
@@ -169,8 +168,7 @@ class QueryAnalysis(BaseModel):
 
 
 class PerplexityBaseState(MessagesState):
-    """
-    Base state schema for all Perplexity agents.
+    """Base state schema for all Perplexity agents.
 
     This state extends MessagesState to provide conversation management
     while adding Perplexity-specific fields for search, retrieval, and
@@ -179,15 +177,15 @@ class PerplexityBaseState(MessagesState):
 
     # Query information
     query: str = Field(description="The user's query")
-    query_analysis: Optional[QueryAnalysis] = Field(
+    query_analysis: QueryAnalysis | None = Field(
         default=None, description="Analysis of the query"
     )
 
     # Search and retrieval
-    search_results: List[SearchResult] = Field(
+    search_results: list[SearchResult] = Field(
         default_factory=list, description="All search results"
     )
-    current_search_query: Optional[str] = Field(
+    current_search_query: str | None = Field(
         default=None, description="Current search query being processed"
     )
     search_iteration: int = Field(
@@ -195,23 +193,23 @@ class PerplexityBaseState(MessagesState):
     )
 
     # Citations and sources
-    citations: List[Citation] = Field(
+    citations: list[Citation] = Field(
         default_factory=list, description="All citations collected"
     )
-    verified_facts: List[Dict[str, Any]] = Field(
+    verified_facts: list[dict[str, Any]] = Field(
         default_factory=list, description="Facts that have been verified"
     )
 
     # Response generation
-    draft_response: Optional[str] = Field(
+    draft_response: str | None = Field(
         default=None, description="Draft response before quality checks"
     )
-    final_response: Optional[str] = Field(
+    final_response: str | None = Field(
         default=None, description="Final response with citations"
     )
 
     # Metadata and control
-    metadata: Dict[str, Any] = Field(
+    metadata: dict[str, Any] = Field(
         default_factory=dict, description="Additional metadata"
     )
     performance_metrics: PerformanceMetrics = Field(
@@ -247,7 +245,7 @@ class PerplexityBaseState(MessagesState):
         if not any(c.source_id == citation.source_id for c in self.citations):
             self.citations.append(citation)
 
-    def get_high_confidence_citations(self) -> List[Citation]:
+    def get_high_confidence_citations(self) -> list[Citation]:
         """Get citations above the confidence threshold."""
         return [
             c for c in self.citations if c.relevance_score >= self.confidence_threshold
@@ -274,14 +272,13 @@ class BasicSearchState(PerplexityBaseState):
     """State for basic search mode."""
 
     # No additional fields needed for basic search
-    pass
 
 
 class ProSearchState(PerplexityBaseState):
     """State for Pro search mode with enhanced reasoning."""
 
     # Multi-step planning
-    execution_plan: List[Dict[str, Any]] = Field(
+    execution_plan: list[dict[str, Any]] = Field(
         default_factory=list, description="Step-by-step execution plan"
     )
     current_step: int = Field(
@@ -289,31 +286,31 @@ class ProSearchState(PerplexityBaseState):
     )
 
     # Reasoning traces
-    reasoning_traces: List[str] = Field(
+    reasoning_traces: list[str] = Field(
         default_factory=list, description="Chain-of-thought reasoning traces"
     )
 
     # Model selection
-    selected_model: Optional[ModelChoice] = Field(
+    selected_model: ModelChoice | None = Field(
         default=None, description="Selected model for current task"
     )
-    model_selection_rationale: Optional[str] = Field(
+    model_selection_rationale: str | None = Field(
         default=None, description="Why this model was selected"
     )
 
     # Code execution
-    code_snippets: List[Dict[str, Any]] = Field(
+    code_snippets: list[dict[str, Any]] = Field(
         default_factory=list, description="Code snippets to execute"
     )
-    code_results: List[Dict[str, Any]] = Field(
+    code_results: list[dict[str, Any]] = Field(
         default_factory=list, description="Results from code execution"
     )
 
     # Enhanced search
-    follow_up_queries: List[str] = Field(
+    follow_up_queries: list[str] = Field(
         default_factory=list, description="Generated follow-up queries"
     )
-    cross_references: List[Dict[str, Any]] = Field(
+    cross_references: list[dict[str, Any]] = Field(
         default_factory=list, description="Cross-referenced information"
     )
 
@@ -323,32 +320,32 @@ class ResearchState(PerplexityBaseState):
 
     # Research planning
     research_topic: str = Field(description="Main research topic")
-    subtopics: List[str] = Field(
+    subtopics: list[str] = Field(
         default_factory=list, description="Identified subtopics"
     )
-    research_roadmap: List[Dict[str, Any]] = Field(
+    research_roadmap: list[dict[str, Any]] = Field(
         default_factory=list, description="Research execution roadmap"
     )
 
     # Source management
-    source_coverage: Dict[str, List[str]] = Field(
+    source_coverage: dict[str, list[str]] = Field(
         default_factory=dict, description="Coverage of sources by topic"
     )
-    contradictions: List[Dict[str, Any]] = Field(
+    contradictions: list[dict[str, Any]] = Field(
         default_factory=list, description="Identified contradictions between sources"
     )
-    patterns: List[Dict[str, Any]] = Field(
+    patterns: list[dict[str, Any]] = Field(
         default_factory=list, description="Identified patterns across sources"
     )
 
     # Report generation
-    report_outline: Optional[Dict[str, Any]] = Field(
+    report_outline: dict[str, Any] | None = Field(
         default=None, description="Structured report outline"
     )
-    report_sections: Dict[str, str] = Field(
+    report_sections: dict[str, str] = Field(
         default_factory=dict, description="Generated report sections"
     )
-    visual_elements: List[Dict[str, Any]] = Field(
+    visual_elements: list[dict[str, Any]] = Field(
         default_factory=list, description="Charts, graphs, or other visuals"
     )
 
@@ -366,31 +363,31 @@ class LabsState(PerplexityBaseState):
 
     # Project analysis
     project_type: str = Field(description="Type of project")
-    project_requirements: List[str] = Field(
+    project_requirements: list[str] = Field(
         default_factory=list, description="Identified project requirements"
     )
-    deliverables: List[Dict[str, Any]] = Field(
+    deliverables: list[dict[str, Any]] = Field(
         default_factory=list, description="Expected deliverables"
     )
 
     # Tool orchestration
-    required_tools: List[str] = Field(
+    required_tools: list[str] = Field(
         default_factory=list, description="Tools required for the project"
     )
-    tool_execution_log: List[Dict[str, Any]] = Field(
+    tool_execution_log: list[dict[str, Any]] = Field(
         default_factory=list, description="Log of tool executions"
     )
 
     # Asset generation
-    generated_assets: Dict[str, Any] = Field(
+    generated_assets: dict[str, Any] = Field(
         default_factory=dict, description="Generated project assets"
     )
-    asset_dependencies: Dict[str, List[str]] = Field(
+    asset_dependencies: dict[str, list[str]] = Field(
         default_factory=dict, description="Dependencies between assets"
     )
 
     # Integration and deployment
-    integration_status: Dict[str, bool] = Field(
+    integration_status: dict[str, bool] = Field(
         default_factory=dict, description="Integration status of components"
     )
     deployment_ready: bool = Field(
@@ -398,9 +395,9 @@ class LabsState(PerplexityBaseState):
     )
 
     # Project metadata
-    estimated_completion_time: Optional[float] = Field(
+    estimated_completion_time: float | None = Field(
         default=None, description="Estimated time to complete in minutes"
     )
-    actual_completion_time: Optional[float] = Field(
+    actual_completion_time: float | None = Field(
         default=None, description="Actual completion time in minutes"
     )

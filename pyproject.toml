@@ -5,7 +5,7 @@ description = "haive-prebuilt for Haive framework"
 authors = ["pr1m8 <william.astley@algebraicwealth.com>"]
 license = "MIT"
 readme = "README.md"
-packages = [{ include = "src", from = "." }]
+packages = [{ include = "haive", from = "src" }]
 [tool.poetry.dependencies]
 haive-core = { path = "../haive-core", develop = true }
 haive-agents = { path = "../haive-agents", develop = true }
@@ -40,3 +40,61 @@ pyspellchecker = "^0.8.2"
 [build-system]
 requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
+
+# 📦 AutoImport Configuration for Namespaced Poly Repo
+[tool.autoimport]
+# Disable moving to top to preserve existing structure
+disable_move_to_top = false
+
+# Common statements for haive namespace - THESE SHOULD BE SPECIFIC IMPORTS
+[tool.autoimport.common_statements]
+# Core haive imports - BE SPECIFIC!
+"AugLLMConfig" = "from haive.core.engine.aug_llm import AugLLMConfig"
+"Agent" = "from haive.core.agent import Agent"
+"BaseModel" = "from pydantic import BaseModel"
+"Field" = "from pydantic import Field"
+"StateSchema" = "from haive.core.schema import StateSchema"
+"MessagesState" = "from haive.core.schema.prebuilt.messages_state import MessagesState"
+
+# Common type imports
+"Optional" = "from typing import Optional"
+"List" = "from typing import List"
+"Dict" = "from typing import Dict"
+"Any" = "from typing import Any"
+"Union" = "from typing import Union"
+"Literal" = "from typing import Literal"
+
+# LangChain common imports
+"ChatPromptTemplate" = "from langchain_core.prompts import ChatPromptTemplate"
+"HumanMessage" = "from langchain_core.messages import HumanMessage"
+"AIMessage" = "from langchain_core.messages import AIMessage"
+"SystemMessage" = "from langchain_core.messages import SystemMessage"
+"tool" = "from langchain_core.tools import tool"
+"END" = "from langgraph.graph import END"
+"START" = "from langgraph.graph import START"
+
+# Common Python patterns
+"datetime" = "from datetime import datetime"
+"Path" = "from pathlib import Path"
+"logging" = "import logging"
+"os" = "import os"
+"sys" = "import sys"
+"json" = "import json"
+
+# Ruff Configuration
+[tool.ruff]
+line-length = 88
+target-version = "py312"
+
+[tool.ruff.lint]
+# Enforce absolute imports and other rules
+select = ["E", "W", "F", "I", "TID251", "TID252"]
+ignore = ["E501"]
+
+[tool.isort]
+profile = "black"
+known_first_party = ["haive"]
+known_third_party = ["langchain", "langchain_core", "langgraph", "pydantic"]
+force_single_line = false
+combine_as_imports = true
+lines_after_imports = 2

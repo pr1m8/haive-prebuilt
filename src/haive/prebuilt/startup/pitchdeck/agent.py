@@ -1,20 +1,19 @@
-"""
-Pitch deck generation subgraph for creating compelling pitch decks.
+"""Pitch deck generation subgraph for creating compelling pitch decks.
 
 This subgraph handles the creation of pitch deck outlines, slide content,
 and deck refinement.
 """
 
-from typing import Any, Dict, List, Literal, Optional
+import uuid
+from typing import Any
 
 from haive.core.schema.state_schema import StateSchema
 from langchain_core.messages import BaseMessage, HumanMessage
 from langgraph.graph import END, START, StateGraph
-from pydantic import BaseModel, Field
+from pydantic import Field
 
 from haive.prebuilt.startup.ideation.models import StartupIdea
 from haive.prebuilt.startup.pitchdeck.models import (
-    DesignStyle,
     PitchDeck,
     PitchDeckMetadata,
     QualityMetrics,
@@ -33,25 +32,25 @@ from haive.prebuilt.startup.pitchdeck.prompts import (
 class PitchDeckState(StateSchema):
     """State for pitch deck generation subgraph."""
 
-    messages: List[BaseMessage] = Field(default_factory=list)
+    messages: list[BaseMessage] = Field(default_factory=list)
 
     # Input
-    startup_idea: Optional[StartupIdea] = None
-    pitch_deck_brief: Optional[Dict[str, Any]] = None
-    deck_metadata: Optional[PitchDeckMetadata] = None
+    startup_idea: StartupIdea | None = None
+    pitch_deck_brief: dict[str, Any] | None = None
+    deck_metadata: PitchDeckMetadata | None = None
 
     # Deck creation
-    deck_outline: Optional[Dict[str, Any]] = None
-    pitch_deck: Optional[PitchDeck] = None
+    deck_outline: dict[str, Any] | None = None
+    pitch_deck: PitchDeck | None = None
     current_slide_index: int = 0
 
     # Content generation
-    narrative: Optional[Dict[str, Any]] = None
-    slides_content: List[SlideContent] = Field(default_factory=list)
+    narrative: dict[str, Any] | None = None
+    slides_content: list[SlideContent] = Field(default_factory=list)
 
     # Quality and review
-    review_feedback: Optional[Dict[str, Any]] = None
-    quality_metrics: Optional[QualityMetrics] = None
+    review_feedback: dict[str, Any] | None = None
+    quality_metrics: QualityMetrics | None = None
     revision_count: int = 0
     max_revisions: int = 2
 
@@ -61,7 +60,7 @@ class PitchDeckState(StateSchema):
     deck_approved: bool = False
 
 
-def create_deck_outline_node(state: PitchDeckState) -> Dict[str, Any]:
+def create_deck_outline_node(state: PitchDeckState) -> dict[str, Any]:
     """Create the pitch deck outline."""
     if not state.startup_idea and not state.pitch_deck_brief:
         return {
@@ -101,7 +100,6 @@ def create_deck_outline_node(state: PitchDeckState) -> Dict[str, Any]:
     )
 
     # Create initial pitch deck structure
-    import uuid
 
     pitch_deck = PitchDeck(deck_id=str(uuid.uuid4()), metadata=metadata, slides=[])
 
@@ -133,7 +131,7 @@ def create_deck_outline_node(state: PitchDeckState) -> Dict[str, Any]:
     }
 
 
-def create_narrative_node(state: PitchDeckState) -> Dict[str, Any]:
+def create_narrative_node(state: PitchDeckState) -> dict[str, Any]:
     """Create compelling narrative for the pitch."""
     if not state.pitch_deck:
         return {
@@ -172,7 +170,7 @@ def create_narrative_node(state: PitchDeckState) -> Dict[str, Any]:
     }
 
 
-def generate_slide_content_node(state: PitchDeckState) -> Dict[str, Any]:
+def generate_slide_content_node(state: PitchDeckState) -> dict[str, Any]:
     """Generate content for the next slide."""
     if not state.pitch_deck or state.current_slide_index >= len(
         state.pitch_deck.slides
@@ -221,7 +219,7 @@ def generate_slide_content_node(state: PitchDeckState) -> Dict[str, Any]:
     }
 
 
-def review_pitch_deck_node(state: PitchDeckState) -> Dict[str, Any]:
+def review_pitch_deck_node(state: PitchDeckState) -> dict[str, Any]:
     """Review the complete pitch deck."""
     if not state.pitch_deck:
         return {"messages": [HumanMessage(content="No pitch deck to review")]}
@@ -258,7 +256,7 @@ def review_pitch_deck_node(state: PitchDeckState) -> Dict[str, Any]:
     }
 
 
-def apply_feedback_node(state: PitchDeckState) -> Dict[str, Any]:
+def apply_feedback_node(state: PitchDeckState) -> dict[str, Any]:
     """Apply review feedback to improve the deck."""
     if not state.review_feedback or not state.pitch_deck:
         return {"messages": [HumanMessage(content="No feedback to apply")]}
@@ -267,7 +265,7 @@ def apply_feedback_node(state: PitchDeckState) -> Dict[str, Any]:
 
     # Apply top improvement suggestions
     messages = []
-    for slide_id, suggestion in list(
+    for _slide_id, suggestion in list(
         feedback.get("improvement_suggestions", {}).items()
     )[:3]:
         messages.append(f"Applied: {suggestion}")
@@ -286,16 +284,15 @@ def determine_next_step(state: PitchDeckState) -> str:
     """Determine next step in pitch deck creation."""
     if not state.outline_complete:
         return "outline"
-    elif not state.narrative:
+    if not state.narrative:
         return "narrative"
-    elif state.current_slide_index < len(state.pitch_deck.slides):
+    if state.current_slide_index < len(state.pitch_deck.slides):
         return "generate_content"
-    elif not state.review_feedback:
+    if not state.review_feedback:
         return "review"
-    elif not state.deck_approved and state.revision_count < state.max_revisions:
+    if not state.deck_approved and state.revision_count < state.max_revisions:
         return "apply_feedback"
-    else:
-        return "end"
+    return "end"
 
 
 def build_pitch_deck_subgraph() -> StateGraph:

@@ -1,4 +1,79 @@
-https://github.com/NirDiamant/GenAI_Agents/blob/main/all_agents_tutorials/essay_grading_system_langgraph.ipynb# Define the fact-checking prompt
+"""Essay Grading - TODO: Add brief description
+
+TODO: Add detailed description of module functionality
+
+
+
+Example:
+    Basic usage::
+
+        from haive.essay_grading import module_function
+
+        # TODO: Add example
+
+
+"""
+
+# Reference: https://github.com/NirDiamant/GenAI_Agents/blob/main/all_agents_tutorials/essay_grading_system_langgraph.ipynb# Define the fact-checking prompt
+
+from typing import List, TypedDict
+
+from langchain_core.agents import Agent
+from langchain_core.prompts import PromptTemplate
+from langgraph.graph import END
+
+
+# Placeholder imports - these need to be implemented or imported from appropriate modules
+def chunk_large_text(text: str) -> List[str]:
+    """Split large text into manageable chunks."""
+    # TODO: Implement proper text chunking
+    max_chunk_size = 1000
+    return [text[i : i + max_chunk_size] for i in range(0, len(text), max_chunk_size)]
+
+
+def search_and_summarize(keyword: str) -> str:
+    """Search for keyword and summarize results."""
+    # TODO: Implement search and summarization
+    return f"Search results for '{keyword}'"
+
+
+def summarize_article(article_text: str, chunks: List[str]) -> str:
+    """Summarize the article."""
+    # TODO: Implement summarization logic
+    return f"Summary of article with {len(chunks)} chunks"
+
+
+# Placeholder for LLM and result types
+class FactCheckResult(TypedDict):
+    result: List[dict]
+
+
+class State(TypedDict):
+    article_text: str
+    current_query: str
+    chunks: List[str]
+    actions: List[str]
+    summary_result: str
+    fact_check_result: List[dict]
+    tone_analysis_result: List[str]
+    quote_extraction_result: List[str]
+    grammar_and_bias_review_result: List[str]
+
+
+# Placeholder for LLM - needs to be configured
+llm = None  # TODO: Initialize with actual LLM configuration
+
+# Define routes mapping
+routes = {
+    "summarization": "summary",
+    "fact-checking": "fact checking",
+    "tone-analysis": "tone analysis",
+    "quote-extraction": "quote extraction",
+    "grammar-and-bias-review": "grammar and bias review",
+    "no-action-required": "no-action-required",
+    "invalid": "invalid",
+}
+
 fact_checking_prompt = PromptTemplate(
     input_variables=["text"],
     template=(
@@ -10,17 +85,17 @@ fact_checking_prompt = PromptTemplate(
         "{text}\n\n"
         "Return the results in this JSON format:\n"
         "{{\n"
-        "  \"results\": [\n"
+        '  "results": [\n'
         "    {{\n"
-        "      \"statement\": \"<Original statement>\",\n"
-        "      \"status\": \"<confirmed | refuted | unverifiable | vague>\",\n"
-        "      \"explanation\": \"<Brief explanation of findings or reason for vagueness>\",\n"
-        "      \"suggested_keywords\": [\"<keyword1>\", \"<keyword2>\"]\n"
+        '      "statement": "<Original statement>",\n'
+        '      "status": "<confirmed | refuted | unverifiable | vague>",\n'
+        '      "explanation": "<Brief explanation of findings or reason for vagueness>",\n'
+        '      "suggested_keywords": ["<keyword1>", "<keyword2>"]\n'
         "    }},\n"
         "    {{...}}\n"
         "  ]\n"
         "}}\n"
-    )
+    ),
 )
 
 # Define the structured output llm for the fact-checking pipeline
@@ -30,7 +105,6 @@ structured_output_llm = llm.with_structured_output(FactCheckResult)
 fact_checking_pipeline = fact_checking_prompt | structured_output_llm
 
 
-
 def fact_check_article(article_text: str, chunks=None):
     """
     Fact-check the given text by identifying factual inaccuracies, misleading information, unsupported claims, or vague language.
@@ -38,32 +112,35 @@ def fact_check_article(article_text: str, chunks=None):
     # Split the full article text into manageable chunks if not provided
     if not chunks:
         chunks = chunk_large_text(article_text)
-    
+
     # Fact-check each chunk of the article
     fact_check_results = []
     for chunk in chunks:
         fact_check_result = fact_checking_pipeline.invoke({"text": chunk})
         # Add search results for suggested keywords
         for statement in fact_check_result["result"]:
-            suggested_keywords = statement.get('suggested_keywords', [])
+            suggested_keywords = statement.get("suggested_keywords", [])
             if suggested_keywords:
-                statement['search_results'] = [
+                statement["search_results"] = [
                     search_and_summarize(keyword) for keyword in suggested_keywords
                 ]
-        
+
         fact_check_results.extend(fact_check_result["result"])
 
     return fact_check_results
+
+
 tone_analysis_prompt = PromptTemplate(
     input_variables=["text"],
     template=(
         "Analyze the tones of the following article. Does it appear neutral, positive, critical, or opinionated? "
         "Provide a short explanation for each detected tone. "
         "Use specific examples from the article to support your analysis.\\n\n{text}"
-    )
+    ),
 )
 
 tone_pipeline = tone_analysis_prompt | llm
+
 
 def tone_analysis_article(article_text: str, chunks=None):
     """
@@ -72,14 +149,15 @@ def tone_analysis_article(article_text: str, chunks=None):
     # Split the full article text into manageable chunks if not provided
     if not chunks:
         chunks = chunk_large_text(article_text)
-    
+
     # Analyze the tones of each chunk of the article
     tone_results = []
     for chunk in chunks:
         tone_result = tone_pipeline.invoke({"text": chunk})
         tone_results.append(tone_result.content)
-    
+
     return tone_results
+
 
 # Quote extraction
 quote_extraction_prompt = PromptTemplate(
@@ -88,12 +166,11 @@ quote_extraction_prompt = PromptTemplate(
         "Identify direct quotes in the following content, noting the speaker's name "
         "and the context of each quote. If there are no quotes, return 'No quotes found'.\n\n"
         "Text: {text}"
-    )
+    ),
 )
 
 # Define the quote extraction pipeline
 quote_extraction_pipeline = quote_extraction_prompt | llm
-
 
 
 def quote_extraction_article(article_text: str, chunks=None):
@@ -103,14 +180,16 @@ def quote_extraction_article(article_text: str, chunks=None):
     # Split the full article text into manageable chunks if not provided
     if not chunks:
         chunks = chunk_large_text(article_text)
-    
+
     # Extract quotes from each chunk of the article
     quote_results = []
     for chunk in chunks:
         quote_result = quote_extraction_pipeline.invoke({"text": chunk})
         quote_results.append(quote_result.content)
-    
+
     return quote_results
+
+
 # Define a prompt template for reviewing the grammar and bias of the article
 review_prompt = PromptTemplate(
     input_variables=["text"],
@@ -118,12 +197,11 @@ review_prompt = PromptTemplate(
         "Review the following article for grammar, spelling, punctuation, and bias. "
         "Provide feedback on each aspect in form of a list of the issues found and some suggestions for improvement.\n\n"
         "{text}"
-    )
+    ),
 )
 
 # Define the review pipeline
 grammar_and_bias_review = review_prompt | llm
-
 
 
 def grammary_and_bias_analysis_article(article_text: str, chunks=None):
@@ -133,14 +211,16 @@ def grammary_and_bias_analysis_article(article_text: str, chunks=None):
     # Split the full article text into manageable chunks if not provided
     if not chunks:
         chunks = chunk_large_text(article_text)
-    
+
     # Review each chunk of the article
     review_results = []
     for chunk in chunks:
         review_result = grammar_and_bias_review.invoke({"text": chunk})
         review_results.append(review_result.content)
-    
+
     return review_results
+
+
 def get_or_create_chunks(state: State):
     """
     This function gets the article text from the state and splits it into manageable chunks.
@@ -193,8 +273,11 @@ def quote_extraction_node(state: State) -> State:
     article_text = state["article_text"]
     quote_extraction_results = quote_extraction_article(article_text, chunks)
     return {"quote_extraction_result": quote_extraction_results}
+
+
 class SystemAction(TypedDict):
     actions: List[str]
+
 
 # Define a prompt template for identifying the user's intended actions based on their input
 action_prompt = PromptTemplate(
@@ -206,16 +289,16 @@ action_prompt = PromptTemplate(
         "}}\n\n"
         "Guidelines:\n"
         "- If the user requests all actions or says 'everything' or 'full report,' respond with the list of all individual actions:\n"
-        '{{\n'
+        "{{\n"
         '    "actions": ["summarization", "fact-checking", "tone-analysis", "quote-extraction", "grammar-and-bias-review"]\n'
         "}}\n"
         "- If the user input requests multiple specific actions, list each action requested (e.g., 'summarization' and 'tone analysis' together as ['summarization', 'tone-analysis']).\n"
         "- If the user’s input does not relate to any accessible action, respond with:\n"
-        '{{\n'
+        "{{\n"
         '    "actions": ["invalid"]\n'
         "}}\n"
         "- If the user's input does not require any specific action, or wants to end the conversation, respond with:\n"
-        '{{\n'
+        "{{\n"
         '    "actions": ["no-action-required"]\n'
         "}}\n\n"
         "Important:\n"
@@ -239,12 +322,11 @@ action_prompt = PromptTemplate(
         "- User input: 'I have another question that’s not related to these functions.'\n"
         '  System action: {{ "actions": ["invalid"] }}\n\n'
         "Input text:\n{input_text}"
-    )
+    ),
 )
 
 
 action_pipeline = action_prompt | llm.with_structured_output(SystemAction)
-
 
 
 def get_user_actions(input_text: str) -> List[str]:
@@ -252,9 +334,11 @@ def get_user_actions(input_text: str) -> List[str]:
     Identify the user's intended actions based on their input.
     """
     system_actions = action_pipeline.invoke({"input_text": input_text})
-    
+
     return system_actions["actions"]
-Sample usage
+
+
+# Sample usage
 user_inputs = [
     "Can you summarize this article for me?",
     "I'm not sure about the accuracy of this article. Can you summarize it and fact-check it?",
@@ -273,13 +357,16 @@ for user_input in user_inputs:
     user_actions = get_user_actions(user_input)
     print(f"System actions: {user_actions}")
 
+
 def grammar_and_bias_review_node(state: State) -> State:
     chunks = get_or_create_chunks(state)
     article_text = state["article_text"]
-    grammar_and_bias_review_results = (
-        grammary_and_bias_analysis_article(article_text, chunks)
+    grammar_and_bias_review_results = grammary_and_bias_analysis_article(
+        article_text, chunks
     )
     return {"grammar_and_bias_review_result": grammar_and_bias_review_results}
+
+
 def route(state: State) -> str:
     routes = []
     actions = state.get("actions", [])
@@ -298,13 +385,20 @@ def route(state: State) -> str:
     return routes
 
 
+class BaseLLMConfig:
+    """Placeholder for base LLM configuration."""
+
+    pass
+
 
 class JournamlsimReviewAgent(Agent):
     """
     Agent for reviewing the grammar and bias of an article.
     """
+
     def __init__(self, llm: BaseLLMConfig):
         super().__init__(llm)
+        self.graph = None  # TODO: Initialize graph properly
 
     def setup_workflow(self):
         # Define constants for repeated literals - review
@@ -316,7 +410,6 @@ class JournamlsimReviewAgent(Agent):
         GRAMMAR_AND_BIAS_REVIEW = "grammar and bias review"
 
         # Create a graph
-        
 
         # Define the nodes
         self.graph.add_node(CATEGORY, categorize_user_input)
@@ -339,7 +432,7 @@ class JournamlsimReviewAgent(Agent):
                 "grammar-and-bias-review": GRAMMAR_AND_BIAS_REVIEW,
                 "no-action-required": END,
                 "invalid": END,
-            }
+            },
         )
 
         self.graph.add_edge(SUMMARY, END)

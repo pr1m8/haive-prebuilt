@@ -1,1 +1,17 @@
-https://github.com/NirDiamant/GenAI_Agents/blob/main/all_agents_tutorials/Academic_Task_Learning_Agent_LangGraph.ipynb
+"""Academic Task Learning - TODO: Add brief description
+
+TODO: Add detailed description of module functionality
+
+
+
+Example:
+    Basic usage::
+
+        from haive.academic_task_learning import module_function
+
+        # TODO: Add example
+
+
+"""
+
+# Reference: https://github.com/NirDiamant/GenAI_Agents/blob/main/all_agents_tutorials/Academic_Task_Learning_Agent_LangGraph.ipynb

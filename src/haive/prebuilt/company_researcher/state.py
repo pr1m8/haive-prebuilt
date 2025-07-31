@@ -2,19 +2,17 @@ from __future__ import annotations
 
 import uuid
 from datetime import datetime
-from enum import Enum, auto
-from typing import Annotated, Any, Dict, List, Optional, Union
+from enum import Enum
+from typing import Annotated, Any
 
-# Import the enhanced models
 from haive_prebuilt.misc.company_researcher.models import (
-    ComplianceRiskFactor,
     EnhancedKYCCustomerProfile,
-    ProhibitedActivity,
-    RestrictedIndustry,
 )
 from langchain_core.messages import BaseMessage
 from langgraph.graph import add_messages
 from pydantic import BaseModel, ConfigDict, Field
+
+# Import the enhanced models
 
 
 class KYCWorkflowStage(str, Enum):
@@ -39,8 +37,7 @@ class KYCDecisionStatus(str, Enum):
 
 
 class KYCWorkflowState(BaseModel):
-    """
-    Comprehensive state model for KYC workflow
+    """Comprehensive state model for KYC workflow
 
     Captures the entire state of the KYC processing pipeline
     """
@@ -52,12 +49,12 @@ class KYCWorkflowState(BaseModel):
     )
 
     # Customer Profile
-    customer_profile: Optional[EnhancedKYCCustomerProfile] = Field(
+    customer_profile: EnhancedKYCCustomerProfile | None = Field(
         default=None, description="Comprehensive customer profile"
     )
 
     # Workflow Messaging
-    messages: Annotated[List[BaseMessage], add_messages] = Field(
+    messages: Annotated[list[BaseMessage], add_messages] = Field(
         default_factory=list, description="Conversation and workflow messages"
     )
 
@@ -79,12 +76,12 @@ class KYCWorkflowState(BaseModel):
     )
 
     # Additional Routing Information
-    next_stage: Optional[KYCWorkflowStage] = Field(
+    next_stage: KYCWorkflowStage | None = Field(
         default=None, description="Next stage in the workflow"
     )
 
     # Error Handling
-    error_details: Optional[Dict[str, Any]] = Field(
+    error_details: dict[str, Any] | None = Field(
         default=None, description="Details of any errors encountered during processing"
     )
 
@@ -104,8 +101,7 @@ class KYCWorkflowState(BaseModel):
     )
 
     def update_stage(self, new_stage: KYCWorkflowStage) -> None:
-        """
-        Update the current workflow stage
+        """Update the current workflow stage
 
         Args:
             new_stage: New workflow stage
@@ -121,8 +117,7 @@ class KYCWorkflowState(BaseModel):
             self.screening_iterations += 1
 
     def set_decision_status(self, status: KYCDecisionStatus) -> None:
-        """
-        Set the decision status and update stage
+        """Set the decision status and update stage
 
         Args:
             status: New decision status
@@ -139,9 +134,8 @@ class KYCWorkflowState(BaseModel):
 
         self.last_updated = datetime.now()
 
-    def log_error(self, error_details: Dict[str, Any]) -> None:
-        """
-        Log error details and update workflow state
+    def log_error(self, error_details: dict[str, Any]) -> None:
+        """Log error details and update workflow state
 
         Args:
             error_details: Dictionary of error information
@@ -163,23 +157,23 @@ def main():
             }
         )
     )
-    
+
     # Demonstrate stage update
     print("Initial State:")
     print(kyc_state.model_dump_json(indent=2))
-    
+
     # Update stage
     kyc_state.update_stage(KYCWorkflowStage.RISK_ASSESSMENT)
-    
+
     # Set decision status
     kyc_state.set_decision_status(KYCDecisionStatus.PENDING_REVIEW)
-    
+
     # Log an error (optional)
     kyc_state.log_error({
         "error_type": "compliance_issue",
         "message": "Additional verification required"
     })
-    
+
     print("\nUpdated State:")
     print(kyc_state.model_dump_json(indent=2))
 

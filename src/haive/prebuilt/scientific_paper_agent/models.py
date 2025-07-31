@@ -1,3 +1,11 @@
+import os
+import time
+from typing import ClassVar, Optional
+
+import urllib3
+from pydantic import BaseModel, Field
+
+
 class CoreAPIWrapper(BaseModel):
     """Simple wrapper around the CORE API."""
 
@@ -22,7 +30,7 @@ class CoreAPIWrapper(BaseModel):
             )
             if 200 <= response.status < 300:
                 return response.json()
-            elif attempt < max_retries - 1:
+            if attempt < max_retries - 1:
                 time.sleep(2 ** (attempt + 2))
             else:
                 raise Exception(
@@ -45,14 +53,12 @@ class CoreAPIWrapper(BaseModel):
                 [item["name"] for item in result.get("authors", [])]
             )
             docs.append(
-                (
-                    f"* ID: {result.get('id', '')},\n"
-                    f"* Title: {result.get('title', '')},\n"
-                    f"* Published Date: {published_date_str},\n"
-                    f"* Authors: {authors_str},\n"
-                    f"* Abstract: {result.get('abstract', '')},\n"
-                    f"* Paper URLs: {result.get('sourceFulltextUrls') or result.get('downloadUrl', '')}"
-                )
+                f"* ID: {result.get('id', '')},\n"
+                f"* Title: {result.get('title', '')},\n"
+                f"* Published Date: {published_date_str},\n"
+                f"* Authors: {authors_str},\n"
+                f"* Abstract: {result.get('abstract', '')},\n"
+                f"* Paper URLs: {result.get('sourceFulltextUrls') or result.get('downloadUrl', '')}"
             )
         return "\n-----\n".join(docs)
 

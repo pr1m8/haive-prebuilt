@@ -2,12 +2,9 @@ from __future__ import annotations
 
 import uuid
 from datetime import datetime
-from enum import Enum, auto
-from typing import Any, Dict, List, Literal, Optional, Union
+from enum import Enum
+from typing import Any
 
-from langchain_core.messages import SystemMessage
-from langchain_core.output_parsers import PydanticOutputParser
-from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
 
 
@@ -102,27 +99,27 @@ class CustomerRiskProfile(BaseModel):
     """Comprehensive customer risk profile"""
 
     # Prohibited Activities
-    prohibited_activities: List[ProhibitedActivity] = Field(
+    prohibited_activities: list[ProhibitedActivity] = Field(
         default_factory=list, description="List of identified prohibited activities"
     )
 
     # Restricted Industries
-    restricted_industries: List[RestrictedIndustry] = Field(
+    restricted_industries: list[RestrictedIndustry] = Field(
         default_factory=list, description="Industries requiring additional scrutiny"
     )
 
     # Detailed Risk Factors
-    compliance_risk_factors: List[ComplianceRiskFactor] = Field(
+    compliance_risk_factors: list[ComplianceRiskFactor] = Field(
         default_factory=list, description="Specific compliance risk indicators"
     )
 
     # Geographic Risks
-    geographic_risks: Dict[str, GeographicRiskProfile] = Field(
+    geographic_risks: dict[str, GeographicRiskProfile] = Field(
         default_factory=dict, description="Risk profile for jurisdictions of operation"
     )
 
     # Enhanced Due Diligence Triggers
-    edd_requirements: List[EnhancedDueDiligenceRequirement] = Field(
+    edd_requirements: list[EnhancedDueDiligenceRequirement] = Field(
         default_factory=list, description="Triggers for Enhanced Due Diligence"
     )
 
@@ -133,9 +130,7 @@ class CustomerRiskProfile(BaseModel):
 
     @field_validator("overall_risk_score", mode="before")
     def calculate_risk_score(cls, v, values):
-        """
-        Dynamically calculate risk score based on identified risk factors
-        """
+        """Dynamically calculate risk score based on identified risk factors"""
         base_score = 0.0
 
         # Prohibited activities are highest risk
@@ -182,16 +177,16 @@ class CustomerRiskProfile(BaseModel):
 class OwnershipStructure(BaseModel):
     """Detailed ownership and control information"""
 
-    ultimate_beneficial_owners: List[Dict[str, Any]] = Field(
+    ultimate_beneficial_owners: list[dict[str, Any]] = Field(
         default_factory=list, description="List of ultimate beneficial owners"
     )
-    ownership_percentage: Dict[str, float] = Field(
+    ownership_percentage: dict[str, float] = Field(
         default_factory=dict, description="Ownership percentages for key stakeholders"
     )
-    corporate_hierarchy: Optional[Dict[str, Any]] = Field(
+    corporate_hierarchy: dict[str, Any] | None = Field(
         default=None, description="Detailed corporate ownership hierarchy"
     )
-    control_mechanisms: List[str] = Field(
+    control_mechanisms: list[str] = Field(
         default_factory=list, description="Mechanisms of corporate control"
     )
 
@@ -199,23 +194,22 @@ class OwnershipStructure(BaseModel):
 class ComplianceDocumentation(BaseModel):
     """Comprehensive compliance documentation tracking"""
 
-    verified_documents: Dict[str, bool] = Field(
+    verified_documents: dict[str, bool] = Field(
         default_factory=dict, description="Status of required compliance documents"
     )
-    document_expiration_dates: Dict[str, datetime] = Field(
+    document_expiration_dates: dict[str, datetime] = Field(
         default_factory=dict, description="Expiration dates for compliance documents"
     )
-    verification_history: List[Dict[str, Any]] = Field(
+    verification_history: list[dict[str, Any]] = Field(
         default_factory=list, description="Historical record of document verifications"
     )
-    missing_documents: List[str] = Field(
+    missing_documents: list[str] = Field(
         default_factory=list, description="List of documents still required"
     )
 
 
 class EnhancedKYCCustomerProfile(BaseModel):
-    """
-    Comprehensive and enhanced KYC customer profile
+    """Comprehensive and enhanced KYC customer profile
     Combines multiple aspects of customer risk assessment
     """
 
@@ -227,9 +221,9 @@ class EnhancedKYCCustomerProfile(BaseModel):
 
     # Personal/Business Information
     full_name: str = Field(..., description="Full legal name")
-    date_of_birth: Optional[datetime] = Field(None, description="Date of birth")
-    nationality: Optional[str] = Field(None, description="Nationality")
-    business_name: Optional[str] = Field(None, description="Registered business name")
+    date_of_birth: datetime | None = Field(None, description="Date of birth")
+    nationality: str | None = Field(None, description="Nationality")
+    business_name: str | None = Field(None, description="Registered business name")
 
     # Comprehensive Risk Assessment
     risk_profile: CustomerRiskProfile = Field(
@@ -238,7 +232,7 @@ class EnhancedKYCCustomerProfile(BaseModel):
     )
 
     # Ownership and Control
-    ownership: Optional[OwnershipStructure] = Field(
+    ownership: OwnershipStructure | None = Field(
         default=None, description="Detailed ownership and control information"
     )
 
@@ -259,7 +253,7 @@ class EnhancedKYCCustomerProfile(BaseModel):
     last_updated: datetime = Field(default_factory=datetime.now)
 
     # Additional Metadata
-    additional_notes: Optional[str] = Field(
+    additional_notes: str | None = Field(
         None, description="Additional compliance notes"
     )
 
@@ -271,9 +265,7 @@ class EnhancedKYCCustomerProfile(BaseModel):
 
     @model_validator(mode="before")
     def validate_customer_profile(cls, values):
-        """
-        Perform comprehensive validation of the customer profile
-        """
+        """Perform comprehensive validation of the customer profile"""
         # Ensure either personal or business name is provided
         if not values.get("full_name") and not values.get("business_name"):
             raise ValueError("Either full name or business name must be provided")
@@ -296,7 +288,7 @@ def main():
         nationality="United States",
         business_name="Global Financial Solutions LLC"
     )
-    
+
     # Add some risk factors
     customer.risk_profile.prohibited_activities.append(
         ProhibitedActivity.MONEY_LAUNDERING
@@ -308,11 +300,11 @@ def main():
         ComplianceRiskFactor.COMPLEX_CORPORATE_STRUCTURE,
         ComplianceRiskFactor.UNUSUAL_TRANSACTION_PATTERNS
     ])
-    
+
     # Print the customer profile with detailed risk assessment
     print("Enhanced KYC Customer Profile:")
     print(customer.model_dump_json(indent=2))
-    
+
     # Demonstrate risk score calculation
     print(f"\nOverall Risk Score: {customer.risk_profile.overall_risk_score}")
 
