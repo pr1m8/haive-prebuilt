@@ -117,25 +117,110 @@ Each solution includes comprehensive documentation, deployment guides,
 configuration examples, and integration tutorials.
 """
 
-__version__ = "0.1.0"
+import lazy_loader as lazy
 
-# Import commonly used prebuilt solutions
-try:
-    PREBUILT_AVAILABLE = True
-except ImportError:
-    # Graceful degradation if prebuilt solutions aren't available
-    PREBUILT_AVAILABLE = False
-
-__all__ = [
-    "__version__",
+# Define submodules to lazy load
+submodules = [
+    "academic_task_learning",
+    "ai_insight",
+    "arxiv_agent",
+    "blog_writer_agent",
+    "car_buyer_agent",
+    "career_assistant",
+    "chiron_learning_agent",
+    "clause_ai",
+    "company_researcher",
+    "constituional_agent",
+    "content_intelligence",
+    "contract_analysis",
+    "customer_support",
+    "db_discovery",
+    "e2e_testing",
+    "essay_grading",
+    "eu_green_compliance",
+    "gif_generator",
+    "github_agent",
+    "gmail_agent",
+    "graph_inspector",
+    "gtla",
+    "memory_agent",
+    "misc",
+    "open_researcher",
+    "people_researcher",
+    "perplexity",
+    "podcast_generator",
+    "project_manager",
+    "reflection",
+    "sales_call_analyzer",
+    "scientific_paper_agent",
+    "search_and_summarize",
+    "self_improving",
+    "shop_genie",
+    "startup",
+    "systemic_review_of_scientific_articles",
+    "taskifier",
+    "tldr2",
+    "translator_agent",
+    "tts_poem_gen",
+    "weather_agent",
+    "weather_disaster_management",
+    "wolfram_alpha_agent",
 ]
 
-if PREBUILT_AVAILABLE:
-    __all__.extend(
-        [
-            "CodeReviewer",
-            "ContentGenerator",
-            "CustomerSupportBot",
-            "ResearchAssistant",
-        ]
-    )
+# Define specific attributes from submodules to expose
+# TODO: Customize this based on actual exports from each submodule
+submod_attrs = {
+    "academic_task_learning": [],  # TODO: Add specific exports from academic_task_learning
+    "ai_insight": [],  # TODO: Add specific exports from ai_insight
+    "arxiv_agent": [],  # TODO: Add specific exports from arxiv_agent
+    "blog_writer_agent": [],  # TODO: Add specific exports from blog_writer_agent
+    "car_buyer_agent": [],  # TODO: Add specific exports from car_buyer_agent
+    "career_assistant": [],  # TODO: Add specific exports from career_assistant
+    "chiron_learning_agent": [],  # TODO: Add specific exports from chiron_learning_agent
+    "clause_ai": [],  # TODO: Add specific exports from clause_ai
+    "company_researcher": [],  # TODO: Add specific exports from company_researcher
+    "constituional_agent": [],  # TODO: Add specific exports from constituional_agent
+    "content_intelligence": [],  # TODO: Add specific exports from content_intelligence
+    "contract_analysis": [],  # TODO: Add specific exports from contract_analysis
+    "customer_support": [],  # TODO: Add specific exports from customer_support
+    "db_discovery": [],  # TODO: Add specific exports from db_discovery
+    "e2e_testing": [],  # TODO: Add specific exports from e2e_testing
+    "essay_grading": [],  # TODO: Add specific exports from essay_grading
+    "eu_green_compliance": [],  # TODO: Add specific exports from eu_green_compliance
+    "gif_generator": [],  # TODO: Add specific exports from gif_generator
+    "github_agent": [],  # TODO: Add specific exports from github_agent
+    "gmail_agent": [],  # TODO: Add specific exports from gmail_agent
+    "graph_inspector": [],  # TODO: Add specific exports from graph_inspector
+    "gtla": [],  # TODO: Add specific exports from gtla
+    "memory_agent": [],  # TODO: Add specific exports from memory_agent
+    "misc": [],  # TODO: Add specific exports from misc
+    "open_researcher": [],  # TODO: Add specific exports from open_researcher
+    "people_researcher": [],  # TODO: Add specific exports from people_researcher
+    "perplexity": [],  # TODO: Add specific exports from perplexity
+    "podcast_generator": [],  # TODO: Add specific exports from podcast_generator
+    "project_manager": [],  # TODO: Add specific exports from project_manager
+    "reflection": [],  # TODO: Add specific exports from reflection
+    "sales_call_analyzer": [],  # TODO: Add specific exports from sales_call_analyzer
+    "scientific_paper_agent": [],  # TODO: Add specific exports from scientific_paper_agent
+    "search_and_summarize": [],  # TODO: Add specific exports from search_and_summarize
+    "self_improving": [],  # TODO: Add specific exports from self_improving
+    "shop_genie": [],  # TODO: Add specific exports from shop_genie
+    "startup": [],  # TODO: Add specific exports from startup
+    "systemic_review_of_scientific_articles": [],  # TODO: Add specific exports from systemic_review_of_scientific_articles
+    "taskifier": [],  # TODO: Add specific exports from taskifier
+    "tldr2": [],  # TODO: Add specific exports from tldr2
+    "translator_agent": [],  # TODO: Add specific exports from translator_agent
+    "tts_poem_gen": [],  # TODO: Add specific exports from tts_poem_gen
+    "weather_agent": [],  # TODO: Add specific exports from weather_agent
+    "weather_disaster_management": [],  # TODO: Add specific exports from weather_disaster_management
+    "wolfram_alpha_agent": [],  # TODO: Add specific exports from wolfram_alpha_agent
+}
+
+# Attach lazy loading - this creates __getattr__, __dir__, and __all__
+__getattr__, __dir__, __all__ = lazy.attach(
+    __name__, submodules=submodules, submod_attrs=submod_attrs
+)
+
+# Add any eager imports here (lightweight utilities, etc.)
+# Example: from .metadata import SomeUtility
+# __all__ += ['SomeUtility']

@@ -1,5 +1,5 @@
 # TODO: These need to be properly defined or imported
-from .models import Schedule
+from haive.prebuilt.project_manager.models import Schedule
 
 
 def create_scheduling_prompt(tasks, dependencies, insights, state):
