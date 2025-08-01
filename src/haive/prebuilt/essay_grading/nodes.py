@@ -3,7 +3,7 @@ import re
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_openai import ChatOpenAI
 
-from .state import State
+from haive.prebuilt.essay_grading.state import State
 
 # LLM configuration
 llm = ChatOpenAI(model="gpt-4o", temperature=0.1)

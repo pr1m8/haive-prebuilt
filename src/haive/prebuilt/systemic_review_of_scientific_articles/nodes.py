@@ -14,7 +14,7 @@ from tenacity import (
     wait_exponential,
 )
 
-from .prompts import (
+from haive.prebuilt.systemic_review_of_scientific_articles.prompts import (
     abstract_prompt,
     analyze_paper_prompt,
     conclusions_prompt,
@@ -28,8 +28,10 @@ from .prompts import (
     results_prompt,
     revise_draft_prompt,
 )
-from .state import AgentState
-from .tools import AcademicPaperSearchTool
+from haive.prebuilt.systemic_review_of_scientific_articles.state import AgentState
+from haive.prebuilt.systemic_review_of_scientific_articles.tools import (
+    AcademicPaperSearchTool,
+)
 
 # Type aliases
 AnyMessage = Union[AIMessage, HumanMessage, SystemMessage, ToolMessage]

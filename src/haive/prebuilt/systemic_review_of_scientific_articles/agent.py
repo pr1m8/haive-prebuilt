@@ -4,7 +4,7 @@
 from haive.agents.base import Agent
 from langgraph.graph import END
 
-from .nodes import (
+from haive.prebuilt.systemic_review_of_scientific_articles.nodes import (
     aggregator,
     article_download,
     critique,

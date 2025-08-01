@@ -1,7 +1,7 @@
 from haive.agents.base import Agent
 from langgraph.graph import END
 
-from .nodes import (
+from haive.prebuilt.essay_grading.nodes import (
     analyze_structure,
     calculate_final_score,
     check_grammar,

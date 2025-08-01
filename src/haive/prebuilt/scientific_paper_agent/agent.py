@@ -1,6 +1,6 @@
 from langgraph.graph import END
 
-from .nodes import (
+from haive.prebuilt.scientific_paper_agent.nodes import (
     agent_node,
     decision_making_node,
     judge_node,

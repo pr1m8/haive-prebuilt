@@ -1,7 +1,7 @@
 from langchain.llms.base import BaseLLM
 from langgraph.graph import END, START
 
-from .nodes import (
+from haive.prebuilt.podcast_generator.nodes import (
     Start_parallel,
     finalize_report,
     initiate_all_interviews,
@@ -9,7 +9,7 @@ from .nodes import (
     write_introduction,
     write_report,
 )
-from .state import PodcastGeneratorState
+from haive.prebuilt.podcast_generator.state import PodcastGeneratorState
 
 # TODO: These need to be properly defined or imported
 Agent = None  # This should be the base Agent class

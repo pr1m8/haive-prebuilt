@@ -2,12 +2,14 @@
 from langchain_core.messages import HumanMessage
 from langgraph.graph import Send
 
-from .prompts import (
+from haive.prebuilt.podcast_generator.prompts import (
     conclusion_instructions,
     intro_instructions,
     report_writer_instructions,
 )
-from .state import PodcastGeneratorState as ResearchGraphState
+from haive.prebuilt.podcast_generator.state import (
+    PodcastGeneratorState as ResearchGraphState,
+)
 
 # TODO: This needs to be properly imported or defined
 podcast_model = None  # This should be defined elsewhere or imported
