@@ -129,6 +129,7 @@ class CustomerRiskProfile(BaseModel):
     )
 
     @field_validator("overall_risk_score", mode="before")
+    @classmethod
     def calculate_risk_score(cls, v, values):
         """Dynamically calculate risk score based on identified risk factors"""
         base_score = 0.0
@@ -264,6 +265,7 @@ class EnhancedKYCCustomerProfile(BaseModel):
     )
 
     @model_validator(mode="before")
+    @classmethod
     def validate_customer_profile(cls, values):
         """Perform comprehensive validation of the customer profile"""
         # Ensure either personal or business name is provided
@@ -273,6 +275,7 @@ class EnhancedKYCCustomerProfile(BaseModel):
         return values
 
     @field_validator("last_updated")
+    @classmethod
     def update_last_updated(cls, v):
         """Always update last_updated when the model is modified"""
         return datetime.now()

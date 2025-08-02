@@ -123,6 +123,7 @@ class KYCAgentConfiguration(AgentConfig):
         return KYCWorkflowState
 
     @field_validator("edd_triggers")
+    @classmethod
     def validate_edd_triggers(cls, v):
         """Validate Enhanced Due Diligence triggers
 
