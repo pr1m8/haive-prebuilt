@@ -6,9 +6,10 @@ Description: Converts a single query into multiple variations or batched forms f
 from haive.core.engine.aug_llm import AugLLMConfig
 from haive.core.models.llm.base import AzureLLMConfig
 from haive_agents.simple.factory import create_simple_agent
-from haive_prebuilt.simple.query.models import QueryModel
 from langchain_core.prompts import ChatPromptTemplate
 from pydantic import BaseModel, Field
+
+from haive.prebuilt.query.models import QueryModel
 
 SYSTEM_PROMPT = """
 You are a query expansion assistant.

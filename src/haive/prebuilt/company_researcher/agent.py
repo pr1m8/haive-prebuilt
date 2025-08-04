@@ -1,18 +1,19 @@
 from datetime import datetime
 
 from haive.core.engine.agent.agent import Agent, register_agent
-from haive_prebuilt.misc.company_researcher.config import KYCAgentConfiguration
-from haive_prebuilt.misc.company_researcher.models import (
+from langchain_core.messages import AIMessage, HumanMessage, SystemMessage
+from langgraph.graph import END, START
+
+from haive.prebuilt.company_researcher.config import KYCAgentConfiguration
+from haive.prebuilt.company_researcher.models import (
     EnhancedKYCCustomerProfile,
     RestrictedIndustry,
 )
-from haive_prebuilt.misc.company_researcher.state import (
+from haive.prebuilt.company_researcher.state import (
     KYCDecisionStatus,
     KYCWorkflowStage,
     KYCWorkflowState,
 )
-from langchain_core.messages import AIMessage, HumanMessage, SystemMessage
-from langgraph.graph import END, START
 
 # Import the configuration and state
 

@@ -2,11 +2,12 @@ import sys
 from typing import Any
 
 import requests
-from haive_prebuilt.misc.systemic_review_of_scientific_articles.models import (
-    AcademicPaperSearchInput,
-)
 from langchain_core.tools import BaseTool
 from pydantic import Field
+
+from haive.prebuilt.systemic_review_of_scientific_articles.models import (
+    AcademicPaperSearchInput,
+)
 
 
 class AcademicPaperSearchTool(BaseTool):

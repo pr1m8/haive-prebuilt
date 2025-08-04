@@ -5,12 +5,13 @@ from datetime import datetime
 from enum import Enum
 from typing import Annotated, Any
 
-from haive_prebuilt.misc.company_researcher.models import (
-    EnhancedKYCCustomerProfile,
-)
 from langchain_core.messages import BaseMessage
 from langgraph.graph import add_messages
 from pydantic import BaseModel, ConfigDict, Field
+
+from haive.prebuilt.company_researcher.models import (
+    EnhancedKYCCustomerProfile,
+)
 
 # Import the enhanced models
 
