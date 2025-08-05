@@ -1,5 +1,5 @@
+from haive.agents.react_agent2.config2 import ReactAgentConfig
 from haive.core.engine.aug_llm import AugLLMConfig
-from haive_agents.react_agent2.config2 import ReactAgentConfig
 
 from haive.haive.tools.search_tools import tavily_search_tool
 from haive.prebuilt.weather_disaster_management.models import (

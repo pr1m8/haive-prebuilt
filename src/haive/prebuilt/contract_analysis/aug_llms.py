@@ -1,7 +1,8 @@
-from haive.core.aug_llm import AugLLMConfig
-from haive_agents.contract_analysis.models import ContractInfo, StepAnalysis
+from haive.core.engine.aug_llm import AugLLMConfig
 from langchain_core.messages import HumanMessage, SystemMessage
 from langchain_core.prompts import ChatPromptTemplate
+
+from haive.prebuilt.contract_analysis.models import ContractInfo, StepAnalysis
 
 CONTRACT_CLASSIFIER_SYSTEM_PROMPT = """Analyze the provided contract and determine:
     1. The type of contract (e.g., Employment, NDA, License Agreement)
@@ -14,8 +15,8 @@ messages = [
 
 contract_classifier_aug_llm = AugLLMConfig(
     # model="gpt-4o-mini",
-    promptTemplate=ChatPromptTemplate.from_messages(messages),
-    structured_output=ContractInfo,
+    prompt_template=ChatPromptTemplate.from_messages(messages),
+    structured_output_model=ContractInfo,
 )
 
 CONTRACT_REVIEW_SYSTEM_PROMPT = """You are a {role}.
@@ -41,8 +42,8 @@ contract_review_messages = [
 ]
 
 contract_review_aug_llm = AugLLMConfig(
-    promptTemplate=ChatPromptTemplate.from_messages(contract_review_messages),
-    structured_output=StepAnalysis,
+    prompt_template=ChatPromptTemplate.from_messages(contract_review_messages),
+    structured_output_model=StepAnalysis,
 )
 
 
@@ -60,5 +61,5 @@ modifications_messages = [
 ]
 
 modifications_aug_llm = AugLLMConfig(
-    promptTemplate=ChatPromptTemplate.from_messages(modifications_messages),
+    prompt_template=ChatPromptTemplate.from_messages(modifications_messages),
 )

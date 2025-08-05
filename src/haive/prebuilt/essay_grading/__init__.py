@@ -18,7 +18,7 @@ Example:
 
 from typing import List, TypedDict
 
-from langchain_core.agents import Agent
+from haive.agents.base.agent import Agent
 from langchain_core.prompts import PromptTemplate
 from langgraph.graph import END
 

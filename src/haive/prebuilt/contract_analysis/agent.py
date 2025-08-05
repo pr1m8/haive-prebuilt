@@ -1,7 +1,8 @@
-from haive_agents.base import AgentArchitecture, AgentArchitectureConfig
-from haive_agents.contract_analysis.state import ContractReviewState
+from haive.agents.base import AgentArchitecture, AgentArchitectureConfig
 from langgraph.graph import END, START
 from pydantic import Field
+
+from haive.prebuilt.contract_analysis.state import ContractReviewState
 
 
 # Node function placeholders - these need to be implemented

@@ -1,4 +1,4 @@
-from haive_agents.project_manager.state import AgentState
+from haive.agents.project_manager.state import AgentState
 from langgraph.graph import END
 
 from haive.prebuilt.project_manager.aug_llms import llm, schedule_llm

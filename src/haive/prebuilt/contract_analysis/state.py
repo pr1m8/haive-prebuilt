@@ -1,8 +1,13 @@
 import operator
 from typing import Annotated
 
-from haive_agents.contract_analysis.models import ContractInfo, Modification, ReviewPlan
 from pydantic import BaseModel, Field
+
+from haive.prebuilt.contract_analysis.models import (
+    ContractInfo,
+    Modification,
+    ReviewPlan,
+)
 
 
 class ContractReviewState(BaseModel):

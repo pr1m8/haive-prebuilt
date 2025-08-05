@@ -4,9 +4,9 @@ Description: Extracts structured data or targeted fields (e.g. dates, names, num
 Useful for indexing, templating, and semantic metadata extraction.
 """
 
-from haive.core.aug_llm import AugLLMConfig
+from haive.agents.simple.factory import create_simple_agent
+from haive.core.engine.aug_llm import AugLLMConfig
 from haive.core.models.llm.base import AzureLLMConfig
-from haive_agents.simple.factory import create_simple_agent
 from langchain_core.prompts import ChatPromptTemplate
 from pydantic import BaseModel, Field
 
