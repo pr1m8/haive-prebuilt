@@ -25,7 +25,14 @@ from typing import Any, Dict, List, Optional
 import requests
 from bs4 import BeautifulSoup
 from langchain_core.tools import tool
-from newsapi import NewsApiClient
+
+try:
+    from newsapi import NewsApiClient
+
+    NEWSAPI_AVAILABLE = True
+except ImportError:
+    NewsApiClient = None
+    NEWSAPI_AVAILABLE = False
 from pydantic import BaseModel, Field
 
 # Configure logging
@@ -81,6 +88,13 @@ def web_search(
         >>> results = web_search("AI healthcare", max_results=5)
         >>> print(f"Found {results['total_results']} articles")
     """
+    if not NEWSAPI_AVAILABLE:
+        return {
+            "error": "NewsAPI not available. Install with: pip install newsapi-python",
+            "articles": [],
+            "total_results": 0,
+        }
+
     try:
         # Initialize NewsAPI client
         newsapi = NewsApiClient(api_key=os.getenv("NEWSAPI_KEY"))
