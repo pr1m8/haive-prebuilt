@@ -50,45 +50,45 @@ Educational Solutions:
     - Language Teacher: Foreign language learning assistant
 
 Usage:
-    ```python
-    from haive.prebuilt import ResearchAssistant, ContentGenerator, CustomerSupportBot
+    ::
 
-    # Create a research assistant
-    researcher = ResearchAssistant(
-        name="Academic Researcher",
-        specialization="AI and Machine Learning",
-        sources=["arxiv", "google_scholar", "ieee"]
-    )
+        from haive.prebuilt import ResearchAssistant, ContentGenerator, CustomerSupportBot
 
-    # Conduct research
-    research_report = await researcher.research_topic(
-        "Latest developments in large language models"
-    )
+        # Create a research assistant
+        researcher = ResearchAssistant(
+            name="Academic Researcher",
+            specialization="AI and Machine Learning",
+            sources=["arxiv", "google_scholar", "ieee"]
+        )
 
-    # Create content generator
-    content_gen = ContentGenerator(
-        style="professional",
-        target_audience="technical professionals"
-    )
+        # Conduct research
+        research_report = await researcher.research_topic(
+            "Latest developments in large language models"
+        )
 
-    # Generate blog post
-    blog_post = await content_gen.create_blog_post(
-        topic="AI in Healthcare",
-        length="medium",
-        include_sources=True
-    )
+        # Create content generator
+        content_gen = ContentGenerator(
+            style="professional",
+            target_audience="technical professionals"
+        )
 
-    # Create customer support bot
-    support_bot = CustomerSupportBot(
-        knowledge_base="company_kb.json",
-        escalation_rules="support_rules.yaml"
-    )
+        # Generate blog post
+        blog_post = await content_gen.create_blog_post(
+            topic="AI in Healthcare",
+            length="medium",
+            include_sources=True
+        )
 
-    # Handle customer query
-    response = await support_bot.handle_query(
-        "How do I reset my password?"
-    )
-    ```
+        # Create customer support bot
+        support_bot = CustomerSupportBot(
+            knowledge_base="company_kb.json",
+            escalation_rules="support_rules.yaml"
+        )
+
+        # Handle customer query
+        response = await support_bot.handle_query(
+            "How do I reset my password?"
+        )
 
 Configuration:
     Each prebuilt solution includes:
