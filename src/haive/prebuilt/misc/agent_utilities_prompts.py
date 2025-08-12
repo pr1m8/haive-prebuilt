@@ -4,7 +4,7 @@ This module provides prompt templates and factory functions for creating
 specialized utility agents for various business and project management tasks.
 """
 
-from typing import List, Optional
+from typing import Optional
 
 from haive.agents.simple.agent import SimpleAgent
 from haive.core.engine.aug_llm import AugLLMConfig
