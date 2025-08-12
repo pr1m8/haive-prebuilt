@@ -37,6 +37,10 @@ profanityfilter = "^2.1.0"
 pygments = "^2.19.1"
 pyspellchecker = "^0.8.2"
 
+[tool.poetry.group.docs.dependencies]
+# Use the shared pydevelop-docs system (contains all 43+ Sphinx extensions)
+pydevelop-docs = { path = "../../tools/pydevelop-docs", develop = true }
+
 [build-system]
 requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
