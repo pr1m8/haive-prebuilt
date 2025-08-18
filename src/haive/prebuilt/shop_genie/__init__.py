@@ -1,10 +1,10 @@
-"""Shop Genie - TODO: Add brief description
+"""Shop Genie - TODO: Add brief description.
 
 TODO: Add detailed description of module functionality
 
 
 
-Example:
+Examples:
     Basic usage::
 
         from haive.shop_genie import module_function

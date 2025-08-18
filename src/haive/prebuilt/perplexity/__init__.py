@@ -1,10 +1,10 @@
-"""Perplexity - TODO: Add brief description
+"""Perplexity - TODO: Add brief description.
 
 TODO: Add detailed description of module functionality
 
 
 
-Example:
+Examples:
     Basic usage::
 
         from haive.perplexity import module_function

@@ -10,7 +10,7 @@ class AgentAction(BaseModel):
         tool (Optional[str]): The specific tool to be used for the action (if needed)
         action_input (Optional[Dict]): Input parameters for the action
 
-    Example:
+    Examples:
         >>> action = AgentAction(
         ...     action="search_calendar",
         ...     thought="Need to check schedule conflicts",
@@ -32,7 +32,7 @@ class AgentOutput(BaseModel):
         observation (str): The result or observation from executing the action
         output (Dict): Structured output data from the action
 
-    Example:
+    Examples:
         >>> output = AgentOutput(
         ...     observation="Found 3 free time slots next week",
         ...     output={

@@ -6,7 +6,7 @@ web searching, content extraction, and analysis operations.
 Tools are implemented as Pydantic models with proper typing and
 documentation for use with LangChain's tool system.
 
-Example:
+Examples:
     >>> from news_research.tools import web_search, extract_content
     >>> results = web_search.invoke({"query": "AI news", "max_results": 5})
     >>> content = extract_content.invoke({"url": "https://example.com/article"})
@@ -84,7 +84,7 @@ def web_search(
     Returns:
         Dictionary containing article metadata and search info
 
-    Example:
+    Examples:
         >>> results = web_search("AI healthcare", max_results=5)
         >>> print(f"Found {results['total_results']} articles")
     """
@@ -178,7 +178,7 @@ def extract_content(url: str, timeout: int = 10) -> Dict[str, Any]:
     Returns:
         Dictionary with extracted content and metadata
 
-    Example:
+    Examples:
         >>> content = extract_content("https://example.com/article")
         >>> print(f"Extracted {content['word_count']} words")
     """
@@ -358,7 +358,7 @@ async def batch_process_articles(
     Returns:
         Dictionary with results for each URL and summary statistics
 
-    Example:
+    Examples:
         >>> results = await batch_process_articles(
         ...     urls=["url1", "url2", "url3"],
         ...     operation="extract"
@@ -387,6 +387,14 @@ async def batch_process_articles(
     semaphore = asyncio.Semaphore(max_concurrent)
 
     async def process_with_limit(url: str) -> Dict[str, Any]:
+        """Process With Limit.
+
+Args:
+    url: [TODO: Add description]
+
+Returns:
+    [TODO: Add return description]
+"""
         async with semaphore:
             return await process_single(url)
 

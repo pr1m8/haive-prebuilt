@@ -17,9 +17,13 @@ final_answer_router = None
 
 class ScientificPaperAgent(Agent):
     def __init__(self):
+        """  Init  .
+"""
         super().__init__()
 
     def set_workflow(self):
+        """Set Workflow.
+"""
         # Add nodes to the graph
         self.graph.add_node("decision_making", decision_making_node)
         self.graph.add_node("planning", planning_node)

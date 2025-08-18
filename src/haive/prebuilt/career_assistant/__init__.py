@@ -1,10 +1,10 @@
-"""Career Assistant - TODO: Add brief description
+"""Career Assistant - TODO: Add brief description.
 
 TODO: Add detailed description of module functionality
 
 
 
-Example:
+Examples:
     Basic usage::
 
         from haive.career_assistant import module_function

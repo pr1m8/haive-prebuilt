@@ -1,10 +1,10 @@
-"""Scientific Paper Agent - TODO: Add brief description
+"""Scientific Paper Agent - TODO: Add brief description.
 
 TODO: Add detailed description of module functionality
 
 
 
-Example:
+Examples:
     Basic usage::
 
         from haive.scientific_paper_agent import module_function

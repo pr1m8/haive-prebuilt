@@ -12,7 +12,7 @@ from langchain_core.prompts import ChatPromptTemplate
 # QUERY UNDERSTANDING AGENT PROMPTS
 # ============================================================================
 
-QUERY_ANALYSIS_SYSTEM_PROMPT = """You are an expert Query Analysis Agent in the Perplexity AI system. Your role is to analyze user queries and determine:
+QUERY_ANALYSIS_SYSTEM_PROMPT = """You are an expert Query Analysis Agent in the Perplexity AI system. Your role is to analyze user queries and determine:.
 1. The type of query (simple factual, complex reasoning, research, etc.)
 2. Complexity score and required capabilities
 3. Whether real-time information is needed
@@ -97,7 +97,7 @@ SEARCH_QUERY_GENERATION_PROMPT = ChatPromptTemplate.from_messages(
         ),
         (
             "human",
-            """Generate search queries for the following information need:
+            """Generate search queries for the following information need:.
 
 Original Query: {{query}}
 Query Analysis: {{query_analysis}}
@@ -120,8 +120,8 @@ Output Format:
     "search_strategy": "Explanation of the search strategy"
 }
 
-Example:
-Original Query: "Latest developments in quantum computing"
+Examples:
+    Original Query: "Latest developments in quantum computing"
 {
     "search_queries": [
         {
@@ -155,7 +155,7 @@ DOCUMENT_RELEVANCE_SCORING_PROMPT = ChatPromptTemplate.from_messages(
         ),
         (
             "human",
-            """Score the relevance of these search results to the query:
+            """Score the relevance of these search results to the query:.
 
 Query: {{query}}
 Search Results: {{search_results}}
@@ -232,8 +232,8 @@ Output Format:
     "key_citations": [{"claim": "...", "source_id": "...", "indices": [1,2,3]}]
 }
 
-Example:
-Query: "What are the benefits of meditation?"
+Examples:
+    Query: "What are the benefits of meditation?"
 
 Response:
 {
@@ -263,7 +263,7 @@ QUALITY_ASSURANCE_PROMPT = ChatPromptTemplate.from_messages(
         ),
         (
             "human",
-            """Review and enhance the following response:
+            """Review and enhance the following response:.
 
 Original Query: {{query}}
 Draft Response: {{draft_response}}
@@ -308,7 +308,7 @@ MULTI_STEP_PLANNING_PROMPT = ChatPromptTemplate.from_messages(
         ),
         (
             "human",
-            """Create an execution plan for this complex query:
+            """Create an execution plan for this complex query:.
 
 Query: {{query}}
 Query Analysis: {{query_analysis}}
@@ -360,7 +360,7 @@ CHAIN_OF_THOUGHT_PROMPT = ChatPromptTemplate.from_messages(
         ),
         (
             "human",
-            """Apply systematic reasoning to solve this problem:
+            """Apply systematic reasoning to solve this problem:.
 
 Problem: {{problem}}
 Context: {{context}}
@@ -410,7 +410,7 @@ RESEARCH_STRATEGY_PROMPT = ChatPromptTemplate.from_messages(
         ),
         (
             "human",
-            """Develop a comprehensive research strategy for:
+            """Develop a comprehensive research strategy for:.
 
 Research Topic: {{topic}}
 Research Goals: {{goals}}
@@ -467,7 +467,7 @@ SOURCE_ANALYSIS_PROMPT = ChatPromptTemplate.from_messages(
         ),
         (
             "human",
-            """Analyze the following sources for the research topic:
+            """Analyze the following sources for the research topic:.
 
 Topic: {{topic}}
 Sources: {{sources}}
@@ -525,7 +525,7 @@ RESEARCH_SYNTHESIS_PROMPT = ChatPromptTemplate.from_messages(
         ),
         (
             "human",
-            """Synthesize the research findings into a comprehensive report:
+            """Synthesize the research findings into a comprehensive report:.
 
 Topic: {{topic}}
 Analyzed Sources: {{analyzed_sources}}
@@ -584,7 +584,7 @@ PROJECT_REQUIREMENTS_PROMPT = ChatPromptTemplate.from_messages(
         ),
         (
             "human",
-            """Analyze the following project request:
+            """Analyze the following project request:.
 
 Project Request: {{project_request}}
 User Context: {{user_context}}
@@ -660,7 +660,7 @@ TOOL_ORCHESTRATION_PROMPT = ChatPromptTemplate.from_messages(
         ),
         (
             "human",
-            """Orchestrate tools for the following project phase:
+            """Orchestrate tools for the following project phase:.
 
 Project Requirements: {{project_requirements}}
 Current Phase: {{current_phase}}

@@ -1,10 +1,10 @@
-"""Startup - TODO: Add brief description
+"""Startup - TODO: Add brief description.
 
 TODO: Add detailed description of module functionality
 
 
 
-Example:
+Examples:
     Basic usage::
 
         from haive.startup import module_function

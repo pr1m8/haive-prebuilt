@@ -4,7 +4,7 @@ This module defines all Pydantic models used by the journalism assistant
 for structured outputs, validation, and data handling throughout the
 fact-checking, analysis, and review workflows.
 
-Example:
+Examples:
     >>> from journalism_assistant.models import FactCheckStatement, ArticleSummary
     >>> fact_check = FactCheckStatement(
     ...     statement="The economy grew by 3%",

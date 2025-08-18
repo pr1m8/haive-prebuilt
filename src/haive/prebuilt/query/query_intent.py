@@ -1,7 +1,7 @@
 # Additional simple agents
 
 # src/haive/prebuilt/simple/query_intent_classifier.py
-"""Agent Name: QueryIntentClassifier
+"""Agent Name: QueryIntentClassifier.
 Description: Classifies the intent behind a query, such as definition, comparison, fact-checking, opinion, etc.
 """
 

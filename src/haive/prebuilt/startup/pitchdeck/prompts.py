@@ -35,7 +35,7 @@ pitch_deck_review_prompt = ChatPromptTemplate.from_messages(
         MessagesPlaceholder(variable_name="messages", optional=True),
         (
             "human",
-            """Review this pitch deck:
+            """Review this pitch deck:.
 
 {pitch_deck_content}
 
@@ -94,7 +94,7 @@ pitch_deck_outline_prompt = ChatPromptTemplate.from_messages(
         MessagesPlaceholder(variable_name="messages", optional=True),
         (
             "human",
-            """Create a pitch deck outline for:
+            """Create a pitch deck outline for:.
 
 Company: {company_name}
 Stage: {stage}

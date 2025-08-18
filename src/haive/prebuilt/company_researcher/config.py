@@ -21,7 +21,7 @@ from haive.prebuilt.prompts import (
 
 
 class KYCComplianceEngines(BaseModel):
-    """Configuration for different KYC compliance engines"""
+    """Configuration for different KYC compliance engines."""
 
     initial_screening: AugLLMConfig = Field(
         default_factory=lambda: AugLLMConfig(
@@ -65,7 +65,7 @@ class KYCComplianceEngines(BaseModel):
 
 
 class KYCAgentConfiguration(AgentConfig):
-    """Advanced configuration for KYC Agent with granular control"""
+    """Advanced configuration for KYC Agent with granular control."""
 
     # Screening Thresholds
     risk_score_thresholds: dict[str, float] = Field(
@@ -115,7 +115,7 @@ class KYCAgentConfiguration(AgentConfig):
 
     # State Schema Derivation
     def derive_schema(self) -> type[BaseModel]:
-        """Create a custom state schema specifically for KYC workflow
+        """Create a custom state schema specifically for KYC workflow.
 
         Returns:
             Pydantic model representing the KYC agent state
@@ -126,7 +126,7 @@ class KYCAgentConfiguration(AgentConfig):
     @field_validator("edd_triggers")
     @classmethod
     def validate_edd_triggers(cls, v):
-        """Validate Enhanced Due Diligence triggers
+        """Validate Enhanced Due Diligence triggers.
 
         Ensures trigger values are within reasonable ranges
         """
@@ -147,7 +147,7 @@ class KYCAgentConfiguration(AgentConfig):
     def create_config(
         cls, name: str | None = None, **kwargs
     ) -> "KYCAgentConfiguration":
-        """Factory method to create a KYC agent configuration
+        """Factory method to create a KYC agent configuration.
 
         Args:
             name: Optional name for the agent

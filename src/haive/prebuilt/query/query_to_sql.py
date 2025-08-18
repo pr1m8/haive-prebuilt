@@ -1,5 +1,5 @@
 # src/haive/prebuilt/simple/query_to_sql.py
-"""Agent Name: QueryToSQL
+"""Agent Name: QueryToSQL.
 Description: Converts a natural language query into an SQL SELECT statement (assuming schema knowledge).
 """
 

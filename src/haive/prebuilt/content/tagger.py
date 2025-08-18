@@ -1,7 +1,7 @@
 # Document-oriented Simple Agents
 
 # src/haive/prebuilt/simple/tagger.py
-"""Agent Name: DocumentTagger
+"""Agent Name: DocumentTagger.
 Description: Tags a document or passage with relevant keywords, topics, or semantic tags.
 """
 

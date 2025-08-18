@@ -9,7 +9,7 @@ from pydantic import BaseModel, ConfigDict, Field, field_validator, model_valida
 
 
 class ProhibitedActivity(str, Enum):
-    """Comprehensive list of prohibited activities based on Corpay's risk appetite"""
+    """Comprehensive list of prohibited activities based on Corpay's risk appetite."""
 
     # Illegal Activities
     ARMS_MUNITIONS = "arms_and_munitions_trade"
@@ -38,7 +38,7 @@ class ProhibitedActivity(str, Enum):
 
 
 class RestrictedIndustry(str, Enum):
-    """Industries requiring enhanced due diligence"""
+    """Industries requiring enhanced due diligence."""
 
     ARMS_DEFENSE = "arms_and_defense"
     CHARITY_NPO = "charities_non_profit"
@@ -54,7 +54,7 @@ class RestrictedIndustry(str, Enum):
 
 
 class ComplianceRiskFactor(str, Enum):
-    """Detailed compliance risk factors"""
+    """Detailed compliance risk factors."""
 
     OWNERSHIP_TRANSPARENCY = "lack_of_beneficial_ownership_transparency"
     COMPLEX_CORPORATE_STRUCTURE = "complex_corporate_structure"
@@ -66,7 +66,7 @@ class ComplianceRiskFactor(str, Enum):
 
 
 class IdentityVerificationLevel(str, Enum):
-    """Levels of identity verification"""
+    """Levels of identity verification."""
 
     NONE = "no_verification"
     BASIC = "basic_verification"
@@ -76,7 +76,7 @@ class IdentityVerificationLevel(str, Enum):
 
 
 class GeographicRiskProfile(str, Enum):
-    """Geographic risk assessment categories"""
+    """Geographic risk assessment categories."""
 
     LOW_RISK = "low_risk_jurisdiction"
     MEDIUM_RISK = "medium_risk_jurisdiction"
@@ -85,7 +85,7 @@ class GeographicRiskProfile(str, Enum):
 
 
 class EnhancedDueDiligenceRequirement(str, Enum):
-    """Triggers for Enhanced Due Diligence"""
+    """Triggers for Enhanced Due Diligence."""
 
     PEP_ASSOCIATION = "politically_exposed_person"
     HIGH_RISK_INDUSTRY = "high_risk_industry"
@@ -96,7 +96,7 @@ class EnhancedDueDiligenceRequirement(str, Enum):
 
 
 class CustomerRiskProfile(BaseModel):
-    """Comprehensive customer risk profile"""
+    """Comprehensive customer risk profile."""
 
     # Prohibited Activities
     prohibited_activities: list[ProhibitedActivity] = Field(
@@ -131,7 +131,7 @@ class CustomerRiskProfile(BaseModel):
     @field_validator("overall_risk_score", mode="before")
     @classmethod
     def calculate_risk_score(cls, v, values):
-        """Dynamically calculate risk score based on identified risk factors"""
+        """Dynamically calculate risk score based on identified risk factors."""
         base_score = 0.0
 
         # Prohibited activities are highest risk
@@ -176,7 +176,7 @@ class CustomerRiskProfile(BaseModel):
 
 
 class OwnershipStructure(BaseModel):
-    """Detailed ownership and control information"""
+    """Detailed ownership and control information."""
 
     ultimate_beneficial_owners: list[dict[str, Any]] = Field(
         default_factory=list, description="List of ultimate beneficial owners"
@@ -193,7 +193,7 @@ class OwnershipStructure(BaseModel):
 
 
 class ComplianceDocumentation(BaseModel):
-    """Comprehensive compliance documentation tracking"""
+    """Comprehensive compliance documentation tracking."""
 
     verified_documents: dict[str, bool] = Field(
         default_factory=dict, description="Status of required compliance documents"
@@ -210,7 +210,7 @@ class ComplianceDocumentation(BaseModel):
 
 
 class EnhancedKYCCustomerProfile(BaseModel):
-    """Comprehensive and enhanced KYC customer profile
+    """Comprehensive and enhanced KYC customer profile.
     Combines multiple aspects of customer risk assessment
     """
 
@@ -267,7 +267,7 @@ class EnhancedKYCCustomerProfile(BaseModel):
     @model_validator(mode="before")
     @classmethod
     def validate_customer_profile(cls, values):
-        """Perform comprehensive validation of the customer profile"""
+        """Perform comprehensive validation of the customer profile."""
         # Ensure either personal or business name is provided
         if not values.get("full_name") and not values.get("business_name"):
             raise ValueError("Either full name or business name must be provided")
@@ -277,7 +277,7 @@ class EnhancedKYCCustomerProfile(BaseModel):
     @field_validator("last_updated")
     @classmethod
     def update_last_updated(cls, v):
-        """Always update last_updated when the model is modified"""
+        """Always update last_updated when the model is modified."""
         return datetime.now()
 
 

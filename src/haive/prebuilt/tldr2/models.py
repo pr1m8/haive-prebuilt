@@ -3,7 +3,7 @@
 This module defines all Pydantic models used by the news research agent
 for structured outputs, API parameters, and data validation.
 
-Example:
+Examples:
     >>> from news_research.models import NewsApiParams, ArticleSummary
     >>> params = NewsApiParams(q="AI news", sources="bbc-news")
     >>> summary = ArticleSummary(title="...", summary="...", confidence=0.9)
@@ -39,7 +39,7 @@ class NewsApiParams(BaseModel):
         sort_by: Sort order for results
         page_size: Number of results per page
 
-    Example:
+    Examples:
         >>> params = NewsApiParams(
         ...     q="artificial intelligence",
         ...     sources="bbc-news,techcrunch",
@@ -314,7 +314,7 @@ class ResearchReport(BaseModel):
         Returns:
             str: Formatted markdown string of the report
 
-        Example:
+        Examples:
             >>> report = ResearchReport(...)
             >>> markdown = report.to_markdown()
             >>> print(markdown)

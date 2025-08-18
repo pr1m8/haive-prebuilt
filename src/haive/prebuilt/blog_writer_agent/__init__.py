@@ -1,10 +1,10 @@
-"""Blog Writer Agent - TODO: Add brief description
+"""Blog Writer Agent - TODO: Add brief description.
 
 TODO: Add detailed description of module functionality
 
 
 
-Example:
+Examples:
     Basic usage::
 
         from haive.blog_writer_agent import module_function

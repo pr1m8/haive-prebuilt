@@ -1,10 +1,10 @@
-"""Memory Agent - TODO: Add brief description
+"""Memory Agent - TODO: Add brief description.
 
 TODO: Add detailed description of module functionality
 
 
 
-Example:
+Examples:
     Basic usage::
 
         from haive.memory_agent import module_function

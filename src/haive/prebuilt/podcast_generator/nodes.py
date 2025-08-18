@@ -16,7 +16,7 @@ podcast_model = None  # This should be defined elsewhere or imported
 
 
 def initiate_all_interviews(state: ResearchGraphState):
-    """This is the "map" step where we run each interview sub-graph using Send API"""
+    """This is the "map" step where we run each interview sub-graph using Send API."""
     topic = state["topic"]
     return [
         Send(
@@ -35,6 +35,11 @@ def initiate_all_interviews(state: ResearchGraphState):
 
 
 def write_report(state: ResearchGraphState):
+    """Write Report.
+
+Args:
+    state: [TODO: Add description]
+"""
     # Full set of sections
     sections = state["sections"]
     topic = state["topic"]
@@ -51,6 +56,11 @@ def write_report(state: ResearchGraphState):
 
 
 def write_introduction(state: ResearchGraphState):
+    """Write Introduction.
+
+Args:
+    state: [TODO: Add description]
+"""
     # Full set of sections
     sections = state["sections"]
     topic = state["topic"]
@@ -68,6 +78,11 @@ def write_introduction(state: ResearchGraphState):
 
 
 def write_conclusion(state: ResearchGraphState):
+    """Write Conclusion.
+
+Args:
+    state: [TODO: Add description]
+"""
     # Full set of sections
     sections = state["sections"]
     topic = state["topic"]
@@ -85,7 +100,7 @@ def write_conclusion(state: ResearchGraphState):
 
 
 def finalize_report(state: ResearchGraphState):
-    """The is the "reduce" step where we gather all the sections, combine them, and reflect on them to write the intro/conclusion"""
+    """The is the "reduce" step where we gather all the sections, combine them, and reflect on them to write the intro/conclusion."""
     # Save full final report
     content = state["content"]
     final_report = (
@@ -100,4 +115,4 @@ def finalize_report(state: ResearchGraphState):
 
 
 def Start_parallel(state):
-    """No-op node that should be interrupted on"""
+    """No-op node that should be interrupted on."""

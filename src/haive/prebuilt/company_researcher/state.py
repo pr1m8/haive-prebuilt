@@ -17,7 +17,7 @@ from haive.prebuilt.company_researcher.models import (
 
 
 class KYCWorkflowStage(str, Enum):
-    """Stages in the KYC workflow"""
+    """Stages in the KYC workflow."""
 
     INITIAL_SCREENING = "initial_screening"
     RISK_ASSESSMENT = "risk_assessment"
@@ -28,7 +28,7 @@ class KYCWorkflowStage(str, Enum):
 
 
 class KYCDecisionStatus(str, Enum):
-    """Possible decision statuses in KYC workflow"""
+    """Possible decision statuses in KYC workflow."""
 
     PENDING = "pending"
     APPROVED = "approved"
@@ -38,7 +38,7 @@ class KYCDecisionStatus(str, Enum):
 
 
 class KYCWorkflowState(BaseModel):
-    """Comprehensive state model for KYC workflow
+    """Comprehensive state model for KYC workflow.
 
     Captures the entire state of the KYC processing pipeline
     """
@@ -102,7 +102,7 @@ class KYCWorkflowState(BaseModel):
     )
 
     def update_stage(self, new_stage: KYCWorkflowStage) -> None:
-        """Update the current workflow stage
+        """Update the current workflow stage.
 
         Args:
             new_stage: New workflow stage
@@ -118,7 +118,7 @@ class KYCWorkflowState(BaseModel):
             self.screening_iterations += 1
 
     def set_decision_status(self, status: KYCDecisionStatus) -> None:
-        """Set the decision status and update stage
+        """Set the decision status and update stage.
 
         Args:
             status: New decision status
@@ -136,7 +136,7 @@ class KYCWorkflowState(BaseModel):
         self.last_updated = datetime.now()
 
     def log_error(self, error_details: dict[str, Any]) -> None:
-        """Log error details and update workflow state
+        """Log error details and update workflow state.
 
         Args:
             error_details: Dictionary of error information

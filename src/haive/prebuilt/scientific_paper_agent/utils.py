@@ -9,10 +9,20 @@ try:
 except ImportError:
     # Fallback if not in Jupyter environment
     def display(content):
+        """Display.
+
+Args:
+    content: [TODO: Add description]
+"""
         print(content)
 
     class Markdown:
         def __init__(self, text):
+            """  Init  .
+
+Args:
+    text: [TODO: Add description]
+"""
             self.text = text
 
         def __str__(self):
@@ -20,6 +30,14 @@ except ImportError:
 
 
 def format_tools_description(tools: list[BaseTool]) -> str:
+    """Format Tools Description.
+
+Args:
+    tools: [TODO: Add description]
+
+Returns:
+    [TODO: Add return description]
+"""
     return "\n\n".join(
         [
             f"- {tool.name}: {tool.description}\n Input arguments: {tool.args}"
@@ -29,6 +47,15 @@ def format_tools_description(tools: list[BaseTool]) -> str:
 
 
 async def print_stream(app: CompiledStateGraph, input: str) -> Optional[BaseMessage]:
+    """Print Stream.
+
+Args:
+    app: [TODO: Add description]
+    input: [TODO: Add description]
+
+Returns:
+    [TODO: Add return description]
+"""
     display(Markdown("## New research running"))
     display(Markdown(f"### Input:\n\n{input}\n\n"))
     display(Markdown("### Stream:\n\n"))

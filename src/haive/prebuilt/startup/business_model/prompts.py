@@ -37,7 +37,7 @@ financial_projection_prompt = ChatPromptTemplate.from_messages(
         MessagesPlaceholder(variable_name="messages", optional=True),
         (
             "human",
-            """Create financial projections for:
+            """Create financial projections for:.
 
 Company: {company_name}
 Business Model: {business_model}

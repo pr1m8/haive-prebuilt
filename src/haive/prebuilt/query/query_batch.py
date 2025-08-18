@@ -1,5 +1,5 @@
 # src/haive/prebuilt/simple/query_batch.py
-"""Agent Name: QueryBatcher
+"""Agent Name: QueryBatcher.
 Description: Converts a single query into multiple variations or batched forms for ensemble retrieval or multi-agent use.
 """
 

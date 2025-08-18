@@ -1,10 +1,10 @@
-"""Sales Call Analyzer - TODO: Add brief description
+"""Sales Call Analyzer - TODO: Add brief description.
 
 TODO: Add detailed description of module functionality
 
 
 
-Example:
+Examples:
     Basic usage::
 
         from haive.sales_call_analyzer import module_function

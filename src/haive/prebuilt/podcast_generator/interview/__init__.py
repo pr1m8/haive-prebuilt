@@ -1,4 +1,4 @@
-"""Interview - TODO: Add brief description
+"""Interview - TODO: Add brief description.
 
 TODO: Add detailed description of module functionality
 
@@ -7,7 +7,7 @@ Key Components:
     * Classes: InterviewState
 
 
-Example:
+Examples:
     Basic usage::
 
         from haive.interview import InterviewState

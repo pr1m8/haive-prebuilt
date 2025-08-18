@@ -11,9 +11,13 @@ result_approach = None
 
 class TaskifierAgent(Agent):
     def __init__(self):
+        """  Init  .
+"""
         super().__init__()
 
     def set_workflow(self):
+        """Set Workflow.
+"""
         # Initialize the StateGraph
         # Add nodes to the graph
         self.graph.add_node("approach_analysis", approach_analysis)

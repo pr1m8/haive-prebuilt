@@ -1,10 +1,10 @@
-"""Tldr2 - TODO: Add brief description
+"""Tldr2 - TODO: Add brief description.
 
 TODO: Add detailed description of module functionality
 
 
 
-Example:
+Examples:
     Basic usage::
 
         from haive.tldr2 import module_function

@@ -12,7 +12,7 @@ from haive.prebuilt.project_manager.models import (
 
 # Node Functions
 def task_dependency_node(state: AgentState):
-    """Node to analyze task dependencies"""
+    """Node to analyze task dependencies."""
     state["tasks"]
     # Simple implementation - in real scenario, this would analyze dependencies
     state["dependencies"] = []
@@ -20,7 +20,7 @@ def task_dependency_node(state: AgentState):
 
 
 def router(state: AgentState):
-    """Router to determine next step based on risk score"""
+    """Router to determine next step based on risk score."""
     risk_score = state.get("project_risk_score", 0)
     if risk_score > 0.7:  # High risk threshold
         return "insight_generator"
@@ -28,7 +28,7 @@ def router(state: AgentState):
 
 
 def task_generation_node(state: AgentState):
-    """LangGraph node that will extract tasks from given project description"""
+    """LangGraph node that will extract tasks from given project description."""
     description = state["project_description"]
     prompt = f"""
         You are an expert project manager tasked with analyzing the following project description: {description}
@@ -46,7 +46,7 @@ def task_generation_node(state: AgentState):
     return {"tasks": tasks}
 
     def task_scheduler_node(state: AgentState):
-        """LangGraph node that will schedule tasks based on dependencies and team availability"""
+        """LangGraph node that will schedule tasks based on dependencies and team availability."""
         state["dependencies"]
         state["tasks"]
         state[
@@ -59,7 +59,7 @@ def task_generation_node(state: AgentState):
         return state
 
     def task_allocation_node(state: AgentState):
-        """LangGraph node that will allocate tasks to team members"""
+        """LangGraph node that will allocate tasks to team members."""
         tasks = state["tasks"]
         schedule = state["schedule"]
         team = state["team"]
@@ -92,7 +92,7 @@ def task_generation_node(state: AgentState):
         return state
 
     def risk_assessment_node(state: AgentState):
-        """LangGraph node that analyse risk associated with schedule and allocation of task"""
+        """LangGraph node that analyse risk associated with schedule and allocation of task."""
         schedule = state["schedule"]
         task_allocations = state["task_allocations"]
         prompt = f"""
@@ -125,7 +125,7 @@ def task_generation_node(state: AgentState):
         return state
 
     def insight_generation_node(state: AgentState):
-        """LangGraph node that generate insights from the schedule, task allocation, and risk associated"""
+        """LangGraph node that generate insights from the schedule, task allocation, and risk associated."""
         schedule = state["schedule"]
         task_allocations = state["task_allocations"]
         risks = state["risks"]

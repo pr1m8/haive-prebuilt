@@ -20,7 +20,7 @@ CoreAPIWrapper = None
 def search_papers(query: str, max_papers: int = 1) -> str:
     """Search for scientific papers using the CORE API.
 
-    Example:
+    Examples:
     {"query": "Attention is all you need", "max_papers": 1}
 
     Returns:
@@ -36,7 +36,7 @@ def search_papers(query: str, max_papers: int = 1) -> str:
 def download_paper(url: str) -> str:
     """Download a specific scientific paper from a given URL.
 
-    Example:
+    Examples:
     {"url": "https://sample.pdf"}
 
     Returns:

@@ -1,5 +1,5 @@
 # src/haive/prebuilt/simple/query_type_detector.py
-"""Agent Name: QueryTypeDetector
+"""Agent Name: QueryTypeDetector.
 Description: Labels the query as boolean, open-ended, multi-hop, numerical, or instruction.
 """
 

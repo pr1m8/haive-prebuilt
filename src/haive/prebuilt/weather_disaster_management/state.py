@@ -5,7 +5,7 @@ from pydantic import BaseModel, Field
 
 
 class WeatherLocation(BaseModel):
-    """The location to get weather data for"""
+    """The location to get weather data for."""
 
     city: str = Field(..., description="The city to get weather data for")
     country: str = Field(..., description="The country to get weather data for")

@@ -45,6 +45,11 @@ tools = {"academic_paper_search_tool": AcademicPaperSearchTool()}
 
 
 def process_input(state: AgentState):
+    """Process Input.
+
+Args:
+    state: [TODO: Add description]
+"""
     max_revision = 2
     messages = state.get("messages", [])
 
@@ -85,6 +90,11 @@ def get_relevant_messages(state: AgentState) -> List[AnyMessage]:
 
 
 def plan_node(state: AgentState):
+    """Plan Node.
+
+Args:
+    state: [TODO: Add description]
+"""
     print("PLANNER")
     relevant_messages = get_relevant_messages(state)
     messages = [SystemMessage(content=planner_prompt)] + relevant_messages
@@ -95,6 +105,11 @@ def plan_node(state: AgentState):
 
 
 def research_node(state: AgentState):
+    """Research Node.
+
+Args:
+    state: [TODO: Add description]
+"""
     print("RESEARCHER")
     review_plan = state["systematic_review_outline"]
     messages = [SystemMessage(content=research_prompt)] + review_plan
@@ -136,6 +151,11 @@ def take_action(state: AgentState):
 
 
 def decision_node(state: AgentState):
+    """Decision Node.
+
+Args:
+    state: [TODO: Add description]
+"""
     print("DECISION-MAKER")
     review_plan = state["systematic_review_outline"]
     relevant_messages = get_relevant_messages(state)
@@ -149,6 +169,11 @@ def decision_node(state: AgentState):
 
 
 def article_download(state: AgentState):
+    """Article Download.
+
+Args:
+    state: [TODO: Add description]
+"""
     print("DOWNLOAD PAPERS")
     last_message = state["messages"][-1]
 
@@ -207,6 +232,11 @@ def article_download(state: AgentState):
 
 
 def paper_analyzer(state: AgentState):
+    """Paper Analyzer.
+
+Args:
+    state: [TODO: Add description]
+"""
     print("ANALYZE PAPERS")
     analyses = ""
     for paper in state["papers"][-1].content:
@@ -240,6 +270,11 @@ def _make_api_call(model, messages, temperature=0.1):
 
 
 def write_abstract(state: AgentState):
+    """Write Abstract.
+
+Args:
+    state: [TODO: Add description]
+"""
     print("WRITE ABSTRACT")
     review_plan = state["systematic_review_outline"]
     analyses = state["analyses"]
@@ -252,6 +287,11 @@ def write_abstract(state: AgentState):
 
 
 def write_introduction(state: AgentState):
+    """Write Introduction.
+
+Args:
+    state: [TODO: Add description]
+"""
     print("WRITE INTRODUCTION")
     review_plan = state["systematic_review_outline"]
     analyses = state["analyses"]
@@ -264,6 +304,11 @@ def write_introduction(state: AgentState):
 
 
 def write_methods(state: AgentState):
+    """Write Methods.
+
+Args:
+    state: [TODO: Add description]
+"""
     print("WRITE METHODS")
     review_plan = state["systematic_review_outline"]
     analyses = state["analyses"]
@@ -276,6 +321,11 @@ def write_methods(state: AgentState):
 
 
 def write_results(state: AgentState):
+    """Write Results.
+
+Args:
+    state: [TODO: Add description]
+"""
     print("WRITE RESULTS")
     review_plan = state["systematic_review_outline"]
     analyses = state["analyses"]
@@ -288,6 +338,11 @@ def write_results(state: AgentState):
 
 
 def write_conclusion(state: AgentState):
+    """Write Conclusion.
+
+Args:
+    state: [TODO: Add description]
+"""
     print("WRITE CONCLUSION")
     review_plan = state["systematic_review_outline"]
     analyses = state["analyses"]
@@ -300,6 +355,11 @@ def write_conclusion(state: AgentState):
 
 
 def write_references(state: AgentState):
+    """Write References.
+
+Args:
+    state: [TODO: Add description]
+"""
     print("WRITE REFERENCES")
     review_plan = state["systematic_review_outline"]
     analyses = state["analyses"]
@@ -312,6 +372,11 @@ def write_references(state: AgentState):
 
 
 def aggregator(state: AgentState):
+    """Aggregator.
+
+Args:
+    state: [TODO: Add description]
+"""
     print("AGGREGATE")
     abstract = state["abstract"][-1].content
     introduction = state["introduction"][-1].content
@@ -348,6 +413,11 @@ def aggregator(state: AgentState):
 
 
 def critique(state: AgentState):
+    """Critique.
+
+Args:
+    state: [TODO: Add description]
+"""
     print("CRITIQUE")
     draft = state["draft"]
     review_plan = state["systematic_review_outline"]
@@ -361,6 +431,11 @@ def critique(state: AgentState):
 
 
 def paper_reviser(state: AgentState):
+    """Paper Reviser.
+
+Args:
+    state: [TODO: Add description]
+"""
     print("REVISE PAPER")
     critique = state["messages"][-1].content
     draft = state["draft"]
@@ -396,5 +471,10 @@ def exists_action(state: AgentState):
 
 
 def final_draft(state: AgentState):
+    """Final Draft.
+
+Args:
+    state: [TODO: Add description]
+"""
     print("FINAL DRAFT")
     return {"draft": state["draft"]}

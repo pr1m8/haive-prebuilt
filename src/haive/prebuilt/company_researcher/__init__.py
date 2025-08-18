@@ -1,10 +1,10 @@
-"""Company Researcher - TODO: Add brief description
+"""Company Researcher - TODO: Add brief description.
 
 TODO: Add detailed description of module functionality
 
 
 
-Example:
+Examples:
     Basic usage::
 
         from haive.company_researcher import module_function

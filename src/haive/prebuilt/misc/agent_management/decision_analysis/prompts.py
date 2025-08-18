@@ -62,7 +62,7 @@ DECISION_ANALYSIS_SYSTEM_PROMPT = """You are a senior decision analysis consulta
 
 Provide decisions that are analytically rigorous, psychologically informed, and practically implementable."""
 
-DECISION_ANALYSIS_USER_PROMPT = """Analyze this decision comprehensively and provide a structured recommendation:
+DECISION_ANALYSIS_USER_PROMPT = """Analyze this decision comprehensively and provide a structured recommendation:.
 
 **Decision to Analyze:**
 {decision_description}

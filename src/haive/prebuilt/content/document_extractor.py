@@ -1,5 +1,5 @@
 # src/haive/prebuilt/simple/document_extractor.py
-"""Agent Name: DocumentExtractor
+"""Agent Name: DocumentExtractor.
 Description: Extracts structured data or targeted fields (e.g. dates, names, numbers, places) from freeform text.
 Useful for indexing, templating, and semantic metadata extraction.
 """

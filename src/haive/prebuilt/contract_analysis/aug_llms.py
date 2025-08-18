@@ -4,7 +4,7 @@ from langchain_core.prompts import ChatPromptTemplate
 
 from haive.prebuilt.contract_analysis.models import ContractInfo, StepAnalysis
 
-CONTRACT_CLASSIFIER_SYSTEM_PROMPT = """Analyze the provided contract and determine:
+CONTRACT_CLASSIFIER_SYSTEM_PROMPT = """Analyze the provided contract and determine:.
     1. The type of contract (e.g., Employment, NDA, License Agreement)
     2. The industry it belongs to (if clear from the context)."""
 

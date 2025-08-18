@@ -1,10 +1,10 @@
-"""Tts Poem Gen - TODO: Add brief description
+"""Tts Poem Gen - TODO: Add brief description.
 
 TODO: Add detailed description of module functionality
 
 
 
-Example:
+Examples:
     Basic usage::
 
         from haive.tts_poem_gen import module_function

@@ -66,9 +66,13 @@ class ContractAnalysisAgent(AgentArchitecture):
     state: ContractReviewState
 
     def run(self):
+        """Run.
+"""
         pass
 
     def setup_workflow(self):
+        """Setup Workflow.
+"""
         self.graph.add_node("classify_contract", classify_contract)
         self.graph.add_node("retrieve_clauses", retrieve_clauses)
         self.graph.add_node("execute_step_clause", execute_step_clause)

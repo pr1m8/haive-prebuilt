@@ -27,10 +27,15 @@ class WeatherDisasterManagementAgent(Agent[WeatherDisasterManagerConfig]):
     def __init__(
         self, config: WeatherDisasterManagerConfig = WeatherDisasterManagerConfig()
     ):
+        """  Init  .
+
+Args:
+    config: [TODO: Add description]
+"""
         super().__init__(config)
 
     def get_human_verification(self, state: WeatherState) -> WeatherState:
-        """Get human verification for low/medium severity alerts"""
+        """Get human verification for low/medium severity alerts."""
         severity = state.severity.strip().lower()
 
         if severity in ["low", "medium"]:
@@ -109,7 +114,7 @@ class WeatherDisasterManagementAgent(Agent[WeatherDisasterManagerConfig]):
             )
 
     def send_email_alert(self, state: WeatherState) -> WeatherState:
-        """Send weather alert email"""
+        """Send weather alert email."""
         sender_email = os.getenv("SENDER_EMAIL")
         receiver_email = os.getenv("RECEIVER_EMAIL")
         password = os.getenv("EMAIL_PASSWORD")
@@ -164,7 +169,7 @@ class WeatherDisasterManagementAgent(Agent[WeatherDisasterManagerConfig]):
             )
 
     def format_weather_email(state: WeatherState) -> str:
-        """Format weather data and severity assessment into an email message"""
+        """Format weather data and severity assessment into an email message."""
         weather_data = state.weather_data
         "\n".join(state.social_media_reports)
 
@@ -220,7 +225,7 @@ class WeatherDisasterManagementAgent(Agent[WeatherDisasterManagerConfig]):
         )
 
     def handle_no_approval(self, state: WeatherState) -> WeatherState:
-        """Handle cases where human verification was rejected"""
+        """Handle cases where human verification was rejected."""
         print("\nVerification was not approved by human, Email not sent")
 
         message = (
@@ -233,7 +238,7 @@ class WeatherDisasterManagementAgent(Agent[WeatherDisasterManagerConfig]):
     def verify_approval_router(
         state: WeatherState,
     ) -> Literal["send_email_alert", "handle_no_approval"]:
-        """Route based on human approval decision"""
+        """Route based on human approval decision."""
         return "send_email_alert" if state.human_approved else "handle_no_approval"
 
     def get_weather_data(
@@ -286,7 +291,7 @@ class WeatherDisasterManagementAgent(Agent[WeatherDisasterManagerConfig]):
             )
 
     def public_works_response(self, state: WeatherState) -> WeatherState:
-        """Generate public works response plan"""
+        """Generate public works response plan."""
         try:
             response = (
                 self.engines["public_works_response"]
@@ -321,7 +326,7 @@ class WeatherDisasterManagementAgent(Agent[WeatherDisasterManagerConfig]):
             )
 
     def civil_defense_response(self, state: WeatherState) -> WeatherState:
-        """Generate civil defense response plan"""
+        """Generate civil defense response plan."""
         try:
             chain = self.engines["civil_defense_response"]
             response = chain.invoke(
@@ -353,7 +358,7 @@ class WeatherDisasterManagementAgent(Agent[WeatherDisasterManagerConfig]):
             )
 
     def emergency_response(self, state: WeatherState) -> WeatherState:
-        """Generate emergency response plan"""
+        """Generate emergency response plan."""
         try:
             response = (
                 self.engines["emergency_response"]
@@ -388,7 +393,7 @@ class WeatherDisasterManagementAgent(Agent[WeatherDisasterManagerConfig]):
             )
 
     def analyze_disaster_type(self, state: WeatherState) -> WeatherState:
-        """Analyze weather data to identify potential disasters"""
+        """Analyze weather data to identify potential disasters."""
         weather_data = state.weather_data
 
         try:
@@ -415,7 +420,7 @@ class WeatherDisasterManagementAgent(Agent[WeatherDisasterManagerConfig]):
             )
 
     def assess_severity(self, state: WeatherState) -> WeatherState:
-        """Assess the severity of the identified weather situation"""
+        """Assess the severity of the identified weather situation."""
         weather_data = state.weather_data
 
         try:
@@ -484,7 +489,7 @@ class WeatherDisasterManagementAgent(Agent[WeatherDisasterManagerConfig]):
         "civil_defense_response",
         "public_works_response",
     ]:
-        """Route to appropriate department based on disaster type and severity"""
+        """Route to appropriate department based on disaster type and severity."""
         disaster = state.disaster_type.strip().lower()
         severity = state.severity.strip().lower()
 
@@ -496,7 +501,7 @@ class WeatherDisasterManagementAgent(Agent[WeatherDisasterManagerConfig]):
         return "civil_defense_response"
 
     def run_weather_emergency_system(self, location: WeatherLocation):
-        """Initialize and run the weather emergency system for a given city"""
+        """Initialize and run the weather emergency system for a given city."""
         print(f"Running weather emergency system for {location}")
         print(f"Initializing state for {location.__str__()}")
         initial_state = WeatherState(

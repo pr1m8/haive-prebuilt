@@ -21,7 +21,7 @@ class TaskList(BaseModel):
 
 
 class TaskDependency(BaseModel):
-    """Task dependency model"""
+    """Task dependency model."""
 
     task: Task = Field(description="Task")
     dependent_tasks: list[Task] = Field(description="List of dependent tasks")
@@ -38,14 +38,14 @@ class Team(BaseModel):
 
 # Iterative assessment
 class TaskAllocation(BaseModel):
-    """Task allocation class"""
+    """Task allocation class."""
 
     task: Task = Field(description="Task")
     team_member: TeamMember = Field(description="Team members assigned to the task")
 
 
 class TaskSchedule(BaseModel):
-    """Schedule schedule class"""
+    """Schedule schedule class."""
 
     task: Task = Field(description="Task")
     start_day: int = Field(description="Start day of the task")
@@ -54,19 +54,19 @@ class TaskSchedule(BaseModel):
 
 # Lists
 class DependencyList(BaseModel):
-    """List of task dependencies"""
+    """List of task dependencies."""
 
     dependencies: list[TaskDependency] = Field(description="List of task dependencies")
 
 
 class Schedule(BaseModel):
-    """List of task schedules"""
+    """List of task schedules."""
 
     schedule: list[TaskSchedule] = Field(description="List of task schedules")
 
 
 class TaskAllocationList(BaseModel):
-    """List of task allocations"""
+    """List of task allocations."""
 
     task_allocations: list[TaskAllocation] = Field(
         description="List of task allocations"
@@ -75,7 +75,7 @@ class TaskAllocationList(BaseModel):
 
 # Iteration
 class TaskAllocationListIteration(BaseModel):
-    """List of task allocations for each iteration"""
+    """List of task allocations for each iteration."""
 
     task_allocations_iteration: list[TaskAllocationList] = Field(
         description="List of task allocations for each iteration"
@@ -83,7 +83,7 @@ class TaskAllocationListIteration(BaseModel):
 
 
 class ScheduleIteration(BaseModel):
-    """List of task schedules for each iteration"""
+    """List of task schedules for each iteration."""
 
     schedule: list[Schedule] = Field(
         description="List of task schedules for each iteration"
@@ -91,20 +91,20 @@ class ScheduleIteration(BaseModel):
 
 
 class Risk(BaseModel):
-    """Risk of a task"""
+    """Risk of a task."""
 
     task: Task = Field(description="Task")
     score: str = Field(description="Risk associated with the task")
 
 
 class RiskList(BaseModel):
-    """List of risks for each iteration"""
+    """List of risks for each iteration."""
 
     risks: list[Risk] = Field(description="List of risks")
 
 
 class RiskListIteration(BaseModel):
-    """List of risks for each iteration"""
+    """List of risks for each iteration."""
 
     risks_iteration: list[RiskList] = Field(
         description="List of risks for each iteration"

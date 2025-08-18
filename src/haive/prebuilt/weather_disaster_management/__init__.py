@@ -1,10 +1,10 @@
-"""Weather Disaster Management - TODO: Add brief description
+"""Weather Disaster Management - TODO: Add brief description.
 
 TODO: Add detailed description of module functionality
 
 
 
-Example:
+Examples:
     Basic usage::
 
         from haive.weather_disaster_management import module_function

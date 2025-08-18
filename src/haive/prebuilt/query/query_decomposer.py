@@ -1,5 +1,5 @@
 # src/haive/prebuilt/simple/query_decomposer.py
-"""Agent Name: QueryDecomposer
+"""Agent Name: QueryDecomposer.
 Description: Breaks down a complex query into smaller, logically ordered sub-queries.
 """
 

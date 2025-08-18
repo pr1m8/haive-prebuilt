@@ -38,6 +38,14 @@ class CoreAPIWrapper(BaseModel):
                 )
 
     def search(self, query: str) -> str:
+        """Search.
+
+Args:
+    query: [TODO: Add description]
+
+Returns:
+    [TODO: Add return description]
+"""
         response = self._get_search_response(query)
         results = response.get("results", [])
         if not results:

@@ -1,10 +1,10 @@
-"""People Researcher - TODO: Add brief description
+"""People Researcher - TODO: Add brief description.
 
 TODO: Add detailed description of module functionality
 
 
 
-Example:
+Examples:
     Basic usage::
 
         from haive.people_researcher import module_function

@@ -30,7 +30,7 @@ judge_llm = base_llm.with_structured_output(JudgeOutput)
 
 # Decision making node
 def decision_making_node(state: AgentState):
-    """Entry point of the workflow. Based on the user query, the model can either respond directly or perform a full research, routing the workflow to the planning node"""
+    """Entry point of the workflow. Based on the user query, the model can either respond directly or perform a full research, routing the workflow to the planning node."""
     system_prompt = SystemMessage(content=decision_making_prompt)
     response: DecisionMakingOutput = decision_making_llm.invoke(
         [system_prompt] + state["messages"]

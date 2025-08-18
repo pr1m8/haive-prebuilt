@@ -1,10 +1,10 @@
-"""Essay Grading - TODO: Add brief description
+"""Essay Grading - TODO: Add brief description.
 
 TODO: Add detailed description of module functionality
 
 
 
-Example:
+Examples:
     Basic usage::
 
         from haive.essay_grading import module_function
@@ -255,6 +255,14 @@ def summarization_node(state):
 
 
 def fact_checking_node(state: State) -> State:
+    """Fact Checking Node.
+
+Args:
+    state: [TODO: Add description]
+
+Returns:
+    [TODO: Add return description]
+"""
     chunks = get_or_create_chunks(state)
     article_text = state["article_text"]
     fact_checking_results = fact_check_article(article_text, chunks)
@@ -262,6 +270,14 @@ def fact_checking_node(state: State) -> State:
 
 
 def tone_analysis_node(state: State) -> State:
+    """Tone Analysis Node.
+
+Args:
+    state: [TODO: Add description]
+
+Returns:
+    [TODO: Add return description]
+"""
     chunks = get_or_create_chunks(state)
     article_text = state["article_text"]
     tone_analysis_results = tone_analysis_article(article_text, chunks)
@@ -269,6 +285,14 @@ def tone_analysis_node(state: State) -> State:
 
 
 def quote_extraction_node(state: State) -> State:
+    """Quote Extraction Node.
+
+Args:
+    state: [TODO: Add description]
+
+Returns:
+    [TODO: Add return description]
+"""
     chunks = get_or_create_chunks(state)
     article_text = state["article_text"]
     quote_extraction_results = quote_extraction_article(article_text, chunks)
@@ -359,6 +383,14 @@ for user_input in user_inputs:
 
 
 def grammar_and_bias_review_node(state: State) -> State:
+    """Grammar And Bias Review Node.
+
+Args:
+    state: [TODO: Add description]
+
+Returns:
+    [TODO: Add return description]
+"""
     chunks = get_or_create_chunks(state)
     article_text = state["article_text"]
     grammar_and_bias_review_results = grammary_and_bias_analysis_article(
@@ -368,6 +400,14 @@ def grammar_and_bias_review_node(state: State) -> State:
 
 
 def route(state: State) -> str:
+    """Route.
+
+Args:
+    state: [TODO: Add description]
+
+Returns:
+    [TODO: Add return description]
+"""
     routes = []
     actions = state.get("actions", [])
     if "full report" in actions:
@@ -397,10 +437,17 @@ class JournamlsimReviewAgent(Agent):
     """
 
     def __init__(self, llm: BaseLLMConfig):
+        """  Init  .
+
+Args:
+    llm: [TODO: Add description]
+"""
         super().__init__(llm)
         self.graph = None  # TODO: Initialize graph properly
 
     def setup_workflow(self):
+        """Setup Workflow.
+"""
         # Define constants for repeated literals - review
         CATEGORY = "category"
         SUMMARY = "summary"

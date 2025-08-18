@@ -1,10 +1,10 @@
-"""Self Improving - TODO: Add brief description
+"""Self Improving - TODO: Add brief description.
 
 TODO: Add detailed description of module functionality
 
 
 
-Example:
+Examples:
     Basic usage::
 
         from haive.self_improving import module_function

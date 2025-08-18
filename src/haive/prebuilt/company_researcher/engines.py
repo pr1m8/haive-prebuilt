@@ -14,7 +14,7 @@ from haive.prebuilt.company_researcher.models import (
 
 
 def create_initial_screening_prompt() -> ChatPromptTemplate:
-    """Create a prompt template for initial KYC screening
+    """Create a prompt template for initial KYC screening.
 
     Returns:
         ChatPromptTemplate for initial screening
@@ -43,7 +43,7 @@ Provide a comprehensive initial risk assessment focusing on:
 
 
 def create_enhanced_due_diligence_prompt() -> ChatPromptTemplate:
-    """Create a prompt template for enhanced due diligence
+    """Create a prompt template for enhanced due diligence.
 
     Returns:
         ChatPromptTemplate for enhanced due diligence
@@ -73,7 +73,7 @@ Focus Areas:
 
 
 def create_final_risk_assessment_prompt() -> ChatPromptTemplate:
-    """Create a prompt template for final risk assessment
+    """Create a prompt template for final risk assessment.
 
     Returns:
         ChatPromptTemplate for final risk assessment
@@ -109,6 +109,8 @@ Critical Evaluation Criteria:
 
 # Demonstration remains the same
 def main():
+    """Main.
+"""
     # Create a sample enhanced KYC customer profile
     customer = EnhancedKYCCustomerProfile(
         full_name="John Michael Doe",

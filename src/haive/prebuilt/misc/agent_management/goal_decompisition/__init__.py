@@ -79,7 +79,7 @@ DECISION_ANALYSIS_SYSTEM_PROMPT = """You are a senior decision analysis consulta
 
 Provide decisions that are analytically rigorous, psychologically informed, and practically implementable."""
 
-DECISION_ANALYSIS_USER_PROMPT = """Analyze this decision comprehensively and provide a structured recommendation:
+DECISION_ANALYSIS_USER_PROMPT = """Analyze this decision comprehensively and provide a structured recommendation:.
 
 **Decision to Analyze:**
 {decision_description}
@@ -190,7 +190,7 @@ RESOURCE_PLANNING_SYSTEM_PROMPT = """You are a strategic resource planning exper
 
 Focus on practical, implementable resource plans that balance optimization with real-world constraints and uncertainties."""
 
-RESOURCE_PLANNING_USER_PROMPT = """Create a comprehensive resource plan for this initiative:
+RESOURCE_PLANNING_USER_PROMPT = """Create a comprehensive resource plan for this initiative:.
 
 **Initiative Requiring Resource Planning:**
 {initiative_description}
@@ -306,7 +306,7 @@ QUALITY_ASSESSMENT_SYSTEM_PROMPT = """You are a quality management expert and co
 
 Provide assessments that are thorough, actionable, and focused on sustainable quality improvement."""
 
-QUALITY_ASSESSMENT_USER_PROMPT = """Conduct a comprehensive quality assessment of this deliverable, process, or system:
+QUALITY_ASSESSMENT_USER_PROMPT = """Conduct a comprehensive quality assessment of this deliverable, process, or system:.
 
 **Subject of Quality Assessment:**
 {assessment_subject}
@@ -436,7 +436,7 @@ WORKFLOW_OPTIMIZATION_SYSTEM_PROMPT = """You are a workflow optimization expert 
 
 Focus on practical improvements that deliver measurable business value while being realistic about implementation challenges and change management requirements."""
 
-WORKFLOW_OPTIMIZATION_USER_PROMPT = """Analyze and optimize this workflow or process:
+WORKFLOW_OPTIMIZATION_USER_PROMPT = """Analyze and optimize this workflow or process:.
 
 **Process/Workflow to Optimize:**
 {process_description}
@@ -570,7 +570,7 @@ COMMUNICATION_PLANNING_SYSTEM_PROMPT = """You are a strategic communications exp
 
 Focus on practical communication plans that build strong stakeholder relationships while driving project success."""
 
-COMMUNICATION_PLANNING_USER_PROMPT = """Develop a comprehensive communication plan for this initiative:
+COMMUNICATION_PLANNING_USER_PROMPT = """Develop a comprehensive communication plan for this initiative:.
 
 **Initiative Requiring Communication Plan:**
 {initiative_description}

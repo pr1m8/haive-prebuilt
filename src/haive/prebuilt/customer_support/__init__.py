@@ -1,10 +1,10 @@
-"""Customer Support - TODO: Add brief description
+"""Customer Support - TODO: Add brief description.
 
 TODO: Add detailed description of module functionality
 
 
 
-Example:
+Examples:
     Basic usage::
 
         from haive.customer_support import module_function

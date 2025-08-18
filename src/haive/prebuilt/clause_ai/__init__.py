@@ -1,10 +1,10 @@
-"""Clause Ai - TODO: Add brief description
+"""Clause Ai - TODO: Add brief description.
 
 TODO: Add detailed description of module functionality
 
 
 
-Example:
+Examples:
     Basic usage::
 
         from haive.clause_ai import module_function

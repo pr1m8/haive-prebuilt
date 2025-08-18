@@ -1,10 +1,10 @@
-"""Podcast Generator - TODO: Add brief description
+"""Podcast Generator - TODO: Add brief description.
 
 TODO: Add detailed description of module functionality
 
 
 
-Example:
+Examples:
     Basic usage::
 
         from haive.podcast_generator import module_function

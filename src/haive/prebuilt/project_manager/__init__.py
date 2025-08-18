@@ -1,10 +1,10 @@
-"""Project Manager - TODO: Add brief description
+"""Project Manager - TODO: Add brief description.
 
 TODO: Add detailed description of module functionality
 
 
 
-Example:
+Examples:
     Basic usage::
 
         from haive.project_manager import module_function

@@ -28,9 +28,13 @@ from haive.prebuilt.systemic_review_of_scientific_articles.nodes import (
 
 class SystemicReviewOfScientificArticlesAgent(Agent):
     def __init__(self):
+        """  Init  .
+"""
         super().__init__()
 
     def set_workflow(self):
+        """Set Workflow.
+"""
         self.graph.add_node("process_input", process_input)
         self.graph.add_node("planner", plan_node)
         self.graph.add_node("researcher", research_node)

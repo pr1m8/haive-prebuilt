@@ -1,10 +1,10 @@
-"""Search And Summarize - TODO: Add brief description
+"""Search And Summarize - TODO: Add brief description.
 
 TODO: Add detailed description of module functionality
 
 
 
-Example:
+Examples:
     Basic usage::
 
         from haive.search_and_summarize import module_function

@@ -1,10 +1,10 @@
-"""Ai Insight - TODO: Add brief description
+"""Ai Insight - TODO: Add brief description.
 
 TODO: Add detailed description of module functionality
 
 
 
-Example:
+Examples:
     Basic usage::
 
         from haive.ai_insight import module_function

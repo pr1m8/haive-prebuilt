@@ -1,10 +1,10 @@
-"""Eu Green Compliance - TODO: Add brief description
+"""Eu Green Compliance - TODO: Add brief description.
 
 TODO: Add detailed description of module functionality
 
 
 
-Example:
+Examples:
     Basic usage::
 
         from haive.eu_green_compliance import module_function

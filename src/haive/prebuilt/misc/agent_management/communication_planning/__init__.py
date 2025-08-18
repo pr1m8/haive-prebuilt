@@ -1,10 +1,10 @@
-"""Communication Planning - TODO: Add brief description
+"""Communication Planning - TODO: Add brief description.
 
 TODO: Add detailed description of module functionality
 
 
 
-Example:
+Examples:
     Basic usage::
 
         from haive.communication_planning import module_function

@@ -50,11 +50,22 @@ class LanguageDetector:
     NUMERIC_ENCODING_REGEX = re.compile(r"\b\d{2,3}(?: \d{2,3})+\b")
 
     def __init__(self):
+        """  Init  .
+"""
         self.spell = SpellChecker()
         self.spell.word_frequency.load_words(["pydantic", "pygments"])
 
     @validate_call
     def detect_language(self, text: str, method: str) -> LanguageDetectionResult:
+        """Detect Language.
+
+Args:
+    text: [TODO: Add description]
+    method: [TODO: Add description]
+
+Returns:
+    [TODO: Add return description]
+"""
         try:
             if method == "cld3":
                 gcld3 = importlib.import_module("gcld3")
@@ -83,6 +94,14 @@ class LanguageDetector:
 
     @validate_call
     def analyze_security(self, text: str) -> SecurityAnalysis:
+        """Analyze Security.
+
+Args:
+    text: [TODO: Add description]
+
+Returns:
+    [TODO: Add return description]
+"""
         return SecurityAnalysis(
             non_latin=self._contains_non_latin(text),
             zero_width=bool(self.ZERO_WIDTH_REGEX.search(text)),
@@ -98,6 +117,14 @@ class LanguageDetector:
 
     @validate_call
     def detect_programming_language(self, text: str) -> str | None:
+        """Detect Programming Language.
+
+Args:
+    text: [TODO: Add description]
+
+Returns:
+    [TODO: Add return description]
+"""
         try:
             return guess_lexer(text).name
         except ClassNotFound:
@@ -105,6 +132,14 @@ class LanguageDetector:
 
     @validate_call
     def check_profanity(self, text: str) -> bool:
+        """Check Profanity.
+
+Args:
+    text: [TODO: Add description]
+
+Returns:
+    [TODO: Add return description]
+"""
         for module in ["profanity_check", "better_profanity"]:
             try:
                 checker = importlib.import_module(module)
@@ -145,12 +180,23 @@ class LanguageDetector:
 
 class ContentAnalyzer:
     def __init__(self):
+        """  Init  .
+"""
         self.detector = LanguageDetector()
 
     @validate_call
     def full_analysis(
         self, text: str, lang_method: str = "cld3"
     ) -> ContentAnalysisResult:
+        """Full Analysis.
+
+Args:
+    text: [TODO: Add description]
+    lang_method: [TODO: Add description]
+
+Returns:
+    [TODO: Add return description]
+"""
         lang_result = self.detector.detect_language(text, lang_method)
         misspelled = list(self.detector.spell.unknown(text.split()))
 
@@ -179,7 +225,7 @@ class ContentAnalyzer:
 if __name__ == "__main__":
     analyzer = ContentAnalyzer()
 
-    sample_text = """Hello world
+    sample_text = """Hello world.
     \u200b print("Hidden message")
     72 101 108 108 111
     """

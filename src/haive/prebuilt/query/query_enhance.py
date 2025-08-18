@@ -1,5 +1,5 @@
 # src/haive/prebuilt/simple/query_enhancer.py
-"""Agent Name: QueryEnhancer
+"""Agent Name: QueryEnhancer.
 Description: Enriches a query by adding relevant context, assumptions, or metadata.
 Useful for boosting reasoning or LLM effectiveness.
 """

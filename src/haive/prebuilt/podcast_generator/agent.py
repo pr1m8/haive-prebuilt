@@ -19,9 +19,17 @@ interview_self = None  # This should be defined elsewhere
 
 class PodcastGeneratorAgent(Agent):
     def __init__(self, llm: BaseLLM, state: PodcastGeneratorState):
+        """  Init  .
+
+Args:
+    llm: [TODO: Add description]
+    state: [TODO: Add description]
+"""
         super().__init__(llm, state)
 
     def setup_workflow(self):
+        """Setup Workflow.
+"""
         self.graph.add_node("Planing", plan_self.graph.compile())
         self.graph.add_node("Start research", Start_parallel)
         self.graph.add_node("Create podcast", interview_self.graph.compile())

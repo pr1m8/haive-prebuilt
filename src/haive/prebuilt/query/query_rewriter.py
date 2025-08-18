@@ -1,5 +1,5 @@
 # src/haive/prebuilt/simple/query_rewriter.py
-"""Agent Name: QueryRewriter
+"""Agent Name: QueryRewriter.
 Description: Improves or reformulates a user query to be clearer or more suitable for retrieval.
 """
 

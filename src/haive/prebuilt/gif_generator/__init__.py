@@ -1,10 +1,10 @@
-"""Gif Generator - TODO: Add brief description
+"""Gif Generator - TODO: Add brief description.
 
 TODO: Add detailed description of module functionality
 
 
 
-Example:
+Examples:
     Basic usage::
 
         from haive.gif_generator import module_function

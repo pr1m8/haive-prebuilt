@@ -1,10 +1,10 @@
-"""Content Intelligence - TODO: Add brief description
+"""Content Intelligence - TODO: Add brief description.
 
 TODO: Add detailed description of module functionality
 
 
 
-Example:
+Examples:
     Basic usage::
 
         from haive.content_intelligence import module_function

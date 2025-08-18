@@ -12,9 +12,13 @@ from haive.prebuilt.essay_grading.nodes import (
 
 class EssayGradingAgent(Agent):
     def __init__(self):
+        """  Init  .
+"""
         super().__init__()
 
     def set_workflow(self):
+        """Set Workflow.
+"""
         # Add nodes to the graph
         self.graph.add_node("check_relevance", check_relevance)
         self.graph.add_node("check_grammar", check_grammar)

@@ -1,10 +1,10 @@
-"""Systemic Review Of Scientific Articles - TODO: Add brief description
+"""Systemic Review Of Scientific Articles - TODO: Add brief description.
 
 TODO: Add detailed description of module functionality
 
 
 
-Example:
+Examples:
     Basic usage::
 
         from haive.systemic_review_of_scientific_articles import module_function

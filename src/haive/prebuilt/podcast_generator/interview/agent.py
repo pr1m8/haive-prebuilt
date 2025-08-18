@@ -15,9 +15,17 @@ route_messages = None
 
 class InterviewAgent(Agent):
     def __init__(self, llm: BaseLLM, state: PodcastGeneratorState):
+        """  Init  .
+
+Args:
+    llm: [TODO: Add description]
+    state: [TODO: Add description]
+"""
         pass
 
     def setup_workflow(self):
+        """Setup Workflow.
+"""
         self.graph.add_node("Host question", generate_question)
         self.graph.add_node("Web research", search_web)
         self.graph.add_node("Wiki research", search_wikipedia)

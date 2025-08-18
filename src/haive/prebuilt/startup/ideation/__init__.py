@@ -1,10 +1,10 @@
-"""Ideation - TODO: Add brief description
+"""Ideation - TODO: Add brief description.
 
 TODO: Add detailed description of module functionality
 
 
 
-Example:
+Examples:
     Basic usage::
 
         from haive.ideation import module_function

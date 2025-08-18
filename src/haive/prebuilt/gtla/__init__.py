@@ -1,10 +1,10 @@
-"""Gtla - TODO: Add brief description
+"""Gtla - TODO: Add brief description.
 
 TODO: Add detailed description of module functionality
 
 
 
-Example:
+Examples:
     Basic usage::
 
         from haive.gtla import module_function

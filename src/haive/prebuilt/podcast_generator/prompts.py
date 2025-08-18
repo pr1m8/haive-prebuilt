@@ -1,4 +1,4 @@
-report_writer_instructions = """You are a podcast script writer preparing a script for an episode on this overall topic:
+report_writer_instructions = """You are a podcast script writer preparing a script for an episode on this overall topic:.
 
 {topic}
 

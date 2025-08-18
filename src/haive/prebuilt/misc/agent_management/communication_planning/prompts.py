@@ -78,7 +78,7 @@ COMMUNICATION_PLANNING_SYSTEM_PROMPT = """You are a strategic communications exp
 
 Focus on practical communication plans that build strong stakeholder relationships while driving project success."""
 
-COMMUNICATION_PLANNING_USER_PROMPT = """Develop a comprehensive communication plan for this initiative:
+COMMUNICATION_PLANNING_USER_PROMPT = """Develop a comprehensive communication plan for this initiative:.
 
 **Initiative Requiring Communication Plan:**
 {initiative_description}

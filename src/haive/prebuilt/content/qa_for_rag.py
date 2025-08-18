@@ -1,5 +1,5 @@
 # src/haive/prebuilt/simple/qa_for_rag.py
-"""Agent Name: QAForRAGGenerator
+"""Agent Name: QAForRAGGenerator.
 Description: Generates QA pairs from documents suitable for fine-tuning or retrieval-augmented generation.
 """
 

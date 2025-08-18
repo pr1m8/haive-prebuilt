@@ -1,10 +1,10 @@
-"""Decision Analysis - TODO: Add brief description
+"""Decision Analysis - TODO: Add brief description.
 
 TODO: Add detailed description of module functionality
 
 
 
-Example:
+Examples:
     Basic usage::
 
         from haive.decision_analysis import module_function

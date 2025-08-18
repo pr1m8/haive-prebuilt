@@ -1,10 +1,10 @@
-"""Open Researcher - TODO: Add brief description
+"""Open Researcher - TODO: Add brief description.
 
 TODO: Add detailed description of module functionality
 
 
 
-Example:
+Examples:
     Basic usage::
 
         from haive.open_researcher import module_function

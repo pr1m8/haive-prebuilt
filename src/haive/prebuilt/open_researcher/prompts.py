@@ -159,7 +159,7 @@ section_writer_inputs = """
 </Source material>
 """
 
-section_grader_instructions = """Review a report section relative to the specified topic:
+section_grader_instructions = """Review a report section relative to the specified topic:.
 
 <Report topic>
 {topic}

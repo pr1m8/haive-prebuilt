@@ -24,6 +24,12 @@ class AcademicPaperSearchTool(BaseTool):
         name: str = "academic_paper_search_tool",
         description: str = "Queries an academic paper API to retrieve relevant articles based on a topic",
     ):
+        """  Init  .
+
+Args:
+    name: [TODO: Add description]
+    description: [TODO: Add description]
+"""
         super().__init__()
         self.name = name
         self.description = description
@@ -39,6 +45,15 @@ class AcademicPaperSearchTool(BaseTool):
         raise NotImplementedError("Async version not implemented")
 
     def query_academic_api(self, topic: str, max_results: int) -> list[dict[str, Any]]:
+        """Query Academic Api.
+
+Args:
+    topic: [TODO: Add description]
+    max_results: [TODO: Add description]
+
+Returns:
+    [TODO: Add return description]
+"""
         base_url = "https://api.semanticscholar.org/graph/v1/paper/search"
         params = {
             "query": topic,

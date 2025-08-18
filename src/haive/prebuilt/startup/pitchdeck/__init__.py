@@ -1,10 +1,10 @@
-"""Pitchdeck - TODO: Add brief description
+"""Pitchdeck - TODO: Add brief description.
 
 TODO: Add detailed description of module functionality
 
 
 
-Example:
+Examples:
     Basic usage::
 
         from haive.pitchdeck import module_function

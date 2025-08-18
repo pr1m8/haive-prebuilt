@@ -1,10 +1,10 @@
-"""Chiron Learning Agent - TODO: Add brief description
+"""Chiron Learning Agent - TODO: Add brief description.
 
 TODO: Add detailed description of module functionality
 
 
 
-Example:
+Examples:
     Basic usage::
 
         from haive.chiron_learning_agent import module_function

@@ -1,10 +1,10 @@
-"""Contract Analysis - TODO: Add brief description
+"""Contract Analysis - TODO: Add brief description.
 
 TODO: Add detailed description of module functionality
 
 
 
-Example:
+Examples:
     Basic usage::
 
         from haive.contract_analysis import module_function

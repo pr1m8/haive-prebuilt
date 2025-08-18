@@ -1,10 +1,10 @@
-"""Academic Task Learning - TODO: Add brief description
+"""Academic Task Learning - TODO: Add brief description.
 
 TODO: Add detailed description of module functionality
 
 
 
-Example:
+Examples:
     Basic usage::
 
         from haive.academic_task_learning import module_function
