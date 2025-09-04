@@ -17,7 +17,7 @@ langgraph = "^0.3.5"
 langdetect = "^1.0.9"
 fast-langdetect = "^0.3.2"
 langid = "^1.1.6"
-gcld3 = "^3.0.13"
+# gcld3 = "^3.0.13"  # Commented out - requires system dependencies
 pyspellchecker = "^0.8.2"
 
 [tool.poetry.group.dev.dependencies]
@@ -38,12 +38,10 @@ pygments = "^2.19.1"
 pyspellchecker = "^0.8.2"
 
 [tool.poetry.group.docs.dependencies]
-# Use the shared pydevelop-docs system (contains all 43+ Sphinx extensions)
-pydevelop-docs = { path = "../../tools/pydevelop-docs", develop = true }
+# Documentation dependencies
 sphinx = "^8.2.3"
 sphinx-autoapi = "^3.6.0"
 sphinx-autodoc-typehints = "^3.1.0"
-sphinxcontrib-autodoc-pydantic = "^2.2.0"
 furo = "^2024.8.6"
 myst-parser = "^4.0.1"
 sphinx-copybutton = "^0.5.2"
