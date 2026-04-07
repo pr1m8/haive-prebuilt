@@ -1304,23 +1304,6 @@ sphinx = ">=6.0,<9.0"
 sphinx-basic-ng = ">=1.0.0.beta2"
 
 [[package]]
-name = "gcld3"
-version = "3.0.13"
-description = "CLD3 is a neural network model for language identification."
-optional = false
-python-versions = "*"
-groups = ["main"]
-files = [
-    {file = "gcld3-3.0.13-cp36-cp36m-macosx_10_9_x86_64.whl", hash = "sha256:11a127e493c2952a83a957e2f025d6ff8b1d2efd353baa25bd99d7ceb3c96c54"},
-    {file = "gcld3-3.0.13-cp36-cp36m-manylinux2010_x86_64.whl", hash = "sha256:51538b26dd1741f49ceb03421710d4355c6ce3fd257a2ddebe868e36458f5d45"},
-    {file = "gcld3-3.0.13-cp38-cp38-macosx_10_9_x86_64.whl", hash = "sha256:fb745958278bfcc230fe3e15af3babb2752e77afd929ae0f95b9ef52648f3271"},
-    {file = "gcld3-3.0.13-cp38-cp38-manylinux2010_x86_64.whl", hash = "sha256:c6bc0ecf3d95943a2b9fe61214aab8284a3b33f25e07c6caad064ea59417620f"},
-    {file = "gcld3-3.0.13-pp36-pypy36_pp73-macosx_10_9_x86_64.whl", hash = "sha256:b56a9852861c7209434917885b8331ddf5f11d3d5810baafb9a29ffd5ccd35d1"},
-    {file = "gcld3-3.0.13-pp36-pypy36_pp73-manylinux2010_x86_64.whl", hash = "sha256:4fc4ae1c8c7baab21a46fc66074787d010ca338f5c4b2ff80dd2448d18cc3d89"},
-    {file = "gcld3-3.0.13.tar.gz", hash = "sha256:47c8c779bfe7372a38564b0cd357556dc362aec81cb55b0c889059e8b952e959"},
-]
-
-[[package]]
 name = "gitdb"
 version = "4.0.12"
 description = "Git Object Database"
@@ -1851,127 +1834,91 @@ files = [
 
 [[package]]
 name = "haive-agents"
-version = "0.1.0"
+version = "1.0.0"
 description = "haive-agents for Haive framework"
 optional = false
-python-versions = ">=3.12,<3.13"
+python-versions = "<3.13,>=3.12"
 groups = ["main", "dev"]
-files = []
-develop = true
+files = [
+    {file = "haive_agents-1.0.0-py3-none-any.whl", hash = "sha256:cedd8a9dab90b3d6dab2e00ea9169e1ee5627e000121fec411aa62bf765caefa"},
+    {file = "haive_agents-1.0.0.tar.gz", hash = "sha256:c07e0898486e725828e7bdfa57b31ad050565d1daada2c6abc941421732d3cca"},
+]
 
 [package.dependencies]
-haive-core = {path = "../haive-core", develop = true}
-langchain = "^0.3.20"
-langchain-community = "^0.3.26"
-langchain-core = "^0.3.44"
-langchain-google-vertexai = "^2.0.27"
-langchain-huggingface = "^0.3.0"
-langgraph = "^0.3.5"
-langgraph-checkpoint-postgres = "^2.0.23"
-pydantic = "^2.10.6"
-
-[package.source]
-type = "directory"
-url = "../haive-agents"
+haive-core = ">=1.0.0,<2.0.0"
+langchain = ">=0.3.20,<0.4.0"
+langchain-community = ">=0.3.26,<0.4.0"
+langchain-core = ">=0.3.44,<0.4.0"
+langchain-google-vertexai = ">=2.0.27,<3.0.0"
+langchain-huggingface = ">=0.3.0,<0.4.0"
+langgraph = ">=0.3.5,<0.4.0"
+langgraph-checkpoint-postgres = ">=2.0.23,<3.0.0"
+langgraph-sdk = ">=0.1.51,<0.2.0"
+langsmith = ">=0.3,<0.4"
+pydantic = ">=2.10.6,<3.0.0"
 
 [[package]]
 name = "haive-core"
-version = "0.1.0"
+version = "1.0.0"
 description = "haive-core for Haive framework"
 optional = false
-python-versions = ">=3.12,<3.13"
+python-versions = "<3.13,>=3.12"
 groups = ["main", "dev"]
-files = []
-develop = true
+files = [
+    {file = "haive_core-1.0.0-py3-none-any.whl", hash = "sha256:0f2858603fac1a6ec0439e7bde73fa3d5fd285bd21465bb320471787e40cfa98"},
+    {file = "haive_core-1.0.0.tar.gz", hash = "sha256:ba88a43bc0498b9bf4f931dfe838bcbcd3dcfabc43620764420dbb1684e2c695"},
+]
 
 [package.dependencies]
-langgraph = "^0.3.5"
-langgraph-checkpoint-postgres = "^2.0.23"
-plotly = "^6.2.0"
-pre-commit = "^4.2.0"
-pydantic = "^2.10.6"
-pymupdf4llm = "^0.0.27"
-streamlit = "^1.47.1"
+langgraph = ">=0.3.5,<0.4.0"
+langgraph-checkpoint-postgres = ">=2.0.23,<3.0.0"
+langgraph-sdk = ">=0.1.51,<0.2.0"
+langsmith = ">=0.3,<0.4"
+plotly = ">=6.2.0,<7.0.0"
+pre-commit = ">=4.2.0,<5.0.0"
+pydantic = ">=2.10.6,<3.0.0"
+pymupdf4llm = ">=0.0.27,<0.0.28"
+streamlit = ">=1.47.1,<2.0.0"
 
 [package.extras]
-ai21 = []
 all-providers = ["langchain-huggingface (>=0.3.0,<0.4.0)"]
 all-retrievers = ["langchain (>=0.3.20,<0.4.0)", "langchain-community (>=0.3.27,<0.4.0)", "langchain-core (>=0.3.44,<0.4.0)"]
-amazon-knowledge-bases = []
-anthropic = []
 api-retrievers = ["langchain-community (>=0.3.27,<0.4.0)"]
 arxiv = ["langchain-community (>=0.3.27,<0.4.0)"]
 asknews = ["langchain-community (>=0.3.27,<0.4.0)"]
-aws = []
-azure = []
 azure-search = ["langchain-community (>=0.3.27,<0.4.0)"]
-bedrock = []
 bm25 = ["langchain-community (>=0.3.27,<0.4.0)"]
 chatgpt-plugin = ["langchain-community (>=0.3.27,<0.4.0)"]
-chroma = []
-cloud-retrievers = []
-cohere = []
 cohere-rag = ["langchain-community (>=0.3.27,<0.4.0)"]
 contextual-compression = ["langchain (>=0.3.20,<0.4.0)"]
-databricks = []
 docarray = ["langchain-community (>=0.3.27,<0.4.0)"]
 elasticsearch = ["langchain-community (>=0.3.27,<0.4.0)"]
 ensemble = ["langchain (>=0.3.20,<0.4.0)"]
 faiss = ["langchain-community (>=0.3.27,<0.4.0)"]
-fireworks = []
-google = []
 google-document-ai-warehouse = ["langchain-community (>=0.3.27,<0.4.0)"]
-google-vertex-ai-search = []
-google-vertex-search = []
-groq = []
 huggingface = ["langchain-huggingface (>=0.3.0,<0.4.0)"]
-ibm = []
-kendra = []
 knn = ["langchain-community (>=0.3.27,<0.4.0)"]
 llamaindex = ["langchain-community (>=0.3.27,<0.4.0)"]
 metal = ["langchain-community (>=0.3.27,<0.4.0)"]
-milvus = []
-mistral = []
 multi-query = ["langchain (>=0.3.20,<0.4.0)"]
 neuraldb = ["langchain-community (>=0.3.27,<0.4.0)"]
-nvidia = []
-ollama = []
-openai = []
 parent-document = ["langchain (>=0.3.20,<0.4.0)"]
-pgvector = []
-pinecone = []
-pinecone-hybrid = []
-popular-providers = []
 popular-retrievers = ["langchain (>=0.3.20,<0.4.0)", "langchain-community (>=0.3.27,<0.4.0)", "langchain-core (>=0.3.44,<0.4.0)"]
 pubmed = ["langchain-community (>=0.3.27,<0.4.0)"]
-qdrant = []
-qdrant-sparse = []
-redis = []
 self-query = ["langchain (>=0.3.20,<0.4.0)"]
 sparse-retrievers = ["langchain-community (>=0.3.27,<0.4.0)"]
 svm = ["langchain-community (>=0.3.27,<0.4.0)"]
 tavily = ["langchain-community (>=0.3.27,<0.4.0)"]
 tfidf = ["langchain-community (>=0.3.27,<0.4.0)"]
 time-weighted = ["langchain (>=0.3.20,<0.4.0)"]
-together = []
-upstage = []
 vector-retrievers = ["langchain-core (>=0.3.44,<0.4.0)"]
 vector-store = ["langchain-core (>=0.3.44,<0.4.0)"]
-vertex-search = []
 vespa = ["langchain-community (>=0.3.27,<0.4.0)"]
-weaviate = []
-weaviate-hybrid = []
 web-research = ["langchain-community (>=0.3.27,<0.4.0)"]
 wikipedia = ["langchain-community (>=0.3.27,<0.4.0)"]
-xai = []
 you-search = ["langchain-community (>=0.3.27,<0.4.0)"]
 zep = ["langchain-community (>=0.3.27,<0.4.0)"]
 zep-cloud = ["langchain-community (>=0.3.27,<0.4.0)"]
-zilliz = []
-
-[package.source]
-type = "directory"
-url = "../haive-core"
 
 [[package]]
 name = "handy-archives"
@@ -2573,21 +2520,24 @@ numpy = "*"
 
 [[package]]
 name = "langsmith"
-version = "0.4.4"
+version = "0.3.45"
 description = "Client library to connect to the LangSmith LLM Tracing and Evaluation Platform."
 optional = false
 python-versions = ">=3.9"
 groups = ["main", "dev"]
 files = [
-    {file = "langsmith-0.4.4-py3-none-any.whl", hash = "sha256:014c68329bd085bd6c770a6405c61bb6881f82eb554ce8c4d1984b0035fd1716"},
-    {file = "langsmith-0.4.4.tar.gz", hash = "sha256:70c53bbff24a7872e88e6fa0af98270f4986a6e364f9e85db1cc5636defa4d66"},
+    {file = "langsmith-0.3.45-py3-none-any.whl", hash = "sha256:5b55f0518601fa65f3bb6b1a3100379a96aa7b3ed5e9380581615ba9c65ed8ed"},
+    {file = "langsmith-0.3.45.tar.gz", hash = "sha256:1df3c6820c73ed210b2c7bc5cdb7bfa19ddc9126cd03fdf0da54e2e171e6094d"},
 ]
 
 [package.dependencies]
 httpx = ">=0.23.0,<1"
 orjson = {version = ">=3.9.14,<4.0.0", markers = "platform_python_implementation != \"PyPy\""}
 packaging = ">=23.2"
-pydantic = ">=1,<3"
+pydantic = [
+    {version = ">=1,<3", markers = "python_full_version < \"3.12.4\""},
+    {version = ">=2.7.4,<3.0.0", markers = "python_full_version >= \"3.12.4\""},
+]
 requests = ">=2,<3"
 requests-toolbelt = ">=1.0.0,<2.0.0"
 zstandard = ">=0.23.0,<0.24.0"
@@ -6593,4 +6543,4 @@ cffi = ["cffi (>=1.11)"]
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.12,<3.13"
-content-hash = "a932682a06a547085dbf79378143a1365a279eb9102b12fa6852b041ea4b87e2"
+content-hash = "e951b4d2d0da99cf50156d5b5632d7f0f2919c76c95f902bb1b129f3b3b90805"
