@@ -1,11 +1,24 @@
 [tool.poetry]
 name = "haive-prebuilt"
-version = "1.0.0"
+version = "1.0.1"
 description = "Pre-configured Haive agent presets and templates for common use cases"
 authors = ["pr1m8 <william.astley@algebraicwealth.com>"]
 license = "MIT"
 readme = "README.md"
 packages = [{ include = "haive", from = "src" }]
+homepage = "https://github.com/pr1m8/haive-prebuilt"
+repository = "https://github.com/pr1m8/haive-prebuilt"
+documentation = "https://pr1m8.github.io/haive-prebuilt/"
+keywords = ["ai-agents", "presets", "templates", "langchain", "llm", "domain-specific"]
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "Intended Audience :: Developers",
+  "License :: OSI Approved :: MIT License",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.12",
+  "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+
 [tool.poetry.dependencies]
 haive-core = "^1.0.0"
 haive-agents = "^1.0.0"
